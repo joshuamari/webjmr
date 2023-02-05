@@ -7,6 +7,7 @@ $titleName = $_REQUEST["titleName"];
 $headString="<title>$titleName</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta charset='UTF-8'>
+<link rel='stylesheet' href='css/neoBootstrap.css'>
 <link rel='stylesheet' href='css/bootstrap.min.css'>
 <link rel='stylesheet' type='text/css' href='css/font-awesome.css'>
 <link rel='stylesheet' href='css/boxicons.css'>

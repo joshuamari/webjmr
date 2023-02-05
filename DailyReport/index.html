@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/neoBootstrap.css">
-    <link rel="stylesheet" href="css/w3-kawasaki.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/dr.css"/>
     <link rel="stylesheet" href="css/boxicons.css" />
-    <link rel="stylesheet" href="jquery-ui-1.13.2/jquery-ui-1.13.2.custom/jquery-ui.css" />
+    <!-- <link rel="stylesheet" href="jquery-ui-1.13.2/jquery-ui-1.13.2.custom/jquery-ui.css" /> -->
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/neoBootstrap.js"></script>
-    <script
+    <!-- <script
     src="js/jquery-ui.js"
     integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
     <!--#region BUSTER CALL  -->
     <script>
       // $.ajax({url: "ajax/getVersion.php", success: function(result){
@@ -25,10 +24,10 @@
       //     $('head').append(script);
       //     console.log('version: '+result);
       // }});
-      var busterCall = ["js/dr.js","css/dr.css"];
+      var busterCall = ["js/newDR.js","css/dr.css"];
       $.post("ajax/getVersion.php", {
           busterCall : busterCall,
-          titleName: "Web JMR"
+          titleName: "Daily Report"
       },
           function (data) {
           $('head').html(data);
@@ -55,9 +54,9 @@
               <div class="left-cont row py-3 px-3">
 
                 <div class="col-12 col-md-6  my-2">
-                  <label for="groupSel" class="form-label">Group</label>
+                  <label for="idGroup" class="form-label">Group</label>
                   <div class="input-group">
-                    <select class="form-select" id="groupSel" required>
+                    <select class="form-select" id="idGroup" required>
                       <option value="" disabled selected>Select Group</option>
                       <option>SYS</option>
                     </select>
@@ -66,15 +65,15 @@
                 </div>
 
                 <div class="col-12 col-md-6 my-2 datepicker">
-                  <label for="dateSel" class="form-label">Select Date</label>
-                  <input type="date"class="form-control"id="dateSel" required/>
+                  <label for="idDRDate" class="form-label">Select Date</label>
+                  <input type="date"class="form-control"id="idDRDate" required/>
                   <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p2" role="alert"></span>
                 </div>
 
                 <div class="col-12 my-2 ">
-                  <label for="locationSel" class="form-label">Location</label>
+                  <label for="idLocation" class="form-label">Location</label>
                   <div class="input-group">
-                    <select class="form-select" id="locationSel" required>
+                    <select class="form-select" id="idLocation" required>
                       <option value="" disabled selected>Select Location</option>
                       <option>KDT</option>
                       <option>WFH</option>
@@ -87,46 +86,42 @@
                 </div>
 
                 <div class="col-12 my-2">
-                  <label for="projectSel" class="form-label">Project</label>
+                  <label for="idProject" class="form-label">Project</label>
                   <div class="input-group">
-                    <select class="form-select" id="projectSel" required>
+                    <select class="form-select" id="idProject" required>
                       <option value="" disabled selected>Select Project</option>
-                      <option>GENERAL OFFICE WORK</option>
-                      <option>TRAINING AND DEVELOPMENT</option>
-                      <option>OTHERS</option>
-                      
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
                 </div>
 
                 <div class="col-12 my-2">
-                  <label for="itemSel" class="form-label">Item of Works</label>
+                  <label for="idItem" class="form-label">Item of Works</label>
                   <div class="input-group">
-                    <select class="form-select" id="itemSel" required>
+                    <select class="form-select" id="idItem" required>
                       <option value="" disabled selected>Select Item of Works</option>
-                      <option>Tapa Flakes</option>
+                      <!-- <option>Tapa Flakes</option>
                       <option>Hatsilog</option>
-                      <option>Zagu</option>
+                      <option>Zagu</option> -->
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
                 </div>
 
                 <div class="col-12 my-2">
-                  <label for="jobreqSel" class="form-label">Job Request Description</label>
+                  <label for="idJRD" class="form-label">Job Request Description</label>
                   <div class="input-group">
-                    <select class="form-select" id="jobreqSel" required>
-                      <option value="" disabled selected>Select Item of Works</option>
-                      <option>Tapa Flakes</option>
+                    <select class="form-select" id="idJRD" required>
+                      <option value="" disabled selected>Select Job Request Description</option>
+                      <!-- <option>Tapa Flakes</option>
                       <option>Hatsilog</option>
-                      <option>Zagu</option>
+                      <option>Zagu</option> -->
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
                 </div>
 
-                <div class="col-12 my-2">
+                <div class="col-12 my-2 d-none" id="id2DDiv">
                   <label for="2d3d" class="form-label">2D/3D</label>
                   <div class="radio-buttons m-0 p-0">
                     <label  class="custom-radio">
@@ -168,18 +163,18 @@
                   </div>
                 </div>
 
-                <div class="col-12 col-12 my-2">
-                  <label for="revision" class="form-label">Revision</label>
+                <div class="col-12 col-12 my-2 d-none" id="idRevDiv">
+                  <label for="idRev" class="form-label">Revision</label>
                   <div class="input-group switch">
-                    <input type="checkbox" class="checkbox" id="revision">
+                    <input type="checkbox" class="checkbox" id="idRev">
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p7" role="alert"></span>
                 </div>
 
                 <div class="col-12 col-lg-6 my-2">
-                  <label for="towSel" class="form-label">Type of Work</label>
+                  <label for="idTOW" class="form-label">Type of Work</label>
                   <div class="input-group col-8">
-                    <select class="form-select" id="towSel" required>
+                    <select class="form-select" id="idTOW" required>
                       <option value="" disabled selected>Select Type of Work</option>
                       <option>New - New 2D/3D</option>
                       <option>KMod</option>
@@ -190,9 +185,9 @@
                 </div>
 
                 <div class="col-12 col-lg-6 mt-2 checker d-none">
-                  <label for="checkSel" class="form-label">Checker</label>
+                  <label for="idChecking" class="form-label">Checker</label>
                   <div class="input-group col-8">
-                    <select class="form-select" id="checkSel" required>
+                    <select class="form-select" id="idChecking" required>
                       <option value="" disabled selected>Select Checker</option>
                       <option>TAN, ERWIN</option>
                       <option>MATIBAG, ERWILSON</option>
@@ -211,39 +206,39 @@
                   <label class="form-label">No. of Hours</label>
             
                   <div class="d-flex justify-content-start">
-                    <input type="number" placeholder="HH" class="form-control" min="0" max="20" id="hour"style="width:200px" required/>
+                    <input type="number" placeholder="HH" class="form-control" min="0" max="20" id="getHour"style="width:200px" required/>
                      <p class="mx-3 my-0">:</p> 
-                    <input type="number" placeholder="MM" class="form-control" min="0" max="59" id="minute"style="width:200px" required/>
+                    <input type="number" placeholder="MM" class="form-control" min="0" max="59" id="getMin"style="width:200px" required/>
                   </div>
                   <span class="col-6 mt-1 alert-danger text-danger" id="p9" role="alert"></span>
                 </div>
 
                 <div class="col-12 col-lg-6  my-2">
-                  <label for="mhType" class="form-label">Manhour Type</label>
+                  <label for="idMH" class="form-label">Manhour Type</label>
                   <div class="input-group">
-                    <select class="form-select" id="mhType" required>
+                    <select class="form-select" id="idMH" required>
                       <option value="" disabled selected>Select Manhour Type</option>
-                      <option>Regular</option>
-                      <option>Overtime</option>
+                      <option mhid="0">Regular</option>
+                      <option mhid="1">Overtime</option>
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p10" role="alert"></span>
                 </div>
                 
                 <div class="col-12 my-2">
-                  <label for="remarks" class="form-label">Remarks</label>
-                  <textarea class="form-control" id="remarks" rows="2"></textarea>
+                  <label for="idRemarks" class="form-label">Remarks</label>
+                  <textarea class="form-control" id="idRemarks" rows="2"></textarea>
                 
                 </div>
                 
                 <div class="row col-12 my-4 d-flex">
                   <div class="col-md-6 col-12 my-0">
-                  <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-add w-100 fw-bold" id="btn-add">
+                  <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-add w-100 fw-bold" id="idAdd">
                     Add
                   </button>
                 </div>
                 <div class="col-md-6 col-12 my-0">
-                  <button type="button" class="my-2 my-md-0 btn btn-reset text-uppercase w-100 fw-bold" id="btn-reset">
+                  <button type="button" class="my-2 my-md-0 btn btn-reset text-uppercase w-100 fw-bold" id="idReset">
                     Clear
                   </button>
                 </div>
@@ -265,13 +260,13 @@
             <div class="top-right   position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light"style="width:100%">
               <div class=" row right-cont  py-4 px-3">
                 <div class="col-12 my-2">
-                  <label for="copyDate" class="form-label">Copy From</label>
+                  <label for="idCopyDate" class="form-label">Copy From</label>
                   <div class="row">
                     <div class="col-8">
-                      <input type="date"class="form-control "id="copyDate"required/>
+                      <input type="date"class="form-control "id="idCopyDate"required/>
                     </div>
                     <div class="col-4">
-                      <button class="btn btn-warning w-100 fw-bold">COPY</button>
+                      <button id="idCopy" class="btn btn-warning w-100 fw-bold">COPY</button>
                     </div>
                   </div>
                 </div>
@@ -279,9 +274,9 @@
                 <div class="col-12">
                   <div class="row position-relative d-flex align-items-center justify-content-center">
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card card-regular mx-auto" id="card">
+                      <div class="card mx-auto" id="cardReg">
                         <div class="circle">
-                          <h5 class="card-title">8</h5>
+                          <h5 class="card-title" id="regCount">8</h5>
                         </div>
                         <div class="content">
                           <p>REGULAR</p>
@@ -290,9 +285,9 @@
                     </div>
 
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card card-ot mx-auto">
+                      <div class="card mx-auto" id="cardOt">
                         <div class="circle">
-                          <h5 class="card-title">8</h5>
+                          <h5 class="card-title" id="otCount">8</h5>
                         </div>
                         <div class="content">
                           <p>OVERTIME</p>
@@ -301,9 +296,9 @@
                     </div>
 
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card card-leave mx-auto">
+                      <div class="card mx-auto" id="cardLv">
                         <div class="circle">
-                          <h5 class="card-title">8</h5>
+                          <h5 class="card-title" id="lvCount">8</h5>
                         </div>
                         <div class="content">
                           <p>LEAVE</p>
@@ -326,6 +321,7 @@
                           <th>Item</th>
                           <th>Description</th>
                           <th>Hour</th>
+                          <th>MH Type</th>
                           <th>Action</th>
                         </tr>
                       </thead>
