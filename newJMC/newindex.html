@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Manhour Category</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/w3-kawasaki.css">
+    <link rel="stylesheet" href="css/boxicons.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/jmc.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/form.js"></script>
+    <script src="jquery-ui-1.13.2/jquery-ui.min.js"></script>
+    <!--#region BUSTER CALL  -->
+    <script>
+      $.ajax({url: "ajax/getVersion.php", success: function(result){
+          var script = document.createElement("script");
+          script.src = "js/newmain.js?version="+result;
+          $('head').append(script);
+          console.log('version: '+result);
+      }});
+      </script>
+      <!--#endregion -->
+  </head>
+  <body>
+    <!------MODAL START-->
+
+            <!-- DELETE JOB REQUEST DESCRIPTION MODAL -->
+
+    <div class="modal fade" id="deleteJRDModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body fs-4 ">
+            Delete this entry?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- DELETE ITEM OF WORKS MODAL -->
+
+    <div class="modal fade" id="deleteItemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body fs-4 ">
+            Delete this entry?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- DELETE PROJECT MODAL -->
+
+    <div class="modal fade" id="deleteProjModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body fs-4 ">
+            Delete this entry?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger">Yes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD PROJECT MODAL -->
+
+    <div class="modal fade" id="addProjModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ">
+            <div class="row px-3">
+              <div class="col-12 mb-2">
+                <label for="projTitle" class="form-label">Title</label>
+                  <input type="text"class="form-control"id="projTitle" placeholder="Input title" required/>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="pr1" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="projOrder" class="form-label">Order #</label>
+                  <input type="text"class="form-control"id="projOrder" placeholder="Input order no." required/>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="pr2" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="projBUIC" class="form-label">BU in Charge</label>
+                <div class="input-group">
+                  <select class="form-select" id="projBUIC" required>
+                    <option value="" disabled selected>Select Group</option>
+                    <option>CRY</option>
+                    
+                  </select>
+                </div>
+                <span class="col-12 mt-1 alert-danger text-danger" id="pr3" role="alert"></span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger addproj">ADD</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD ITEM OF WORKS MODAL -->
+
+    <div class="modal fade" id="addItemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ">
+            <div class="row px-3">
+              <div class="col-12 mb-2">
+                <label for="itemTitle" class="form-label">Title</label>
+                  <input type="text"class="form-control"id="itemTitle" placeholder="Input title" required/>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="i1" role="alert"></span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger additem">ADD</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD JOB REQUEST DESCRIPTION MODAL -->
+
+    <div class="modal fade" id="addJrdModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body ">
+            <div class="row px-3">
+              <div class="col-12 mb-2">
+                <label for="jrdTitle" class="form-label">Title</label>
+                  <input type="text"class="form-control"id="jrdTitle" placeholder="Input title" required/>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="j1" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdSheet" class="form-label">No. of Sheet</label>
+                <input type="number" placeholder="#" class="form-control" id="jrdSheet"  min="0" required/>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="j2" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdPaper" class="form-label">Paper Size</label>
+                <div class="input-group col-8">
+                  <select class="form-select" id="jrdPaper" required>
+                    <option value="" disabled selected>Select paper size</option>
+                    <option>A1</option>
+                    <option>A2</option>
+                    <option>A3</option>
+                  </select>
+                </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="j3" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdKhiDate" class="form-label">KHI Date</label>
+                <input type="date"class="form-control"id="jrdKhiDate" required/>
+                <span class="col-12 mt-1 alert-danger text-danger" id="j4" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdCharge" class="form-label">KHI in Charge</label>
+                  <input type="text"class="form-control"id="jrdCharge" placeholder="Input Employee" required/>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="j5" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdKhiDl" class="form-label">KHI Deadline</label>
+                <input type="date"class="form-control"id="jrdKhiDl" required/>
+                <span class="col-12 mt-1 alert-danger text-danger" id="j6" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdKdtDl" class="form-label">KDT Deadline</label>
+                <input type="date"class="form-control"id="jrdKdtDl" required/>
+                <span class="col-12 mt-1 alert-danger text-danger" id="j7" role="alert"></span>
+              </div>
+              <div class="col-12 mb-2">
+                <label for="jrdMh" class="form-label">Expected Manhour</label>
+                <input type="number" placeholder="#" class="form-control"  min="0" id="jrdMh"  required/>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="j8" role="alert"></span>
+              </div>
+              
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger addjrd">ADD</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!------MODAL END-->
+
+    <div class="jmc  position-relative">
+        <div class="mainBody  m-4 position-relative row">
+            <div class="col-12 project row px-3 pb-3 m-0 ">
+              <div class="page-title col-12 p-0 m-0">
+                <h1 class="title ps-2 m-0">JMC</h1>
+                  <div class="col-12 col-md-4 col-lg-3 m-0 pt-1">
+                    <label for="groupSel" class="form-label">Group</label>
+                    <select id="groupSel" class="form-select">
+                      <option value="" selected>SYS</option>
+                      <option value="">...</option>
+                    </select>
+                  </div>
+              </div>
+              
+              <div class="col-12 content position-relative shadow  my-3">
+                <div class="title p-3 d-flex justify-content-between align-items-center row">
+                  <h1 class="col-12 col-lg-10">Project</h1>
+                  <div class="col-12 col-lg-2 d-flex justify-content-end">
+                    <button class="btn btn-add fw-bold text-center shadow w-100"
+                    data-bs-toggle="modal" data-bs-target="#addProjModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
+                  </div>
+                </div>
+                <div class="table-container overflow-auto">
+                  <table class="table table-striped table-hover">
+                    <thead class="text-center sticky-top">
+                      <tr >
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Order #</th>
+                        <th>BU in Charge</th>
+                        <th>Priority</th>
+                        <th>Active</th>
+                        <th>Option</th>
+                      </tr>
+                      
+                    </thead>
+                    <tbody>
+                      <tr class=" text-center">
+                        <td id="hoverProjNext"><span id="projPrio">1</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                        <td>40ft Liquid Hydrogen Container</td>
+                        <td>61H2G01</td>
+                        <td>CRY</td>
+                        <td>1</td>
+                        <td>
+                          <div class="form-check form-switch p-0">
+                            <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                          </div>  
+                        </td>
+                        <td>
+                          <button class="btn btn-warning" id="editProj-btn"><i class='bx bx-edit fs-5' ></i></button>
+                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjModal"><i class='bx bx-trash fs-5'></i></button>
+                        </td>
+                      </tr>
+                      <tr class=" text-center">
+                        <td id="hoverProjNext"><span id="projPrio">2</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                        <td>Nitric Acid Plant Estimation</td>
+                        <td>61R2239-E120</td>
+                        <td>CHE</td>
+                        <td>1</td>
+                        <td>
+                          <div class="form-check form-switch p-0">
+                            <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                          </div>
+                        </td>
+                        <td>
+                          <button class="btn btn-warning" id="editProj-btn"><i class='bx bx-edit fs-5' ></i></button>
+                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjModal"><i class='bx bx-trash fs-5'></i></button>
+                        </td>
+                      </tr>
+                      <tr class=" text-center dontMove">
+                        <td id="hoverProjNext"><span id="projPrio">3</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                        <td>Procurement Training Step-2</td>
+                        <td>61W2241-P430</td>
+                        <td>CHE</td>
+                        <td>1</td>
+                        <td>
+                          <div class="form-check form-switch p-0">
+                            <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                          </div>
+                        </td>
+                        <td>
+                          <button class="btn btn-warning" id="editProj-btn"><i class='bx bx-edit fs-5' ></i></button>
+                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjModal"><i class='bx bx-trash fs-5'></i></button>
+                        </td>
+                      </tr>
+                      
+                      
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+            <div class="item col-12 row p-3 m-0 d-none">
+              <div class="page-title col-12 p-0 m-0">
+                <h1 class="title ps-2 m-0">JMC</h1>
+                <div class="breadcrumbar text-start pt-2 fs-5"style="--bs-breadcrumb-divider: '>';">
+                 
+                  <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item">
+                      <a
+                        id="projectPage"
+                        style="
+                          color: #FC9842;
+                          font-weight: 500;
+                          text-decoration: none;
+                          cursor: pointer;
+                        "
+                        >Project</a
+                      >
+                    </li>
+                    <li class="breadcrumb-item active text-light">Item of Works</li>
+                  </ol>
+                </div>
+            </div>
+            
+            <div class="col-12 content position-relative  my-3">
+              <div class="title p-3 d-flex justify-content-between align-items-center row">
+                <h1 class="col-12 col-lg-10 m-0">Item of Works</h1>
+                <div class="col-12 col-lg-2 d-flex justify-content-end">
+                  <button class="btn btn-add fw-bold text-center shadow w-100"
+                  data-bs-toggle="modal" data-bs-target="#addItemModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
+                </div>
+                <div class="col-12 m-0   selectedCont d-flex align-items-center justify-content-start">
+                  <h2 class=" m-0 p-0">40ft Liquid Hydrogen Container</h2>
+                </div>
+                </div>
+              <div class="table-container overflow-auto">
+                <table class="table table-striped">
+                  <thead class="text-center sticky-top" >
+                    <tr >
+                      <th>#</th>
+                      <th>Title</th>
+                      <th>Active</th>
+                      <th>Option</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td id="hoverItemNext"><span id="itemPrio">1</span><span id="itemIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                      <td>W.O NO.221115</td>
+                      <td>
+                        <div class="form-check form-switch p-0">
+                          <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                        </div>
+                      </td>
+                      <td>
+                        <button class="btn btn-warning" id="editItem-btn"><i class='bx bx-edit fs-5' ></i></button>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal"><i class='bx bx-trash fs-5'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+            <div class="jrd col-12 row p-3 m-0 d-none">
+              <div class="page-title col-12 p-0 m-0">
+                <h1 class="title ps-2 m-0">JMC</h1>
+                <div class="breadcrumbar text-start  fs-5"style="--bs-breadcrumb-divider: '>';">
+                 
+                  <ol class="breadcrumb m-0 mt-2">
+                    <li class="breadcrumb-item">
+                      <a
+                        id="projectPage"
+                        style="
+                          color: #FC9842;
+                          font-weight: 500;
+                          text-decoration: none;
+                          cursor: pointer;
+                        "
+                        >Project</a
+                      >
+                    </li>
+                    <li class="breadcrumb-item  text-light">
+                      <a
+                      id="itemPage"
+                        style="
+                          color: #FC9842;
+                          font-weight: 500;
+                          text-decoration: none;
+                          cursor: pointer;
+                        "
+                        >Item of Works</a
+                      >
+                    </li>
+                    <li class="breadcrumb-item active text-light">Job Request Description</li>
+                  </ol>
+                </div>
+            </div>
+            
+            <div class="col-12 content position-relative  my-3">
+              <div class="title p-3 d-flex justify-content-between align-items-center row">
+                <h1 class="col-12 col-lg-10 m-0">Job Request Description</h1>
+                <div class="col-12 col-lg-2 d-flex justify-content-end">
+                  <button class="btn btn-add fw-bold text-center shadow w-100"
+                  data-bs-toggle="modal" data-bs-target="#addJrdModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
+                </div>
+                <div class="col-12 m-0   selectedCont d-flex align-items-center justify-content-start">
+                  <h2 class=" m-0 p-0">W.O NO. 221115</h2>
+                </div>
+                </div>
+              <div class="table-container overflow-auto">
+                <table class="table table-striped">
+                  <thead class="text-center sticky-top" >
+                    <tr >
+                      <th>#</th>
+                      <th>Title</th>
+                      <th>No. of Sheet</th>
+                      <th>Paper Size</th>
+                      <th>KHI Date</th>
+                      <th>KHI in-Charge</th>
+                      <th>KHI Deadline</th>
+                      <th>KDT Deadline</th>
+                      <th>Expected Manhour</th>
+                      <th>Active</th>
+                      <th>Option</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>1</td>
+                      <td>Modification</td>
+                      <td>4</td>
+                      <td>A2</td>
+                      <td>
+                        <input type="date"class="form-control"id="dateSel" required/>
+                      </td>
+                      <td>D. YOSHIMOTO</td>
+                      <td>
+                        <input type="date"class="form-control"id="dateSel" required/>
+                      </td>
+                      <td>
+                        <input type="date"class="form-control"id="dateSel" required/>
+                      </td>
+                      <td>40</td>
+                      <td>
+                        <div class="form-check form-switch p-0">
+                          <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                        </div>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-warning" id="editJrd-btn" ><i class='bx bx-edit fs-5' ></i></button>
+                        <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#deleteJRDModal"><i class='bx bx-trash fs-5'></i></button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+  </body>
+</html>
