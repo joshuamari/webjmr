@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Job Manhour Category</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="css/w3-kawasaki.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/form.js"></script>
+    <!--#region BUSTER CALL  -->
+    <script>
+      $.ajax({url: "ajax/getVersion.php", success: function(result){
+          var script = document.createElement("script");
+          script.src = "js/main.js?version="+result;
+          $('head').append(script);
+          console.log('version: '+result);
+      }});
+      </script>
+      <!--#endregion -->
+    <style>
+      /* body {
+        background-image: url("images/KawasakiBG-white.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        } */
+      /*#region Active Switch*/
+      .pointer {cursor: pointer;}
+      a{cursor:pointer;}
+      body {
+        background-image: url("images/KawasakiBG-white.png");
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        }
+        /* The switch - the box around the slider */
+      .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+        }
+        
+        /* Hide default HTML checkbox */
+        .switch input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        
+        /* The slider */
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          -webkit-transition: .4s;
+          transition: .4s;
+        }
+        
+        input:checked + .slider {
+          background-color: #2196F3;
+        }
+        
+        input:focus + .slider {
+          box-shadow: 0 0 1px #2196F3;
+        }
+        
+        input:checked + .slider:before {
+          -webkit-transform: translateX(26px);
+          -ms-transform: translateX(26px);
+          transform: translateX(26px);
+        }
+        
+        /* Rounded sliders */
+        .slider.round {
+          border-radius: 34px;
+        }
+        
+        .slider.round:before {
+          border-radius: 50%;
+        }
+
+        .w3-pointer{
+          cursor: pointer;
+        }
+      /*#endregion*/
+    </style>
+  </head>
+  <body>
+    <header class="kawasaki-blue w3-xlarge w3-padding">
+      JMC: Prototype
+    </header>
+    <div id="mainBody">
+      <p class="w3-margin">
+        Group: <select id="myGroup">
+          
+        </select>
+      </p>
+      <!-- <div class="w3-container">
+        <div class="w3-panel w3-card-4 kawasaki-deepblue60 w3-quarter">
+          Project
+        </div>
+        <div class="w3-panel w3-card-4 kawasaki-blue60 w3-quarter">
+          Item of Works (Dwg. No.)
+        </div>
+        <div class="w3-panel w3-card-4 kawasaki-turquoiseblue60 w3-quarter">
+          Job Request Description
+        </div>
+        <div class="w3-panel w3-card-4 kawasaki-limegreen60 w3-quarter">
+          Types of Work
+        </div>
+      </div> -->
+      <div class="w3-padding" id="topTbl">
+        <table class="w3-table-all">
+          <thead>
+            <tr>
+              <th width="50%" class="w3-center w3-border kawasaki-deepblue60">Project</th>
+              <th width="50%" class="w3-center w3-border kawasaki-blue60">Item of Works (Dwg. No.)</th>
+              <!-- <th width="33%" class="w3-center w3-border kawasaki-turquoiseblue60">Job Request Description</th> -->
+              <!-- <th width="25%" class="w3-center w3-border kawasaki-limegreen60">Types of Work</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w3-center w3-border" id="sProj" pid="#">#</td>
+              <td class="w3-center w3-border" id="sItem">#</td>
+              <!-- <td class="w3-center w3-border" id="sJob">#</td> -->
+              <!-- <td class="w3-center w3-border" id="sTypes">#</td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="w3-padding" id="botTbl">
+      <table class="w3-table-all w3-hoverable">
+        <thead>
+          <tr>
+            <th id="headRow" colspan="7" class="w3-center w3-border kawasaki-deepblue60 w3-container"><span id="addSpan" class="w3-left"><button id="addBtn" title="Add"><i class="fa fa-plus"></i></button></span><span id="headName">Project</span></th>
+          </tr>
+          <tr id="headCols">
+            <th class="w3-border" width="1%">No.</th>
+            <th class="w3-border">Title</th>
+            <th class="w3-border" width="10%">Order #</th>
+            <th class="w3-border" width="10%">Budget in charge</th>
+            <th class="w3-border" width="1%">Priority</th>
+            <th class="w3-border" width="1%">Active</th>
+            <th class="w3-border" width="1%">Options</th>
+          </tr>
+        </thead>
+        <tbody id="tContent">
+        </tbody>
+      </table>
+    </div>
+    <!-- <footer class="kawasaki-deepred60 w3-large w3-padding">
+      Powered by: SYS
+    </footer> -->
+    <div id="" class="w3-modal">
+      <div class="w3-modal-content">
+        <header class="w3-teal w3-padding">
+          <h3>test</h3>
+        </header>
+        <div class="w3-padding">
+
+        </div>
+        <footer class="w3-teal w3-padding">
+          <h5>foot</h5>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
