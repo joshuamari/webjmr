@@ -68,11 +68,11 @@ isloadedWebJMR="load";
 function ifSmallScreen(){
   if ($(window).width() < 426) {
     if ($(".sidebar").hasClass(".close")) {
-      $(".menu-two").hide();
+      $(".menu-two").addClass('d-none');
     } else {
-      $(".menu-two").show();
+      $(".menu-two").removeClass('d-none');
     }
   } else {
-    $(".menu-two").hide();
+    $(".menu-two").addClass('d-none');
   }
 }

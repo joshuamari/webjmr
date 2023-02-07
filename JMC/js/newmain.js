@@ -38,6 +38,7 @@ $(document).ready(function(){
       console.log("logged in: employee#"+empDetails['empNum']);//if result is not 0, store employee number in global variable
       console.log("logged in: firstname"+empDetails['empFName']);
       //checkAdminAccess SOON here
+      ifSmallScreen();
       jmcAccess();
       getMyGroups();
     }
@@ -166,6 +167,40 @@ $(document).on({
     $($(this).find('#projIcon')).hide();
   }
 }, "#hoverProjNext");
+
+
+//sidebar shits//////
+
+let arrow = document.querySelectorAll(".arrow");
+
+for (var i = 0; i < arrow.length; i++) {
+  arrow[i].addEventListener("click", (e) => {
+    let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
+    arrowParent.classList.toggle("showMenu");
+  });
+}
+let ey = document.querySelectorAll(".ey");
+
+for (var i = 0; i < ey.length; i++) {
+  ey[i].addEventListener("click", (e) => {
+    let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
+    aey.classList.toggle("showMenu");
+  });
+}
+
+let sidebar = document.querySelector(".sidebar");
+let sidebarBtn = document.querySelector(".menu-one");
+let sidebarBtn2 = document.querySelector(".menu-two");
+// console.log(sidebarBtn);
+sidebarBtn.addEventListener("click", () => {
+  $(".sidebar").toggleClass("close");
+  console.log("pinindot")
+});
+sidebarBtn2.addEventListener("click", () => {
+  $(".sidebar").addClass("close");
+});
+
+
 //#endregion
 
 //#region FUNCTIONS
@@ -250,5 +285,16 @@ function getLeaveItems(){
     async: false
   });
   return leaveItemsArray;
+}
+function ifSmallScreen(){
+  if ($(window).width() < 426) {
+    if ($(".sidebar").hasClass(".close")) {
+      $(".menu-two").hide();
+    } else {
+      $(".menu-two").show();
+    }
+  } else {
+    $(".menu-two").hide();
+  }
 }
 //#endregion

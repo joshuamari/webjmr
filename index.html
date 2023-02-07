@@ -20,18 +20,10 @@
 
     <!--#region BUSTER CALL  -->
     <script>
-        // $.ajax({
-        //     url: "ajax/getVersion.php", success: function (result) {
-        //         var script = document.createElement("script");
-        //         script.src = "js/main.js?version=" + result;
-        //         $('head').append(script);
-        //         console.log('version: ' + result);
-        //     }
-        // });
         var busterCall = ["js/main.js","css/index.css","css/bootstrap.min.css"];
         $.post("ajax/getVersion.php", {
             busterCall : busterCall,
-            titleName: "KDT Forms"
+            titleName: "Web JMR"
         },
             function (data) {
             $('head').html(data);
@@ -43,170 +35,9 @@
 </head>
 
 <body>
-
-    <div class="sidebar close fixed-top">
-        <div class="d-flex justify-content-between align-items-center">
-            <a class="logo-details row-cols-10" style="text-decoration:none;"href="index.html">
-            <i class='bx bxs-book-open' ></i>
-            <span class="logo_name"  >KDT Forms</span>
-        </a>
-        <div class="col-2 align-items-center  " style="font-size:35px; height: 60px;">
-            <i class='bx bx-menu position-relative menu-two mx-0 px-0' style="top: 10px;"></i>
-        </div>
-        
-        </div>
-        
-        <ul class="nav-links">
-            <!-- <li>
-                <div class="iocn-link">
-                    <a class="row-cols-12 ey">
-                        <i class='bx bx-grid-alt col-3'></i>
-                        <span class="link_name col-12">Admin Forms</span>
-                   </a>
-                    <i class='bx bxs-chevron-down arrow col-3'></i>
-
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name">Leave</a></li>
-                    <li><a id="#" style="cursor: pointer;">Loan Form</a></li>
-                    <li><a id="#" style="cursor: pointer;">OT Form</a></li>
-
-                </ul>
-            </li> -->
-            <li>
-                <div class="iocn-link">
-                    <a class="row-cols-12 ey" id="leave-menu">
-                        <i class='bx bx-book-alt col-3'>
-                            
-                        </i>
-                        <span class="link_name col-6">Leave</span>
-
-                    </a>
-                    <i class='bx bxs-chevron-down arrow col-3'></i>
-                    
-
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name">Leave</a></li>
-                    <li><a class="submenu-link" id="dashboard" style="cursor: pointer;">Leave Approvals
-                        <span class="badge rounded-pill bg-light text-dark ms-2" id="notif-dashboard"></span>
-                    </a></li>
-                    <li><a class="submenu-link" id="leave-confirmation" style="cursor: pointer;">Leave Confirmation
-                        <span class="badge rounded-pill bg-light text-dark ms-2" id="notif-leaveCon"></span>
-                    </a></li>
-                    <li><a class="submenu-link" id="leavecount" style="cursor: pointer;">Leave Count</a>
-                    </li>
-                    <li><a class="submenu-link" id="leaveform" style="cursor: pointer;">My Leave
-                        <span class="badge rounded-pill bg-light text-dark ms-2" id="notif-lf"></span>
-                    </a></li>
-                    <li><a class="submenu-link" id="leavereport" style="cursor: pointer;display:none">Leave Reports
-                        
-                    </a></li>
-
-                </ul>
-            </li>
-            <!-- <li>
-                <div class="iocn-link">
-                    <a class="row-cols-12 ey">
-                        <i class='bx bx-collection col-3'></i>
-                        <span class="link_name col-6">IT Forms</span>
-
-                    </a>
-                    <i class='bx bxs-chevron-down arrow col-3'></i>
-
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name">IT Forms</a></li>
-                    <li><a id="idreq" style="cursor: pointer;">ID Replacement</a></li>
-                    <li><a id="idrep" style="cursor: pointer;">ID Re-Printing</a></li>
-                    <li><a id="it-reqwfh" style="cursor: pointer;">WFH Request</a></li>
-                    <li><a id="it-hs-wc" style="cursor: pointer;">Headset & Webcam</a></li>
-                    <li><a id="it-training" style="cursor: pointer;">Training Setup</a></li>
-                    <li><a id="it-others" style="cursor: pointer;">IT Others</a></li>
-
-                </ul>
-            </li> -->
-            <!-- <li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-book-alt'></i>
-                        <span class="link_name">Posts</span>
-                    </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Posts</a></li>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Login Form</a></li>
-                    <li><a href="#">Card Design</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-pie-chart-alt-2'></i>
-                    <span class="link_name">Analytics</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Analytics</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-line-chart'></i>
-                    <span class="link_name">Chart</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Chart</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-plug'></i>
-                        <span class="link_name">Plugins</span>
-                    </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Plugins</a></li>
-                    <li><a href="#">UI Face</a></li>
-                    <li><a href="#">Pigments</a></li>
-                    <li><a href="#">Box Icons</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-compass'></i>
-                    <span class="link_name">Explore</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Explore</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-history'></i>
-                    <span class="link_name">History</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">History</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
-                    <span class="link_name">Setting</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Setting</a></li>
-                </ul>
-            </li> -->
-
-        </ul>
-    </div>
-    <section class="home-section" style="height: 100vh;">
-        <div class="home-topbar sticky-top">
-            <i class='bx bx-menu position-relative menu-one mx-0 px-0'></i>
+    <section class="home-section" style="height: 100vh; width: 100%;">
+        <div class="home-topbar sticky-top ">
+          
 <!-- 
             <div class="search position-relative">
                 <label class="position-relative">
@@ -244,7 +75,7 @@
                 <div class="  row grid gap-3 align-items-center justify-content-center pb-5 px-0  m-0" id="cardsContainer" style="width:100%; ">
                     <div class="col-12 col-md-5 col-xl-3 px-5 px-md-0 mx-3">
                         <div class="card  ">
-                            <a href="http://localhost/webjmr/dailyreport" class="text-dark" style="text-decoration: none; height: 200px;">
+                            <a href="./dailyreport" class="text-dark" style="text-decoration: none; height: 200px;">
                                 <div class="card-body m-0  flex-column d-flex justify-content-center align-items-center h-100">
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <i class='bx bx-book fs-3'></i>
@@ -258,7 +89,7 @@
                     
                     <div class="col-12 col-md-5 col-xl-3 px-5 px-md-0 mx-3">
                         <div class="card  ">
-                            <a href="#" class="text-dark" style="text-decoration: none; height: 200px;">
+                            <a href="./JMC" class="text-dark" style="text-decoration: none; height: 200px;">
                                 <div class="card-body m-0  flex-column d-flex justify-content-center align-items-center h-100">
                                     <div class="icon d-flex align-items-center justify-content-center">
                                         <i class='bx bx-book fs-3'></i>
