@@ -16,12 +16,12 @@ const projHeader = `<th class="w3-border" width="1%">No.</th>
                     <th class="w3-border">Title</th>
                     <th class="w3-border" width="10%">Order #</th>
                     <th class="w3-border" width="10%">Budget in charge</th>
-                    <th class="w3-border" width="1%">Priority</th>
+                    
                     <th class="w3-border" width="1%">Active</th>
                     <th class="w3-border" width="1%">Options</th>`;
 const itemHeader = `<th class="w3-border" width="1%">No.</th>
                     <th class="w3-border">Title</th>
-                    <th class="w3-border" width="1%">Priority</th>
+       
                     <th class="w3-border" width="1%">Active</th>
                     <th class="w3-border" width="1%">Options</th>`;
 const jobHeader =  `<th class="w3-border" width="1%">No.</th>
@@ -33,7 +33,7 @@ const jobHeader =  `<th class="w3-border" width="1%">No.</th>
                     <th class="w3-border">KHI Deadline</th>
                     <th class="w3-border">KDT Deadline</th>
                     <th class="w3-border">Expected Manhour</th>
-                    <th class="w3-border" width="1%">Priority</th>
+        
                     <th class="w3-border" width="1%">Active</th>
                     <th class="w3-border" width="1%">Options</th>`;
 
@@ -61,13 +61,15 @@ $(document).ready(function(){
       console.log("logged in: employee#"+empDetails['empNum']);//if result is not 0, store employee number in global variable
       console.log("logged in: firstname"+empDetails['empFName']);
       //checkAdminAccess SOON here
-      jmcAccess();
       getMyGroups();
+   
     }
   }})
   //console.log('connected main.js');
   
 });
+
+
 function getMyGroups(){
   $.post("ajax/getMyGroup.php",
   {
@@ -197,7 +199,7 @@ function projRow(iVal){
   var nonDefaults=``;
   if(ifEditable(iVal)=='contenteditable'){
     nonDefaults=`<td class="clBUIC" ><select class="selectBUIC" id="sel${trID}">
-    </select></td>${prioString}
+    </select></td>
     <td><label class="switch"><input id="cb${trID}" class="cb" type="checkbox" ${activeStatus}><span class="slider round"></span></label></td>
   <td class="w3-xlarge w3-center"><button class='delBut'><i class="fa fa-trash"></i></button></td>`;
   }
@@ -331,7 +333,7 @@ function itemRow(iVal){
   }
   var nonDefaults=``;
   if(ifEditable(iVal)=='contenteditable'){
-    nonDefaults=`${prioString}
+    nonDefaults=`
   <td><label class="switch"><input id="cb${trID}" class="cb" type="checkbox" ${activeStatus}><span class="slider round"></span></label></td>
   <td class="w3-xlarge w3-center"><button class='delBut'><i class="fa fa-trash"></i></button></td>`;
   }
@@ -446,7 +448,7 @@ function jobRow(iVal){
   }
   var nonDefaults=``;
   if(ifEditable(iVal)=='contenteditable'){
-    nonDefaults=`${prioString}
+    nonDefaults=`
   <td><label class="switch"><input id="cb${trID}" class="cb" type="checkbox" ${activeStatus}><span class="slider round"></span></label></td>
   <td class="w3-xlarge w3-center"><button class='delBut'><i class="fa fa-trash"></i></button></td>`;
   }
@@ -785,16 +787,3 @@ $(document).on('change','.selectBUIC',function(){
   var buic=$(this).val();
   updateProject('clBUIC',buic,trID)
 })
-function jmcAccess(){
-  $.post("ajax/jmcAccess.php",
-  {
-    empNum:empDetails['empNum']
-  },
-    function (data) {
-      if(data.trim()==0){
-        alert('Access denied');
-        window.location.href=rootFolder+'/welcome';
-      }
-    }
-  );
-}
