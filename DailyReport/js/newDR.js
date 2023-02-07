@@ -23,11 +23,12 @@ $(document).ready(function(){//page Initialize Event
         if(empDetails.length<1){//if result is 0, redirect to log in page
           window.location.href=rootFolder+'/welcome'; 
         }
-        // else{//if result is not 0, store employee number in global variable
-        // //   console.log(empDetails);
-        // //   console.log("logged in: employee#"+empDetails['empNum']);
-        // //   console.log("logged in: firstname"+empDetails['empFName']);
-        // }
+        else{//if result is not 0, store employee number in global variable
+        //   console.log(empDetails);
+        //   console.log("logged in: employee#"+empDetails['empNum']);
+        //   console.log("logged in: firstname"+empDetails['empFName']);
+        $('.hello-user').text(empDetails['empFName']);
+        }
       },async:false});
         ifSmallScreen();
         initializeDate();

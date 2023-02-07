@@ -34,10 +34,10 @@ $(document).ready(function(){
       window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
     }
     else{
-      console.log(empDetails);
-      console.log("logged in: employee#"+empDetails['empNum']);//if result is not 0, store employee number in global variable
-      console.log("logged in: firstname"+empDetails['empFName']);
-      //checkAdminAccess SOON here
+      // console.log(empDetails);
+      // console.log("logged in: employee#"+empDetails['empNum']);//if result is not 0, store employee number in global variable
+      // console.log("logged in: firstname"+empDetails['empFName']);
+      $('.hello-user').text(empDetails['empFName']);
       ifSmallScreen();
       jmcAccess();
       getMyGroups();
