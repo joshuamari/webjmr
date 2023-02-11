@@ -3,49 +3,47 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variables
-$clmn='';
-if(isset($_REQUEST['clmn'])){
-    $clmn=$_REQUEST['clmn'];
-    switch ($clmn){
-        case "clTitle":
-            $clmn='fldJob';
-            break;
-        case "cltrNoSheet":
-            $clmn='fldNoSheets';
-            break;
-        case "cltrPaperSize":
-            $clmn='fldPaperSize';
-            break;
-        case "cltrKHIDate":
-            $clmn='fldKHIDate';
-            break;
-        case "cltrKHIC":
-            $clmn='fldKHIC';
-            break;
-        case "cltrKHIDeadline":
-            $clmn='fldKHIDeadline';
-            break;
-        case "cltrKDTDeadline":
-            $clmn='fldKDTDeadline';
-            break;
-        case "cltrExpMH":
-            $clmn='fldExpectedMH';
-            break;
-    }
-}
-$val='';
-if(isset($_REQUEST['val'])){
-    $val=$_REQUEST['val'];
-}
 $id='';
 if(isset($_REQUEST['id'])){
     $id=$_REQUEST['id'];
 }
+$editJName='';
+if(!empty($_POST['editJName'])){
+    $editJName=$_POST['editJName'];
+}
+$editJSheet=NULL;
+if(!empty($_POST['editJSheet'])){
+    $editJSheet=$_POST['editJSheet'];
+}
+$editJPaper=NULL;
+if(!empty($_POST['editJPaper'])){
+    $editJPaper=$_POST['editJPaper'];
+}
+$editJKHIReq=NULL;
+if(!empty($_POST['editJKHIReq'])){
+    $editJKHIReq=$_POST['editJKHIReq'];
+}
+$editJKHIC=NULL;
+if(!empty($_POST['editJKHIC'])){
+    $editJKHIC=$_POST['editJKHIC'];
+}
+$editJKHIDead=NULL;
+if(!empty($_POST['editJKHIDead'])){
+    $editJKHIDead=$_POST['editJKHIDead'];
+}
+$editJKDTDead=NULL;
+if(!empty($_POST['editJKDTDead'])){
+    $editJKDTDead=$_POST['editJKDTDead'];
+}
+$editJMH=NULL;
+if(!empty($_POST['editJMH'])){
+    $editJMH=$_POST['editJMH'];
+}
 #endregion
 #region Update Query
-$updateQ="UPDATE drawingreference SET `$clmn`=:val WHERE fldID=:id";
+$updateQ="UPDATE drawingreference SET fldJob=:editJName,fldNoSheets=:editJSheet,fldPaperSize=:editJPaper,fldKHIDate=:editJKHIReq,fldKHIC=:editJKHIC,fldKHIDeadline=:editJKHIDead,fldKDTDeadline=:editJKDTDead,fldExpectedMH=:editJMH WHERE fldID=:id";
 $updateStmt=$connwebjmr->prepare($updateQ);
-$updateStmt->execute([":val"=>$val,":id"=>$id]);
+$updateStmt->execute([":id"=>$id,":editJName"=>$editJName,":editJSheet"=>$editJSheet,":editJPaper"=>$editJPaper,":editJKHIReq"=>$editJKHIReq,":editJKHIC"=>$editJKHIC,":editJKHIDead"=>$editJKHIDead,":editJKDTDead"=>$editJKDTDead,":editJMH"=>$editJMH]);
 #endregion
 var_dump($updateStmt);
 ?>

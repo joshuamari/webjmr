@@ -40,6 +40,36 @@ $(document).ready(function(){//page Initialize Event
         getTOW();
         getEntries();
         sequenceValidation();
+        //#region sidebarshits
+        let arrow = document.querySelectorAll(".arrow");
+
+        for (var i = 0; i < arrow.length; i++) {
+        arrow[i].addEventListener("click", (e) => {
+            let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
+            arrowParent.classList.toggle("showMenu");
+        });
+        }
+        let ey = document.querySelectorAll(".ey");
+
+        for (var i = 0; i < ey.length; i++) {
+        ey[i].addEventListener("click", (e) => {
+            let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
+            aey.classList.toggle("showMenu");
+        });
+        }
+
+        let sidebar = document.querySelector(".sidebar");
+        let sidebarBtn = document.querySelector(".menu-one");
+        let sidebarBtn2 = document.querySelector(".menu-two");
+        // console.log(sidebarBtn);
+        sidebarBtn.addEventListener("click", () => {
+        $(".sidebar").toggleClass("close");
+        console.log("pinindot")
+        });
+        sidebarBtn2.addEventListener("click", () => {
+        $(".sidebar").addClass("close");
+        });
+        //#endregion
 });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY
@@ -121,39 +151,6 @@ $(document).on('click','#idCopy',function(){//click Copy Event
 });
 $(document).on('click','button[edit-entry]',function(){//click edit event
     editEntry(this);
-});
-
-
-
-//sidebarshits
-
-let arrow = document.querySelectorAll(".arrow");
-
-for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e) => {
-    let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
-    arrowParent.classList.toggle("showMenu");
-  });
-}
-let ey = document.querySelectorAll(".ey");
-
-for (var i = 0; i < ey.length; i++) {
-  ey[i].addEventListener("click", (e) => {
-    let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
-    aey.classList.toggle("showMenu");
-  });
-}
-
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".menu-one");
-let sidebarBtn2 = document.querySelector(".menu-two");
-// console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", () => {
-  $(".sidebar").toggleClass("close");
-  console.log("pinindot")
-});
-sidebarBtn2.addEventListener("click", () => {
-  $(".sidebar").addClass("close");
 });
 
 //#endregion

@@ -12,7 +12,6 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/form.js"></script>
     <script src="jquery-ui-1.13.2/jquery-ui.min.js"></script>
     <!--#region BUSTER CALL  -->
     <script>
@@ -42,8 +41,8 @@
               Delete this entry?
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger">Yes</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="deleteJob">Yes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDelJob">Cancel</button>
               
             </div>
           </div>
@@ -63,8 +62,8 @@
               Delete this entry?
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger">Yes</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="deleteItem">Yes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDelItem">Cancel</button>
               
             </div>
           </div>
@@ -84,8 +83,8 @@
               Delete this entry?
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger">Yes</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="deleteProj">Yes</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelDelProj">Cancel</button>
               
             </div>
           </div>
@@ -99,7 +98,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close cancelProj" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
@@ -127,8 +126,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger addproj">ADD</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="addProj">ADD</button>
+              <button type="button" class="btn btn-secondary cancelProj" data-bs-dismiss="modal" id="cancelAddProj">Cancel</button>
             </div>
           </div>
         </div>
@@ -141,7 +140,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close cancelItem" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
@@ -153,8 +152,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger additem">ADD</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="addItem">ADD</button>
+              <button type="button" class="btn btn-secondary cancelItem" data-bs-dismiss="modal" id="cancelAddItem">Cancel</button>
             </div>
           </div>
         </div>
@@ -167,7 +166,7 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close cancelJob" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
@@ -176,12 +175,12 @@
                     <input type="text"class="form-control"id="jrdTitle" placeholder="Input title" required/>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j1" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdSheet" class="form-label">No. of Sheet</label>
                   <input type="number" placeholder="#" class="form-control" id="jrdSheet"  min="0" required/>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j2" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdPaper" class="form-label">Paper Size</label>
                   <div class="input-group col-8">
                     <select class="form-select" id="jrdPaper" required>
@@ -189,31 +188,32 @@
                       <option>A1</option>
                       <option>A2</option>
                       <option>A3</option>
+                      <option>A4</option>
                     </select>
                   </div>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j3" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdKhiDate" class="form-label">KHI Date</label>
                   <input type="date"class="form-control"id="jrdKhiDate" required/>
                   <span class="col-12 mt-1 alert-danger text-danger" id="j4" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdCharge" class="form-label">KHI in Charge</label>
                     <input type="text"class="form-control"id="jrdCharge" placeholder="Input Employee" required/>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j5" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdKhiDl" class="form-label">KHI Deadline</label>
                   <input type="date"class="form-control"id="jrdKhiDl" required/>
                   <span class="col-12 mt-1 alert-danger text-danger" id="j6" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdKdtDl" class="form-label">KDT Deadline</label>
                   <input type="date"class="form-control"id="jrdKdtDl" required/>
                   <span class="col-12 mt-1 alert-danger text-danger" id="j7" role="alert"></span>
                 </div>
-                <div class="col-12 mb-2">
+                <div class="col-12 mb-2 engr d-none">
                   <label for="jrdMh" class="form-label">Expected Manhour</label>
                   <input type="number" placeholder="#" class="form-control"  min="0" id="jrdMh"  required/>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j8" role="alert"></span>
@@ -222,8 +222,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger addjrd">ADD</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" id="addJob">ADD</button>
+              <button type="button" class="btn btn-secondary cancelJob" data-bs-dismiss="modal" id="cancelAddJob">Cancel</button>
             </div>
           </div>
         </div>
@@ -251,7 +251,7 @@
 
           <li>
               <div class="iocn-link">
-                  <a class="row-cols-12 ey" href="/webJMR/dailyreport/index.html">
+                  <a class="row-cols-12 ey" href="../dailyreport">
                     <i class='bx bx-calendar-event' ></i>
                           
                       
@@ -268,7 +268,7 @@
           </li>
           <li>
               <div class="iocn-link">
-                  <a class="row-cols-12 ey" href="/webJMR/JMC/index.html">
+                  <a class="row-cols-12 ey" href=".">
                     <i class='bx bx-briefcase' ></i>
                       <span class="link_name col-9">JMC</span>
 
@@ -327,7 +327,7 @@
                   <div class="title p-3 d-flex justify-content-between align-items-center row">
                     <h1 class="col-12 col-lg-10">Project</h1>
                     <div class="col-12 col-lg-2 d-flex justify-content-end">
-                      <button class="btn btn-add fw-bold text-center shadow w-100"
+                      <button id="addJMC" class="btn btn-add fw-bold text-center shadow w-100"
                       data-bs-toggle="modal" data-bs-target="#addProjModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
                     </div>
                   </div>
@@ -339,22 +339,20 @@
                           <th>Title</th>
                           <th>Order #</th>
                           <th>BU in Charge</th>
-                          <th>Priority</th>
                           <th>Active</th>
                           <th>Option</th>
                         </tr>
                         
                       </thead>
-                      <tbody>
+                      <tbody id="projTable">
                         <tr class=" text-center">
-                          <td id="hoverProjNext"><span id="projPrio">1</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                          <td id="hoverProjNext"><span class="projPrio">1</span><span class="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
                           <td>40ft Liquid Hydrogen Container</td>
                           <td>61H2G01</td>
                           <td>CRY</td>
-                          <td>1</td>
                           <td>
                             <div class="form-check form-switch p-0">
-                              <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
+                              <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked">
                             </div>  
                           </td>
                           <td>
@@ -363,11 +361,10 @@
                           </td>
                         </tr>
                         <tr class=" text-center">
-                          <td id="hoverProjNext"><span id="projPrio">2</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                          <td id="hoverProjNext"><span class="projPrio">2</span><span class="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
                           <td>Nitric Acid Plant Estimation</td>
                           <td>61R2239-E120</td>
                           <td>CHE</td>
-                          <td>1</td>
                           <td>
                             <div class="form-check form-switch p-0">
                               <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
@@ -379,11 +376,10 @@
                           </td>
                         </tr>
                         <tr class=" text-center dontMove">
-                          <td id="hoverProjNext"><span id="projPrio">3</span><span id="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                          <td id="hoverProjNext"><span class="projPrio">3</span><span class="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
                           <td>Procurement Training Step-2</td>
                           <td>61W2241-P430</td>
                           <td>CHE</td>
-                          <td>1</td>
                           <td>
                             <div class="form-check form-switch p-0">
                               <input class="checkbox" type="checkbox" role="switch" id="flexSwitchCheckChecked" >
@@ -394,9 +390,6 @@
                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjModal"><i class='bx bx-trash fs-5'></i></button>
                           </td>
                         </tr>
-                        
-                        
-  
                       </tbody>
                     </table>
                   </div>
@@ -429,12 +422,12 @@
               <div class="col-12 content position-relative  my-3">
                 <div class="title p-3 d-flex justify-content-between align-items-center row">
                   <h1 class="col-12 col-lg-10 m-0">Item of Works</h1>
-                  <div class="col-12 col-lg-2 d-flex justify-content-end">
+                  <div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddItem">
                     <button class="btn btn-add fw-bold text-center shadow w-100"
                     data-bs-toggle="modal" data-bs-target="#addItemModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
                   </div>
                   <div class="col-12 m-0   selectedCont d-flex align-items-center justify-content-start">
-                    <h2 class=" m-0 p-0">40ft Liquid Hydrogen Container</h2>
+                    <h2 class=" m-0 p-0" id="selectedProject">40ft Liquid Hydrogen Container</h2>
                   </div>
                   </div>
                 <div class="table-container overflow-auto">
@@ -447,9 +440,9 @@
                         <th>Option</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="itemTable">
                       <tr class="text-center">
-                        <td id="hoverItemNext"><span id="itemPrio">1</span><span id="itemIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+                        <td class="hoverItemNext"><span class="itemPrio">1</span><span class="itemIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
                         <td>W.O NO.221115</td>
                         <td>
                           <div class="form-check form-switch p-0">
@@ -504,12 +497,12 @@
               <div class="col-12 content position-relative  my-3">
                 <div class="title p-3 d-flex justify-content-between align-items-center row">
                   <h1 class="col-12 col-lg-10 m-0">Job Request Description</h1>
-                  <div class="col-12 col-lg-2 d-flex justify-content-end">
+                  <div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddJRD">
                     <button class="btn btn-add fw-bold text-center shadow w-100"
                     data-bs-toggle="modal" data-bs-target="#addJrdModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
                   </div>
                   <div class="col-12 m-0   selectedCont d-flex align-items-center justify-content-start">
-                    <h2 class=" m-0 p-0">W.O NO. 221115</h2>
+                    <h2 class=" m-0 p-0" id="selectedItem">W.O NO. 221115</h2>
                   </div>
                   </div>
                 <div class="table-container overflow-auto">
@@ -529,7 +522,7 @@
                         <th>Option</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="jrdTable">
                       <tr class="text-center">
                         <td>1</td>
                         <td>Modification</td>

@@ -25,12 +25,12 @@ $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 #endregion
 #region Projects Query
-$jobsQ="SELECT * FROM drawingreference WHERE fldGroup='$empGroup'$statement AND fldDelete=0 ORDER BY fldActive DESC,fldPriority";
+$jobsQ="SELECT * FROM drawingreference WHERE fldGroup='$empGroup'$statement AND fldDelete=0 ORDER BY fldPriority,fldActive DESC";
 $jobsStmt=$connwebjmr->query($jobsQ);
 $jobArr=$jobsStmt->fetchAll();
 if(count($jobArr)>0){
     foreach($jobArr AS $job){
-        array_push($jobs,$job['fldJob']."||j_".$job['fldID']."||".$job['fldNoSheets']."||".$job['fldPaperSize']."||".$job['fldKHIDate']."||".$job['fldKHIC']."||".$job['fldKHIDeadline']."||".$job['fldKDTDeadline']."||".$job['fldExpectedMH']."||".$job['fldActive']."||".$job['fldPriority']."||".$maxPrio);
+        array_push($jobs,$job['fldJob']."||".$job['fldID']."||".$job['fldNoSheets']."||".$job['fldPaperSize']."||".$job['fldKHIDate']."||".$job['fldKHIC']."||".$job['fldKHIDeadline']."||".$job['fldKDTDeadline']."||".$job['fldExpectedMH']."||".$job['fldActive']."||".$job['fldPriority']);
     }
 }
 #endregion

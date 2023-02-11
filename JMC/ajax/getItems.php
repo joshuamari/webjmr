@@ -17,12 +17,12 @@ $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 #endregion
 #region Items Query
-$itemsQ="SELECT * FROM itemofworkstable WHERE fldProject='$selProj' AND fldGroup='$empGroup' AND fldDelete=0 ORDER BY fldActive DESC,fldPriority ASC";
+$itemsQ="SELECT * FROM itemofworkstable WHERE fldProject='$selProj' AND fldGroup='$empGroup' AND fldDelete=0 ORDER BY fldPriority DESC,fldActive DESC";
 $itemsStmt=$connwebjmr->query($itemsQ);
 $itemsArr=$itemsStmt->fetchAll();
 if(count($itemsArr)>0){
     foreach($itemsArr as $itms){
-        array_push($items,$itms['fldItem']."||i_".$itms['fldID']."||".$itms['fldActive']."||".$itms['fldPriority']."||".$maxPrio);
+        array_push($items,$itms['fldItem']."||".$itms['fldID']."||".$itms['fldActive']."||".$itms['fldPriority']);
     }
 }
 #endregion

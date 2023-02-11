@@ -13,12 +13,12 @@ $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 #endregion
 #region Projects Query
-$projectsQ="SELECT * FROM projectstable WHERE fldDirect=1 AND fldGroup='$empGroup' AND fldDelete=0 ORDER BY fldActive DESC,fldPriority ASC";
+$projectsQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup='$empGroup') AND fldDelete=0 ORDER BY fldPriority DESC,fldActive DESC";
 $projectsStmt=$connwebjmr->query($projectsQ);
 $projArr=$projectsStmt->fetchAll();
 if(count($projArr)>0){
     foreach($projArr AS $projs){
-        array_push($projects,$projs['fldProject']."||p_".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']."||".$projs['fldPriority']."||".$maxPrio);
+        array_push($projects,$projs['fldProject']."||".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']."||".$projs['fldPriority']);
     }
 }
 #endregion
