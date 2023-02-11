@@ -19,11 +19,19 @@ $prioq="SELECT MAX(fldPriority) FROM itemofworkstable WHERE fldActive='1' AND fl
 $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 $maxPrio++;
+$dupq="SELECT COUNT(*) FROM itemofworkstable WHERE fldDelete='0' AND fldGroup='$grp' AND fldProject='$projID' AND fldItem='$itemName'";
+$dupstmt=$connwebjmr->query($dupq);
+$dup=$dupstmt->fetchColumn();
 #endregion
 
 #region Insert Query
-$projQ="INSERT INTO itemofworkstable(fldProject,fldItem,fldGroup,fldPriority) VALUES (:projID,:itemName,:grp,:maxPrio)";
-$projStmt=$connwebjmr->prepare($projQ);
-$projStmt->execute([":projID"=>$projID,":itemName"=>$itemName,":grp"=>$grp,":maxPrio"=>$maxPrio]);
+if($dup>0){
+    echo "Duplicate Title";
+}
+else{
+    $projQ="INSERT INTO itemofworkstable(fldProject,fldItem,fldGroup,fldPriority) VALUES (:projID,:itemName,:grp,:maxPrio)";
+    $projStmt=$connwebjmr->prepare($projQ);
+    $projStmt->execute([":projID"=>$projID,":itemName"=>$itemName,":grp"=>$grp,":maxPrio"=>$maxPrio]);
+}
 #endregion
 ?>

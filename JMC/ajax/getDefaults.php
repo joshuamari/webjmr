@@ -10,7 +10,7 @@ $defaultsQ="SELECT * FROM projectstable WHERE fldDirect=0";
 $defaultsStmt=$connwebjmr->query($defaultsQ);
 $defArr=$defaultsStmt->fetchAll();
 foreach($defArr AS $dflts){
-    array_push($defaults,$dflts['fldProject']."||p_".$dflts['fldID']);
+    array_push($defaults,$dflts['fldProject']."||".$dflts['fldID']."||".$dflts['fldOrder']."||".$dflts['fldBUIC']."||".$dflts['fldActive']."||".$dflts['fldPriority']);
 }
 echo json_encode($defaults);
 #endregion
