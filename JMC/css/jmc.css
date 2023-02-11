@@ -34,6 +34,7 @@ body {
   background-size: 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  width: 100%;
   }
 
 
@@ -47,7 +48,7 @@ body {
   height: 100%;
   width: 260px;
   background: var(--main-blue);
-  z-index: 100;
+  z-index: 99;
   transition: all 0.5s ease;
 }
 
@@ -276,8 +277,8 @@ font-size: 11px;
 .home-section .home-content {
 background: #eeeded;
 align-items: center;
-width: 100%;
 
+position: relative;
 padding: 0 20px 0 20px;
 
 }
@@ -305,6 +306,7 @@ width: 100%;
 justify-content: space-between;
 padding: 0 20px 0 20px;
 background: #ffff;
+z-index: 90;
 }
 
 .home-section .home-topbar .bx-menu,
@@ -419,8 +421,9 @@ letter-spacing: 2px;
     height: 94vh;
     display: flex;
     align-items: center;
-
+    position: relative;
     background: var(--darkest-blue);
+
   }
 
   .mainBody{
@@ -744,7 +747,7 @@ letter-spacing: 2px;
 
 
 
-@media (max-width: 425px) {
+@media (max-width: 530px) {
 
   .sidebar.close .nav-links li .sub-menu {
       display: none;
@@ -770,7 +773,8 @@ letter-spacing: 2px;
   }
 
   .home-topbar{
-      z-index: 99;
+      z-index: 90;
+      width: 100%;
   }
 
   .home-section {
@@ -793,5 +797,50 @@ letter-spacing: 2px;
   footer div{
       font-size: 11px;
   }
+  .jmc{
+    position: relative;
+    overflow-x: auto;
+  }
+  .project{
+    position: relative;
+    width: auto;
+  }
 
 }
+@media (max-width: 770px){
+  .jmc{
+    overflow-x: auto;
+  }
+  .project .content .table-container table td,
+  .project .content .table-container table thead th{
+    font-size: 16px;
+  }
+  .project .page-title .title{
+    font-size: 55px;
+    width: 185px;
+    height: 65px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .project .content .title h1{
+    font-size: 35px;
+    font-weight: 700;
+    letter-spacing: normal;
+  }
+  .project .content .table-container{
+    min-height: 450px;
+    max-height: 680px;
+  }
+  .project .content{
+    min-height: 650px;
+    max-height: 720px;
+  }
+  .form-label{
+    font-size: 16px;
+    padding-top: 10px;
+  }
+  .home-content{
+    width: 100vw;
+  
+}
+} 
