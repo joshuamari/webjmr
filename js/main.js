@@ -1,3 +1,4 @@
+//#region GLOBALS
 switch (document.location.hostname) //get Root Folder
 {
     case 'kdt-ph':
@@ -10,7 +11,10 @@ switch (document.location.hostname) //get Root Folder
         rootFolder = '//kdt-ph/update_test/';
         break;
 }
-$(document).ready(function () {
+//#endregion
+
+//$region BINDS
+$(document).ready(function () {//page Initialize Event
 
     $.ajax({
       url: "Includes/checkLogin.php",
@@ -24,14 +28,34 @@ $(document).ready(function () {
           $("#eid").val(empDetails["empNum"]);
           $("#ename").val(empDetails["empFName"] + " " + empDetails["empSName"]);
           $(".hello-user").text(empDetails["empFName"]);
+          checkTestAccess();
         }
       },async:false
     });
   }
 );
+//#endregion
 
-var isloadedWebJMR = isloadedWebJMR||"test";
-if (isloadedWebJMR!="load"){
-
+//#region FUNCTIONS
+function checkTestAccess(){//check if has access to testing
+  $.post("ajax/checkTestAccess.php",
+  {
+    empNum:empDetails['empNum']
+  },
+    function (data) {
+      var access=data.trim();
+      if(access=='0'){
+        alert('Access denied')
+        window.location.href = rootFolder + "/welcome";
+      }
+    }
+  );
 }
-isloadedWebJMR="load";
+//#endregion
+
+
+// var isloadedWebJMR = isloadedWebJMR||"test";
+// if (isloadedWebJMR!="load"){
+
+// }
+// isloadedWebJMR="load";

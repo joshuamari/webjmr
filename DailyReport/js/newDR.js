@@ -28,6 +28,7 @@ $(document).ready(function(){//page Initialize Event
         //   console.log("logged in: employee#"+empDetails['empNum']);
         //   console.log("logged in: firstname"+empDetails['empFName']);
         $('.hello-user').text(empDetails['empFName']);
+        checkTestAccess();
         }
       },async:false});
         ifSmallScreen();
@@ -641,7 +642,7 @@ function editEntry(iVal){//edit selected entry
     isDrawing();
 }
 
-function ifSmallScreen(){
+function ifSmallScreen(){//responsive
     if ($(window).width() < 426) {
       if ($(".sidebar").hasClass(".close")) {
         $(".menu-two").addClass('d-none');
@@ -651,7 +652,7 @@ function ifSmallScreen(){
     } else {
       $(".menu-two").addClass('d-none');
     }
-  }
+}
 
 function getCheckers(){//get Checkers Selection
     $.ajaxSetup({async: false});
@@ -692,7 +693,20 @@ function colorCount(){//color MH Counts
 
     }
 }
-
+function checkTestAccess(){//check if has access to testing
+    $.post("ajax/checkTestAccess.php",
+    {
+      empNum:empDetails['empNum']
+    },
+      function (data) {
+        var access=data.trim();
+        if(access=='0'){
+          alert('Access denied')
+          window.location.href = rootFolder + "/welcome";
+        }
+      }
+    );
+}
 //#region 
 
         //     reg = Convert.ToDouble(lblRegular.Text);

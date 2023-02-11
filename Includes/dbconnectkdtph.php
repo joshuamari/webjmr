@@ -18,6 +18,5 @@ $kdtPresidentQ="SELECT DISTINCT fldEmployeeNum FROM emp_prof WHERE fldDesig='KDT
 $kdtPresidentStmt=$connkdt->query($kdtPresidentQ);
 $kdtPresident=$kdtPresidentStmt->fetchColumn();
 
-$kdtAdmin="121"; //MAAM ARLENE SA NGAYON
 ?>
 

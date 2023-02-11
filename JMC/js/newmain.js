@@ -37,18 +37,12 @@ $(document).ready(function(){
       window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
     }
     else{
-      // console.log(empDetails);
-      // console.log("logged in: employee#"+empDetails['empNum']);//if result is not 0, store employee number in global variable
-      // console.log("logged in: firstname"+empDetails['empFName']);
       $('.hello-user').text(empDetails['empFName']);
       ifSmallScreen();
       jmcAccess();
       getMyGroups();
       getBUICGroups();
-      // $('.projIcon,.itemIcon').hide();
-      // $('tbody').sortable({
-      //   items: 'tr:not(.dontMove)'  
-      // });
+      checkTestAccess();
     }
   }});
   //#region sidebar shits
@@ -825,7 +819,7 @@ function defaultDrawref(){
   });
   return isSame;
 }
-function addJob(){
+function addJob(){//add jrd to database
   var jobName=$('#jrdTitle').val();
   var jobSheet=$('#jrdSheet').val();
   var jobPaper=$('#jrdPaper').val();
@@ -860,7 +854,7 @@ function addJob(){
     }
   );
 }
-function deleteJob(iVal){
+function deleteJob(iVal){//delete jrd from database
   $.post("ajax/deleteJob.php",
   {
     trID:iVal,
@@ -871,7 +865,7 @@ function deleteJob(iVal){
     }
   );
 }
-function checkJRDADD(){
+function checkJRDADD(){//check if jrd add has engineering fields
   var defs=['1','2','3','4','5']
   if(defs.includes(selectedProject)){
     $('.engr').addClass('d-none');
@@ -886,7 +880,7 @@ function checkJRDADD(){
     $('#divAddJRD').removeClass('d-none');
   }
 }
-function checkItemAdd(){
+function checkItemAdd(){//check if selected project can add itemofworks
   if(selectedProject=='5'){
     $('#divAddItem').addClass('d-none');
   }
@@ -894,7 +888,7 @@ function checkItemAdd(){
     $('#divAddItem').removeClass('d-none');
   }
 }
-function checkJRDEdit(){
+function checkJRDEdit(){//check if jrd edit has engineering fields
   var vool=true;
   var defs=['1','2','3','4','5']
   if(defs.includes(selectedProject)){
@@ -902,7 +896,7 @@ function checkJRDEdit(){
   }
   return vool;
 }
-function updateJob(iVal){
+function updateJob(iVal){//update selected drawing reference in database
   var id=iVal;
   var editJName=$('#editJName').val();
   var editJSheet=$('#editJSheet').val();
@@ -927,6 +921,20 @@ function updateJob(iVal){
     function (data) {
       //console.log(data)
       getJobs();
+    }
+  );
+}
+function checkTestAccess(){//check if has access to testing
+  $.post("ajax/checkTestAccess.php",
+  {
+    empNum:empDetails['empNum']
+  },
+    function (data) {
+      var access=data.trim();
+      if(access=='0'){
+        alert('Access denied')
+        window.location.href = rootFolder + "/welcome";
+      }
     }
   );
 }
