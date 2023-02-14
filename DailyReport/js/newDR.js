@@ -425,7 +425,7 @@ function addEntries(iVal){//add Entries to Database
         $('#getMin').addClass('border border-danger')
         mgaKulang.push("ORAS");
     }
-    if(!mhtype){
+    if(!mhtype && proj!=5){
         $('#p10').text("Please select manhour type");
         $('#idMH').addClass('border border-danger')
         mgaKulang.push("MHTYPE");
@@ -535,7 +535,7 @@ function MHValidation(){//enable/disable manhour type selection
         }
     }
     else{
-        $("#idMH").attr('disabled',false);
+        $("#idMH").attr('disabled',true);
         $("#idMH").val('');
         if(!isWorkDay()){
             alert("Leave disabled on holidays/weekends");
