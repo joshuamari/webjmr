@@ -2,7 +2,7 @@
 switch (document.location.hostname) //get Root Folder
 {
     case 'kdt-ph':
-        rootFolder = '//kdt-ph/update_test/';
+        rootFolder = '//kdt-ph/';
         break;
     case 'localhost':
         rootFolder = '//localhost/';

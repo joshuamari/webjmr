@@ -701,7 +701,7 @@ function checkTestAccess(){//check if has access to testing
       function (data) {
         var access=data.trim();
         if(access=='0'){
-          alert('Access denied')
+            alert('Access denied');
           window.location.href = rootFolder + "/welcome";
         }
       }
