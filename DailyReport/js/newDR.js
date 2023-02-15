@@ -325,6 +325,7 @@ function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: true}); 
 }
 function getJobs(iVal,xVal){//get Job Selection
+    console.log(iVal+","+xVal)
     $.ajaxSetup({async: false});
     $('#idJRD').val('');
     $.post("ajax/getJobs.php",
@@ -598,7 +599,7 @@ function editEntry(iVal){//edit selected entry
         function (data) {
             console.log(data);
             var dataEdit = $.parseJSON(data);
-            console.log(dataEdit);
+            // console.log(dataEdit);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idGroup').val(dataEdit[1]);
             var getLocs = Object.values(document.getElementsByClassName("clLoc"));
@@ -620,6 +621,10 @@ function editEntry(iVal){//edit selected entry
             }else{
                 $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
             }
+            isDrawing();
+            getTOW(`${dataEdit[2]}`);
+            disableTimeInput(`${dataEdit[2]}`);
+            MHValidation();
             $($('#idTOW').find(`option[tow-id=${dataEdit[7]}]`)).attr('selected',true);
             getTOWDesc(dataEdit[7]);
             $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).attr('selected',true);
@@ -673,7 +678,7 @@ function saveFunction(){//update database entry
 }
 function cancelEditFunction(){//cancel editables
     $('#idAdd').text("Add");
-    $('#idReset').text("Reset");
+    $('#idReset').text("Clear");
     resetEntry();
 }
 function colorCount(){//color MH Counts
