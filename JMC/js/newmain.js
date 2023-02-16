@@ -413,7 +413,7 @@ function projRow(iVal){//lay project table
 }
 function ifEditable(iVal){//check if non default
   var vool=false;
-  if(!defaults.includes(iVal) && !leaveVal.includes(iVal) && !leaveJobVal.includes(iVal)){
+  if(!defaults.includes(iVal) && !leaveVal.includes(iVal) && !leaveJobVal.includes(iVal) && !otherVal.includes(iVal) && !otherJobVal.includes(iVal)){
     vool=true;
   }
   return vool;
@@ -624,6 +624,9 @@ function fillItem(){//set item to lay
   if(selectedProjectString == "LEAVE"){
     leaveVal.map(itemRow)
   }
+  if(selectedProjectString == "OTHER"){
+    otherVal.map(itemRow)
+  }
 }
 function itemRow(iVal){//lay item table
   var iTitle = iVal.split('||')[0];
@@ -771,6 +774,9 @@ function fillJob(){//set draw refs to lay
   }
   if(selectedProjectString == "LEAVE"){
     leaveJobVal.map(jobRow); // mga common sa Leave
+  }
+  if(selectedProjectString == "OTHER"){
+    otherJobVal.map(jobRow); // mga common sa Leave
   }
 }
 function jobRow(iVal){//lay drawref table
