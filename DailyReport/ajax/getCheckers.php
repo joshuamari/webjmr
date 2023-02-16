@@ -15,7 +15,7 @@ if(isset($_REQUEST['empGrp'])){
 
 #endregion
 #region Query Members
-$memQ = "SELECT * FROM emp_prof WHERE fldEmployeeNum<>'$empNum' AND fldGroup='$empGrp'";
+$memQ = "SELECT * FROM emp_prof WHERE fldEmployeeNum<>'$empNum' AND fldGroup='$empGrp' AND fldActive=1 AND fldNick<>''";
 $memStmt=$connkdt->query($memQ);
 $memArr=$memStmt->fetchAll();
 foreach($memArr AS $mem){
