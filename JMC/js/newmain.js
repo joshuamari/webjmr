@@ -26,6 +26,8 @@ const leaveJobVal=getLeaveJob();
 var jobs=[];
 var del='';
 var buicEdit=``;
+const otherVal = getOtherItems();
+const otherJobVal=getOtherJob();
 //#endregion
 
 //#region BINDS
@@ -460,6 +462,28 @@ function getLeaveItems(){//get items for leave project
   });
   return leaveItemsArray;
 }
+function getOtherItems(){//get items for other project
+  var otherItemsArray=[];
+  $.ajax({
+    url: "ajax/getOtherItems.php",
+    success: function (data) {
+      otherItemsArray=$.parseJSON(data);
+    },
+    async: false
+  });
+  return otherItemsArray;
+}
+function getOtherJob(){//get draw ref for leave
+  var defaultsArray=[];
+  $.ajax({
+    url: "ajax/getOtherJob.php",
+    success: function (data) {
+      defaultsArray=$.parseJSON(data);
+    },
+    async: false
+  });
+  return defaultsArray;
+}
 function ifSmallScreen(){
   if ($(window).width() < 426) {
     if ($(".sidebar").hasClass(".close")) {
@@ -872,7 +896,7 @@ function checkJRDADD(){//check if jrd add has engineering fields
   else{
     $('.engr').removeClass('d-none');
   }
-  if(selectedProject=='5'){
+  if(selectedProject=='5' || selectedProject=='4'){
     $('#divAddJRD').addClass('d-none');
   }
   else{
@@ -880,7 +904,7 @@ function checkJRDADD(){//check if jrd add has engineering fields
   }
 }
 function checkItemAdd(){//check if selected project can add itemofworks
-  if(selectedProject=='5'){
+  if(selectedProject=='5' || selectedProject=='4'){
     $('#divAddItem').addClass('d-none');
   }
   else{
