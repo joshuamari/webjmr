@@ -501,6 +501,7 @@ function addEntries(iVal){//add Entries to Database
                     $('#idAdd').text("Add");
                     $('#idReset').text("Reset");
                 }
+                isDrawing();
             }
         });
     }
@@ -654,7 +655,8 @@ function editEntry(iVal){//edit selected entry
             $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).attr('selected',true);
             $('#idRemarks').val(dataEdit[8]);
             if(dataEdit[9] != null){
-                $(`button[2d3d-id=${dataEdit[9]}]`).click();
+                // $(`button[2d3d-id=${dataEdit[9]}]`).click();
+                $(`#${dataEdit[9]}`).click()
             }
             if(dataEdit[10] == 1){
                 $('#idRev').click();
