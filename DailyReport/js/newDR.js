@@ -123,7 +123,7 @@ $(document).on('change','#idProject',function(){//select Project Event
     var projID=$($(this).find('option:selected')).attr('proj-id');//get ID of selected Project
     $('#idJRD').val('');//clear Job Request Description
     getItems(projID);
-    if(projID==1 || projID==5){//IF GOW or LEAVE
+    if(projID==1 || projID==5 || projID==4){//IF GOW or LEAVE
         getJobs(projID,"test");
     }
     isDrawing();
@@ -349,7 +349,6 @@ function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: true}); 
 }
 function getJobs(iVal,xVal){//get Job Selection
-    console.log(iVal+","+xVal)
     $.ajaxSetup({async: false});
     $('#idJRD').val('');
     $.post("ajax/getJobs.php",

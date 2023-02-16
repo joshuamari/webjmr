@@ -17,7 +17,7 @@ if(isset($_REQUEST['itemID'])){
     $itemID=$_REQUEST['itemID'];
 }
 $statement=" AND fldItem=$itemID";
-if($projID==1 || $projID==5){
+if($projID==1 || $projID==5 || $projID==4){
     $statement=" AND fldItem IS NULL";
 }
 #endregion
