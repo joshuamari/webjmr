@@ -300,7 +300,7 @@ $(document).on('click','#jrdsave-btn',function(){
 //#endregion
 
 //#region FUNCTIONS
-function jmcAccess(){
+function jmcAccess(){//check if user has access to jmc
   $.post("ajax/jmcAccess.php",
   {
     empNum:empDetails['empNum']
@@ -313,7 +313,7 @@ function jmcAccess(){
     }
   );
 }
-function getMyGroups(){
+function getMyGroups(){//get group selection
   $.post("ajax/getMyGroup.php",
   {
     empNum:empDetails['empNum'],
@@ -325,7 +325,7 @@ function getMyGroups(){
     }
   );
 }
-function getProjects(){
+function getProjects(){//get projects
   $.ajaxSetup({async: false});
   projects=[];
   $.post("ajax/getProjects.php",
@@ -359,12 +359,12 @@ function getProjects(){
   );
   $.ajaxSetup({async: true});
 }
-function fillProj(){
+function fillProj(){//set items to lay
   $('#projTable').empty();
   projects.map(projRow);
   // defaults.map(projRow); //pang defaults lang to
 }
-function projRow(iVal){
+function projRow(iVal){//lay project table
   var iTitle = iVal.split('||')[0];
   var trID = iVal.split('||')[1] || "";
   var iOrder =  iVal.split('||')[2] || "";
@@ -409,14 +409,14 @@ function projRow(iVal){
   $('#projTable').append(addString);
 
 }
-function ifEditable(iVal){
+function ifEditable(iVal){//check if non default
   var vool=false;
   if(!defaults.includes(iVal) && !leaveVal.includes(iVal) && !leaveJobVal.includes(iVal)){
     vool=true;
   }
   return vool;
 }
-function getGOWJob(){
+function getGOWJob(){//get draw ref for GOW
   gowJobVal=[];
   $.post("ajax/getGOWJob.php",
   {
@@ -427,7 +427,7 @@ function getGOWJob(){
     }
   );
 }
-function getLeaveJob(){
+function getLeaveJob(){//get draw ref for leave
   var defaultsArray=[];
   $.ajax({
     url: "ajax/getLeaveJob.php",
@@ -438,7 +438,7 @@ function getLeaveJob(){
   });
   return defaultsArray;
 }
-function getDefaults(){
+function getDefaults(){//get default projects
   var defaultsArray=[];
   $.ajax({
     url: "ajax/getDefaults.php",
@@ -449,7 +449,7 @@ function getDefaults(){
   });
   return defaultsArray;
 }
-function getLeaveItems(){
+function getLeaveItems(){//get items for leave project
   var leaveItemsArray=[];
   $.ajax({
     url: "ajax/getLeaveItems.php",
@@ -471,7 +471,7 @@ function ifSmallScreen(){
     $(".menu-two").addClass('d-none');
   }
 }
-function changeActive(iVal,xVal){
+function changeActive(iVal,xVal){//set active/inactive
   var trType=iVal.split("_")[0];
   var trID=iVal.split("_")[1];
   $.post("ajax/changeActive.php",
@@ -496,7 +496,7 @@ function changeActive(iVal,xVal){
     }
   );
 }
-function addProject(){
+function addProject(){//add project to database
   var projName=$('#projTitle').val();
   var grp=$('#myGroup').val();
   var orderNum=$('#projOrder').val();
@@ -519,7 +519,7 @@ function addProject(){
     }
   );
 }
-function deleteProject(iVal){
+function deleteProject(iVal){//delete selected project from database
   $.post("ajax/deleteProject.php",
   {
     trID:iVal,
@@ -531,7 +531,7 @@ function deleteProject(iVal){
     }
   );
 }
-function getBUICGroups(){
+function getBUICGroups(){//get buic group selection
   $.ajax({
     url: "ajax/getAllGroups.php",
     success: function (response) {
@@ -540,7 +540,7 @@ function getBUICGroups(){
     }
   });
 }
-function updateProject(iVal){
+function updateProject(iVal){//update selected project in database
   var id=iVal;
   var editPName=$('#editPName').val();
   var editPOrder=$('#editPOrder').val();
@@ -558,7 +558,7 @@ function updateProject(iVal){
     }
   );
 }
-function getItems(){
+function getItems(){//get items
   $.ajaxSetup({async: false});
   items=[];
   $.post("ajax/getItems.php",
@@ -594,14 +594,14 @@ function getItems(){
   );
   $.ajaxSetup({async: true});
 }
-function fillItem(){
+function fillItem(){//set item to lay
   $('#itemTable').empty();
   items.map(itemRow);
   if(selectedProjectString == "LEAVE"){
     leaveVal.map(itemRow)
   }
 }
-function itemRow(iVal){
+function itemRow(iVal){//lay item table
   var iTitle = iVal.split('||')[0];
   var trID = iVal.split('||')[1] || "";
   var iActive = iVal.split('||')[2] || "";
@@ -642,7 +642,7 @@ function itemRow(iVal){
   $('#itemTable').append(addString);
 
 }
-function addItem(){
+function addItem(){//add item to database
   var itemName=$('#itemTitle').val();
   var grp=$('#myGroup').val();
   $.post("ajax/insertItems.php",
@@ -662,15 +662,15 @@ function addItem(){
     }
   );
 }
-function clearPModal(){
+function clearPModal(){//clear project add modal fields
   $('#projTitle').val('');
   $('#projOrder').val('');
   $('#projBUIC').val('');
 }
-function clearIModal(){
+function clearIModal(){//clear item add modal fields
   $('#itemTitle').val('');
 }
-function clearJModal(){
+function clearJModal(){//clear draw ref add modal fields
   $('#jrdTitle').val('');
   $('#jrdSheet').val('');
   $('#jrdPaper').val('');
@@ -680,7 +680,7 @@ function clearJModal(){
   $('#jrdKdtDl').val('');
   $('#jrdMh').val('');
 }
-function deleteItem(iVal){
+function deleteItem(iVal){//delete selected item in database
   $.post("ajax/deleteItem.php",
   {
     trID:iVal,
@@ -692,7 +692,7 @@ function deleteItem(iVal){
     }
   );
 }
-function updateItem(iVal){
+function updateItem(iVal){//update selected item in database
   var val=$('#editIName').val();
   var id=iVal;
   $.post("ajax/updateItems.php",
@@ -705,7 +705,7 @@ function updateItem(iVal){
     }
   );
 }
-function getJobs(){
+function getJobs(){//get draw refs
   jobs=[];
   $.post("ajax/getJobs.php",
   {
@@ -738,7 +738,7 @@ function getJobs(){
     }
   );
 }
-function fillJob(){
+function fillJob(){//set draw refs to lay
   $('#jrdTable').empty();
   jobs.map(jobRow)
   getGOWJob();
@@ -749,8 +749,7 @@ function fillJob(){
     leaveJobVal.map(jobRow); // mga common sa Leave
   }
 }
-
-function jobRow(iVal){
+function jobRow(iVal){//lay drawref table
   var iTitle = iVal.split('||')[0];
   var trID = iVal.split('||')[1] || "";
   var trNoSheet = iVal.split('||')[2] || "";
@@ -809,7 +808,7 @@ function jobRow(iVal){
   $('#jrdTable').append(addString);
 
 }
-function defaultDrawref(){
+function defaultDrawref(){//check if drawref for non engineering
   var sProj=selectedProjectString;
   var isSame=false;
   defaults.forEach(element => {
