@@ -278,9 +278,33 @@ function getMHCount(){//get MH Counter Values
                 break;
         }
         })
-    $('#regCount').text(reg);
-    $('#otCount').text(ot);
-    $('#lvCount').text(lv);
+        if(reg>8){
+            $('#cardReg').addClass('new');
+            $('#regCount').text(reg);
+        }
+        else{
+            $('#cardReg').removeClass('new');
+            $('#regCount').text(reg);
+        }
+        if(ot>8){
+            $('#cardOt').addClass('new');
+            $('#otCount').text(ot);
+        }
+        else{
+            $('#cardOt').removeClass('new');
+            $('#otCount').text(ot);
+        }
+        if(lv>8){
+            $('#cardLv').addClass('new');
+            $('#lvCount').text(lv);
+        }
+        else{
+            $('#cardLv').removeClass('new');
+            $('#lvCount').text(lv);
+        }
+
+    
+
 }
 function sequenceValidation(){//sequence Checking Project->Item->Job
     $('#idProject').prop('disabled',true);
