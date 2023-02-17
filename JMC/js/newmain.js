@@ -515,6 +515,7 @@ function changeActive(iVal,xVal){//set active/inactive
           getItems();
           break;
         case "j":
+          getJobs();
           break;
       }
     }

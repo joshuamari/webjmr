@@ -379,7 +379,7 @@ function addEntries(iVal){//add Entries to Database
     var revision =  "";
     var mhtype = $($('#idMH').find('option:selected')).attr('mhid');
     var remarks = $('#idRemarks').val();
-    var checker = $('#idChecking').val() || "";
+    var checker = $($('#idChecking').find('option:selected')).attr('dataid') || "";
     var mgaKulang = [];
     if($("#id2DDiv").hasClass("d-none")){
         tutri="";
@@ -634,11 +634,11 @@ function editEntry(iVal){//edit selected entry
             });
             getCheckers();
             getProjects();
-            $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).attr('selected',true);
+            $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).attr('selected',true).change();
             getItems(dataEdit[2]);
-            $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).attr('selected',true);
+            $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).attr('selected',true).change();
             getJobs(dataEdit[2],dataEdit[3]);
-            $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).attr('selected',true);
+            $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).attr('selected',true).change();
             $('#getHour').val(dataEdit[5].toString().split('.')[0]);
             if(dataEdit[5].toString().split('.')[1] == undefined){
                 $('#getMin').val(0);
@@ -649,9 +649,9 @@ function editEntry(iVal){//edit selected entry
             getTOW(`${dataEdit[2]}`);
             disableTimeInput(`${dataEdit[2]}`);
             MHValidation();
-            $($('#idTOW').find(`option[tow-id=${dataEdit[7]}]`)).attr('selected',true);
+            $($('#idTOW').find(`option[tow-id=${dataEdit[7]}]`)).attr('selected',true).change();
             getTOWDesc(dataEdit[7]);
-            $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).attr('selected',true);
+            $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).attr('selected',true).change();
             $('#idRemarks').val(dataEdit[8]);
             if(dataEdit[9] != null){
                 // $(`button[2d3d-id=${dataEdit[9]}]`).click();
@@ -664,7 +664,7 @@ function editEntry(iVal){//edit selected entry
             if(dataEdit[11] != null){
                 // $('#idChecking').val(dataEdit[11]);
                 $("#forChecking").show();
-                $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).attr('selected',true);
+                $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).attr('selected',true).change();
                 // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
             }
         }

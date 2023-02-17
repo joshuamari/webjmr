@@ -25,7 +25,7 @@ $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 #endregion
 #region Projects Query
-$jobsQ="SELECT * FROM drawingreference WHERE fldGroup='$empGroup'$statement AND fldDelete=0 ORDER BY fldPriority,fldActive DESC";
+$jobsQ="SELECT * FROM drawingreference WHERE fldGroup='$empGroup' AND fldProject='$selProj' $statement AND fldDelete=0 ORDER BY fldActive DESC,fldPriority";
 $jobsStmt=$connwebjmr->query($jobsQ);
 $jobArr=$jobsStmt->fetchAll();
 if(count($jobArr)>0){
