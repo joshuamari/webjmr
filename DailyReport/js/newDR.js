@@ -493,7 +493,7 @@ function addEntries(iVal){//add Entries to Database
             cache: false,
             processData: false,
             success: function (data) {
-                console.log(data)
+                // console.log(data)
                 getEntries();
                 resetEntry();
                 if($('#idAdd').text()!="Add"){

@@ -3,6 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variables
+$defaultPID=['1','2','3'];
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
     $empGroup=$_REQUEST['empGroup'];
@@ -16,13 +17,10 @@ if(isset($_REQUEST['selItem'])){
     $selItem=$_REQUEST['selItem'];
 }
 $statement=" AND fldItem IS NULL";
-if($selProj!=1){
+if(!in_array($selProj,$defaultPID)){
     $statement=" AND fldItem='$selItem'";
 }
 $jobs=array();
-$prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup='$empGroup' AND fldProject='$selProj' AND (fldItem='$selItem' OR fldItem IS NULL)";
-$priostmt=$connwebjmr->query($prioq);
-$maxPrio=$priostmt->fetchColumn();
 #endregion
 #region Projects Query
 $jobsQ="SELECT * FROM drawingreference WHERE fldGroup='$empGroup' AND fldProject='$selProj' $statement AND fldDelete=0 ORDER BY fldActive DESC,fldPriority";
