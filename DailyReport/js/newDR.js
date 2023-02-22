@@ -362,7 +362,8 @@ function getProjects(){//get Project Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
-        empGroup:$('#idGroup').val()
+        empGroup:empDetails['empGroup'],
+        empNum:empDetails['empNum']
     },
         function (data) {
             $('#idProject').html(data);
@@ -376,10 +377,12 @@ function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
-        empGroup:$('#idGroup').val(),
+        empGroup:empDetails['empGroup'],
+        empNum:empDetails['empNum'],
         projID:iVal
     },
         function (data) {
+            console.log(data)
             $('#idItem').html(data);
             sequenceValidation();
         }
@@ -391,7 +394,8 @@ function getJobs(iVal,xVal){//get Job Selection
     $('#idJRD').val('');
     $.post("ajax/getJobs.php",
     {
-        empGroup:$('#idGroup').val(),
+        empGroup:empDetails['empGroup'],
+        empNum:empDetails['empNum'],
         projID:iVal,
         itemID:xVal
     },
