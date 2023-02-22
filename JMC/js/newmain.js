@@ -969,4 +969,54 @@ function checkTestAccess(){//check if has access to testing
     }
   );
 }
+function getShareGroups(){
+  $.post("ajax/getShareGroups.php",
+  {
+    empGroup:empDetails['empDetails']
+  },
+    function (data) {
+     $('#shareGroup').html(data);
+    }
+  );
+  }
+  function getShareEmployees(){
+  $.post("ajax/getShareEmployees.php",
+  {
+    empGroup:$('#shareGroup').val()
+  },
+    function (data) {
+      $('#shareEmployee').html(data)
+    }
+  );
+  }
+  function getSharedList(){
+  $.ajax({
+    url: "ajax/getSharedList.php",
+    success: function (response) {
+      $('#sharedList').html(response)
+    }
+  });
+  }
+  function shareProject(){
+  $.post("ajax/shareProject.php",
+  {
+    projID:selectedProject,
+    empNum:$('#shareEmployee').val()
+  },
+    function (data) {
+      getSharedList();
+    }
+  );
+  }
+  function removeShare(){
+    $.post("ajax/removeShare.php",
+    {
+      projID:selectedProject,
+      empNum:$('#shareEmployee').val()
+    },
+      function (data) {
+        getSharedList();
+      }
+    );
+  }
 //#endregion
