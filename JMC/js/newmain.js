@@ -392,7 +392,7 @@ function projRow(iVal){//lay project table
       </div>  
     </td>
     <td>
-      <button class="btn addAccess" data-bs-toggle="modal" data-bs-target="#addEmpAccess" title="Share project access"><i class='bx bx-share-alt fs-5'></i></button>
+      <button class="btn addAccess" data-bs-toggle="modal" data-bs-target="#addEmpAccess" title="Share project access"><i class='bx bx-user-plus fs-4'></i></button>
       <button class="btn btn-warning editProj" title="Edit"><i class='bx bx-edit fs-5' ></i></button>
       <button class="btn btn-danger delBut" data-bs-toggle="modal" data-bs-target="#deleteProjModal" title="Delete"><i class='bx bx-trash fs-5'></i></button>
     </td>`;
