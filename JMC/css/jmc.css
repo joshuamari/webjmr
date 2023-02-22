@@ -745,6 +745,14 @@ letter-spacing: 2px;
 }
 
 
+.addAccess{
+  background-color: var(--tertiary-blue);
+  color: #fff;
+}
+.addAccess:hover{
+  background-color: #32aed8;
+}
+
 /* 
 
 @media (max-width: 530px) {

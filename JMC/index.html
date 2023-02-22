@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/selectpicker.css">
     <link rel="stylesheet" href="css/w3-kawasaki.css">
     <link rel="stylesheet" href="css/boxicons.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/jmc.css">
-    <link rel="stylesheet" href="css/selectpicker.css">
+
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
     <script src="js/selectpicker.js"></script>
     <script src="jquery-ui-1.13.2/jquery-ui.min.js"></script>
     <!--#region BUSTER CALL  -->
@@ -243,17 +245,55 @@
             <div class="modal-body ">
               <div class="row px-3">
                 <div class="col-12 mb-2">
-                  <h1>Add Project Access to Employee</h1>
+                  <h4 class="m-0">Add Project Access to Employee</h4>
                 </div>
                 <div class="col-12 mb-2">
-                  <label for="itemTitle" class="form-label">Employee Name</label>
-                  <select class="selectpicker" data-live-search="true">
+                  <label for="empName" class="form-label">Group</label>
+                  <!-- <select class="selectpicker form-control" id="empName" data-live-search="true">
                     <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
                     <option data-tokens="mustard">Burger, Shake and a Smile</option>
                     <option data-tokens="frosting">Sugar, Spice and all things nice</option>
+                  </select> -->
+                  <select class="form-select">
+                    <option selected>Select Group</option>
+                    <option value="1">SYS</option>
+                    <option value="2">ENV</option>
+                    <option value="3">EE</option>
                   </select>
-                  
-                    <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="i1" role="alert"></span>
+                    <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="e1" role="alert"></span>
+                </div>
+
+                <div class="col-12 mb-2">
+                  <label for="empName" class="form-label">Employee</label>
+                  <select class="form-select" disabled>
+                    <option selected>Select Employee</option>
+                    <option value="1">EMP 1</option>
+                    <option value="2">AMP 2</option>
+                    <option value="3">EMP 3</option>
+                  </select>
+                    <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="e2" role="alert"></span>
+                </div>
+
+                <div class="col-12 mt-3 mb-2">
+                  <h4 class="m-0">Employees with Access on this Project</h4>
+                </div>
+                <div class="col-12 mb-2">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Employee</th>
+                        <th>Group</th>
+                        <th>Option</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Collene Medrano</td>
+                        <td>SYS</td>
+                        <td><button class="btn btn-danger" title="remove"><i class="bx bx-trash fs-5"></i></button></td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
