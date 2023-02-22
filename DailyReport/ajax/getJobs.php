@@ -20,10 +20,26 @@ $statement=" AND fldItem=$itemID";
 if($projID==1 || $projID==5 || $projID==4){
     $statement=" AND fldItem IS NULL";
 }
+$empNum='';
+if(isset($_REQUEST['empNum'])){
+    $empNum=$_REQUEST['empNum'];
+}
+$sharedProjects="(";
+$spQ="SELECT * FROM project_share WHERE fldEmployeeNum='$empNum'";
+$spStmt=$connwebjmr->query($spQ);
+if($spStmt->rowCount()>0){
+    $spArr=$spStmt->fetchAll();
+    foreach($spArr AS $sps){
+        $sp=$sps['fldProject'];
+        $sharedProjects.="'$sp',";
+    }
+}
+$sharedProjects=rtrim($sharedProjects,',');
+$sharedProjects.=")";
 #endregion
 #region MyGroup Query
 if($itemID!=''){
-    $jobQ="SELECT * FROM drawingreference WHERE fldProject=:projID $statement AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL) AND fldDelete=0 ORDER BY fldPriority";
+    $jobQ="SELECT * FROM drawingreference WHERE fldProject=:projID $statement AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL OR fldProject IN $sharedProjects) AND fldDelete=0 ORDER BY fldPriority";
     $jobStmt=$connwebjmr->prepare($jobQ);
     $jobStmt->execute([":projID"=>$projID,":empGroup"=>$empGroup]);
     $jobArr=$jobStmt->fetchAll();
