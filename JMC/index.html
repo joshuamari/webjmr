@@ -248,13 +248,13 @@
                   <h4 class="m-0">Add Project Access to Employee</h4>
                 </div>
                 <div class="col-12 mb-2">
-                  <label for="empName" class="form-label">Group</label>
+                  <label for="shareGroup" class="form-label">Group</label>
                   <!-- <select class="selectpicker form-control" id="empName" data-live-search="true">
                     <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
                     <option data-tokens="mustard">Burger, Shake and a Smile</option>
                     <option data-tokens="frosting">Sugar, Spice and all things nice</option>
                   </select> -->
-                  <select class="form-select">
+                  <select class="form-select" id="shareGroup">
                     <option selected>Select Group</option>
                     <option value="1">SYS</option>
                     <option value="2">ENV</option>
@@ -264,8 +264,8 @@
                 </div>
 
                 <div class="col-12 mb-2">
-                  <label for="empName" class="form-label">Employee</label>
-                  <select class="form-select" disabled>
+                  <label for="shareEmployee" class="form-label">Employee</label>
+                  <select class="form-select" id="shareEmployee" disabled>
                     <option selected>Select Employee</option>
                     <option value="1">EMP 1</option>
                     <option value="2">AMP 2</option>
@@ -286,7 +286,7 @@
                         <th>Option</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sharedList">
                       <tr>
                         <td>Collene Medrano</td>
                         <td>SYS</td>
