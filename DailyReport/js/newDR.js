@@ -261,6 +261,7 @@ function getMHCount(){//get MH Counter Values
     var reg=0;
     var ot=0;
     var lv=0;
+    var loc="KDT";
     var getTRs = Object.values($('#drEntries').children());
     getTRs.length -= 2;
     getTRs.forEach(element => {
@@ -277,34 +278,71 @@ function getMHCount(){//get MH Counter Values
                 lv+=hr;
                 break;
         }
-        })
-        if(reg>8){
-            $('#cardReg').addClass('new');
-            $('#regCount').text(reg);
-        }
-        else{
-            $('#cardReg').removeClass('new');
-            $('#regCount').text(reg);
-        }
-        if(ot>8){
-            $('#cardOt').addClass('new');
-            $('#otCount').text(ot);
-        }
-        else{
-            $('#cardOt').removeClass('new');
-            $('#otCount').text(ot);
-        }
-        if(lv>8){
-            $('#cardLv').addClass('new');
-            $('#lvCount').text(lv);
-        }
-        else{
-            $('#cardLv').removeClass('new');
-            $('#lvCount').text(lv);
-        }
-
+        loc=$($(element).children()[0]).text();
+        });
     
-
+    $('#regCount').text(reg);
+    $('#otCount').text(ot);
+    $('#lvCount').text(lv);
+    
+    $('#cardReg').removeClass('new');
+    $('#cardOt').removeClass('new');
+    $('#cardLv').removeClass('new');
+    if(loc=="WFH"){
+        if(ot>0){
+            $('#cardOt').addClass('new');
+        }
+        if(lv>0){
+            $('#cardLv').addClass('new');
+        }
+    }
+    else{
+        if(isWorkDay()){
+            if(ot>0){
+                if(reg<8 || lv>0){
+                    $('#cardOt').addClass('new');
+                }
+            }
+            if((lv==4 && reg<4) || (lv==8 && reg<8)){
+                    $('#cardLv').addClass('new');
+            }
+            if(reg>8){
+                $('#cardReg').addClass('new');
+            }
+        }
+        else{
+            if(reg>0){
+                $('#cardReg').addClass('new');
+            }
+            if(lv>0){
+                $('#cardLv').addClass('new');
+            }
+        }
+    }
+        // if(reg>8){
+        //     $('#cardReg').addClass('new');
+        //     $('#regCount').text(reg);
+        // }
+        // else{
+        //     $('#cardReg').removeClass('new');
+        //     $('#regCount').text(reg);
+        // }
+        // if(ot>8){
+        //     $('#cardOt').addClass('new');
+        //     $('#otCount').text(ot);
+        // }
+        // else{
+        //     $('#cardOt').removeClass('new');
+        //     $('#otCount').text(ot);
+        // }
+        // if(lv>8){
+        //     $('#cardLv').addClass('new');
+        //     $('#lvCount').text(lv);
+        // }
+        // else{
+        //     $('#cardLv').removeClass('new');
+        //     $('#lvCount').text(lv);
+        // }
 }
 function sequenceValidation(){//sequence Checking Project->Item->Job
     $('#idProject').prop('disabled',true);
@@ -571,10 +609,15 @@ function MHValidation(){//enable/disable manhour type selection
 function isWorkDay(){//check if work day
     var isWorkDay=false;
     var selDate=$("#idDRDate").val();
+    var selLoc=$("#idLocation").val();
+    if(selLoc==null){
+        selLoc="KDT";
+    }
     $.ajaxSetup({async: false});
     $.post("ajax/checkWorkDay.php",
     {
-        selDate:selDate
+        selDate:selDate,
+        selLoc:selLoc
     },
         function (data) {
             isWorkDay=$.parseJSON(data);
