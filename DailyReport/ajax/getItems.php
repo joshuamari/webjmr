@@ -16,7 +16,7 @@ $empNum='';
 if(isset($_REQUEST['empNum'])){
     $empNum=$_REQUEST['empNum'];
 }
-$sharedProjects="(";
+$sharedProjects="OR fldProject IN (";
 $spQ="SELECT * FROM project_share WHERE fldEmployeeNum='$empNum'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
@@ -25,13 +25,15 @@ if($spStmt->rowCount()>0){
         $sp=$sps['fldProject'];
         $sharedProjects.="'$sp',";
     }
+    $sharedProjects=rtrim($sharedProjects,',');
+    $sharedProjects.=")";
 }
-$sharedProjects=rtrim($sharedProjects,',');
-$sharedProjects.=")";
+else{
+    $sharedProjects="";
+}
 #endregion
 #region MyGroup Query
-$itemQ="SELECT * FROM itemofworkstable WHERE fldProject=:projID AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL OR fldProject IN $sharedProjects) AND fldDelete=0 ORDER BY fldPriority";
-echo $itemQ;
+$itemQ="SELECT * FROM itemofworkstable WHERE fldProject=:projID AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete=0 ORDER BY fldPriority";
 $itemStmt=$connwebjmr->prepare($itemQ);
 $itemStmt->execute([":projID"=>$projID,":empGroup"=>$empGroup]);
 $itemArr=$itemStmt->fetchAll();

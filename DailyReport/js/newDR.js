@@ -382,7 +382,6 @@ function getItems(iVal){//get Item Selection
         projID:iVal
     },
         function (data) {
-            console.log(data)
             $('#idItem').html(data);
             sequenceValidation();
         }
