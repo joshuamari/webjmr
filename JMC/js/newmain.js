@@ -1058,10 +1058,10 @@ function checkShareValidation(){
 }
 function checkAddShare(){
   var vool=true;
-  if($('#shareGroup').val().length==0){
+  if(!$('#shareGroup').val()){
     vool=false;
   }
-  if($('#shareEmployee').val().length==0){
+  if(!$('#shareEmployee').val()){
     vool=false;
   }
   return vool;
