@@ -12,7 +12,7 @@ if(date('N', strtotime($selDate)) >= 6){
     $isWorkday=FALSE;
 }
 $selLoc="KDT";
-if(isset($_REQUEST['selLoc'])){
+if(!empty($_REQUEST['selLoc'])){
     $selLoc=$_REQUEST['selLoc'];
 }
 #endregion

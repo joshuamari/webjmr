@@ -7,6 +7,9 @@ $output="<option value='' selected hidden>Select Item of Works</option>";
 $projID='';
 if(isset($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
+    if($projID=='3'){
+        $projID='1';
+    }
 }
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){

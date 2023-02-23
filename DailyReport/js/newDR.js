@@ -153,6 +153,9 @@ $(document).on('click','#idCopy',function(){//click Copy Event
 $(document).on('click','button[edit-entry]',function(){//click edit event
     editEntry(this);
 });
+$(document).on('change','#idLocation',function(){//select Group Event
+    MHValidation();
+});
 
 //#endregion
 
@@ -299,7 +302,7 @@ function getMHCount(){//get MH Counter Values
         }
     }
     else{
-        if(isWorkDay()){
+        if(isWorkDay(loc)){
             if(ot>0){
                 if(reg<8 || lv>0){
                     $('#cardOt').addClass('new');
@@ -601,8 +604,13 @@ function isDrawing(){//enable/disable engineering selections
 }
 function MHValidation(){//enable/disable manhour type selection
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
+    var selLoc="KDT";
+    if($('#idLocation').val()){
+        selLoc=$('#idLocation').val();
+    }
+    $('#idLocation').val();
     if(projID!="5"){//if Project selected is not LEAVE
-        if(!isWorkDay()){
+        if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
             $("#idMH").attr('disabled',true);
         }
@@ -614,16 +622,16 @@ function MHValidation(){//enable/disable manhour type selection
     else{
         $("#idMH").attr('disabled',true);
         $("#idMH").val('');
-        if(!isWorkDay()){
+        if(!isWorkDay(selLoc)){
             alert("Leave disabled on holidays/weekends");
             $("#idProject").val("").change();
         }
     }
 }
-function isWorkDay(){//check if work day
+function isWorkDay(iVal){//check if work day
     var isWorkDay=false;
     var selDate=$("#idDRDate").val();
-    var selLoc=$("#idLocation").val();
+    var selLoc=iVal;
     if(selLoc==null){
         selLoc="KDT";
     }
@@ -762,23 +770,6 @@ function cancelEditFunction(){//cancel editables
     $('#idAdd').text("Add");
     $('#idReset').text("Clear");
     resetEntry();
-}
-function colorCount(){//color MH Counts
-    var reg=$('#regCount').text();
-    var ot=$('#otCount').text();
-    var lv=$('#lvCount').text();
-    if(isWorkDay()){
-
-    }
-    if($('#idLocation').val()=="WFH"){
-        if(!lv||!ot){
-            $('#cardOt').addClass('new');
-            $('#cardLv').addClass('new');
-        }
-    }
-    else{
-
-    }
 }
 function checkTestAccess(){//check if has access to testing
     $.post("ajax/checkTestAccess.php",
