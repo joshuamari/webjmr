@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output='<option value="" disabled selected>Select Location</option><option>KDT</option><option>WFH</option>';
+$output='<option value="" hidden selected>Select Location</option><option>KDT</option><option>WFH</option>';
 #endregion
 #region MyGroup Query
 $disLocQ="SELECT * FROM dispatch_locations WHERE fldActive=1";

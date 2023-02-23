@@ -133,9 +133,8 @@
                 <div class="col-12 col-md-6  my-2">
                   <label for="idGroup" class="form-label">Group</label>
                   <div class="input-group">
-                    <select class="form-select" id="idGroup" required>
-                      <option value="" disabled selected>Select Group</option>
-                      <option>SYS</option>
+                    <select class="form-select" id="idGroup" placeholder="Select Group" required>
+                      
                     </select>
                   </div>
                   <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p1" role="alert"></span>
@@ -166,7 +165,7 @@
                   <label for="idProject" class="form-label">Project</label>
                   <div class="input-group">
                     <select class="form-select" id="idProject" required>
-                      <option value="" disabled selected>Select Project</option>
+                      <option value="" selected>Select Project</option>
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
@@ -185,7 +184,7 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
                 </div>
 
-                <div class="col-12 my-2">
+                <div class="col-12 my-2 d-none" id="idJRDDiv">
                   <label for="idJRD" class="form-label">Job Request Description</label>
                   <div class="input-group">
                     <select class="form-select" id="idJRD" required>
@@ -248,7 +247,7 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p7" role="alert"></span>
                 </div>
 
-                <div class="col-12 col-lg-6 my-2">
+                <div class="col-12 col-lg-6 my-2 d-none" id="idTowDiv">
                   <label for="idTOW" class="form-label">Type of Work</label>
                   <div class="input-group col-8">
                     <select class="form-select" id="idTOW" required>
@@ -275,7 +274,7 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p8" role="alert"></span>
                 </div>
 
-                <div class="col-12 my-2">
+                <div class="col-12 my-2 d-none" id="idTowDescDiv">
                   <textarea class="form-control" id="towDesc" rows="1" disabled></textarea>
                 </div>
 
@@ -294,7 +293,7 @@
                   <label for="idMH" class="form-label">Manhour Type</label>
                   <div class="input-group">
                     <select class="form-select" id="idMH" required>
-                      <option value="" disabled selected>Select Manhour Type</option>
+                      <option value="" hidden selected>Select Manhour Type</option>
                       <option mhid="0">Regular</option>
                       <option mhid="1">Overtime</option>
                     </select>

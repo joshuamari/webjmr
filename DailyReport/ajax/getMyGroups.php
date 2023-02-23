@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectkdtph.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected disabled>Select Group</option>";
+$output="<option value='' selected hidden>Select Group</option>";
 $empNum='';
 if(isset($_REQUEST['empNum'])){
     $empNum=$_REQUEST['empNum'];

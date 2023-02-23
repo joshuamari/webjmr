@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected disabled>Select Job Request Description</option>";
+$output="<option value='' selected hidden>Select Job Request Description</option>";
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
     $empGroup=$_REQUEST['empGroup'];

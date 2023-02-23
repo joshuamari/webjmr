@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected disabled>Select Item of Works</option>";
+$output="<option value='' selected hidden>Select Item of Works</option>";
 $projID='';
 if(isset($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];

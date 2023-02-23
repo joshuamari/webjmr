@@ -178,6 +178,7 @@ function initializeDate(){//Initialize Selected Date
 
 }
 function getMyGroups(){//get Group Selection
+    $.ajaxSetup({async: false});
     $.post("ajax/getMyGroups.php",
     {
         empNum:empDetails['empNum']
@@ -186,6 +187,7 @@ function getMyGroups(){//get Group Selection
             $('#idGroup').html(data);
         }
     );
+    $.ajaxSetup({async: true});
 }
 function getDispatchLoc(){//get Dispatch Location Selection
     $.ajax({
@@ -368,7 +370,6 @@ function getProjects(){//get Project Selection
         function (data) {
             $('#idProject').html(data);
             $('#idProject').val("").change();
-            sequenceValidation();
         }
     );
     $.ajaxSetup({async: true});
@@ -425,17 +426,17 @@ function addEntries(iVal){//add Entries to Database
     if($("#id2DDiv").hasClass("d-none")){
         tutri="";
     }
-    if(grp == null){
+    if(!grp){
         $('#p1').text("Please select group");
         $('#idGroup').addClass('border border-danger')
         mgaKulang.push("GROUP");
     }
-    if(date==""){
+    if(!date){
         $('#p2').text("Please select date");
         $('#idDRDate').addClass('border border-danger')
         mgaKulang.push("DATE");
     }
-    if(loc == null){
+    if(!loc){
         $('#p3').text("Please select location");
         $('#idLocation').addClass('border border-danger')
         mgaKulang.push("LOCATION");
@@ -450,7 +451,7 @@ function addEntries(iVal){//add Entries to Database
         $('#idItem').addClass('border border-danger')
         mgaKulang.push("ITEM");
     }
-    if(!jobreq){
+    if(!jobreq && !defaults.includes(proj)){
         $('#p6').text("Please select job request description");
         $('#idJRD').addClass('border border-danger')
         mgaKulang.push("JRD");
@@ -461,7 +462,7 @@ function addEntries(iVal){//add Entries to Database
     else{
         revision = 0;
     }
-    if(!tow){
+    if(!tow && !defaults.includes(proj)){
         $('#p11').text("Please select type of work");
         $('#idTOW').addClass('border border-danger')
         mgaKulang.push("TOW");
@@ -518,7 +519,7 @@ function addEntries(iVal){//add Entries to Database
     fd.append("empNum",empDetails['empNum']);
 
     if(mgaKulang.length>0){
-        // console.log(mgaKulang)
+        console.log(mgaKulang)
         return;
     }
     else{
@@ -582,10 +583,20 @@ function isDrawing(){//enable/disable engineering selections
     if(isDrawing){
         $("#id2DDiv").removeClass("d-none");
         $("#idRevDiv").removeClass("d-none");
+        $("#idJRDDiv").removeClass("d-none");
+        $("#idTowDiv").removeClass("d-none");
+        $("#idTowDescDiv").removeClass("d-none");
     }
     else{
         $("#id2DDiv").addClass("d-none");
         $("#idRevDiv").addClass("d-none");
+        $("#idJRDDiv").addClass("d-none");
+        $("#idTowDiv").addClass("d-none");
+        $("#idTowDescDiv").addClass("d-none");
+    }
+    if(projID=='5'){
+        $("#idTowDiv").removeClass("d-none");
+        $("#idTowDescDiv").removeClass("d-none");
     }
 }
 function MHValidation(){//enable/disable manhour type selection

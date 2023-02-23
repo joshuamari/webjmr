@@ -56,6 +56,7 @@ if(isset($_REQUEST['getChecking']) && !empty($_REQUEST['getChecking'])){
 $getDuration='';
 if(isset($_REQUEST['getDuration'])){
     $getDuration=$_REQUEST['getDuration'];
+    $getDuration=number_format((float)$getDuration, 2, '.', '');
 }
 $getMHType='';
 if(isset($_REQUEST['getMHType'])){
