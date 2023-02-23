@@ -123,9 +123,9 @@ $(document).on('change','#idProject',function(){//select Project Event
     var projID=$($(this).find('option:selected')).attr('proj-id');//get ID of selected Project
     $('#idJRD').val('');//clear Job Request Description
     getItems(projID);
-    if(projID==1 || projID==5 || projID==4){//IF GOW or LEAVE
-        getJobs(projID,"test");
-    }
+    // if(projID==1 || projID==5 || projID==4){//IF GOW or LEAVE
+    //     getJobs(projID,"test");
+    // }
     isDrawing();
     getTOW(projID);
     disableTimeInput(projID);
@@ -305,7 +305,7 @@ function getMHCount(){//get MH Counter Values
                     $('#cardOt').addClass('new');
                 }
             }
-            if((lv==4 && reg<4) || (lv==8 && reg<8)){
+            if((lv==4 && reg<4)){
                     $('#cardLv').addClass('new');
             }
             if(reg>8){
