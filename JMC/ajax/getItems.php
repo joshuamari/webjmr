@@ -11,13 +11,20 @@ $selProj='';
 if(isset($_REQUEST['selProj'])){
     $selProj=$_REQUEST['selProj'];
 }
+if($selProj=='3'){
+    $selProj='1';
+}
 $items=array();
-$prioq="SELECT MAX(fldPriority) FROM itemofworkstable WHERE fldActive='1' AND fldGroup='$empGroup' AND fldProject='$selProj'";
-$priostmt=$connwebjmr->query($prioq);
-$maxPrio=$priostmt->fetchColumn();
+// $prioq="SELECT MAX(fldPriority) FROM itemofworkstable WHERE fldActive='1' AND fldGroup='$empGroup' AND fldProject='$selProj'";
+// $priostmt=$connwebjmr->query($prioq);
+// $maxPrio=$priostmt->fetchColumn();
+$groupStatement="fldGroup='$empGroup'";
+if(in_array($selProj,$defaultProjID)){
+    $groupStatement="fldGroup IS NULL";
+}
 #endregion
 #region Items Query
-$itemsQ="SELECT * FROM itemofworkstable WHERE fldProject='$selProj' AND fldGroup='$empGroup' AND fldDelete=0 ORDER BY fldPriority DESC,fldActive DESC";
+$itemsQ="SELECT * FROM itemofworkstable WHERE fldProject='$selProj' AND $groupStatement AND fldDelete=0 ORDER BY fldPriority DESC,fldActive DESC";
 $itemsStmt=$connwebjmr->query($itemsQ);
 $itemsArr=$itemsStmt->fetchAll();
 if(count($itemsArr)>0){
