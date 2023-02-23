@@ -28,6 +28,7 @@ var del='';
 var buicEdit=``;
 const otherVal = getOtherItems();
 const otherJobVal=getOtherJob();
+var shareAccess=``;
 //#endregion
 
 //#region BINDS
@@ -45,6 +46,7 @@ $(document).ready(function(){
       getMyGroups();
       getBUICGroups();
       checkTestAccess();
+      getShareGroups();
     }
   }});
   //#region sidebar shits
@@ -296,6 +298,30 @@ $(document).on('click','#jrdsave-btn',function(){
   var getTRID=$($(this).parents()[1]).attr('id');
   var trID=getTRID.split("_")[1];
   updateJob(trID);
+});
+$(document).on('change','#shareGroup',function(){
+  checkShareValidation();
+  getShareEmployees();
+});
+$(document).on('click','.addAccess',function(){
+  var getTRID=$($(this).parents()[1]).attr('id');
+  var trID=getTRID.split("_")[1];
+  shareAccess=trID;
+  getSharedList(shareAccess);
+});
+$(document).on('click','#shareAccess',function(){
+  if(!checkAddShare()){
+    alert('Incomplete fields');
+    return;
+  }
+  shareProject();
+});
+$(document).on('click','.removeAccess',function(){
+  if(!confirm("Remove Access?")){
+    return;
+  }
+  var dd=($($(this).parents()[1]).attr('id')).split('_')[1];
+  removeShare(dd);
 });
 
 
@@ -969,54 +995,76 @@ function checkTestAccess(){//check if has access to testing
     }
   );
 }
-function getShareGroups(){
+function getShareGroups(){//get groups selections in share jmc modal
   $.post("ajax/getShareGroups.php",
   {
-    empGroup:empDetails['empDetails']
+    empGroup:empDetails['empGroup']
   },
     function (data) {
      $('#shareGroup').html(data);
     }
   );
-  }
-  function getShareEmployees(){
+}
+function getShareEmployees(){//get members of selected group in share jmc modal
   $.post("ajax/getShareEmployees.php",
   {
+    projID:shareAccess,
     empGroup:$('#shareGroup').val()
   },
     function (data) {
       $('#shareEmployee').html(data)
     }
   );
-  }
-  function getSharedList(){
-  $.ajax({
-    url: "ajax/getSharedList.php",
-    success: function (response) {
-      $('#sharedList').html(response)
-    }
-  });
-  }
-  function shareProject(){
-  $.post("ajax/shareProject.php",
+}
+function getSharedList(iVal){//get members shared with selected project
+  $.post("ajax/getSharedList.php",
   {
-    projID:selectedProject,
-    empNum:$('#shareEmployee').val()
+    projID:iVal
   },
     function (data) {
-      getSharedList();
+      $('#sharedList').html(data)
     }
   );
+}
+function shareProject(){//share project to selected member
+  var eid=$($('#shareEmployee').find('option:selected')).attr('e-id');
+  $.post("ajax/shareProject.php",
+  {
+    projID:shareAccess,
+    empNum:eid
+  },
+    function (data) {
+      $('#shareEmployee').val('');
+      $('#shareGroup').val('');
+      getSharedList(shareAccess);
+    }
+  );
+}
+function removeShare(iVal){//remove project access from selected member
+  $.post("ajax/removeShare.php",
+  {
+    projID:shareAccess,
+    empNum:iVal
+  },
+    function (data) {
+      getSharedList(shareAccess);
+    }
+  );
+}
+function checkShareValidation(){
+  if($('#shareGroup').val().length!=0){
+    $('#shareEmployee').prop('disabled',false);
   }
-  function removeShare(){
-    $.post("ajax/removeShare.php",
-    {
-      projID:selectedProject,
-      empNum:$('#shareEmployee').val()
-    },
-      function (data) {
-        getSharedList();
-      }
-    );
+}
+function checkAddShare(){
+  var vool=true;
+  if($('#shareGroup').val().length==0){
+    vool=false;
   }
+  if($('#shareEmployee').val().length==0){
+    vool=false;
+  }
+  return vool;
+}
+// var projID=$($(this).find('option:selected')).attr('proj-id');
 //#endregion

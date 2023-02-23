@@ -17,6 +17,7 @@ if(!empty($userHash)){
     $empDeetsStmt=$connkdt->query($empDeetsQ);
     $empDeetsArr=$empDeetsStmt->fetchAll();
     foreach($empDeetsArr AS $empdeets){
+        $output+=["empGroup"=>$empdeets['fldGroup']];
         $output+=["empFName"=>$empdeets['fldFirstname']];
         $output+=["empSName"=>$empdeets['fldSurname']];
         $output+=["empNName"=>$empdeets['fldNick']];
