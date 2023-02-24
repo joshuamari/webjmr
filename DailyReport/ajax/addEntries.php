@@ -31,8 +31,8 @@ $getItem='';
 if(isset($_REQUEST['getItem'])){
     $getItem=$_REQUEST['getItem'];
 }
-$getDescription='';
-if(isset($_REQUEST['getDescription'])){
+$getDescription=NULL;
+if(!empty($_REQUEST['getDescription'])){
     $getDescription=$_REQUEST['getDescription'];
 }
 $getTwoThree=NULL;
@@ -56,7 +56,6 @@ if(isset($_REQUEST['getChecking']) && !empty($_REQUEST['getChecking'])){
 $getDuration='';
 if(isset($_REQUEST['getDuration'])){
     $getDuration=$_REQUEST['getDuration'];
-    $getDuration=number_format((float)$getDuration, 2, '.', '');
 }
 $getMHType='';
 if(isset($_REQUEST['getMHType'])){

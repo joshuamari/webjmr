@@ -14,6 +14,9 @@ switch (document.location.hostname)
 var empDetails=[];
 var editID = ""
 const defaults =getDefaults();
+var regCount=0;
+var otCount=0;
+var lvCount=0;
 //#endregion
 
 //#region BINDS
@@ -71,7 +74,47 @@ $(document).ready(function(){//page Initialize Event
         $(".sidebar").addClass("close");
         });
         //#endregion
-});
+        //#region input time validation
+        var inputHour = document.getElementById("getHour");
+            
+                var invalidChars = [
+                    "-",
+                    "+",
+                    "e",
+                    "."
+                ];
+
+                inputHour.addEventListener("input", function() {
+                    this.value = this.value.replace(/[e\+\-\.]/gi, "");
+                });
+                
+
+                inputHour.addEventListener("keydown", function(e) {
+                    if (invalidChars.includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+        var inputMin = document.getElementById("getMin");
+            
+                var invalidChars = [
+                    "-",
+                    "+",
+                    "e",
+                    "."
+                ];
+
+                inputMin.addEventListener("input", function() {
+                    this.value = this.value.replace(/[e\+\-\.]/gi, "");
+                });
+                
+
+                inputMin.addEventListener("keydown", function(e) {
+                    if (invalidChars.includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+        //#endregion
+    });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY
 $(document).on('change','#idTOW',function(){//select TOW Event
@@ -227,10 +270,23 @@ function addRow(iVal){//map Entries for display
     var project = iVal.split('||')[3];
     var item = iVal.split('||')[4];
     var desc = iVal.split('||')[5];
-    var hour = iVal.split('||')[6];
+    var hour = parseFloat(iVal.split('||')[6]);
     var mht = iVal.split('||')[7];
     const mhtyp = ["Regular", "OT", "Leave"];
-
+    switch(mht){
+        case "0":
+            regCount+=hour;
+            break;
+        case "1":
+            otCount+=hour;
+            break;
+        case "2":
+            lvCount+=hour;
+            break;
+        default:
+            alert("WTF")
+            break;
+    }
     var addString = `
     <tr id="${mht}_${pId}">
     <td>${loc}</td>
@@ -238,7 +294,7 @@ function addRow(iVal){//map Entries for display
     <td>${project}</td>
     <td>${item}</td>
     <td>${desc}</td>
-    <td>${hour}</td>
+    <td>${parseFloat(hour/60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
     <td><button class="btn btn-warning" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger  delBut"><i class="text-light fa fa-trash"></i></button></td>
     </tr>
@@ -246,6 +302,9 @@ function addRow(iVal){//map Entries for display
     $('#drEntries').append(addString);
 }
 function getEntries(){//get Daily Report Entries
+    regCount=0;
+    otCount=0;
+    lvCount=0;
     $('#drEntries').empty();
     $.post("ajax/getEntries.php",
     {
@@ -273,26 +332,28 @@ function getMHCount(){//get MH Counter Values
     var getTRs = Object.values($('#drEntries').children());
     getTRs.length -= 2;
     getTRs.forEach(element => {
-        var mhType=(element.id)[0];
-        var hr=parseFloat($($(element).children()[5]).text());
-        switch(mhType){
-            case "0":
-                reg+=hr;
-                break;
-            case "1":
-                ot+=hr;
-                break;
-            case "2":
-                lv+=hr;
-                break;
-        }
+        // var mhType=(element.id)[0];
+        // var hr=parseFloat($($(element).children()[5]).text());
+        // switch(mhType){
+        //     case "0":
+        //         reg+=hr;
+        //         break;
+        //     case "1":
+        //         ot+=hr;
+        //         break;
+        //     case "2":
+        //         lv+=hr;
+        //         break;
+        // }
         loc=$($(element).children()[0]).text();
         });
     
-    $('#regCount').text(reg);
-    $('#otCount').text(ot);
-    $('#lvCount').text(lv);
-    
+    $('#regCount').text(parseFloat(regCount/60).toFixed(2));
+    $('#otCount').text(parseFloat(otCount/60).toFixed(2));
+    $('#lvCount').text(parseFloat(lvCount/60).toFixed(2));
+    reg=parseFloat(regCount/60);
+    ot=parseFloat(otCount/60);
+    lv=parseFloat(lvCount/60);
     $('#cardReg').removeClass('new');
     $('#cardOt').removeClass('new');
     $('#cardLv').removeClass('new');
@@ -421,9 +482,9 @@ function addEntries(iVal){//add Entries to Database
     var item = $($('#idItem').find('option:selected')).attr('item-id');
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id');
     var tow = $($('#idTOW').find('option:selected')).attr('tow-id');
-    var hour = $('#getHour').val() || "0";
-    var mins = $('#getMin').val()/60 || "0";
-    var getDuration = `${parseFloat(hour) + parseFloat(mins)}`; 
+    var hour = $('#getHour').val()*60 || "0";
+    var mins = $('#getMin').val() || "0";
+    var getDuration = `${parseFloat(hour) + parseFloat(mins)}`;  
     var revision =  "";
     var mhtype = $($('#idMH').find('option:selected')).attr('mhid');
     var remarks = $('#idRemarks').val();
@@ -481,7 +542,7 @@ function addEntries(iVal){//add Entries to Database
         }
     }
     
-    if(hour>20||hour<0){
+    if(hour>1200||hour<0){//hour*60
         $('#p9').text("Please input valid time");
         $('#getHour').addClass('border border-danger')
         mgaKulang.push("ORAS");
@@ -707,12 +768,15 @@ function editEntry(iVal){//edit selected entry
             $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).attr('selected',true).change();
             getJobs(dataEdit[2],dataEdit[3]);
             $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).attr('selected',true).change();
-            $('#getHour').val(dataEdit[5].toString().split('.')[0]);
-            if(dataEdit[5].toString().split('.')[1] == undefined){
-                $('#getMin').val(0);
-            }else{
-                $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
-            }
+
+            // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
+            // if(dataEdit[5].toString().split('.')[1] == undefined){
+            //     $('#getMin').val(0);
+            // }else{
+            //     $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
+            // }
+            $(`#getHour`).val(`${Math.floor(dataEdit[5]/60)}`);
+            $(`#getMin`).val(`${dataEdit[5] % 60}`);
             isDrawing();
             getTOW(`${dataEdit[2]}`);
             disableTimeInput(`${dataEdit[2]}`);
