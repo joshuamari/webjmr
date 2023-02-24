@@ -132,12 +132,18 @@ $(document).on('change','#idTOW',function(){//select TOW Event
         $('#getHour').val('8');
     }
     getTOWDesc(towVal);
+
+    $('#p11').text("");
+    $(this).removeClass('border-danger');
 });
 $(document).on('change','#idGroup',function(){//select Group Event
     // var getSelValue = $(this).children(":selected").attr("data-id");
     // $('#idGroup').children(":selected").attr("data-id");
     getProjects();
     getCheckers();
+    $('#p1').text("");
+    $(this).removeClass('border-danger');
+
     // console.log(getSelValue);
 });
 $(document).on('change','#idDRDate',function(){//select Date Event
@@ -173,11 +179,16 @@ $(document).on('change','#idProject',function(){//select Project Event
     getTOW(projID);
     disableTimeInput(projID);
     MHValidation();
+    $('#p4').text("");
+    $(this).removeClass('border-danger');
 });
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     var itemID=$($(this).find('option:selected')).attr('item-id');
     getJobs(projID,itemID);
+
+    $('#p5').text("");
+    $(this).removeClass('border-danger');
 })
 $(document).on('click','#refBtn',function(){//click Refresh Event
     getEntries();
@@ -201,7 +212,17 @@ $(document).on('click','button[edit-entry]',function(){//click edit event
 });
 $(document).on('change','#idLocation',function(){//select Group Event
     MHValidation();
+    $('#p3').text("");
+    $(this).removeClass('border-danger');
 });
+$(document).on('change', '#idMH', function(){
+    $('#p10').text("");
+    $(this).removeClass('border-danger');
+});
+$(document).on('change', '#idJRD', function(){
+    $('#p6').text("");
+    $(this).removeClass('border-danger');
+})
 
 //#endregion
 
