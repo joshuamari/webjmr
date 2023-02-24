@@ -28,7 +28,7 @@ $(document).ready(function () {//page Initialize Event
           $("#eid").val(empDetails["empNum"]);
           $("#ename").val(empDetails["empFName"] + " " + empDetails["empSName"]);
           $(".hello-user").text(empDetails["empFName"]);
-          checkTestAccess();
+          // checkTestAccess();
         }
       },async:false
     });

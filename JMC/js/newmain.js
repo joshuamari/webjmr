@@ -42,7 +42,7 @@ $(document).ready(function(){
       jmcAccess();
       getMyGroups();
       getBUICGroups();
-      checkTestAccess();
+      // checkTestAccess();
       getShareGroups();
     }
   }});

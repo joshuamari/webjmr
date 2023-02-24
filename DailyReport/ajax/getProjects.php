@@ -35,9 +35,14 @@ if($empGroup!=''){
     $projStmt->execute([":empGroup"=>$empGroup]);
     $projArr=$projStmt->fetchAll();
     foreach($projArr AS $projs){
+        $groupAppend="";
+        $projGroup=$projs['fldGroup'];
+        if($projGroup!=$empGroup AND $projGroup!=NULL){
+            $groupAppend="($projGroup)";
+        }
         $projName=$projs['fldProject'];
         $projID=$projs['fldID'];
-        $output.="<option proj-id='$projID'>$projName</option>";
+        $output.="<option proj-id='$projID'>$projName$groupAppend</option>";
     }
 }
 #endregion

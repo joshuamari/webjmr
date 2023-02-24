@@ -28,7 +28,7 @@ $(document).ready(function(){//page Initialize Event
         //   console.log("logged in: employee#"+empDetails['empNum']);
         //   console.log("logged in: firstname"+empDetails['empFName']);
         $('.hello-user').text(empDetails['empFName']);
-        checkTestAccess();
+        // checkTestAccess();
         }
       },async:false});
         ifSmallScreen();
@@ -148,6 +148,9 @@ $(document).on('click','.delBut',function(){//click Delete Event
     deleteEntry(trID);
 })
 $(document).on('click','#idCopy',function(){//click Copy Event
+    if(!confirm("Confirm copy entries")){
+        return;
+    }
     copyEntries();
 });
 $(document).on('click','button[edit-entry]',function(){//click edit event
