@@ -5,6 +5,7 @@ $password = "";
 try {
   $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
   
+  date_default_timezone_set('Asia/Manila');
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
