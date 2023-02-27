@@ -4,7 +4,17 @@ $username = "root";
 $password = "";
 try {
   $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
-  
+  $devs=["464","465","487","10"];
+
+  $itMembers=array();
+  $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
+  $itStmt=$connkdt->query($itQ);
+  $itArr=$itStmt->fetchAll();
+  foreach($itArr AS $its){
+    array_push($itMembers,$its['fldEmployeeNum']);
+  }
+  $allAccess=array();
+  $allAccess=array_merge($devs,$itMembers);
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }

@@ -349,6 +349,7 @@ function getMyGroups(){//get group selection
   },
     function (data) {
       $('#myGroup').html(data);
+      $('#myGroup').val(`${empDetails['empGroup']}`);
       getProjects();
       // getGOWJob();
     }
