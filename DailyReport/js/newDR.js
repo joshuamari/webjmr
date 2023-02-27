@@ -181,6 +181,16 @@ $(document).on('change','#idProject',function(){//select Project Event
     MHValidation();
     $('#p4').text("");
     $(this).removeClass('border-danger');
+
+    if(projID == '5'){
+        $('#itemlbl').html("Leave Type");
+        $('#lbltow').html("Day Type");
+    }
+    else{
+        $('#itemlbl').html("Item of Works");
+        $('#lbltow').html("Type of Work");
+    }
+    
 });
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
@@ -449,6 +459,7 @@ function sequenceValidation(){//sequence Checking Project->Item->Job
     }
 }
 function getProjects(){//get Project Selection
+
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
@@ -461,6 +472,7 @@ function getProjects(){//get Project Selection
         }
     );
     $.ajaxSetup({async: true});
+    
 }
 function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: false});
