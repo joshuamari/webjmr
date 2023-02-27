@@ -26,26 +26,28 @@ var del='';
 var buicEdit=``;
 
 var shareAccess=``;
+$.ajaxSetup({async: false});
+$.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+  empDetails=$.parseJSON(data);
+
+  if(empDetails.length<1){
+    window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+  }
+  jmcAccess();
+}});
+$.ajaxSetup({async: true});
 //#endregion
 
 //#region BINDS
 $(document).ready(function(){
   $.ajaxSetup({async: false});
-  $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
-    empDetails=$.parseJSON(data);
-    if(empDetails.length<1){
-      window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
-    }
-    else{
       $('.hello-user').text(empDetails['empFName']);
       ifSmallScreen();
-      jmcAccess();
       getMyGroups();
       getBUICGroups();
       // checkTestAccess();
       getShareGroups();
-    }
-  }});
+
   //#region sidebar shits
   let arrow = document.querySelectorAll(".arrow");
 
