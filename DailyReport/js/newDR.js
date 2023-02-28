@@ -421,7 +421,7 @@ function getMHCount(){//get MH Counter Values
             if((lv==4 && reg<4)){
                     $('#cardLv').addClass('new');
             }
-            if(reg>8){
+            if(reg>8 || (reg>0 && reg<8)){
                 $('#cardReg').addClass('new');
             }
         }
