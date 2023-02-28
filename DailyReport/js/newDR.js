@@ -463,7 +463,8 @@ function getProjects(){//get Project Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
-        empGroup:empDetails['empGroup'],
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum']
     },
         function (data) {
