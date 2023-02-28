@@ -44,6 +44,9 @@ $(document).on('change','#monthSel',function(){
   showInputs();
 })
 $(document).on('click','#resetB',function(){
+  $('#searchMain').val('');
+  $('#BUSel').val('');
+  $('#monthSel').val('');
   showInputs();
 })
 

@@ -34,7 +34,7 @@ if($memStmt->rowCount()>0){
     $statement=" AND fldEmployeeNum IN $memList";
 }
 else{
-    die;
+    exit("<tr><td colspan='13'>No entries</td></tr>");
 }
 $ymSel=date("Y-m");
 if(!empty($_POST['ymSel'])){
