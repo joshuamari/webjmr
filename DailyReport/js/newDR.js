@@ -74,6 +74,11 @@ $(document).ready(function(){//page Initialize Event
         $(".sidebar").addClass("close");
         });
         //#endregion
+        //#region
+
+      
+
+        //#endregion
         //#region input time validation
         var inputHour = document.getElementById("getHour");
             
@@ -136,6 +141,16 @@ $(document).on('change','#idTOW',function(){//select TOW Event
     $('#p11').text("");
     $(this).removeClass('border-danger');
 });
+$(document).on('click','.pindot',function(){
+    $('.ms').toggleClass('open');
+    if($('.ms').hasClass('open')){
+        $('.ms-lbl p').html(`<i class='bx bx-x' style='color:#fff; font-size:40px;'></i>`);
+    }else{
+        $('.ms-lbl p').html(`Monthly Standard <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`);
+    }
+
+    
+})
 $(document).on('change','#idGroup',function(){//select Group Event
     // var getSelValue = $(this).children(":selected").attr("data-id");
     // $('#idGroup').children(":selected").attr("data-id");
