@@ -479,7 +479,8 @@ function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
-        empGroup:empDetails['empGroup'],
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         projID:iVal
     },
@@ -495,7 +496,8 @@ function getJobs(iVal,xVal){//get Job Selection
     $('#idJRD').val('');
     $.post("ajax/getJobs.php",
     {
-        empGroup:empDetails['empGroup'],
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         projID:iVal,
         itemID:xVal
