@@ -9,7 +9,7 @@ if(isset($_REQUEST['projID'])){
 }
 $itemID=NULL;
 $grp=NULL;
-if($projID!=1 && $projID !=5){
+if($projID!=2){
     if(isset($_REQUEST['itemID'])){
         $itemID=$_REQUEST['itemID'];
     }

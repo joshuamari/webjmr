@@ -17,7 +17,7 @@ if(isset($_REQUEST['itemID'])){
     $itemID=$_REQUEST['itemID'];
 }
 $statement=" AND fldItem=$itemID";
-if($projID==1 || $projID==5 || $projID==4){
+if($projID=='2'){
     $statement=" AND fldItem IS NULL";
 }
 $empNum='';

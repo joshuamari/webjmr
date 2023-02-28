@@ -14,12 +14,14 @@ switch (document.location.hostname)
 }
 var empDetails=[];
 const defaults =getDefaults();
+const kdtWorks=2;
 var projects=[];
 var items=[];
 var selectedProject='';
 var selectedProjectString='';
 var selectedItems='';
 var selectedItemsString='';
+var gowJobVal=[];
 
 var jobs=[];
 var del='';
@@ -93,7 +95,7 @@ $(document).on('click','.editJrd-btn', function(){
     var manhour = $(getTR[8]).text();
     var getTD = getTR[10];
     var editDrawRef=``;
-    // if(checkJRDEdit()){
+    if(checkJRDEdit()){
       $(getTR[2]).html(`<input id='editJSheet' type='number' class='form-control'  value='${sheet}' sid='${jrdid}'>`);
     $(getTR[3]).html(`<select id='editJPaper' class="form-select" id="jrdPaper" sid='${jrdid}' required>
                         <option  selected>${paper}</option>
@@ -107,7 +109,7 @@ $(document).on('click','.editJrd-btn', function(){
     $(getTR[6]).html(`<input id='editJKHIDead' type="date"class="form-control" value='${khidead}' sid='${jrdid}' required/>`);
     $(getTR[7]).html(`<input id='editJKDTDead' type="date"class="form-control" value='${kdtdead}' sid='${jrdid}' required/>`);
     $(getTR[8]).html(`<input id='editJMH' type='number' class='form-control'  value='${manhour}' sid='${jrdid}'>`);
-    // }
+    }
     $(getTR[1]).html(`<input id='editJName' type='text' class='form-control'  value='${title}' sid='${jrdid}'>`);
     
 
@@ -189,22 +191,23 @@ $(document).on('click','.itemIcon',function(){
   $('.project').addClass('d-none');
   $('.item').addClass('d-none');
   $('.jrd').removeClass('d-none');
-  var getTitle = $($($(this).parent()).children()[1]).text();
+  var getTitle = $($($(this).parent()).nextAll()[0]).text();
   var getID = $($(this).parents()[1]).attr('id');
   selectedItems=getID.split("_")[1];
   selectedItemsString=getTitle;
   $('#selectedItem').html(selectedItemsString);
   getJobs();
+  checkJRDADD();
 })
 $(document).on({
   mouseenter: function () {
-    if(!defaults.includes(selectedProject)){
+    if(!defaults.includes(selectedProject) || selectedProject==kdtWorks ){
       $($(this).find('.itemPrio')).hide();
       $($(this).find('.itemIcon')).show();
     }
   },
   mouseleave: function () {
-    if(!defaults.includes(selectedProject)){
+    if(!defaults.includes(selectedProject) || selectedProject==kdtWorks ){
       $($(this).find('.itemPrio')).show();
       $($(this).find('.itemIcon')).hide();
     }
@@ -353,7 +356,7 @@ function getMyGroups(){//get group selection
       $('#myGroup').html(data);
       $('#myGroup').val(`${empDetails['empGroup']}`);
       getProjects();
-      // getGOWJob();
+      getGOWJob();
     }
   );
 }
@@ -449,17 +452,17 @@ function ifEditable(iVal){//check if non default
   }
   return vool;
 }
-// function getGOWJob(){//get draw ref for GOW
-//   gowJobVal=[];
-//   $.post("ajax/getGOWJob.php",
-//   {
-//     empGroup:$('#myGroup').val(),
-//   },
-//     function (data) {
-//       gowJobVal=$.parseJSON(data);
-//     }
-//   );
-// }
+function getGOWJob(){//get draw ref for GOW
+  gowJobVal=[];
+  $.post("ajax/getGOWJob.php",
+  {
+    empGroup:$('#myGroup').val(),
+  },
+    function (data) {
+      gowJobVal=$.parseJSON(data);
+    }
+  );
+}
 function getLeaveJob(){//get draw ref for leave
   var defaultsArray=[];
   $.ajax({
@@ -676,7 +679,7 @@ function itemRow(iVal){//lay item table
   //$($(this).parent()).attr('id');//get TR ID
   
   var nonDefaults=``;
-  if(ifEditable(selectedProject)){
+  if(ifEditable(selectedProject) || selectedProject==2){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
@@ -799,16 +802,16 @@ function getJobs(){//get draw refs
 function fillJob(){//set draw refs to lay
   $('#jrdTable').empty();
   jobs.map(jobRow)
-  // getGOWJob();
-  if(selectedProjectString == "GENERAL OFFICE WORK"){
-    gowJobVal.map(jobRow); // mga common sa GOW
-  }
-  if(selectedProjectString == "LEAVE"){
-    leaveJobVal.map(jobRow); // mga common sa Leave
-  }
-  if(selectedProjectString == "OTHER"){
-    otherJobVal.map(jobRow); // mga common sa Leave
-  }
+  getGOWJob();
+  // if(selectedProjectString == "GENERAL OFFICE WORK"){
+  //   gowJobVal.map(jobRow); // mga common sa GOW
+  // }
+  // if(selectedProjectString == "LEAVE"){
+  //   leaveJobVal.map(jobRow); // mga common sa Leave
+  // }
+  // if(selectedProjectString == "OTHER"){
+  //   otherJobVal.map(jobRow); // mga common sa Leave
+  // }
 }
 function jobRow(iVal){//lay drawref table
   var iTitle = iVal.split('||')[0];
@@ -870,10 +873,10 @@ function jobRow(iVal){//lay drawref table
 
 }
 function defaultDrawref(){//check if drawref for non engineering
-  var sProj=selectedProjectString;
+  var sProj=selectedProject;
   var isSame=false;
   defaults.forEach(element => {
-    if(sProj==element.split('||')[0]){
+    if(sProj==element){
       isSame=true;
     }
   });
@@ -925,23 +928,23 @@ function deleteJob(iVal){//delete jrd from database
     }
   );
 }
-// function checkJRDADD(){//check if jrd add has engineering fields
-//   var defs=['1','2','3','4','5']
-//   if(defs.includes(selectedProject)){
-//     $('.engr').addClass('d-none');
-//   }
-//   else{
-//     $('.engr').removeClass('d-none');
-//   }
-//   // if(selectedProject=='5' || selectedProject=='4'){
-//   //   $('#divAddJRD').addClass('d-none');
-//   // }
-//   // else{
-//   //   $('#divAddJRD').removeClass('d-none');
-//   // }
-// }
-function checkItemAdd(){//check if selected project can add itemofworks
+function checkJRDADD(){//check if jrd add has engineering fields
+  // var defs=['1','2','3','4','5']
   if(defaults.includes(selectedProject)){
+    $('.engr').addClass('d-none');
+  }
+  else{
+    $('.engr').removeClass('d-none');
+  }
+  // if(selectedProject=='5' || selectedProject=='4'){
+  //   $('#divAddJRD').addClass('d-none');
+  // }
+  // else{
+  //   $('#divAddJRD').removeClass('d-none');
+  // }
+}
+function checkItemAdd(){//check if selected project can add itemofworks
+  if(defaults.includes(selectedProject) && selectedProject!=2){
     $('#divAddItem').addClass('d-none');
   }
   else{
@@ -950,8 +953,8 @@ function checkItemAdd(){//check if selected project can add itemofworks
 }
 function checkJRDEdit(){//check if jrd edit has engineering fields
   var vool=true;
-  var defs=['1','2','3','4','5']
-  if(defs.includes(selectedProject)){
+  // var defs=['1','2','3','4','5']
+  if(defaults.includes(selectedProject)){
     vool=false;
   }
   return vool;

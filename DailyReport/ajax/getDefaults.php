@@ -6,7 +6,7 @@ require_once "../Includes/dbconnectwebjmr.php";
 $defaults=array();
 #endregion
 #region Defaults Query
-$defaultsQ="SELECT * FROM projectstable WHERE fldDirect=0";
+$defaultsQ="SELECT * FROM projectstable WHERE fldDirect=0 AND fldDelete=0";
 $defaultsStmt=$connwebjmr->query($defaultsQ);
 $defArr=$defaultsStmt->fetchAll();
 foreach($defArr AS $dflts){
