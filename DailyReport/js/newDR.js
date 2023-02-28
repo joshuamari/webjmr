@@ -693,6 +693,11 @@ function disableTimeInput(iVal){//disable Time Input
     }
 }
 function isDrawing(){//enable/disable engineering selections
+    isEngineering();
+    hasJRD();
+    hasTOW();
+}
+function isEngineering(){
     var isDrawing = true;
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
     var selGroup=$("#idGroup").val();
@@ -701,14 +706,38 @@ function isDrawing(){//enable/disable engineering selections
     if(isDrawing){
         $("#id2DDiv").removeClass("d-none");
         $("#idRevDiv").removeClass("d-none");
-        $("#idJRDDiv").removeClass("d-none");
-        $("#idTowDiv").removeClass("d-none");
-        $("#idTowDescDiv").removeClass("d-none");
     }
     else{
         $("#id2DDiv").addClass("d-none");
         $("#idRevDiv").addClass("d-none");
+    }
+}
+function hasJRD(){
+    var isDrawing = true;
+    var projID=$($("#idProject").find('option:selected')).attr('proj-id');
+    var selGroup=$("#idGroup").val();
+    isDrawing=((!defaults.includes(projID) || projID=='2') && projID);
+    // return isDrawing;
+    if(isDrawing){
+        $("#idJRDDiv").removeClass("d-none");
+    }
+    else{
         $("#idJRDDiv").addClass("d-none");
+    }
+}
+function hasTOW(){
+    var isDrawing = true;
+    var projID=$($("#idProject").find('option:selected')).attr('proj-id');
+    var selGroup=$("#idGroup").val();
+    isDrawing=(!defaults.includes(projID) && projID);
+    // return isDrawing;
+    if(isDrawing){
+        // $("#idJRDDiv").removeClass("d-none");
+        $("#idTowDiv").removeClass("d-none");
+        $("#idTowDescDiv").removeClass("d-none");
+    }
+    else{
+        // $("#idJRDDiv").addClass("d-none");
         $("#idTowDiv").addClass("d-none");
         $("#idTowDescDiv").addClass("d-none");
     }

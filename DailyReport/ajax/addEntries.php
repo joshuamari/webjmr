@@ -61,8 +61,8 @@ $getMHType='';
 if(isset($_REQUEST['getMHType'])){
     $getMHType=$_REQUEST['getMHType'];
 }
-$getRemarks='';
-if(isset($_REQUEST['getRemarks'])){
+$getRemarks=NULL;
+if(!empty($_REQUEST['getRemarks'])){
     $getRemarks=$_REQUEST['getRemarks'];
 }
 $logs=date("YmdHis")."_".$empNum;

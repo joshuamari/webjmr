@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Temporary Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/w3-kawasaki.css">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+  <link rel="stylesheet" href="css/neoBootstrap.css">
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.inview.min.js"></script>
+  <script src="js/neoBootstrap.js"></script>
+  <!--#region BUSTER CALL  -->
+  <script>
+    $.ajax({
+      url: "ajax/getVersion.php", success: function (result) {
+        var script = document.createElement("script");
+        script.src = "js/main.js?version=" + result;
+        $('head').append(script);
+        console.log('version: ' + result);
+      }
+    });
+  </script>
+  <!--#endregion -->
+</head>
+
+<body class="container">
+  <h1>Temporary Report</h1>
+  <p>Disclaimer: The purpose of this report is for checking member's entries</p>
+  
+  <div class="container">
+    <form id="mainForm">
+      <div class="mb-3">
+        <label for="searchMain" class="form-label">Name</label>
+        <input type="search"
+          class="form-control" name="searchMain" id="searchMain" aria-describedby="helpId" placeholder="Search Member">
+      </div>
+      <div class="mb-3">
+        <label for="BUSel" class="form-label">Filter by BU</label>
+        <select class="form-select form-select-lg" name="BUSel" id="BUSel" placeholder="Select BU">
+          <option value="0">ALL</option>
+          <option value="1">Sys</option>
+          <option value="2">Env</option>
+        </select>
+      </div>
+      <input type="month" class="form-select form-select-lg"id="monthSel">
+      <div class="d-grid gap-2">
+        <button type="reset" id="resetB" class="btn btn-primary">Reset</button>
+      </div>
+    </form>
+    
+
+    
+    <table class="table">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>Name</th>
+          <th>Group</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th>Project</th>
+          <th>Item</th>
+          <th>JRD</th>
+          <th>2D3D</th>
+          <th>Revision</th>
+          <th>TOW</th>
+          <th>Duration</th>
+          <th>MHTYpe</th>
+        </tr>
+      </thead>
+      <tbody id="mainBod">
+        
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>
