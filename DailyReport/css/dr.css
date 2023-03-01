@@ -28,7 +28,9 @@ body {
     --text-color: #555;
     --header-color:#444;
     --lightblue-color: #a2ccf7;
-
+    
+    /* ni-hide ko ppo yung scroll kasi naka vh naman na yung content (.cont) */
+    overflow: hidden;
 }
 
 
@@ -350,8 +352,10 @@ footer{
 }
 
 .cont{
-
     
+    /* para hiwalay yung overflow ng cont div */
+    overflow-y: auto;
+
     height: 94.5vh;
     justify-content: center;
     background-color: #16334f;
