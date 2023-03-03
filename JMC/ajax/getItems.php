@@ -11,9 +11,6 @@ $selProj='';
 if(isset($_REQUEST['selProj'])){
     $selProj=$_REQUEST['selProj'];
 }
-if($selProj=='3'){
-    $selProj='1';
-}
 $items=array();
 // $prioq="SELECT MAX(fldPriority) FROM itemofworkstable WHERE fldActive='1' AND fldGroup='$empGroup' AND fldProject='$selProj'";
 // $priostmt=$connwebjmr->query($prioq);
