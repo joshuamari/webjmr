@@ -54,9 +54,18 @@ if($defaultsStmt->rowCount()>0){
         $edate=$dflts['fldDate'];
         $eloc=$dflts['fldLocation'];
         $eproject=$dflts['fldProject'];
-        $projQ="SELECT fldProject FROM projectstable WHERE fldID='$eproject'";
+        $projQ="SELECT fldProject,fldGroup FROM projectstable WHERE fldID='$eproject'";
         $projStmt=$connwebjmr->query($projQ);
-        $eproj=$projStmt->fetchColumn();
+        $projArr=$projStmt->fetchAll();
+        foreach($projArr AS $prj){
+            $projName=$prj['fldProject'];
+            $projGroup=$prj['fldGroup'];
+        }
+        $grpShare="";
+        if($projGroup!=NULL && $projGroup!=$egrp){
+            $grpShare="($projGroup)";
+        }
+        $eproj=$projName.$grpShare;
         $eitem=$dflts['fldItem'];
         $itemQ="SELECT fldItem FROM itemofworkstable WHERE fldID='$eitem'";
         $itemStmt=$connwebjmr->query($itemQ);

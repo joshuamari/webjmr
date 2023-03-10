@@ -3,16 +3,16 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output='<option value="" hidden selected>Select Location</option><option>KDT</option><option>WFH</option>';
+$output='<option value="" hidden selected>Select Location</option>';
 #endregion
 #region MyGroup Query
 $disLocQ="SELECT * FROM dispatch_locations WHERE fldActive=1";
-$disLocStmt=$connwebjmr->query($disLocQ);;
+$disLocStmt=$connwebjmr->query($disLocQ);
 $disArr=$disLocStmt->fetchAll();
 foreach($disArr AS $locs){
     $locid=$locs['fldID'];
     $locName=$locs['fldLocation'];
-    $output.="<option>$locName</option>";
+    $output.="<option loc-id='$locid'>$locName</option>";
 }
 #endregion
 echo $output;
