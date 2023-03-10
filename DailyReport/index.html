@@ -495,28 +495,164 @@
                 </div>
               </div>
             </div>
-         
-          
-          
-
-            
-            
-        </div>
-          
+ 
+          </div>
+        
         </div>
 
         
         
 
         </div>
-        <div class="ms  position-absolute d-none" >
+        <div class="ms  position-absolute p-0" >
           <div class="pindot open position-absolute p-0 m-0" >
             <div class="ms-lbl  d-flex justify-content-start align-items-center" style=" height: 100%;  font-size: 16px; font-weight: 600;">
-              <p class="position-relative m-0 p-3 text-light d-inline-flex" style="width: 100%;">Monthly Standard <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i></p>
+              <p class="position-relative m-0 p-3 text-light d-inline-flex justify-content-center" style="width: 100%;">Monthly Standard <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i></p>
             </div>
           </div>
-          <div class="ms-content  position-absolute bg-gradient" >
+          <div class="ms-content  position-relative d-flex row p-3" >
+            <div class="left col-lg-7 col-12 d-flex align-items-center my-3">
+              <div class="calendar" >
+                <div class="month">
+                  <i class='bx bx-chevron-left fs-1 prev'></i>
+                  <div class="date" >Month</div>
+                  <i class='bx bx-chevron-right fs-1 next' ></i>
+                </div>
+                <div class="weekdays">
+                  <div>sun</div>
+                  <div>mon</div>
+                  <div>tue</div>
+                  <div>wed</div>
+                  <div>thu</div>
+                  <div>fri</div>
+                  <div>sat</div>
             
+                </div>
+                <div class="days">
+                  <!----content here--->
+                </div>
+
+                <div class="goto-today ">
+                  <div class="row position-relative w-100 gap-3 d-flex justify-content-between">
+                    <div class="col-12 col-lg-6 p-0">
+                      <label class="form-label">Go to month</label>  
+                      <div class="goto ">
+
+                        <input type="month" class="form-control" id="gotomonth">
+
+                      </div>
+                    </div>
+                    
+           
+                    <button type="button" class="btn today-btn col-12 col-lg-2 ">today</button>
+                  
+                  </div>
+                 
+                    
+                  
+                </div>
+              </div>
+            </div>
+
+            <div class="right col-lg-5 col-12 my-3 position-relative">
+              <div class="today-date">
+                <div class="event-day ">Day</div>
+                <div class="event-date ">Date</div>
+              </div>
+              <div class="events">
+                <div class="projHr col-12">
+                  <table class="table">
+                    <thead class="sticky-top bg-light">
+                      <tr>
+                        <th>Project</th>
+                        <th>Hours</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                      <tr>
+                        <td>GOW</td>
+                        <td>8</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="card-group row mt-3 g-3">
+                  <!-- <div class="mb-3 col-12">
+                    <label class="form-label text-light">Overtime Hours</label>
+                    <input type="text" class="form-control" placeholder="0" disabled>
+                  </div>
+                  <div class="mb-3 col-12">
+                    <label class="form-label text-light">Regular Hours</label>
+                    <input type="text" class="form-control" placeholder="0" disabled>
+                  </div>
+                  <div class="mb-3 col-12">
+                    <label class="form-label text-light">AMS</label>
+                    <input type="text" class="form-control" placeholder="0" disabled>
+                  </div>
+                  <div class="mb-3 col-12">
+                    <label class="form-label text-light">Leave Hours</label>
+                    <input type="text" class="form-control" placeholder="0" disabled>
+                  </div> -->
+
+                  
+                  <div class="col-lg-6 col-6 card-cont">
+                    <div class="card d-flex justify-content-center align-items-center m-0 p-0" style="height: 100%;">
+                      <h1 >0.00</h1>
+                      <span >Total Hours</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-6 card-cont">
+                    <div class="card d-flex justify-content-center align-items-center m-0 p-0" style="height: 100%;">
+                      <h1>0.00</h1>
+                      <span >Overtime</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-6 card-cont">
+                    <div class="card d-flex justify-content-center align-items-center m-0 p-0" style="height: 100%;">
+                      <h1 >0.00</h1>
+                      <span >AMS</span>
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-6 card-cont">
+                    <div class="card d-flex justify-content-center align-items-center m-0 p-0" style="height: 100%;">
+                      <h1 >0.00</h1>
+                      <span >Leave</span>
+                    </div>
+                  </div>
+                
+                  
+
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

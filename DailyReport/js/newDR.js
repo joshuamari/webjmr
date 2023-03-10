@@ -21,7 +21,7 @@ var lvCount=0;
 
 //#region BINDS
 $(document).ready(function(){//page Initialize Event
-    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
         empDetails=$.parseJSON(data);
         if(empDetails.length<1){//if result is 0, redirect to log in page
           window.location.href=rootFolder+'/welcome'; 
@@ -44,6 +44,8 @@ $(document).ready(function(){//page Initialize Event
         getTOW();
         getEntries();
         sequenceValidation();
+        initCalendar();
+       
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
 
@@ -148,7 +150,8 @@ $(document).on('click','.pindot',function(){
     }else{
         $('.ms-lbl p').html(`Monthly Standard <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`);
     }
-
+   
+    // $('.today-btn').click();
     
 })
 $(document).on('change','#idGroup',function(){//select Group Event
@@ -235,11 +238,17 @@ $(document).on('click','#idCopy',function(){//click Copy Event
 $(document).on('click','button[edit-entry]',function(){//click edit event
     editEntry(this);
 });
-$(document).on('change','#idLocation',function(){//select Group Event
+$(document).on('change','#idLocation',function(){//select Group Event    
     MHValidation();
-    $('#p3').text("");
+    $('#p3').text(""); 
     $(this).removeClass('border-danger');
-});
+    if($(this).val()=="WFH"){
+    
+        $($('#idProject').find('option[proj-id=5]')).attr('hidden',true);
+    }
+    else{
+         $($('#idProject').find('option[proj-id=5]')).attr('hidden',false);
+     }});
 $(document).on('change', '#idMH', function(){
     $('#p10').text("");
     $(this).removeClass('border-danger');
@@ -247,6 +256,33 @@ $(document).on('change', '#idMH', function(){
 $(document).on('change', '#idJRD', function(){
     $('#p6').text("");
     $(this).removeClass('border-danger');
+})
+$(document).on('click','.prev', function(){
+    prevMonth();
+    $('#gotomonth').val("");
+})
+$(document).on('click','.next', function(){
+    nextMonth();
+    $('#gotomonth').val("");
+})
+$(document).on('change','#gotomonth',function(){
+    gotoMonth();
+})
+$(document).on('click', '.today-btn', function(){
+    gotoday();
+    $('#gotomonth').val("");
+})
+$(document).on('click','.day', function() {
+    
+    $('.day').each(function(){
+        $(this).removeClass("active");
+    })
+    $(this).addClass("active");
+    console.log("click")
+    var hatdog = $(this).text();
+    console.log(hatdog)
+    getActiveDay(hatdog);
+    
 })
 
 //#endregion
@@ -528,19 +564,20 @@ function addEntries(iVal){//add Entries to Database
     var tutri=$('input[name="radio"]:checked').val();
     var grp = $('#idGroup').val();
     var date = $('#idDRDate').val();
-    var loc = $('#idLocation').val();
+    var loc = $($('#idLocation').find('option:selected')).attr('loc-id');
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id');
     var tow = $($('#idTOW').find('option:selected')).attr('tow-id');
     var hour = $('#getHour').val()*60 || "0";
     var mins = $('#getMin').val() || "0";
-    var getDuration = `${parseFloat(hour) + parseFloat(mins)}`;  
-    var revision =  "";
+    var getDuration = `${parseFloat(hour) + parseFloat(mins)}`;
+    var revision = "";
     var mhtype = $($('#idMH').find('option:selected')).attr('mhid');
     var remarks = $('#idRemarks').val();
     var checker = $($('#idChecking').find('option:selected')).attr('dataid') || "";
     var mgaKulang = [];
+    
     if($("#id2DDiv").hasClass("d-none")){
         tutri="";
     }
@@ -585,15 +622,14 @@ function addEntries(iVal){//add Entries to Database
         $('#idTOW').addClass('border border-danger')
         mgaKulang.push("TOW");
     }
-    if(tow == 3){//If checker
+    if(tow == 3){//If checker        
         if(!checker){
-        $('#p8').text("Please select checker");
-        $('#idChecking').addClass('border border-danger')
-        mgaKulang.push("CHECKER");
+            $('#p8').text("Please select checker");
+            $('#idChecking').addClass('border border-danger')
+            mgaKulang.push("CHECKER");
         }
     }
-    
-    if(hour>1200||hour<0){//hour*60
+    if(hour>1200||hour<0){//hour*60        
         $('#p9').text("Please input valid time");
         $('#getHour').addClass('border border-danger')
         mgaKulang.push("ORAS");
@@ -614,12 +650,9 @@ function addEntries(iVal){//add Entries to Database
         $('#idMH').addClass('border border-danger')
         mgaKulang.push("MHTYPE");
     };
-    
-    if(proj==5){//IF LEAVE
+    if(proj==5){//IF LEAVE        
         mhtype=2;
-    }
-
-    var fd= new FormData();
+    }    var fd= new FormData()
     fd.append("getTwoThree",tutri);
     fd.append("getGroup",grp);
     fd.append("getDate",date);
@@ -635,36 +668,38 @@ function addEntries(iVal){//add Entries to Database
     fd.append("getChecking",checker);
     fd.append("addType",iVal);
     fd.append("empNum",empDetails['empNum']);
-
     if(mgaKulang.length>0){
         console.log(mgaKulang)
         return;
     }
     else{
-        // for (var pair of fd.entries()) {
-        //     console.log(pair[0]+ ', ' + pair[1]); 
-        // }
+         
+        //for (var pair of fd.entries()) {
+        //     console.log(pair[0]+ ', ' + pair[1]);        
+        //}
         // return;
-        $.ajax({
-            type: "POST",
-            url: "ajax/addEntries.php",
-            data: fd,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function (data) {
-                // console.log(data)
-                getEntries();
-                resetEntry();
-                if($('#idAdd').text()!="Add"){
-                    $('#idAdd').text("Add");
-                    $('#idReset').text("Reset");
+            
+             $.ajax({
+                type: "POST",
+                url: "ajax/addEntries.php",
+                data: fd,
+                contentType: false,
+                cache: false,
+                 processData: false,
+                 success: function (data) {
+                     // console.log(data)
+                     
+                    getEntries();
+                    resetEntry();
+                    if($('#idAdd').text()!="Add"){
+                        $('#idAdd').text("Add");
+                        $('#idReset').text("Reset");
+                    }
+                    isDrawing();
                 }
-                isDrawing();
-            }
-        });
+            });
+        }
     }
-}
 function deleteEntry(iVal){//delete Entries from Database
     $.post("ajax/deleteEntry.php",
     {
@@ -746,32 +781,33 @@ function hasTOW(){
         $("#idTowDescDiv").removeClass("d-none");
     }
 }
-function MHValidation(){//enable/disable manhour type selection
+function MHValidation(){//enable/disable manhour type selection    
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
-    var selLoc="KDT";
+    var selLoc="KDT"; 
+    
     if($('#idLocation').val()){
         selLoc=$('#idLocation').val();
     }
-    $('#idLocation').val();
-    if(projID!="5"){//if Project selected is not LEAVE
+    if(projID!="5"){//if Project selected is not LEAVE        
+        $("#idMH").attr('disabled',false);
+        $("#idMH").val(''); 
         if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
             $("#idMH").attr('disabled',true);
         }
-        else{
-            $("#idMH").attr('disabled',false);
-            $("#idMH").val('');
+        if(selLoc=="WFH"){
+            $("#idMH").val('Regular');
+            $("#idMH").attr('disabled',true);
         }
     }
     else{
         $("#idMH").attr('disabled',true);
-        $("#idMH").val('');
-        if(!isWorkDay(selLoc)){
+         $("#idMH").val('');
+         if(!isWorkDay(selLoc)){
             alert("Leave disabled on holidays/weekends");
             $("#idProject").val("").change();
         }
-    }
-}
+    }}
 function isWorkDay(iVal){//check if work day
     var isWorkDay=false;
     var selDate=$("#idDRDate").val();
@@ -1030,3 +1066,227 @@ function checkTestAccess(){//check if has access to testing
 
 //#endregion
 //#endregion
+
+
+
+//#region
+const calendar = document.querySelector('.calendar');
+ 
+
+let today = new Date();
+let activeDay;
+let month= today.getMonth();
+let year = today.getFullYear();
+
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+
+];
+
+//function to add days
+
+function initCalendar() {
+    console.log("hehe");
+    const firstDay = new Date(year, month , 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const prevLastDay = new Date(year, month, 0);
+    const prevDays = prevLastDay.getDate();
+    const lastDate = lastDay.getDate();
+    const day = firstDay.getDay();
+    const nextDays = 7 - lastDay.getDay() -1;
+
+
+   
+    // date.innerHTML = months[month] + " " + year;//month upper center
+    $('.date').html(months[month] + " " + year);
+
+    //prev month days
+    let days = "";
+    for ( let x=day; x>0; x--){
+        var newDate = new Date(year, month-1, prevDays-x + 1);
+        if(newDate.getDay()==0 ){
+            days += `<div class="day  prev-date weekend">${prevDays-x + 1}</div>`;
+            
+        }
+        else{
+          days += `<div class="day prev-date">${prevDays-x + 1}</div>`;  
+        }
+        // // console.log("prev",prevDays-x + 1);
+        // console.log("prev",newDate);
+        
+    }
+
+    //current month days
+    for (let i = 1; i <=lastDate; i++){
+        //if day is today add class today
+        
+        if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
+            
+            var newDate = new Date(year, month, i);
+            if(newDate.getDay()==0){
+                days += `<div class='day today active weekend'>${i}</div>`;
+                
+            }
+            else{
+                days += `<div class='day today active'>${i}</div>`;
+                
+            }
+            
+        }
+        else{
+            var newDate = new Date(year, month, i);
+            if(newDate.getDay()==0 || newDate.getDay()==6 ){
+                days += `<div class="day weekend">${i}</div>`;
+                
+            }
+            else{
+                days += `<div class="day">${i}</div>`;
+                
+            }
+
+            
+        }
+        activeDay=i;
+            getActiveDay(i);
+       
+    }
+
+
+    //next month days
+    for(let j=1; j<= nextDays; j++){
+       
+        var newDate = new Date(year, month+1, j);
+        if(newDate.getDay()!=6 ){
+            days += `<div class="day next-date ">${j}</div>`;
+        }
+        else{
+            days += `<div class="day next-date weekend">${j}</div>`;
+        }
+        // console.log("next",newDate)
+        
+    }
+    
+
+
+    // daysContainer.innerHTML = days;
+    $('.days').html(days);
+
+    addListener();
+}
+
+
+//previous month
+function prevMonth() {
+    month--;
+    if (month < 0) {
+      month = 11;
+      year--;
+    }
+    initCalendar();
+  }
+
+  //next month
+function nextMonth() {
+  month++;
+  if (month > 11) {
+    month = 0;
+    year++;
+  }
+  initCalendar();
+}
+
+//go to entered date
+function gotoMonth(){
+    const dateArr = $('#gotomonth').val().split('-');
+    if(dateArr.length == 2){
+        if(dateArr[1]> 0 && dateArr[1] < 13 && dateArr[0].length == 4){
+            month = dateArr[1] -1;
+            year = dateArr[0];
+            initCalendar();
+            return;
+            
+        }
+    }
+}
+
+//go to today
+function gotoday(){
+    todayy = new Date();
+    month = todayy.getMonth();
+    year= todayy.getFullYear();
+    initCalendar();
+}
+
+function getActiveDay(date){
+    const day = new Date(year, month, date);
+    const dayName = day.toString().split(" ")[0];
+    $('.event-day').html(dayName);
+    $('.event-date').html(date+" "+months[month]+ " "+year);
+}
+function addListener() {
+    const days = document.querySelectorAll(".day");
+    days.forEach((day) => {
+      day.addEventListener("click", (e) => {
+        getActiveDay(e.target.innerHTML);
+        activeDay = Number(e.target.innerHTML);
+        //remove active
+        days.forEach((day) => {
+          day.classList.remove("active");
+        });
+        //if clicked prev-date or next-date switch to that month
+        if (e.target.classList.contains("prev-date")) {
+          prevMonth();
+          //add active to clicked day afte month is change
+          setTimeout(() => {
+            //add active where no prev-date or next-date
+            const days = document.querySelectorAll(".day");
+            days.forEach((day) => {
+              if (
+                !day.classList.contains("prev-date") &&
+                day.innerHTML === e.target.innerHTML
+              ) {
+                day.classList.add("active");
+              }
+            });
+          }, 100);
+        } else if (e.target.classList.contains("next-date")) {
+          nextMonth();
+          //add active to clicked day afte month is changed
+          setTimeout(() => {
+            const days = document.querySelectorAll(".day");
+            days.forEach((day) => {
+              if (
+                !day.classList.contains("next-date") &&
+                day.innerHTML === e.target.innerHTML
+              ) {
+                day.classList.add("active");
+              }
+            });
+          }, 100);
+        } else {
+          e.target.classList.add("active");
+        }
+      });
+    });
+  }
+  
+//#endregion
+
+$(document).on('change','#gotomonth',function(){
+    gotoMonth();
+})
+$(document).on('click', '.today-btn', function(){
+    gotoday();
+    $('#gotomonth').val("");
+})
