@@ -278,9 +278,9 @@ $(document).on('click','.day', function() {
         $(this).removeClass("active");
     })
     $(this).addClass("active");
-    console.log("click")
+    // console.log("click")
     var hatdog = $(this).text();
-    console.log(hatdog)
+    // console.log(hatdog)
     getActiveDay(hatdog);
     
 })
@@ -921,7 +921,7 @@ function editEntry(iVal){//edit selected entry
 }
 
 function ifSmallScreen(){//responsive
-    if ($(window).width() < 426) {
+    if ($(window).width() < 550) {
       if ($(".sidebar").hasClass(".close")) {
         $(".menu-two").addClass('d-none');
       } else {
@@ -968,108 +968,8 @@ function checkTestAccess(){//check if has access to testing
       }
     );
 }
-//#region 
 
-        //     reg = Convert.ToDouble(lblRegular.Text);
-        //     ot = Convert.ToDouble(lblOT.Text);
-        //     leave = Convert.ToDouble(lblLeave.Text);
-        //     lblRegular.BackColor = Color.PowderBlue;
-        //     lblOT.BackColor = Color.PowderBlue;
-        //     lblLeave.BackColor = Color.PowderBlue;
-
-
-        //     //WFH
-        //     if (cboLocation.Text == "WFH")
-        //     {
-        //         if (leave != 0 || ot != 0)
-        //         {
-        //             lblRegular.BackColor = Color.Red;
-        //             lblOT.BackColor = Color.Red;
-        //             lblLeave.BackColor = Color.Red;
-        //         }
-        //         return;
-        //     }
-        //     //for 1 - 5 daytype
-        //     //regular working day
-        //     if (dayType <= 5)
-        //     {
-        //         if (leave != 0 && ot != 0)
-        //         {
-        //             lblRegular.BackColor = Color.Red;
-        //             lblOT.BackColor = Color.Red;
-        //             lblLeave.BackColor = Color.Red;
-        //         }
-        //         if (ot != 0 && reg < 8)
-        //         {
-        //             lblRegular.BackColor = Color.Red;
-        //             lblOT.BackColor = Color.Red;
-        //         }
-        //         if (leave != 0)
-        //         {
-        //             if (leave + reg > 8)
-        //             {
-        //                 lblRegular.BackColor = Color.Red;
-                       
-        //             }
-        //             if (leave + reg < 8)
-        //             {
-        //                 lblRegular.BackColor = Color.Red;
-        //             }
-        //             if (leave > 8)
-        //             {
-        //                 lblLeave.BackColor = Color.Red;
-        //             }
-        //         }
-        //         else
-        //         {
-        //             if (reg != 8)
-        //             {
-        //                 if (reg > 8)
-        //                 {
-
-        //                     lblOT.BackColor = Color.Red;
-        //                 }
-        //                 lblRegular.BackColor = Color.Red;
-
-        //             }
-
-        //         }
-
-
-        //     }
-        //     //for 6-7-8
-        //     //saturday and sunday and holiday
-        //     if ((dayType > 5) && (dayType <= 8))
-        //     {
-        //         if (reg != 0)//may laman regular
-        //         {
-        //             lblRegular.BackColor = Color.Red;
-        //         }
-        //         else if (leave != 0)//may laman leave
-        //         {
-        //             lblLeave.BackColor = Color.Red;
-        //         }
-        //         else if (ot < 4)//4 hrs minimum sabi sa Manual
-        //         {
-        //             lblOT.BackColor = Color.Red;
-        //         }
-        //         else
-        //         {
-        //             lblRegular.BackColor = Color.PowderBlue;
-        //             lblLeave.BackColor = Color.PowderBlue;
-        //         }
-        //     }
-        // }
-
-
-
-
-//#endregion
-//#endregion
-
-
-
-//#region
+//#region MonthlyStandardViewer
 const calendar = document.querySelector('.calendar');
  
 
@@ -1105,85 +1005,67 @@ function initCalendar() {
     const lastDate = lastDay.getDate();
     const day = firstDay.getDay();
     const nextDays = 7 - lastDay.getDay() -1;
-
-
-   
-    // date.innerHTML = months[month] + " " + year;//month upper center
+    // date.innerHTML = months[month] + " " + year;
+    //month upper center
     $('.date').html(months[month] + " " + year);
-
-    //prev month days
-    let days = "";
-    for ( let x=day; x>0; x--){
-        var newDate = new Date(year, month-1, prevDays-x + 1);
-        if(newDate.getDay()==0 ){
-            days += `<div class="day  prev-date weekend">${prevDays-x + 1}</div>`;
-            
-        }
-        else{
-          days += `<div class="day prev-date">${prevDays-x + 1}</div>`;  
-        }
-        // // console.log("prev",prevDays-x + 1);
-        // console.log("prev",newDate);
-        
-    }
-
-    //current month days
-    for (let i = 1; i <=lastDate; i++){
-        //if day is today add class today
-        
-        if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
-            
-            var newDate = new Date(year, month, i);
-            if(newDate.getDay()==0){
-                days += `<div class='day today active weekend'>${i}</div>`;
-                
+        //#region prev month days
+        let days = "";
+        for ( let x=day; x>0; x--){
+            var newDate = new Date(year, month-1, prevDays-x + 1);
+            if(newDate.getDay()==0 ){
+            days += `<div class="day prev-date weekend">${prevDays-x + 1}</div>`;
             }
             else{
-                days += `<div class='day today active'>${i}</div>`;
-                
+                days += `<div class="day prev-date">${prevDays-x + 1}</div>`
             }
-            
-        }
-        else{
-            var newDate = new Date(year, month, i);
-            if(newDate.getDay()==0 || newDate.getDay()==6 ){
-                days += `<div class="day weekend">${i}</div>`;
-                
+            // 
+            // console.log("prev",prevDays-x + 1);
+            // console.log("prev",newDate);
+            }
+        //#endregion
+        //#region current month days 
+        for (let i = 1; i <=lastDate; i++){
+        //if day is today add class today               
+            if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
+                var newDate = new Date(year, month, i);
+                    if(newDate.getDay()==0){
+                        days += `<div class='day today active weekend'>${i}</div>`;
+                        activeDay=i;
+                        getActiveDay(i);
+                    }
+                    else{
+                        days += `<div class='day today active'>${i}</div>`;
+                        activeDay=i;
+                        getActiveDay(i);
+                    }
             }
             else{
-                days += `<div class="day">${i}</div>`;
-                
+                var newDate = new Date(year, month, i);
+                if(newDate.getDay()==0 || newDate.getDay()==6 ){
+                    days += `<div class="day weekend">${i}</div>`;
+                }
+                else{
+                    days += `<div class="day">${i}</div>`;
+                }
             }
-
-            
         }
-        activeDay=i;
-            getActiveDay(i);
-       
+        //#endregion
+        //#region next month days    
+        for(let j=1; j<= nextDays; j++){
+            var newDate = new Date(year, month+1, j);
+            if(newDate.getDay()!=6 ){
+                days += `<div class="day next-date ">${j}</div>`;
+            }
+            else{
+                days += `<div class="day next-date weekend">${j}</div>`;
+            }
+            // console.log("next",newDate)
+        }
+        //#endregion
+    // daysContainer.innerHTML = days;    
+     $('.days').html(days);
+     addListener();
     }
-
-
-    //next month days
-    for(let j=1; j<= nextDays; j++){
-       
-        var newDate = new Date(year, month+1, j);
-        if(newDate.getDay()!=6 ){
-            days += `<div class="day next-date ">${j}</div>`;
-        }
-        else{
-            days += `<div class="day next-date weekend">${j}</div>`;
-        }
-        // console.log("next",newDate)
-        
-    }
-    
-
-
-    // daysContainer.innerHTML = days;
-    $('.days').html(days);
-
-    addListener();
-}
 
 
 //previous month
@@ -1233,12 +1115,26 @@ function getActiveDay(date){
     const dayName = day.toString().split(" ")[0];
     $('.event-day').html(dayName);
     $('.event-date').html(date+" "+months[month]+ " "+year);
+    // console.log(formatDate(date+" "+months[month]+ " "+year))
+}
+function formatDate(dz) {
+    var d = new Date(dz),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
 }
 function addListener() {
     const days = document.querySelectorAll(".day");
     days.forEach((day) => {
       day.addEventListener("click", (e) => {
-        getActiveDay(e.target.innerHTML);
+        // getActiveDay(e.target.innerHTML);
         activeDay = Number(e.target.innerHTML);
         //remove active
         days.forEach((day) => {
@@ -1280,9 +1176,6 @@ function addListener() {
       });
     });
   }
-  
-//#endregion
-
 $(document).on('change','#gotomonth',function(){
     gotoMonth();
 })
@@ -1290,3 +1183,4 @@ $(document).on('click', '.today-btn', function(){
     gotoday();
     $('#gotomonth').val("");
 })
+//#endregion
