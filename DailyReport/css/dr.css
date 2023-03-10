@@ -46,7 +46,7 @@ body {
     height: 100%;
     width: 260px;
     background: var(--main-blue);
-    z-index: 100;
+    z-index: 10000;
     transition: all 0.5s ease;
 }
 
@@ -959,7 +959,7 @@ footer{
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 550px) {
     
     .sidebar.close .nav-links li .sub-menu {
         display: none;
@@ -970,7 +970,7 @@ footer{
 
     .sidebar {
         width: 100%;
-        z-index: 100;
+        z-index: 10000;
     }
     .sidebar.close .logo-details
     {
@@ -1033,8 +1033,17 @@ footer{
         width: 350px;
         height: 60px;
     }
+    .ms .pindot{
+        width: 30%; 
+    }
+    .ms{
+        left: 70%;
+    }
+    .ms .ms-content{
+        left: 30%;
+    }
 }
-@media (max-width:902px){
+@media (min-width:551px) and ( max-width:902px){
     .ms .pindot{
         width: 20%; 
     }
