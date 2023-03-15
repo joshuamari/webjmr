@@ -19,16 +19,16 @@ if(!empty($userHash)){
         $output+=["empDateHired"=>$empdeets['fldDateHired']];
         $output+=["empGroup"=>$empdeets['fldGroup']];
         $output+=["empGender"=>$empdeets['fldGender']];
-        $output+=["empRole"=>NULL];
+        // $output+=["empRole"=>NULL];
     }
-    $emppic="SELECT * FROM formspic WHERE fldEmployeeNum='$userLogin'";
-    $emppicStmt=$connkdt->query($emppic);
-    $emppicArr=$emppicStmt->fetchAll();
-    if(count($emppicArr)>0){
-        foreach($emppicArr AS $emppics){
-            $output["empRole"]=$emppics['fldRole'];
-        }
-    }
+    // $emppic="SELECT * FROM formspic WHERE fldEmployeeNum='$userLogin'";
+    // $emppicStmt=$connkdt->query($emppic);
+    // $emppicArr=$emppicStmt->fetchAll();
+    // if(count($emppicArr)>0){
+    //     foreach($emppicArr AS $emppics){
+    //         $output["empRole"]=$emppics['fldRole'];
+    //     }
+    // }
     
 }
 echo json_encode($output);

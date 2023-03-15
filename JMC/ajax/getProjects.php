@@ -9,15 +9,25 @@ if(isset($_REQUEST['empGroup'])){
 }
 $kdtw="";
 if(!in_array($empGroup,$KDTWAccess)){
-    $kdtw=" AND fldID<>'2'";
+    $kdtw=" AND fldID<>'$solProjID'";
+}
+$empPos='';
+if(isset($_REQUEST['empPos'])){
+    $empPos=$_REQUEST['empPos'];
+}
+$empNum='';
+if(isset($_REQUEST['empNum'])){
+    $empNum=$_REQUEST['empNum'];
+}
+$mngStatement="";
+if(!in_array($empPos,$managementPositions) && !in_array($empNum,$gods)){
+    $mngStatement=" AND fldID<>'$mngProjID'";
 }
 $projects=array();
-$prioq="SELECT MAX(fldPriority) FROM projectstable WHERE fldActive='1' AND fldGroup='$empGroup'";
-$priostmt=$connwebjmr->query($prioq);
-$maxPrio=$priostmt->fetchColumn();
 #endregion
+
 #region Projects Query
-$projectsQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup='$empGroup') AND fldDelete=0 $kdtw ORDER BY fldPriority DESC,fldActive DESC";
+$projectsQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup='$empGroup') AND fldDelete=0 $kdtw $mngStatement ORDER BY fldPriority DESC,fldActive DESC";
 $projectsStmt=$connwebjmr->query($projectsQ);
 $projArr=$projectsStmt->fetchAll();
 if(count($projArr)>0){

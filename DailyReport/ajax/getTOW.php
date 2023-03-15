@@ -9,7 +9,7 @@ if(isset($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
 }
 $type=1;
-if($projID==5){
+if($projID==$leaveID){
     $type=0;
 }
 #endregion

@@ -16,7 +16,7 @@ $items=array();
 // $priostmt=$connwebjmr->query($prioq);
 // $maxPrio=$priostmt->fetchColumn();
 $groupStatement="fldGroup='$empGroup'";
-if(in_array($selProj,$defaultProjID)){
+if(in_array($selProj,$defaultProjID) && $selProj!=$solProjID){
     $groupStatement="fldGroup IS NULL";
 }
 #endregion

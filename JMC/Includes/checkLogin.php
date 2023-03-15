@@ -22,6 +22,7 @@ if(!empty($userHash)){
         $output+=["empSName"=>$empdeets['fldSurname']];
         $output+=["empNName"=>$empdeets['fldNick']];
         $output+=["empDateHired"=>$empdeets['fldDateHired']];
+        $output+=["empPos"=>$empdeets['fldDesig']];
     }
 }
 echo json_encode($output);

@@ -10,11 +10,19 @@ if(isset($_REQUEST['empGroup'])){
 }
 $kdtw='';
 if(!in_array($empGroup,$KDTWAccess)){
-    $kdtw=" AND fldID<>'2'";
+    $kdtw=" AND fldID<>'$solProjID'";
+}
+$empPos='';
+if(isset($_REQUEST['empPos'])){
+    $empPos=$_REQUEST['empPos'];
 }
 $empNum='';
 if(isset($_REQUEST['empNum'])){
     $empNum=$_REQUEST['empNum'];
+}
+$mngStatement="";
+if(!in_array($empPos,$managementPositions) && !in_array($empNum,$gods)){
+    $mngStatement=" AND fldID<>'$mngProjID'";
 }
 $sharedProjects="OR fldID IN (";
 $spQ="SELECT * FROM project_share WHERE fldEmployeeNum='$empNum'";
@@ -34,7 +42,7 @@ else{
 #endregion
 #region MyGroup Query
 if($empGroup!=''){
-    $projQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup=:empGroup $sharedProjects) AND fldActive=1 AND fldDelete=0 $kdtw ORDER BY fldDirect DESC,fldPriority";
+    $projQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup=:empGroup $sharedProjects) AND fldActive=1 AND fldDelete=0 $kdtw $mngStatement ORDER BY fldDirect DESC,fldPriority";
     $projStmt=$connwebjmr->prepare($projQ);
     $projStmt->execute([":empGroup"=>$empGroup]);
     $projArr=$projStmt->fetchAll();
