@@ -638,6 +638,7 @@ footer{
     border-top-left-radius: 10px; 
     border-bottom-left-radius: 10px;
     cursor: pointer;
+    pointer-events: auto;
 }
 
 .ms .ms-content{
@@ -657,6 +658,7 @@ footer{
     left: 88%; 
     z-index: 1021;
     transition: all 0.5s ease;
+    pointer-events: none;
 }
 
 .ms.open {
