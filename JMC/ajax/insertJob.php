@@ -9,12 +9,15 @@ if(isset($_REQUEST['projID'])){
 }
 $itemID=NULL;
 $grp=NULL;
-if($projID!=2){
-    if(isset($_REQUEST['itemID'])){
-        $itemID=$_REQUEST['itemID'];
-    }
+// if($projID!=2){
+//     if(isset($_REQUEST['itemID'])){
+//         $itemID=$_REQUEST['itemID'];
+//     }
+// }
+if(isset($_REQUEST['itemID'])){
+    $itemID=$_REQUEST['itemID'];
 }
-if($projID!=5){
+if($projID!=$leaveID){
     if(isset($_REQUEST['grp'])){
         $grp=$_REQUEST['grp'];
     }

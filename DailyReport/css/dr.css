@@ -793,31 +793,30 @@ footer{
     content: '';
     position: absolute;
     bottom: 10%;
-    left: 50%;
+    /* left: 50%; */
     width: 75%;
     height: 6px;
     border-radius: 30px;
-    transform: translateX(-50px);
+    /* transform: translateX(-50px); */
     background-color:var(--green-color);
 }
 .calendar .days .red::after{
     content: '';
     position: absolute;
     bottom: 10%;
-    left: 50%;
+    /* left: 50%; */
     width: 75%;
     height: 6px;
     border-radius: 30px;
-    transform: translateX(-50px);
+    /* transform: translateX(-50px); */
     background-color: var(--red-color);
 }
-.calendar .days .green:hover::after,
+/* .calendar .days .green:hover::after,
 .calendar .days .red:hover::after{
     background-color: #fff;
-}
+} */
 .calendar .days .active.green::after,
 .calendar .days .active.red::after{
-    background-color: #fff;
     bottom: 20%;
 }
 .calendar .days .active.green,

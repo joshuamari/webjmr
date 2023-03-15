@@ -6,7 +6,7 @@ require_once "../Includes/dbconnectwebjmr.php";
 $defaults=array();
 #endregion
 #region Defaults Query
-$defaultsQ="SELECT * FROM drawingreference WHERE fldProject=5 AND fldGroup IS NULL";
+$defaultsQ="SELECT * FROM drawingreference WHERE fldProject='$leaveID' AND fldGroup IS NULL";
 $defaultsStmt=$connwebjmr->query($defaultsQ);
 $defArr=$defaultsStmt->fetchAll();
 foreach($defArr AS $dflts){

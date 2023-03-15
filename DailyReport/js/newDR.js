@@ -17,6 +17,7 @@ const defaults =getDefaults();
 var regCount=0;
 var otCount=0;
 var lvCount=0;
+const leaveID=getLeaveID();
 //#endregion
 
 //#region BINDS
@@ -190,9 +191,6 @@ $(document).on('change','#idProject',function(){//select Project Event
     var projID=$($(this).find('option:selected')).attr('proj-id');//get ID of selected Project
     $('#idJRD').val('');//clear Job Request Description
     getItems(projID);
-    // if(projID==1 || projID==5 || projID==4){//IF GOW or LEAVE
-    //     getJobs(projID,"test");
-    // }
     isDrawing();
     getTOW(projID);
     disableTimeInput(projID);
@@ -200,7 +198,7 @@ $(document).on('change','#idProject',function(){//select Project Event
     $('#p4').text("");
     $(this).removeClass('border-danger');
 
-    if(projID == '5'){
+    if(projID == leaveID){
         $('#itemlbl').html("Leave Type");
         $('#lbltow').html("Day Type");
     }
@@ -238,16 +236,15 @@ $(document).on('click','#idCopy',function(){//click Copy Event
 $(document).on('click','button[edit-entry]',function(){//click edit event
     editEntry(this);
 });
-$(document).on('change','#idLocation',function(){//select Group Event    
+$(document).on('change','#idLocation',function(){//select Group Event  
     MHValidation();
-    $('#p3').text(""); 
+    $('#p3').text("");
     $(this).removeClass('border-danger');
     if($(this).val()=="WFH"){
-    
-        $($('#idProject').find('option[proj-id=5]')).attr('hidden',true);
+        $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',true);
     }
     else{
-         $($('#idProject').find('option[proj-id=5]')).attr('hidden',false);
+         $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',false);
      }});
 $(document).on('change', '#idMH', function(){
     $('#p10').text("");
@@ -516,7 +513,8 @@ function getProjects(){//get Project Selection
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
-        empNum:empDetails['empNum']
+        empNum:empDetails['empNum'],
+        empPos:empDetails['empPos']
     },
         function (data) {
             $('#idProject').html(data);
@@ -622,14 +620,14 @@ function addEntries(iVal){//add Entries to Database
         $('#idTOW').addClass('border border-danger')
         mgaKulang.push("TOW");
     }
-    if(tow == 3){//If checker        
+    if(tow == 3){//If checker    
         if(!checker){
             $('#p8').text("Please select checker");
             $('#idChecking').addClass('border border-danger')
             mgaKulang.push("CHECKER");
         }
     }
-    if(hour>1200||hour<0){//hour*60        
+    if(hour>1200||hour<0){//hour*60    
         $('#p9').text("Please input valid time");
         $('#getHour').addClass('border border-danger')
         mgaKulang.push("ORAS");
@@ -645,14 +643,15 @@ function addEntries(iVal){//add Entries to Database
         $('#getMin').addClass('border border-danger')
         mgaKulang.push("ORAS");
     }
-    if(!mhtype && proj!=5){
+    if(!mhtype && proj!=leaveID){
         $('#p10').text("Please select manhour type");
         $('#idMH').addClass('border border-danger')
         mgaKulang.push("MHTYPE");
     };
-    if(proj==5){//IF LEAVE        
+    if(proj==leaveID){//IF LEAVE    
         mhtype=2;
-    }    var fd= new FormData()
+    }
+    var fd= new FormData()
     fd.append("getTwoThree",tutri);
     fd.append("getGroup",grp);
     fd.append("getDate",date);
@@ -675,7 +674,7 @@ function addEntries(iVal){//add Entries to Database
     else{
          
         //for (var pair of fd.entries()) {
-        //     console.log(pair[0]+ ', ' + pair[1]);        
+        //   console.log(pair[0]+ ', ' + pair[1]);    
         //}
         // return;
             
@@ -722,7 +721,7 @@ function resetEntry(){//reset Inputs
 function disableTimeInput(iVal){//disable Time Input
     $('#getHour').prop('disabled',false);
     $('#getMin').prop('disabled',false);
-    if(iVal==5){
+    if(iVal==leaveID){
         $('#getHour').prop('disabled',true);
         $('#getMin').prop('disabled',true);
     }
@@ -751,7 +750,8 @@ function hasJRD(){
     var isDrawing = true;
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
     var selGroup=$("#idGroup").val();
-    isDrawing=((!defaults.includes(projID) || projID=='2') && projID);
+    // isDrawing=((!defaults.includes(projID) || projID=='2') && projID);
+    isDrawing=(!defaults.includes(projID) && projID);
     // return isDrawing;
     if(isDrawing){
         $("#idJRDDiv").removeClass("d-none");
@@ -776,21 +776,21 @@ function hasTOW(){
         $("#idTowDiv").addClass("d-none");
         $("#idTowDescDiv").addClass("d-none");
     }
-    if(projID=='5'){
+    if(projID==leaveID){
         $("#idTowDiv").removeClass("d-none");
         $("#idTowDescDiv").removeClass("d-none");
     }
 }
-function MHValidation(){//enable/disable manhour type selection    
+function MHValidation(){//enable/disable manhour type selection  
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
-    var selLoc="KDT"; 
+    var selLoc="KDT";
     
     if($('#idLocation').val()){
         selLoc=$('#idLocation').val();
     }
-    if(projID!="5"){//if Project selected is not LEAVE        
+    if(projID!=leaveID){//if Project selected is not LEAVE    
         $("#idMH").attr('disabled',false);
-        $("#idMH").val(''); 
+        $("#idMH").val('');
         if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
             $("#idMH").attr('disabled',true);
@@ -807,7 +807,8 @@ function MHValidation(){//enable/disable manhour type selection   
             alert("Leave disabled on holidays/weekends");
             $("#idProject").val("").change();
         }
-    }}
+    }
+}
 function isWorkDay(iVal){//check if work day
     var isWorkDay=false;
     var selDate=$("#idDRDate").val();
@@ -968,6 +969,18 @@ function checkTestAccess(){//check if has access to testing
       }
     );
 }
+function getLeaveID(){
+    var lvID=``;
+    $.ajax({
+      url: "ajax/getLeaveID.php",
+      success: function (data) {
+        lvID=data.trim();
+      },
+      async: false
+    });
+    return lvID;
+}
+//#endregion
 
 //#region MonthlyStandardViewer
 const calendar = document.querySelector('.calendar');
@@ -997,7 +1010,7 @@ const months = [
 //function to add days
 
 function initCalendar() {
-    console.log("hehe");
+    // console.log("hehe");
     const firstDay = new Date(year, month , 1);
     const lastDay = new Date(year, month + 1, 0);
     const prevLastDay = new Date(year, month, 0);
@@ -1023,9 +1036,9 @@ function initCalendar() {
             // console.log("prev",newDate);
             }
         //#endregion
-        //#region current month days 
+        //#region current month days
         for (let i = 1; i <=lastDate; i++){
-        //if day is today add class today               
+        //if day is today add class today       
             if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
                 var newDate = new Date(year, month, i);
                     if(newDate.getDay()==0){
@@ -1050,7 +1063,7 @@ function initCalendar() {
             }
         }
         //#endregion
-        //#region next month days    
+        //#region next month days  
         for(let j=1; j<= nextDays; j++){
             var newDate = new Date(year, month+1, j);
             if(newDate.getDay()!=6 ){
@@ -1062,7 +1075,7 @@ function initCalendar() {
             // console.log("next",newDate)
         }
         //#endregion
-    // daysContainer.innerHTML = days;    
+    // daysContainer.innerHTML = days;  
      $('.days').html(days);
      addListener();
     }
@@ -1116,9 +1129,10 @@ function getActiveDay(date){
     $('.event-day').html(dayName);
     $('.event-date').html(date+" "+months[month]+ " "+year);
     // console.log(formatDate(date+" "+months[month]+ " "+year))
+    getDayta(formatDate(date+" "+months[month]+ " "+year));
 }
-function formatDate(dz) {
-    var d = new Date(dz),
+function formatDate(iVal) {
+    var d = new Date(iVal),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -1175,7 +1189,32 @@ function addListener() {
         }
       });
     });
-  }
+}
+function getDayta(iVal){
+    $('#pHoursTable').empty();
+    var projHours=[];
+    $.post("ajax/getDayta.php",
+    {
+        getDate:iVal,
+        empNum:empDetails['empNum']
+    },
+        function (data) {
+            projHours=$.parseJSON(data);
+            // console.log(projHours)
+            projHours.map(fillDayta);
+        }
+    );
+    // projHours.map(fillDayta);
+}
+function fillDayta(iVal){
+    var prj = iVal.split('||')[0];
+    var prjHrs = iVal.split('||')[1];
+    var addString=`<tr>
+    <td>${prj}</td>
+    <td>${prjHrs}</td>
+  </tr>`;
+    $('#pHoursTable').append(addString);
+}
 $(document).on('change','#gotomonth',function(){
     gotoMonth();
 })

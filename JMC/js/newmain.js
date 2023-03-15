@@ -14,7 +14,6 @@ switch (document.location.hostname)
 }
 var empDetails=[];
 const defaults =getDefaults();
-const kdtWorks=2;
 var projects=[];
 var items=[];
 var selectedProject='';
@@ -28,6 +27,7 @@ var del='';
 var buicEdit=``;
 
 var shareAccess=``;
+const solProjID=getSolProjID();
 $.ajaxSetup({async: false});
 $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
   empDetails=$.parseJSON(data);
@@ -201,13 +201,13 @@ $(document).on('click','.itemIcon',function(){
 })
 $(document).on({
   mouseenter: function () {
-    if(!defaults.includes(selectedProject) || selectedProject==kdtWorks ){
+    if(!defaults.includes(selectedProject)){
       $($(this).find('.itemPrio')).hide();
       $($(this).find('.itemIcon')).show();
     }
   },
   mouseleave: function () {
-    if(!defaults.includes(selectedProject) || selectedProject==kdtWorks ){
+    if(!defaults.includes(selectedProject)){
       $($(this).find('.itemPrio')).show();
       $($(this).find('.itemIcon')).hide();
     }
@@ -366,6 +366,8 @@ function getProjects(){//get projects
   $.post("ajax/getProjects.php",
   {
     empGroup:$('#myGroup').val(),
+    empPos:empDetails['empPos'],
+    empNum:empDetails['empNum']
   },
     function (data) {
       projects=$.parseJSON(data);
@@ -679,7 +681,7 @@ function itemRow(iVal){//lay item table
   //$($(this).parent()).attr('id');//get TR ID
   
   var nonDefaults=``;
-  if(ifEditable(selectedProject) || selectedProject==2){
+  if(ifEditable(selectedProject) || selectedProject==solProjID){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
@@ -803,15 +805,6 @@ function fillJob(){//set draw refs to lay
   $('#jrdTable').empty();
   jobs.map(jobRow)
   getGOWJob();
-  // if(selectedProjectString == "GENERAL OFFICE WORK"){
-  //   gowJobVal.map(jobRow); // mga common sa GOW
-  // }
-  // if(selectedProjectString == "LEAVE"){
-  //   leaveJobVal.map(jobRow); // mga common sa Leave
-  // }
-  // if(selectedProjectString == "OTHER"){
-  //   otherJobVal.map(jobRow); // mga common sa Leave
-  // }
 }
 function jobRow(iVal){//lay drawref table
   var iTitle = iVal.split('||')[0];
@@ -936,15 +929,9 @@ function checkJRDADD(){//check if jrd add has engineering fields
   else{
     $('.engr').removeClass('d-none');
   }
-  // if(selectedProject=='5' || selectedProject=='4'){
-  //   $('#divAddJRD').addClass('d-none');
-  // }
-  // else{
-  //   $('#divAddJRD').removeClass('d-none');
-  // }
 }
 function checkItemAdd(){//check if selected project can add itemofworks
-  if(defaults.includes(selectedProject) && selectedProject!=2){
+  if(defaults.includes(selectedProject) && selectedProject!=solProjID){
     $('#divAddItem').addClass('d-none');
   }
   else{
@@ -1071,6 +1058,17 @@ function checkAddShare(){
     vool=false;
   }
   return vool;
+}
+function getSolProjID(){
+    var spID=``;
+    $.ajax({
+      url: "ajax/getSolProjID.php",
+      success: function (data) {
+        spID=data.trim();
+      },
+      async: false
+    });
+    return spID;
 }
 // var projID=$($(this).find('option:selected')).attr('proj-id');
 //#endregion
