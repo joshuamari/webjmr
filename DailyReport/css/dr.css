@@ -650,6 +650,7 @@ footer{
     color: #fff;
     margin: 0;
     overflow-y: auto;
+    pointer-events: auto;
 }
 
 .ms{
