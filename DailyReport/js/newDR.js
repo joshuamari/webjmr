@@ -326,7 +326,7 @@ function getDispatchLoc(){//get Dispatch Location Selection
     });
 }
 function getTOW(iVal){//get Types of Work Selection
-    $.ajaxSetup({async: false});
+    // $.ajaxSetup({async: false});
     $("#idTOW").prop('selectedIndex',0);
     $("#idChecking").prop('selectedIndex',0);
     $("#forChecking").hide();
@@ -339,7 +339,7 @@ function getTOW(iVal){//get Types of Work Selection
             $('#idTOW').val("").change();
         }
     );
-    $.ajaxSetup({async: true});
+    // $.ajaxSetup({async: true});
 }
 function addRow(iVal){//map Entries for display
     // ["primary_id||location||group||project||item||description||hour||mht"]
@@ -351,6 +351,7 @@ function addRow(iVal){//map Entries for display
     var desc = iVal.split('||')[5];
     var hour = parseFloat(iVal.split('||')[6]);
     var mht = iVal.split('||')[7];
+    var rmrks = iVal.split('||')[8];
     const mhtyp = ["Regular", "OT", "Leave"];
     switch(mht){
         case "0":
@@ -367,7 +368,7 @@ function addRow(iVal){//map Entries for display
             break;
     }
     var addString = `
-    <tr id="${mht}_${pId}">
+    <tr id="${mht}_${pId}" title="${rmrks}">
     <td>${loc}</td>
     <td>${group}</td>
     <td>${project}</td>
@@ -828,7 +829,6 @@ function isWorkDay(iVal){//check if work day
     );
     $.ajaxSetup({async: true});
     return isWorkDay;
-
 }
 function getTOWDesc(iVal){//get TOW Selection
     $.post("ajax/getTOWDesc.php",
@@ -1018,6 +1018,7 @@ function initCalendar() {
     const lastDate = lastDay.getDate();
     const day = firstDay.getDay();
     const nextDays = 7 - lastDay.getDay() -1;
+    var mhColor=``;
     // date.innerHTML = months[month] + " " + year;
     //month upper center
     $('.date').html(months[month] + " " + year);
@@ -1025,11 +1026,12 @@ function initCalendar() {
         let days = "";
         for ( let x=day; x>0; x--){
             var newDate = new Date(year, month-1, prevDays-x + 1);
+            // mhColor=checkValidMH(formatDate((prevDays-x + 1)+" "+months[month-1]+ " "+year))
             if(newDate.getDay()==0 ){
-            days += `<div class="day prev-date weekend">${prevDays-x + 1}</div>`;
+            days += `<div class="day prev-date weekend ${mhColor}">${prevDays-x + 1}</div>`;
             }
             else{
-                days += `<div class="day prev-date">${prevDays-x + 1}</div>`
+                days += `<div class="day prev-date ${mhColor}">${prevDays-x + 1}</div>`
             }
             // 
             // console.log("prev",prevDays-x + 1);
@@ -1038,16 +1040,18 @@ function initCalendar() {
         //#endregion
         //#region current month days
         for (let i = 1; i <=lastDate; i++){
-        //if day is today add class today       
+        //if day is today add class today
+        
+        // mhColor=checkValidMH(formatDate(i+" "+months[month]+ " "+year))
             if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
                 var newDate = new Date(year, month, i);
                     if(newDate.getDay()==0){
-                        days += `<div class='day today active weekend'>${i}</div>`;
+                        days += `<div class='day today active weekend ${mhColor}'>${i}</div>`;
                         activeDay=i;
                         getActiveDay(i);
                     }
                     else{
-                        days += `<div class='day today active'>${i}</div>`;
+                        days += `<div class='day today active ${mhColor}'>${i}</div>`;
                         activeDay=i;
                         getActiveDay(i);
                     }
@@ -1055,22 +1059,23 @@ function initCalendar() {
             else{
                 var newDate = new Date(year, month, i);
                 if(newDate.getDay()==0 || newDate.getDay()==6 ){
-                    days += `<div class="day weekend">${i}</div>`;
+                    days += `<div class="day weekend ${mhColor}">${i}</div>`;
                 }
                 else{
-                    days += `<div class="day">${i}</div>`;
+                    days += `<div class="day ${mhColor}">${i}</div>`;
                 }
             }
         }
         //#endregion
         //#region next month days  
         for(let j=1; j<= nextDays; j++){
+            // mhColor=checkValidMH(formatDate(j+" "+months[month+1]+ " "+year))
             var newDate = new Date(year, month+1, j);
             if(newDate.getDay()!=6 ){
-                days += `<div class="day next-date ">${j}</div>`;
+                days += `<div class="day next-date  ${mhColor}">${j}</div>`;
             }
             else{
-                days += `<div class="day next-date weekend">${j}</div>`;
+                days += `<div class="day next-date weekend ${mhColor}">${j}</div>`;
             }
             // console.log("next",newDate)
         }
@@ -1078,6 +1083,8 @@ function initCalendar() {
     // daysContainer.innerHTML = days;  
      $('.days').html(days);
      addListener();
+     addColors(formatDate(1+" "+months[month]+ " "+year));
+    //  alert(formatDate(1+" "+months[month]+ " "+year))
     }
 
 
@@ -1193,6 +1200,8 @@ function addListener() {
 function getDayta(iVal){
     $('#pHoursTable').empty();
     var projHours=[];
+    var mhArr=[0,0,0,0];
+    $.ajaxSetup({async: false});
     $.post("ajax/getDayta.php",
     {
         getDate:iVal,
@@ -1201,10 +1210,20 @@ function getDayta(iVal){
         function (data) {
             projHours=$.parseJSON(data);
             // console.log(projHours)
-            projHours.map(fillDayta);
+            if(projHours.length>0){
+                projHours.map(fillDayta);
+            }
+            else{
+                $('#pHoursTable').html("<tr><td colspan='2' class='text-center'>No entries found</td></tr>");
+            }
         }
     );
-    // projHours.map(fillDayta);
+    $.ajaxSetup({async: true});
+    mhArr=getMHDayta(iVal);
+    $('#msvReg').html(mhArr[0].toFixed(2));
+    $('#msvOt').html(mhArr[1].toFixed(2));
+    $('#msvLv').html(mhArr[2].toFixed(2));
+    $('#msvAms').html(mhArr[3].toFixed(2));
 }
 function fillDayta(iVal){
     var prj = iVal.split('||')[0];
@@ -1214,6 +1233,102 @@ function fillDayta(iVal){
     <td>${prjHrs}</td>
   </tr>`;
     $('#pHoursTable').append(addString);
+}
+function checkValidMH(iVal){
+    var mhColor=``;
+    var selLoc='KDT';
+    var mhArr=[0,0,0,0];
+    mhArr=getMHDayta(iVal);
+    var rHr=mhArr[0];
+    var otHr=mhArr[1];
+    var lHr=mhArr[2];
+    var totalHr=rHr+lHr;
+    var aHr=mhArr[3];
+    if($('#idLocation').val()){
+        selLoc=$('#idLocation').val();
+    }
+    var startDay=new Date('2023-02-27');
+    var curDay=new Date();
+    var compDay=new Date(iVal);
+    if(startDay<=compDay && compDay<=curDay){
+        if(selLoc=="WFH"){
+            // if(otHr>0){
+            //     $('#cardOt').addClass('new');
+            // }
+            // if(lHr>0){
+            //     $('#cardLv').addClass('new');
+            // }
+        }
+        else{
+            if(isWorkDayMSV(selLoc,iVal)){
+                if(totalHr>=8){
+                    mhColor=`green`;
+                }
+                else{
+                    mhColor=`red`;
+                }
+            }
+            else{
+                if(totalHr>0){
+                    if(totalHr>4){
+                        mhColor=`green`;
+                    }
+                    else{
+                        mhColor=`red`;
+                    }
+                }
+            }
+        }
+    }
+    return mhColor;
+}
+function isWorkDayMSV(iVal,xVal){//check if work day
+    var isWorkDay=false;
+    var selDate=xVal;
+    var selLoc=iVal;
+    if(selLoc==null){
+        selLoc="KDT";
+    }
+    $.ajaxSetup({async: false});
+    $.post("ajax/checkWorkDay.php",
+    {
+        selDate:selDate,
+        selLoc:selLoc
+    },
+        function (data) {
+            isWorkDay=$.parseJSON(data);
+        }
+    );
+    $.ajaxSetup({async: true});
+    return isWorkDay;
+}
+function getMHDayta(iVal){
+    var mhArr=[0,0,0,0];
+    $.ajaxSetup({async: false});
+    $.post("ajax/getMHDayta.php",
+    {
+        getDate:iVal,
+        empNum:empDetails['empNum']
+    },
+        function (data) {
+            mhArr=$.parseJSON(data);
+            console.log(mhArr)
+        }
+    );
+    $.ajaxSetup({async: true});
+    return mhArr;
+}
+function addColors(iVal){
+    var greenDates=['2023-03-13','2023-03-14','2023-03-15','2023-03-16'];
+    var redDates=['2023-02-27','2023-02-28','2023-03-01','2023-03-02'];
+    // $().addClass('green');
+    greenDates.forEach(element => {
+        //check month year if less than current
+        //if prev month
+        //$(`.day.prev-date:contains(${testdate})`).addClass('green')
+        //if cur month
+        //$(`.day:contains(${testdate})`).addClass('green')
+    });
 }
 $(document).on('change','#gotomonth',function(){
     gotoMonth();

@@ -27,7 +27,8 @@ foreach($drArr AS $dr){
     $drJob=$dr['jobName'];
     $drHour=$dr['fldDuration'];
     $drMH=$dr['fldMHType'];
-    $drEntry=$drID."||".$drLoc."||".$drGroup."||".$drProj."||".$drItem."||".$drJob."||".$drHour."||".$drMH;
+    $drRemarks=$dr['fldRemarks'];
+    $drEntry=$drID."||".$drLoc."||".$drGroup."||".$drProj."||".$drItem."||".$drJob."||".$drHour."||".$drMH."||".$drRemarks;
     array_push($entries,$drEntry);
 }
 #endregion
