@@ -46,6 +46,7 @@ $(document).ready(function(){//page Initialize Event
         getEntries();
         sequenceValidation();
         initCalendar();
+        addColors();
        
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
@@ -1312,22 +1313,67 @@ function getMHDayta(iVal){
     },
         function (data) {
             mhArr=$.parseJSON(data);
-            console.log(mhArr)
+            // console.log(mhArr)
         }
     );
     $.ajaxSetup({async: true});
     return mhArr;
 }
-function addColors(iVal){
+function addColors(){
     var greenDates=['2023-03-13','2023-03-14','2023-03-15','2023-03-16'];
-    var redDates=['2023-02-27','2023-02-28','2023-03-01','2023-03-02'];
+    var redDates=['2023-02-27','2023-02-28','2023-04-01','2023-03-02'];
+  
     // $().addClass('green');
     greenDates.forEach(element => {
+        
+        var spl = element.split("-");
+        
+        var m = spl[1];
+        var da = spl[2];
+        var d = new Date();
+        var nowm = d.getMonth()+1;
+   
+        
+        if (m>nowm){
+            $(`.day.next-date:contains(${parseInt(da)})`).addClass('green').removeClass('red');
+        }
+        else if(m<nowm){
+            $(`.day.prev-date:contains(${parseInt(da)})`).addClass('green').removeClass('red');
+        }
+        else{
+            $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(da)}`; }).addClass("green").removeClass("red");
+        }
+        
+
+        // console.log("ha");
         //check month year if less than current
         //if prev month
         //$(`.day.prev-date:contains(${testdate})`).addClass('green')
         //if cur month
         //$(`.day:contains(${testdate})`).addClass('green')
+    });
+    redDates.forEach(element => {
+        
+        var spl = element.split("-");
+        
+        var mm = spl[1];
+        var daa = spl[2];
+        var d = new Date();
+        var nowmm = d.getMonth()+1;
+        
+        
+        if (mm>nowmm){
+            $(`.day.next-date:contains(${parseInt(daa)})`).addClass('red').removeClass('green')
+        }
+        else if(mm<nowmm){
+            $(`.day.prev-date:contains(${parseInt(daa)})`).addClass('red').removeClass('green');
+        }
+        else{
+            // $(`.day:contains(${parseInt(daa)})`).addClass('red').removeClass('green');
+            // $('.day').filter(function() {return $(this).text() == `${parseInt(daa)}`;}).addClass('red').removeClass('green');
+            $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("red").removeClass("green");
+        }
+
     });
 }
 $(document).on('change','#gotomonth',function(){
