@@ -46,7 +46,6 @@ $(document).ready(function(){//page Initialize Event
         getEntries();
         sequenceValidation();
         initCalendar();
-        addColors();
        
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
@@ -160,7 +159,7 @@ $(document).on('change','#idGroup',function(){//select Group Event
     // var getSelValue = $(this).children(":selected").attr("data-id");
     // $('#idGroup').children(":selected").attr("data-id");
     getProjects();
-    getCheckers();
+    // getCheckers();
     $('#p1').text("");
     $(this).removeClass('border-danger');
 
@@ -207,7 +206,7 @@ $(document).on('change','#idProject',function(){//select Project Event
         $('#itemlbl').html("Item of Works");
         $('#lbltow').html("Type of Work");
     }
-    
+    getCheckers();
 });
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
@@ -327,7 +326,7 @@ function getDispatchLoc(){//get Dispatch Location Selection
     });
 }
 function getTOW(iVal){//get Types of Work Selection
-    // $.ajaxSetup({async: false});
+    $.ajaxSetup({async: false});
     $("#idTOW").prop('selectedIndex',0);
     $("#idChecking").prop('selectedIndex',0);
     $("#forChecking").hide();
@@ -340,7 +339,7 @@ function getTOW(iVal){//get Types of Work Selection
             $('#idTOW').val("").change();
         }
     );
-    // $.ajaxSetup({async: true});
+    $.ajaxSetup({async: true});
 }
 function addRow(iVal){//map Entries for display
     // ["primary_id||location||group||project||item||description||hour||mht"]
@@ -567,7 +566,7 @@ function addEntries(iVal){//add Entries to Database
     var loc = $($('#idLocation').find('option:selected')).attr('loc-id');
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
-    var jobreq = $($('#idJRD').find('option:selected')).attr('job-id');
+    var jobreq = $($('#idJRD').find('option:selected')).attr('job-id')||'';
     var tow = $($('#idTOW').find('option:selected')).attr('tow-id');
     var hour = $('#getHour').val()*60 || "0";
     var mins = $('#getMin').val() || "0";
@@ -697,6 +696,7 @@ function addEntries(iVal){//add Entries to Database
                         $('#idReset').text("Reset");
                     }
                     isDrawing();
+                    initCalendar();
                 }
             });
         }
@@ -708,6 +708,7 @@ function deleteEntry(iVal){//delete Entries from Database
     },
         function (data) {
             getEntries();
+            initCalendar();
         }
     );
 }
@@ -937,10 +938,12 @@ function ifSmallScreen(){//responsive
 function getCheckers(){//get Checkers Selection
     $.ajaxSetup({async: false});
     var empGrp=$('#idGroup').val();
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id')||'';
     $.post("ajax/getCheckers.php",
      {
         empGrp:empGrp,
-        empNum:empDetails['empNum']
+        empNum:empDetails['empNum'],
+        projID:projID
      },
         function (data) {
             $('#idChecking').html(data);
@@ -1220,11 +1223,19 @@ function getDayta(iVal){
         }
     );
     $.ajaxSetup({async: true});
-    mhArr=getMHDayta(iVal);
-    $('#msvReg').html(mhArr[0].toFixed(2));
-    $('#msvOt').html(mhArr[1].toFixed(2));
-    $('#msvLv').html(mhArr[2].toFixed(2));
-    $('#msvAms').html(mhArr[3].toFixed(2));
+    $.post("ajax/getMHDayta.php",
+    {
+        getDate:iVal,
+        empNum:empDetails['empNum']
+    },
+        function (data) {
+            mhArr=$.parseJSON(data);
+            $('#msvReg').html(mhArr[0].toFixed(2));
+            $('#msvOt').html(mhArr[1].toFixed(2));
+            $('#msvLv').html(mhArr[2].toFixed(2));
+            $('#msvAms').html(mhArr[3].toFixed(2));
+        }
+    );
 }
 function fillDayta(iVal){
     var prj = iVal.split('||')[0];
@@ -1235,105 +1246,33 @@ function fillDayta(iVal){
   </tr>`;
     $('#pHoursTable').append(addString);
 }
-function checkValidMH(iVal){
-    var mhColor=``;
-    var selLoc='KDT';
-    var mhArr=[0,0,0,0];
-    mhArr=getMHDayta(iVal);
-    var rHr=mhArr[0];
-    var otHr=mhArr[1];
-    var lHr=mhArr[2];
-    var totalHr=rHr+lHr;
-    var aHr=mhArr[3];
-    if($('#idLocation').val()){
-        selLoc=$('#idLocation').val();
-    }
-    var startDay=new Date('2023-02-27');
-    var curDay=new Date();
-    var compDay=new Date(iVal);
-    if(startDay<=compDay && compDay<=curDay){
-        if(selLoc=="WFH"){
-            // if(otHr>0){
-            //     $('#cardOt').addClass('new');
-            // }
-            // if(lHr>0){
-            //     $('#cardLv').addClass('new');
-            // }
-        }
-        else{
-            if(isWorkDayMSV(selLoc,iVal)){
-                if(totalHr>=8){
-                    mhColor=`green`;
-                }
-                else{
-                    mhColor=`red`;
-                }
-            }
-            else{
-                if(totalHr>0){
-                    if(totalHr>4){
-                        mhColor=`green`;
-                    }
-                    else{
-                        mhColor=`red`;
-                    }
-                }
-            }
-        }
-    }
-    return mhColor;
-}
-function isWorkDayMSV(iVal,xVal){//check if work day
-    var isWorkDay=false;
-    var selDate=xVal;
-    var selLoc=iVal;
-    if(selLoc==null){
-        selLoc="KDT";
-    }
+function addColors(iVal){
+    var greenDates=[];
+    var redDates=[];
+    var allDates=[];
+    // $().addClass('green');
     $.ajaxSetup({async: false});
-    $.post("ajax/checkWorkDay.php",
+    $.post("ajax/getDateColors.php",
     {
-        selDate:selDate,
-        selLoc:selLoc
-    },
-        function (data) {
-            isWorkDay=$.parseJSON(data);
-        }
-    );
-    $.ajaxSetup({async: true});
-    return isWorkDay;
-}
-function getMHDayta(iVal){
-    var mhArr=[0,0,0,0];
-    $.ajaxSetup({async: false});
-    $.post("ajax/getMHDayta.php",
-    {
-        getDate:iVal,
+        curMonth:iVal,
         empNum:empDetails['empNum']
     },
         function (data) {
-            mhArr=$.parseJSON(data);
-            // console.log(mhArr)
+            // console.log(data)
+            allDates=$.parseJSON(data);
+            greenDates=allDates[0];
+            redDates=allDates[1];
         }
     );
     $.ajaxSetup({async: true});
-    return mhArr;
-}
-function addColors(){
-    var greenDates=['2023-03-13','2023-03-14','2023-03-15','2023-03-16'];
-    var redDates=['2023-02-27','2023-02-28','2023-04-01','2023-03-02'];
-  
-    // $().addClass('green');
     greenDates.forEach(element => {
         
         var spl = element.split("-");
         
         var m = spl[1];
         var da = spl[2];
-        var d = new Date();
+        var d = new Date(iVal);
         var nowm = d.getMonth()+1;
-   
-        
         if (m>nowm){
             $(`.day.next-date:contains(${parseInt(da)})`).addClass('green').removeClass('red');
         }
@@ -1343,14 +1282,6 @@ function addColors(){
         else{
             $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(da)}`; }).addClass("green").removeClass("red");
         }
-        
-
-        // console.log("ha");
-        //check month year if less than current
-        //if prev month
-        //$(`.day.prev-date:contains(${testdate})`).addClass('green')
-        //if cur month
-        //$(`.day:contains(${testdate})`).addClass('green')
     });
     redDates.forEach(element => {
         
@@ -1358,7 +1289,7 @@ function addColors(){
         
         var mm = spl[1];
         var daa = spl[2];
-        var d = new Date();
+        var d = new Date(iVal);
         var nowmm = d.getMonth()+1;
         
         
@@ -1369,8 +1300,6 @@ function addColors(){
             $(`.day.prev-date:contains(${parseInt(daa)})`).addClass('red').removeClass('green');
         }
         else{
-            // $(`.day:contains(${parseInt(daa)})`).addClass('red').removeClass('green');
-            // $('.day').filter(function() {return $(this).text() == `${parseInt(daa)}`;}).addClass('red').removeClass('green');
             $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("red").removeClass("green");
         }
 
