@@ -4,7 +4,7 @@ $username = "root";
 $password = "";
 try {
   $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
-  $devs=["464","465","487","10"];
+  $devs=["464","465","487"];
 
   $itMembers=array();
   $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";

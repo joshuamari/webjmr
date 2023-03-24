@@ -16,13 +16,17 @@ try {
   $leaveQ="SELECT fldID FROM projectstable WHERE fldProject='Leave'";
   $leaveStmt=$connwebjmr->query($leaveQ);
   $leaveID=$leaveStmt->fetchColumn();
-  $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development & Analysis'";
+  $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development, Analysis & IT'";
   $solProjStmt=$connwebjmr->query($solProjQ);
   $solProjID=$solProjStmt->fetchColumn();
   $mngProjQ="SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt=$connwebjmr->query($mngProjQ);
   $mngProjID=$mngProjStmt->fetchColumn();
-  $KDTWAccess=['SYS','ANA'];
+  $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
+  $trainProjStmt=$connwebjmr->query($trainProjQ);
+  $trainProjID=$trainProjStmt->fetchColumn();
+  $noMoreInputItemOfWorks=['10','15','17','19'];
+  $KDTWAccess=['SYS','ANA','IT'];
   $managementPositions=['KDTP','SM','DM','AM','SSS','SSV'];
   $gods=['464','465','487'];
 } catch(PDOException $e) {

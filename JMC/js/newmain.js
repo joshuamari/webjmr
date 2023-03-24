@@ -28,6 +28,9 @@ var buicEdit=``;
 
 var shareAccess=``;
 const solProjID=getSolProjID();
+const trainingProjID=getTrainingProjID();
+const noMoreInputItems=getNoMoreInputItems();
+const allAccess=getAllAccess();
 $.ajaxSetup({async: false});
 $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
   empDetails=$.parseJSON(data);
@@ -71,10 +74,9 @@ $(document).ready(function(){
   let sidebar = document.querySelector(".sidebar");
   let sidebarBtn = document.querySelector(".menu-one");
   let sidebarBtn2 = document.querySelector(".menu-two");
-  // console.log(sidebarBtn);
   sidebarBtn.addEventListener("click", () => {
     $(".sidebar").toggleClass("close");
-    console.log("pinindot")
+    // console.log("pinindot")
   });
   sidebarBtn2.addEventListener("click", () => {
     $(".sidebar").addClass("close");
@@ -198,16 +200,19 @@ $(document).on('click','.itemIcon',function(){
   $('#selectedItem').html(selectedItemsString);
   getJobs();
   checkJRDADD();
+  checkJRDAddDiv();
 })
 $(document).on({
   mouseenter: function () {
-    if(!defaults.includes(selectedProject)){
+    var dznuts=$(this).parent().prop('id').split('_')[1];
+    if(!defaults.includes(selectedProject) || (selectedProject==solProjID && !noMoreInputItems.includes(dznuts))|| selectedProject==trainingProjID){
       $($(this).find('.itemPrio')).hide();
       $($(this).find('.itemIcon')).show();
     }
   },
   mouseleave: function () {
-    if(!defaults.includes(selectedProject)){
+    var dznuts=$(this).parent().prop('id').split('_')[1];
+    if(!defaults.includes(selectedProject) || (selectedProject==solProjID && !noMoreInputItems.includes(dznuts))|| selectedProject==trainingProjID){
       $($(this).find('.itemPrio')).show();
       $($(this).find('.itemIcon')).hide();
     }
@@ -233,7 +238,6 @@ $(document).on('click','.checkbox',function(){
   if($(this).is(":checked")){
     isCheck=1;
   }
-  // console.log(getTRID,isCheck)
   changeActive(getTRID,isCheck);
 });
 $(document).on('click','#addProj',function(){
@@ -542,7 +546,6 @@ function changeActive(iVal,xVal){//set active/inactive
     isCheck:xVal
   },
     function (data) {
-      // console.log(data)
       switch(trType){
         case "p":
           getProjects();
@@ -586,7 +589,6 @@ function deleteProject(iVal){//delete selected project from database
     trID:iVal,
   },
     function (data) {
-      //console.log(data)
       $('#cancelDelProj').click();
       getProjects();
     }
@@ -614,7 +616,6 @@ function updateProject(iVal){//update selected project in database
     editPBUIC:editPBUIC
   },
     function (data) {
-      console.log(data)
       getProjects();
     }
   );
@@ -681,7 +682,7 @@ function itemRow(iVal){//lay item table
   //$($(this).parent()).attr('id');//get TR ID
   
   var nonDefaults=``;
-  if(ifEditable(selectedProject) || selectedProject==solProjID){
+  if(ifEditable(selectedProject)){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
@@ -750,7 +751,6 @@ function deleteItem(iVal){//delete selected item in database
     trID:iVal,
   },
     function (data) {
-      //console.log(data)
       $('#cancelDelItem').click();
       getItems();
     }
@@ -829,7 +829,7 @@ function jobRow(iVal){//lay drawref table
   //$($(this).parent()).attr('id');//get TR ID
   
   var nonDefaults=``;
-  if(ifEditable(iVal)){
+  if(ifEditable(iVal) && allAccess.includes(empDetails['empNum'])){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
@@ -924,19 +924,30 @@ function deleteJob(iVal){//delete jrd from database
 function checkJRDADD(){//check if jrd add has engineering fields
   // var defs=['1','2','3','4','5']
   if(defaults.includes(selectedProject)){
-    $('.engr').addClass('d-none');
+    // $('.engr').addClass('d-none');
+    $('.engr').remove();
   }
-  else{
-    $('.engr').removeClass('d-none');
-  }
+  // else{
+  //   $('.engr').removeClass('d-none');
+  // }
 }
 function checkItemAdd(){//check if selected project can add itemofworks
-  if(defaults.includes(selectedProject) && selectedProject!=solProjID){
-    $('#divAddItem').addClass('d-none');
+  if(defaults.includes(selectedProject)){
+    // $('#divAddItem').addClass('d-none');
+    $('#divAddItem').remove();
   }
-  else{
-    $('#divAddItem').removeClass('d-none');
+  // else{
+  //   $('#divAddItem').removeClass('d-none');
+  // }
+}
+function checkJRDAddDiv(){//check if selected project can add jrd
+  if(defaults.includes(selectedProject) && selectedProject!=solProjID && (!allAccess.includes(empDetails['empNum'])||selectedProject!=trainingProjID)){
+    // $('#divAddJRD').addClass('d-none');
+    $('#divAddJRD').remove();
   }
+  // else{
+  //   $('#divAddJRD').removeClass('d-none');
+  // }
 }
 function checkJRDEdit(){//check if jrd edit has engineering fields
   var vool=true;
@@ -969,7 +980,6 @@ function updateJob(iVal){//update selected drawing reference in database
     editJMH:editJMH
   },
     function (data) {
-      //console.log(data)
       getJobs();
     }
   );
@@ -1069,6 +1079,39 @@ function getSolProjID(){
       async: false
     });
     return spID;
+}
+function getTrainingProjID(){
+  var trID=``;
+  $.ajax({
+    url: "ajax/getTrainingProjID.php",
+    success: function (data) {
+      trID=data.trim();
+    },
+    async: false
+  });
+  return trID;
+}
+function getNoMoreInputItems(){
+  var nmiIDs=[];
+  $.ajax({
+    url: "ajax/getNoMoreInputItems.php",
+    success: function (data) {
+      nmiIDs=$.parseJSON(data)
+    },
+    async: false
+  });
+  return nmiIDs;
+}
+function getAllAccess(){
+  var allAccessIDs=[];
+  $.ajax({
+    url: "ajax/getAllAccess.php",
+    success: function (data) {
+      allAccessIDs=$.parseJSON(data)
+    },
+    async: false
+  });
+  return allAccessIDs;
 }
 // var projID=$($(this).find('option:selected')).attr('proj-id');
 //#endregion

@@ -16,7 +16,7 @@ try {
   $leaveQ="SELECT fldID FROM projectstable WHERE fldProject='Leave'";
   $leaveStmt=$connwebjmr->query($leaveQ);
   $leaveID=$leaveStmt->fetchColumn();
-  $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development & Analysis'";
+  $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development, Analysis & IT'";
   $solProjStmt=$connwebjmr->query($solProjQ);
   $solProjID=$solProjStmt->fetchColumn();
   $mngProjQ="SELECT fldID FROM projectstable WHERE fldProject='Management'";
