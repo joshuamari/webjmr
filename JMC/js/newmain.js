@@ -205,14 +205,14 @@ $(document).on('click','.itemIcon',function(){
 $(document).on({
   mouseenter: function () {
     var dznuts=$(this).parent().prop('id').split('_')[1];
-    if(!defaults.includes(selectedProject) || (selectedProject==solProjID && !noMoreInputItems.includes(dznuts))|| selectedProject==trainingProjID){
+    if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
       $($(this).find('.itemPrio')).hide();
       $($(this).find('.itemIcon')).show();
     }
   },
   mouseleave: function () {
     var dznuts=$(this).parent().prop('id').split('_')[1];
-    if(!defaults.includes(selectedProject) || (selectedProject==solProjID && !noMoreInputItems.includes(dznuts))|| selectedProject==trainingProjID){
+    if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
       $($(this).find('.itemPrio')).show();
       $($(this).find('.itemIcon')).hide();
     }
