@@ -928,7 +928,7 @@ function checkJRDADD(){//check if jrd add has engineering fields
     $('.engr').remove();
   }
   // else{
-  //   $('.engr').removeClass('d-none');
+  //   $('.engr').add();
   // }
 }
 function checkItemAdd(){//check if selected project can add itemofworks
@@ -936,18 +936,28 @@ function checkItemAdd(){//check if selected project can add itemofworks
     // $('#divAddItem').addClass('d-none');
     $('#divAddItem').remove();
   }
-  // else{
-  //   $('#divAddItem').removeClass('d-none');
-  // }
+  else{
+    $('#afteritem').after(
+      `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddItem">
+      <button class="btn btn-add fw-bold text-center shadow w-100"
+      data-bs-toggle="modal" data-bs-target="#addItemModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
+    </div>`
+    );
+  }
 }
 function checkJRDAddDiv(){//check if selected project can add jrd
   if(defaults.includes(selectedProject) && selectedProject!=solProjID && (!allAccess.includes(empDetails['empNum'])||selectedProject!=trainingProjID)){
     // $('#divAddJRD').addClass('d-none');
     $('#divAddJRD').remove();
   }
-  // else{
-  //   $('#divAddJRD').removeClass('d-none');
-  // }
+  else{
+    $('#afterjrd').after(
+      `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddJRD">
+      <button class="btn btn-add fw-bold text-center shadow w-100"
+      data-bs-toggle="modal" data-bs-target="#addJrdModal"><i class='bx bxs-plus-circle p-0'></i> ADD ENTRY</button>
+    </div>`
+    );
+  }
 }
 function checkJRDEdit(){//check if jrd edit has engineering fields
   var vool=true;
