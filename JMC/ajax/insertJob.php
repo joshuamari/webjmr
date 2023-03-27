@@ -4,54 +4,58 @@ require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
 $projID='';
-if(isset($_REQUEST['projID'])){
+if(!empty($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
 }
 $itemID=NULL;
 $grp=NULL;
 // if($projID!=2){
-//     if(isset($_REQUEST['itemID'])){
+//     if(!empty($_REQUEST['itemID'])){
 //         $itemID=$_REQUEST['itemID'];
 //     }
 // }
-if(isset($_REQUEST['itemID'])){
+if(!empty($_REQUEST['itemID'])){
     $itemID=$_REQUEST['itemID'];
 }
 if($projID!=$leaveID){
-    if(isset($_REQUEST['grp'])){
+    if(!empty($_REQUEST['grp'])){
         $grp=$_REQUEST['grp'];
     }
 }
 $jobName='';
-if(isset($_REQUEST['jobName'])){
+if(!empty($_REQUEST['jobName'])){
     $jobName=$_REQUEST['jobName'];
 }
-$jobSheet='';
-if(isset($_REQUEST['jobSheet'])){
+$jobSheet=NULL;
+if(!empty($_REQUEST['jobSheet'])){
     $jobSheet=$_REQUEST['jobSheet'];
 }
 $jobPaper=NULL;
-if(isset($_REQUEST['jobPaper'])){
+if(!empty($_REQUEST['jobPaper'])){
     $jobPaper=$_REQUEST['jobPaper'];
 }
+$jobDraw='';
+if(!empty($_REQUEST['jobDraw'])){
+    $jobDraw=$_REQUEST['jobDraw'];
+}
 $jobKHIReq=NULL;
-if(isset($_REQUEST['jobKHIReq'])){
+if(!empty($_REQUEST['jobKHIReq'])){
     $jobKHIReq=$_REQUEST['jobKHIReq'];
 }
 $jobKHICharge=NULL;
-if(isset($_REQUEST['jobKHICharge'])){
+if(!empty($_REQUEST['jobKHICharge'])){
     $jobKHICharge=$_REQUEST['jobKHICharge'];
 }
 $jobKHIDead=NULL;
-if(isset($_REQUEST['jobKHIDead'])){
+if(!empty($_REQUEST['jobKHIDead'])){
     $jobKHIDead=$_REQUEST['jobKHIDead'];
 }
 $jobKDTDead=NULL;
-if(isset($_REQUEST['jobKDTDead'])){
+if(!empty($_REQUEST['jobKDTDead'])){
     $jobKDTDead=$_REQUEST['jobKDTDead'];
 }
 $jobMH=NULL;
-if(isset($_REQUEST['jobMH'])){
+if(!empty($_REQUEST['jobMH'])){
     $jobMH=$_REQUEST['jobMH'];
 }
 $prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL)";
@@ -68,9 +72,9 @@ if($dup>0){
     echo "Duplicate Title";
 }
 else{
-    $projQ="INSERT INTO drawingreference(fldProject,fldItem,fldJob,fldGroup,fldPriority,fldNoSheets,fldPaperSize,fldKHIDate,fldKHIC,fldKHIDeadline,fldKDTDeadline,fldExpectedMH) VALUES (:projID,:itemID,:jobName,:grp,:maxPrio,:jobSheet,:jobPaper,:jobKHIReq,:jobKHICharge,:jobKHIDead,:jobKDTDead,:jobMH)";
+    $projQ="INSERT INTO drawingreference(fldProject,fldItem,fldJob,fldGroup,fldPriority,fldNoSheets,fldPaperSize,fldDrawingName,fldKHIDate,fldKHIC,fldKHIDeadline,fldKDTDeadline,fldExpectedMH) VALUES (:projID,:itemID,:jobName,:grp,:maxPrio,:jobSheet,:jobPaper,:jobDraw,:jobKHIReq,:jobKHICharge,:jobKHIDead,:jobKDTDead,:jobMH)";
     $projStmt=$connwebjmr->prepare($projQ);
-    $projStmt->execute([":projID"=>$projID,":itemID"=>$itemID,":jobName"=>$jobName,":grp"=>$grp,":maxPrio"=>$maxPrio,":jobSheet"=>$jobSheet,":jobPaper"=>$jobPaper,":jobKHIReq"=>$jobKHIReq,":jobKHICharge"=>$jobKHICharge,":jobKHIDead"=>$jobKHIDead,":jobKDTDead"=>$jobKDTDead,":jobMH"=>$jobMH]);
+    $projStmt->execute([":projID"=>$projID,":itemID"=>$itemID,":jobName"=>$jobName,":grp"=>$grp,":maxPrio"=>$maxPrio,":jobSheet"=>$jobSheet,":jobPaper"=>$jobPaper,":jobDraw"=>$jobDraw,":jobKHIReq"=>$jobKHIReq,":jobKHICharge"=>$jobKHICharge,":jobKHIDead"=>$jobKHIDead,":jobKDTDead"=>$jobKDTDead,":jobMH"=>$jobMH]);
 }
 #endregion
 ?>

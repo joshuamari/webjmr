@@ -8,7 +8,7 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$output='<option value="" selected>Select BUIC</option>';
+$output='<option value="" hidden selected>Select BUIC</option>';
 #endregion
 
 #region main

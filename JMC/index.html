@@ -101,14 +101,14 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+              <h1 class="modal-title fs-2" id="staticBackdropLabel">Project Info</h1>
               <button type="button" class="btn-close cancelProj" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
                 <div class="col-12 mb-2">
-                  <label for="projTitle" class="form-label">Title</label>
-                    <input type="text"class="form-control"id="projTitle" placeholder="Input title" required/>
+                  <label for="projTitle" class="form-label">Project Name</label>
+                    <input type="text"class="form-control"id="projTitle" placeholder="Input project name" required/>
                     <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="pr1" role="alert"></span>
                 </div>
                 <div class="col-12 mb-2">
@@ -143,14 +143,14 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+              <h1 class="modal-title fs-2" id="staticBackdropLabel">Item of Works Info</h1>
               <button type="button" class="btn-close cancelItem" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
                 <div class="col-12 mb-2">
-                  <label for="itemTitle" class="form-label">Title</label>
-                    <input type="text"class="form-control"id="itemTitle" placeholder="Input title" required/>
+                  <label for="itemTitle" class="form-label">Item of Works</label>
+                    <input type="text"class="form-control"id="itemTitle" placeholder="Input item of works" required/>
                     <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="i1" role="alert"></span>
                 </div>
               </div>
@@ -169,14 +169,14 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-2" id="staticBackdropLabel">JMC Info</h1>
+              <h1 class="modal-title fs-2" id="staticBackdropLabel">Job Request Description Info</h1>
               <button type="button" class="btn-close cancelJob" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
               <div class="row px-3">
-                <div class="col-12 mb-2">
-                  <label for="jrdTitle" class="form-label">Title</label>
-                    <input type="text"class="form-control"id="jrdTitle" placeholder="Input title" required/>
+                <div class="col-12 mb-2" id="afterEngr">
+                  <label for="jrdTitle" class="form-label">Job Request Description</label>
+                    <input type="text"class="form-control"id="jrdTitle" placeholder="Input Job Request Description" required/>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j1" role="alert"></span>
                 </div>
                 <div class="col-12 mb-2 engr">
@@ -188,12 +188,17 @@
                   <label for="jrdPaper" class="form-label">Paper Size</label>
                   <div class="input-group col-8">
                     <select class="form-select" id="jrdPaper" required>
-                      <option value="" disabled selected>Select paper size</option>
+                      <option value="" hidden selected>Select paper size</option>
                       <option>A1</option>
                       <option>A2</option>
                       <option>A3</option>
                       <option>A4</option>
                     </select>
+                  </div>
+                  <div class="col-12 mb-2 engr">
+                    <label for="jrdDraw" class="form-label">Drawing/Document Name</label>
+                      <input type="text"class="form-control"id="jrdDraw" placeholder="Input Drawing/Document Name" required/>
+                      <span class="col-12 mt-1 alert-danger text-danger" id="j9" role="alert"></span>
                   </div>
                     <span class="col-12 mt-1 alert-danger text-danger" id="j3" role="alert"></span>
                 </div>
@@ -583,6 +588,7 @@
                         <th>Title</th>
                         <th>No. of Sheet</th>
                         <th>Paper Size</th>
+                        <th>Drawing/Document Name</th>
                         <th>KHI Date</th>
                         <th>KHI in-Charge</th>
                         <th>KHI Deadline</th>

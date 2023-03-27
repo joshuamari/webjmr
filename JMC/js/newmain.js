@@ -90,12 +90,13 @@ $(document).on('click','.editJrd-btn', function(){
     var title = $(getTR[1]).text();
     var sheet = $(getTR[2]).text();
     var paper = $(getTR[3]).text();
-    var khidate = $(getTR[4]).text();
-    var khiemp = $(getTR[5]).text();
-    var khidead = $(getTR[6]).text();
-    var kdtdead = $(getTR[7]).text();
-    var manhour = $(getTR[8]).text();
-    var getTD = getTR[10];
+    var draw = $(getTR[4]).text();
+    var khidate = $(getTR[5]).text();
+    var khiemp = $(getTR[6]).text();
+    var khidead = $(getTR[7]).text();
+    var kdtdead = $(getTR[8]).text();
+    var manhour = $(getTR[9]).text();
+    var getTD = getTR[11];
     var editDrawRef=``;
     if(checkJRDEdit()){
       $(getTR[2]).html(`<input id='editJSheet' type='number' class='form-control'  value='${sheet}' sid='${jrdid}'>`);
@@ -106,13 +107,14 @@ $(document).on('click','.editJrd-btn', function(){
                         <option>A3</option>
                         <option>A4</option>
                     </select>`);
-    $(getTR[4]).html(`<input id='editJKHIReq' type="date"class="form-control" value='${khidate}' sid='${jrdid}' required/>`);
-    $(getTR[5]).html(`<input id='editJKHIC' type='text' class='form-control'  value='${khiemp}' sid='${jrdid}'>`);
-    $(getTR[6]).html(`<input id='editJKHIDead' type="date"class="form-control" value='${khidead}' sid='${jrdid}' required/>`);
-    $(getTR[7]).html(`<input id='editJKDTDead' type="date"class="form-control" value='${kdtdead}' sid='${jrdid}' required/>`);
-    $(getTR[8]).html(`<input id='editJMH' type='number' class='form-control'  value='${manhour}' sid='${jrdid}'>`);
+    $(getTR[4]).html(`<input id='editJDraw' type='text' class='form-control'  value='${draw}' sid='${jrdid}'/>`);
+    $(getTR[5]).html(`<input id='editJKHIReq' type="date"class="form-control" value='${khidate}' sid='${jrdid}' required/>`);
+    $(getTR[6]).html(`<input id='editJKHIC' type='text' class='form-control'  value='${khiemp}' sid='${jrdid}'>`);
+    $(getTR[7]).html(`<input id='editJKHIDead' type="date"class="form-control" value='${khidead}' sid='${jrdid}' required/>`);
+    $(getTR[8]).html(`<input id='editJKDTDead' type="date"class="form-control" value='${kdtdead}' sid='${jrdid}' required/>`);
+    $(getTR[9]).html(`<input id='editJMH' type='number' class='form-control'  value='${manhour}' sid='${jrdid}'>`);
     }
-    $(getTR[1]).html(`<input id='editJName' type='text' class='form-control'  value='${title}' sid='${jrdid}'>`);
+    $(getTR[1]).html(`<input id='editJName' type='text' class='form-control'  value='${title}' sid='${jrdid}'/>`);
     
 
     $($('#jrdTable').find('button')).prop('disabled',true);
@@ -739,6 +741,7 @@ function clearJModal(){//clear draw ref add modal fields
   $('#jrdTitle').val('');
   $('#jrdSheet').val('');
   $('#jrdPaper').val('');
+  $('#jrdDraw').val('');
   $('#jrdKhiDate').val('');
   $('#jrdCharge').val('');
   $('#jrdKhiDl').val('');
@@ -811,13 +814,13 @@ function jobRow(iVal){//lay drawref table
   var trID = iVal.split('||')[1] || "";
   var trNoSheet = iVal.split('||')[2] || "";
   var trPaperSize = iVal.split('||')[3] || "";
-  var trKHIDate = iVal.split('||')[4] || "";
-  var trKHIC = iVal.split('||')[5] || "";
-  var trKHIDeadline = iVal.split('||')[6] || "";
-  var trKDTDeadline = iVal.split('||')[7] || "";
-  var trExpMH = iVal.split('||')[8] || "";
-  var iActive = iVal.split('||')[9] || "";
-  var iPrio = iVal.split('||')[10] || "";
+  var trDrawName = iVal.split('||')[4] || "";
+  var trKHIDate = iVal.split('||')[5] || "";
+  var trKHIC = iVal.split('||')[6] || "";
+  var trKHIDeadline = iVal.split('||')[7] || "";
+  var trKDTDeadline = iVal.split('||')[8] || "";
+  var trExpMH = iVal.split('||')[9] || "";
+  var iActive = iVal.split('||')[10] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
@@ -847,13 +850,14 @@ function jobRow(iVal){//lay drawref table
   }
   var hasDrawref=`<td>${trNoSheet}</td>
   <td>${trPaperSize}</td>
+  <td>${trDrawName}</td>
   <td>${trKHIDate}</td>
   <td>${trKHIC}</td>
   <td>${trKHIDeadline}</td>
   <td>${trKDTDeadline}</td>
   <td>${trExpMH}</td>`;
   if(defaultDrawref()){
-    hasDrawref=`<td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
+    hasDrawref=`<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
   }  
   
   var addString=`<tr class="text-center ${draggable}" id="j_${trID}">
@@ -879,6 +883,7 @@ function addJob(){//add jrd to database
   var jobName=$('#jrdTitle').val();
   var jobSheet=$('#jrdSheet').val();
   var jobPaper=$('#jrdPaper').val();
+  var jobDraw=$('#jrdDraw').val();
   var jobKHIReq=$('#jrdKhiDate').val();
   var jobKHICharge=$('#jrdCharge').val();
   var jobKHIDead=$('#jrdKhiDl').val();
@@ -890,6 +895,7 @@ function addJob(){//add jrd to database
     jobName:jobName,
     jobSheet:jobSheet,
     jobPaper:jobPaper,
+    jobDraw:jobDraw,
     jobKHIReq:jobKHIReq,
     jobKHICharge:jobKHICharge,
     jobKHIDead:jobKHIDead,
@@ -922,21 +928,61 @@ function deleteJob(iVal){//delete jrd from database
   );
 }
 function checkJRDADD(){//check if jrd add has engineering fields
-  // var defs=['1','2','3','4','5']
-  if(defaults.includes(selectedProject)){
-    // $('.engr').addClass('d-none');
-    $('.engr').remove();
+  $('.engr').remove();
+  if(!defaults.includes(selectedProject)){
+    $('#afterEngr').after(`<div class="col-12 mb-2 engr">
+    <label for="jrdSheet" class="form-label">No. of Sheet</label>
+    <input type="number" placeholder="#" class="form-control" id="jrdSheet"  min="0" required/>
+      <span class="col-12 mt-1 alert-danger text-danger" id="j2" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdPaper" class="form-label">Paper Size</label>
+    <div class="input-group col-8">
+      <select class="form-select" id="jrdPaper" required>
+        <option value="" hidden selected>Select paper size</option>
+        <option>A1</option>
+        <option>A2</option>
+        <option>A3</option>
+        <option>A4</option>
+      </select>
+    </div>
+      <span class="col-12 mt-1 alert-danger text-danger" id="j3" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+  <label for="jrdDraw" class="form-label">Drawing/Document Name</label>
+    <input type="text"class="form-control"id="jrdDraw" placeholder="Input Drawing/Document Name" required/>
+    <span class="col-12 mt-1 alert-danger text-danger" id="j9" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdKhiDate" class="form-label">KHI Date</label>
+    <input type="date"class="form-control"id="jrdKhiDate" required/>
+    <span class="col-12 mt-1 alert-danger text-danger" id="j4" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdCharge" class="form-label">KHI in Charge</label>
+      <input type="text"class="form-control"id="jrdCharge" placeholder="Input Employee" required/>
+      <span class="col-12 mt-1 alert-danger text-danger" id="j5" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdKhiDl" class="form-label">KHI Deadline</label>
+    <input type="date"class="form-control"id="jrdKhiDl" required/>
+    <span class="col-12 mt-1 alert-danger text-danger" id="j6" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdKdtDl" class="form-label">KDT Deadline</label>
+    <input type="date"class="form-control"id="jrdKdtDl" required/>
+    <span class="col-12 mt-1 alert-danger text-danger" id="j7" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdMh" class="form-label">Expected Manhour</label>
+    <input type="number" placeholder="#" class="form-control"  min="0" id="jrdMh"  required/>
+      <span class="col-12 mt-1 alert-danger text-danger" id="j8" role="alert"></span>
+  </div>`);
   }
-  // else{
-  //   $('.engr').add();
-  // }
 }
 function checkItemAdd(){//check if selected project can add itemofworks
-  if(defaults.includes(selectedProject)){
-    // $('#divAddItem').addClass('d-none');
-    $('#divAddItem').remove();
-  }
-  else{
+  $('#divAddItem').remove();
+  if(!defaults.includes(selectedProject)){
     $('#afteritem').after(
       `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddItem">
       <button class="btn btn-add fw-bold text-center shadow w-100"
@@ -944,13 +990,12 @@ function checkItemAdd(){//check if selected project can add itemofworks
     </div>`
     );
   }
+
 }
 function checkJRDAddDiv(){//check if selected project can add jrd
-  if(defaults.includes(selectedProject) && selectedProject!=solProjID && (!allAccess.includes(empDetails['empNum'])||selectedProject!=trainingProjID)){
-    // $('#divAddJRD').addClass('d-none');
-    $('#divAddJRD').remove();
-  }
-  else{
+  $('#divAddJRD').remove();
+  // console.log(!defaults.includes(selectedProject) || selectedProject==solProjID || (selectedProject==trainingProjID && allAccess.includes(empDetails['empNum'])))
+  if(!defaults.includes(selectedProject) || selectedProject==solProjID || (selectedProject==trainingProjID && allAccess.includes(empDetails['empNum']))){
     $('#afterjrd').after(
       `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddJRD">
       <button class="btn btn-add fw-bold text-center shadow w-100"
@@ -972,6 +1017,7 @@ function updateJob(iVal){//update selected drawing reference in database
   var editJName=$('#editJName').val();
   var editJSheet=$('#editJSheet').val();
   var editJPaper=$('#editJPaper').val();
+  var editJDraw=$('#editJDraw').val();
   var editJKHIReq=$('#editJKHIReq').val();
   var editJKHIC=$('#editJKHIC').val();
   var editJKHIDead=$('#editJKHIDead').val();
@@ -983,6 +1029,7 @@ function updateJob(iVal){//update selected drawing reference in database
     editJName:editJName,
     editJSheet:editJSheet,
     editJPaper:editJPaper,
+    editJDraw:editJDraw,
     editJKHIReq:editJKHIReq,
     editJKHIC:editJKHIC,
     editJKHIDead:editJKHIDead,

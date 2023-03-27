@@ -27,7 +27,7 @@ $jobsStmt=$connwebjmr->query($jobsQ);
 $jobArr=$jobsStmt->fetchAll();
 if(count($jobArr)>0){
     foreach($jobArr AS $job){
-        array_push($jobs,$job['fldJob']."||".$job['fldID']."||".$job['fldNoSheets']."||".$job['fldPaperSize']."||".$job['fldKHIDate']."||".$job['fldKHIC']."||".$job['fldKHIDeadline']."||".$job['fldKDTDeadline']."||".$job['fldExpectedMH']."||".$job['fldActive']."||".$job['fldPriority']);
+        array_push($jobs,$job['fldJob']."||".$job['fldID']."||".$job['fldNoSheets']."||".$job['fldPaperSize']."||".$job['fldDrawingName']."||".$job['fldKHIDate']."||".$job['fldKHIC']."||".$job['fldKHIDeadline']."||".$job['fldKDTDeadline']."||".$job['fldExpectedMH']."||".$job['fldActive']."||".$job['fldPriority']);
     }
 }
 #endregion

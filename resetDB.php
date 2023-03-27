@@ -19,6 +19,8 @@ date_default_timezone_set('Asia/Manila');
     $truncItemStmt=$connwebjmr->query($truncItemQ);
     $truncJRDQ="TRUNCATE drawingreference";
     $truncJRDStmt=$connwebjmr->query($truncJRDQ);
+    $truncShareQ="TRUNCATE project_share";
+    $truncShareStmt=$connwebjmr->query($truncShareQ);
     #endregion
 
     #region INSERT
