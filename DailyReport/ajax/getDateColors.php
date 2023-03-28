@@ -9,7 +9,7 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$dateOrigin='2023-02-27';
+$dateOrigin='2023-04-03';//edit base sa start ng official input
 $curDay=date("Y-m-d");
 $curFirstDay=date("Y-m-01");
 $curMonth='';
