@@ -21,6 +21,8 @@ date_default_timezone_set('Asia/Manila');
     $truncJRDStmt=$connwebjmr->query($truncJRDQ);
     $truncShareQ="TRUNCATE project_share";
     $truncShareStmt=$connwebjmr->query($truncShareQ);
+    $truncDailyReportQ="TRUNCATE dailyreport";
+    $truncDailyReportStmt=$connwebjmr->query($truncDailyReportQ);
     #endregion
 
     #region INSERT
