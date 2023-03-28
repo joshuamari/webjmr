@@ -22,6 +22,7 @@ const otherID=getOtherID();
 const mngID=getMngID();
 const kiaID=getKiaID();
 const noMoreInputItems=getNoMoreInputItems();
+const oneBUTrainerID=getOneBUTrainerID();
 //#endregion
 
 //#region BINDS
@@ -217,25 +218,13 @@ $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     var itemID=$($(this).find('option:selected')).attr('item-id');
     $('.trgrp').remove();
-    // console.log(noMoreInputItems.includes(itemID))
-    // disableInputs(noMoreInputItems.includes(itemID))
     getLabel(itemID);
     disableInputs(projID,itemID);
     if(noMoreInputItems.includes(itemID)){
         $('#drInstruction').modal('show');
     }
-
-    // if(itemID==14){
-    //     trainingGroup();
-    // }
-    // else{
-    //     $('.trgrp').remove();
-    // }
     trainingGroup(itemID);
-
     getJobs(projID,itemID);
-
-    
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
@@ -695,7 +684,7 @@ function addEntries(iVal){//add Entries to Database
     if(proj==leaveID){//IF LEAVE    
         mhtype=2;
     }
-    if(item==14){
+    if(item==oneBUTrainerID){
         if(!trgrp){
         $('#p12').text("Please select group to train");
         $('#trGroup').addClass('border border-danger');
@@ -1099,7 +1088,7 @@ function disableInputs(iVal,xVal){
      }
 }
 function trainingGroup(iVal) {
-    if(iVal==14){
+    if(iVal==oneBUTrainerID){
         $('.iow').after(`
     <div class="col-12 my-2 trgrp">
                   <label for="trGroup" class="form-label">Group of Trainees</label>
@@ -1143,6 +1132,17 @@ function getLabel(itemOfWorkID){
         }
     );
    
+}
+function getOneBUTrainerID(){
+    var obutrainID=``;
+    $.ajax({
+      url: "ajax/getOneBUTrainerID.php",
+      success: function (data) {
+        obutrainID=data.trim();
+      },
+      async: false
+    });
+    return obutrainID;
 }
 //#endregion
 

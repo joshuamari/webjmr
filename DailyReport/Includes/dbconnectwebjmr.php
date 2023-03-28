@@ -37,6 +37,10 @@ try {
   $trainProjStmt=$connwebjmr->query($trainProjQ);
   $trainProjID=$trainProjStmt->fetchColumn();
 
+  $obuTrainQ="SELECT fldID FROM itemofworkstable WHERE fldItem='Trainer for One BU Participants'";
+  $obuTrainStmt=$connwebjmr->query($obuTrainQ);
+  $oneBUTrainerID=$obuTrainStmt->fetchColumn();
+
   $KDTWAccess=['SYS','ANA','IT'];
   $managementPositions=['KDTP','SM','DM','AM','SSS','SSV','IT-SV'];
   $gods=['464','465','487'];
