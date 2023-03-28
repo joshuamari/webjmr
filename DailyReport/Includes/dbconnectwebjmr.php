@@ -16,15 +16,31 @@ try {
   $leaveQ="SELECT fldID FROM projectstable WHERE fldProject='Leave'";
   $leaveStmt=$connwebjmr->query($leaveQ);
   $leaveID=$leaveStmt->fetchColumn();
+
   $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development, Analysis & IT'";
   $solProjStmt=$connwebjmr->query($solProjQ);
   $solProjID=$solProjStmt->fetchColumn();
+
   $mngProjQ="SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt=$connwebjmr->query($mngProjQ);
   $mngProjID=$mngProjStmt->fetchColumn();
-  $KDTWAccess=['SYS','ANA'];
-  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV'];
+
+  $otherProjQ="SELECT fldID FROM projectstable WHERE fldProject='Business Trip & Other'";
+  $otherProjStmt=$connwebjmr->query($otherProjQ);
+  $otherProjID=$otherProjStmt->fetchColumn();
+  
+  $kiaProjQ="SELECT fldID FROM projectstable WHERE fldProject='KDT Internal Activities'";
+  $kiaProjStmt=$connwebjmr->query($kiaProjQ);
+  $kiaProjID=$kiaProjStmt->fetchColumn();
+  
+  $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
+  $trainProjStmt=$connwebjmr->query($trainProjQ);
+  $trainProjID=$trainProjStmt->fetchColumn();
+
+  $KDTWAccess=['SYS','ANA','IT'];
+  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV','IT-SV'];
   $gods=['464','465','487'];
+  $noMoreInputItemOfWorks=['6','10','15','17','19','21'];
   date_default_timezone_set('Asia/Manila');
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();

@@ -18,6 +18,10 @@ var regCount=0;
 var otCount=0;
 var lvCount=0;
 const leaveID=getLeaveID();
+const otherID=getOtherID();
+const mngID=getMngID();
+const kiaID=getKiaID();
+const noMoreInputItems=getNoMoreInputItems();
 //#endregion
 
 //#region BINDS
@@ -206,13 +210,32 @@ $(document).on('change','#idProject',function(){//select Project Event
         $('#itemlbl').html("Item of Works");
         $('#lbltow').html("Type of Work");
     }
+   
     getCheckers();
 });
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     var itemID=$($(this).find('option:selected')).attr('item-id');
+    $('.trgrp').remove();
+    // console.log(noMoreInputItems.includes(itemID))
+    // disableInputs(noMoreInputItems.includes(itemID))
+    getLabel(itemID);
+    disableInputs(projID,itemID);
+    if(noMoreInputItems.includes(itemID)){
+        $('#drInstruction').modal('show');
+    }
+
+    // if(itemID==14){
+    //     trainingGroup();
+    // }
+    // else{
+    //     $('.trgrp').remove();
+    // }
+    trainingGroup(itemID);
+
     getJobs(projID,itemID);
 
+    
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
@@ -280,6 +303,17 @@ $(document).on('click','.day', function() {
     // console.log(hatdog)
     getActiveDay(hatdog);
     
+})
+$(document).on('change','#trGroup',function(){
+    $('#p12').text("");
+    $('#trGroup').removeClass('border border-danger');
+})
+$(document).on('click','#back2Project',function(){
+    $('#drInstruction').modal('hide');
+    $('#idProject').val("").change();
+})
+$(document).on('click','#drInstruction .btn-close',function(){
+    $('#back2Project').click();
 })
 
 //#endregion
@@ -526,17 +560,22 @@ function getProjects(){//get Project Selection
     
 }
 function getItems(iVal){//get Item Selection
+    $('#labell').remove();
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
+        empPos:empDetails['empPos'],
         projID:iVal
     },
         function (data) {
             $('#idItem').html(data);
             sequenceValidation();
+            if(iVal==mngID){
+                $($('#idItem').children()[1]).prop("selected",true).change();
+            }
         }
     );
     $.ajaxSetup({async: true}); 
@@ -555,6 +594,9 @@ function getJobs(iVal,xVal){//get Job Selection
         function (data) {
             $('#idJRD').html(data);
             sequenceValidation();
+            if(iVal==mngID || iVal==kiaID){
+                $($('#idJRD').children()[1]).attr("selected",true);
+            }
         }
     );
     $.ajaxSetup({async: true});
@@ -566,6 +608,7 @@ function addEntries(iVal){//add Entries to Database
     var loc = $($('#idLocation').find('option:selected')).attr('loc-id');
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
+    var trgrp = $($('#trGroup').find('option:selected')).val();
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id')||'';
     var tow = $($('#idTOW').find('option:selected')).attr('tow-id');
     var hour = $('#getHour').val()*60 || "0";
@@ -652,6 +695,13 @@ function addEntries(iVal){//add Entries to Database
     if(proj==leaveID){//IF LEAVE    
         mhtype=2;
     }
+    if(item==14){
+        if(!trgrp){
+        $('#p12').text("Please select group to train");
+        $('#trGroup').addClass('border border-danger');
+        mgaKulang.push("TRGROUP");
+        }
+    }
     var fd= new FormData()
     fd.append("getTwoThree",tutri);
     fd.append("getGroup",grp);
@@ -659,6 +709,7 @@ function addEntries(iVal){//add Entries to Database
     fd.append("getLocation",loc);
     fd.append("getProject",proj);
     fd.append("getItem",item);
+    fd.append("getTrGrp",trgrp);
     fd.append("getDescription",jobreq);
     fd.append("getType",tow);
     fd.append("getRev",revision);
@@ -713,11 +764,11 @@ function deleteEntry(iVal){//delete Entries from Database
     );
 }
 function resetEntry(){//reset Inputs
-    $("#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc").val("");
+    $("#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc,#trGroup").val("").change();
     $("#one").click();
     $("#idRev").prop('checked',false);
-    $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11").text("");
-    $("#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate").removeClass('border border-danger');
+    $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12").text("");
+    $("#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup").removeClass('border border-danger');
     $('.checker').addClass('d-none');
     sequenceValidation();
 }
@@ -754,7 +805,7 @@ function hasJRD(){
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
     var selGroup=$("#idGroup").val();
     // isDrawing=((!defaults.includes(projID) || projID=='2') && projID);
-    isDrawing=(!defaults.includes(projID) && projID);
+    isDrawing=(projID!=leaveID&&projID!=otherID);
     // return isDrawing;
     if(isDrawing){
         $("#idJRDDiv").removeClass("d-none");
@@ -871,7 +922,7 @@ function editEntry(iVal){//edit selected entry
         function (data) {
             console.log(data);
             var dataEdit = $.parseJSON(data);
-            // console.log(dataEdit);
+            console.log(dataEdit);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idGroup').val(dataEdit[1]);
             var getLocs = Object.values(document.getElementsByClassName("clLoc"));
@@ -918,6 +969,7 @@ function editEntry(iVal){//edit selected entry
                 $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).attr('selected',true).change();
                 // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
             }
+            $('#trGroup').val(dataEdit[12]);
         }
     );
     isDrawing();
@@ -983,6 +1035,114 @@ function getLeaveID(){
       async: false
     });
     return lvID;
+}
+
+function getOtherID(){
+    var oID=``;
+    $.ajax({
+      url: "ajax/getOtherID.php",
+      success: function (data) {
+        oID=data.trim();
+      },
+      async: false
+    });
+    return oID;
+}
+function getMngID(){
+    var mngID=``;
+    $.ajax({
+      url: "ajax/getMngID.php",
+      success: function (data) {
+        mngID=data.trim();
+      },
+      async: false
+    });
+    return mngID;
+}
+function getKiaID(){
+    var kiaID=``;
+    $.ajax({
+      url: "ajax/getKiaID.php",
+      success: function (data) {
+        kiaID=data.trim();
+      },
+      async: false
+    });
+    return kiaID;
+}
+function getNoMoreInputItems(){
+    var nmiIDs=[];
+    $.ajax({
+      url: "ajax/getNoMoreInputItems.php",
+      success: function (data) {
+        nmiIDs=$.parseJSON(data)
+      },
+      async: false
+    });
+    return nmiIDs;
+  }
+function disableInputs(iVal,xVal){
+    $('#getHour').prop('disabled',true);
+    $('#getMin').prop('disabled',true);
+    $('#idMH').prop('disabled',true);
+    $('#idRemarks').prop('disabled',true);
+    $('#idAdd').prop('disabled',true);
+    
+     if(iVal!=leaveID){
+            if(!noMoreInputItems.includes(xVal)){
+            $('#idRemarks').prop('disabled',false);
+            $('#idAdd').prop('disabled',false);
+            $('#getHour').prop('disabled',false);
+            $('#getMin').prop('disabled',false);
+            $('#idMH').prop('disabled',false);
+            }
+     }
+}
+function trainingGroup(iVal) {
+    if(iVal==14){
+        $('.iow').after(`
+    <div class="col-12 my-2 trgrp">
+                  <label for="trGroup" class="form-label">Group of Trainees</label>
+                  <div class="input-group">
+                    <select class="form-select" id="trGroup" required>
+                      <option value="" selected hidden>Select Group to Train</option>
+                    </select>
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p12" role="alert"></span>
+                </div>
+    `);
+    getTRGroups();
+    }
+    else{
+        $('.trgrp').remove();
+    }
+    
+}
+function getTRGroups(){
+$.ajax({
+    url: "ajax/getGroups.php",
+    success: function (response) {
+        $('#trGroup').html(response)
+    },async:false
+});
+}
+function getLabel(itemOfWorkID){
+    $('#labell').remove();
+    $.post("ajax/getLabel.php",
+    {
+        itemID:itemOfWorkID
+    },
+        function (data) {
+            if(data.trim()){
+                //display label
+                // console.log(data.trim())
+                $('#p5').after(`
+                <span class="col-12 alert-primary text-primary" id="labell" role="alert">${data}</span>
+                `)
+            }
+        }
+    );
+   
 }
 //#endregion
 

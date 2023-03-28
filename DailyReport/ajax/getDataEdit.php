@@ -27,6 +27,7 @@ foreach($drArr AS $drs){
     $twothree=$drs['fld2D3D'];
     $rev=$drs['fldRevision'];
     $checker=$drs['fldChecker'];
+    $getTrGrp=$drs['fldTrGroup'];
     array_push($dataEdit,$loc);
     array_push($dataEdit,$grp);
     array_push($dataEdit,$projID);
@@ -39,6 +40,7 @@ foreach($drArr AS $drs){
     array_push($dataEdit,$twothree);
     array_push($dataEdit,$rev);
     array_push($dataEdit,$checker);
+    array_push($dataEdit,$getTrGrp);
 }
 #endregion
 echo json_encode($dataEdit);

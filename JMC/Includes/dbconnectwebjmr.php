@@ -25,9 +25,9 @@ try {
   $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
   $trainProjStmt=$connwebjmr->query($trainProjQ);
   $trainProjID=$trainProjStmt->fetchColumn();
-  $noMoreInputItemOfWorks=['10','15','17','19'];
+  $noMoreInputItemOfWorks=['6','10','15','17','19','21'];
   $KDTWAccess=['SYS','ANA','IT'];
-  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV'];
+  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV','IT-SV'];
   $gods=['464','465','487'];
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
