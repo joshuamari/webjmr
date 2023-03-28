@@ -310,7 +310,7 @@ $(document).on('change','#trGroup',function(){
 })
 $(document).on('click','#back2Project',function(){
     $('#drInstruction').modal('hide');
-    $('#idProject').val("").change();
+    $('#idItem').val("").change();
 })
 $(document).on('click','#drInstruction .btn-close',function(){
     $('#back2Project').click();

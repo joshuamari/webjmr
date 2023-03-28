@@ -668,7 +668,7 @@ footer{
 
 .ms.open .pindot{
     width: 4%;
-    background: #194a7a;
+    background: var(--secondary-blue);
 }
 .ms.open .ms-content{
     width: 96%;
@@ -902,8 +902,8 @@ footer{
     /* width: 100%; */
     /* height: 100%; */
     max-height: 650px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    /* overflow-x: hidden;
+    overflow-y: auto; */
     display: flex;
     flex-direction: column;
     padding: 4px;
@@ -925,6 +925,8 @@ footer{
 }
 .events .card-cont{
     height: 150px;
+    display: flex;
+    justify-content: center;
 }
 .events .card-cont:hover .card{
     background: rgb(101, 149, 194)
@@ -1015,6 +1017,13 @@ footer{
     .ms .ms-content{
         left: 25%;
     }
+    .ms.open .pindot{
+        width: 15%;
+        z-index: 2000;
+        box-shadow: 5px 5px rgba(0, 0, 0 , .20);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
     
 
 
@@ -1035,14 +1044,21 @@ footer{
         width: 350px;
         height: 60px;
     }
-    .ms .pindot{
-        width: 30%; 
+    .ms.open .pindot{
+        width: 15%;
+        z-index: 2000;
+        box-shadow: 5px 5px rgba(0, 0, 0 , .20);
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
     .ms{
         left: 70%;
     }
     .ms .ms-content{
         left: 30%;
+    }
+    .ms .pindot{
+        width: 30%; 
     }
 }
 @media (min-width:551px) and ( max-width:902px){
