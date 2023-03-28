@@ -44,6 +44,9 @@ $.ajaxSetup({async: true});
 //#endregion
 
 //#region BINDS
+$(window).on('load',function(){
+  $('.cs-loader').fadeOut(3000);
+})
 $(document).ready(function(){
   $.ajaxSetup({async: false});
       $('.hello-user').text(empDetails['empFName']);
