@@ -1179,3 +1179,15 @@ footer{
         border-bottom-right-radius: 10px;
     }
 }
+@media (min-width:992px) and (max-width:1398px){
+    .card span{
+        font-size: 15px;
+        
+        text-align: center;
+    }
+    .card h1{
+        font-size: 35px;
+        margin: 0px;
+        padding: 5px;
+    }
+}

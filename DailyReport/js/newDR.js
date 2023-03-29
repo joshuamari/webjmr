@@ -897,6 +897,7 @@ function copyEntries(){//copy entries from selected date
             console.log(data)
             getEntries();
             resetEntry();
+            initCalendar();
         }
     );
 }
@@ -996,6 +997,7 @@ function getCheckers(){//get Checkers Selection
 }
 function saveFunction(){//update database entry
     addEntries(editID);
+    
 }
 function cancelEditFunction(){//cancel editables
     $('#idAdd').text("Add");
