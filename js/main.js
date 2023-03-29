@@ -34,6 +34,7 @@ $(document).ready(function () {//page Initialize Event
     });
     
   $('.cs-loader').fadeOut(3000);
+  
   }
 );
 //#endregion
