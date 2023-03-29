@@ -44,9 +44,6 @@ $.ajaxSetup({async: true});
 //#endregion
 
 //#region BINDS
-$(window).on('load',function(){
-  $('.cs-loader').fadeOut(3000);
-})
 $(document).ready(function(){
   $.ajaxSetup({async: false});
       $('.hello-user').text(empDetails['empFName']);
@@ -86,6 +83,7 @@ $(document).ready(function(){
   });
   //#endregion
   $.ajaxSetup({async: true});
+  $('.cs-loader').fadeOut(3000);
 });
 $(document).on('click','.editJrd-btn', function(){
     var getTR = $($(this).parents()[1]).children();

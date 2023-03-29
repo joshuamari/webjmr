@@ -127,12 +127,11 @@ $(document).ready(function(){//page Initialize Event
                     }
                 });
         //#endregion
+        $('.cs-loader').fadeOut(3000);
     });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY
-$(window).on('load',function(){
-    $('.cs-loader').fadeOut(3000);
-})
+
 $(document).on('change','#idTOW',function(){//select TOW Event
     if(this.value == "Chk - Checker"){
         $('.checker').removeClass('d-none');

@@ -14,9 +14,6 @@ switch (document.location.hostname) //get Root Folder
 //#endregion
 
 //$region BINDS
-$(window).on('load',function(){
-  $('.cs-loader').fadeOut(3000);
-})
 $(document).ready(function () {//page Initialize Event
 
     $.ajax({
@@ -35,6 +32,8 @@ $(document).ready(function () {//page Initialize Event
         }
       },async:false
     });
+    
+  $('.cs-loader').fadeOut(3000);
   }
 );
 //#endregion
