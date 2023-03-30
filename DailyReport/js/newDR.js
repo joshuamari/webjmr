@@ -1090,6 +1090,10 @@ function disableInputs(iVal,xVal){
             $('#idMH').prop('disabled',false);
             }
      }
+     else{
+        $('#idRemarks').prop('disabled',false);
+        $('#idAdd').prop('disabled',false);
+     }
 }
 function trainingGroup(iVal) {
     if(iVal==oneBUTrainerID){
