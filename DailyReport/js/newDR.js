@@ -169,6 +169,7 @@ $(document).on('change','#idGroup',function(){//select Group Event
     // getCheckers();
     $('#p1').text("");
     $(this).removeClass('border-danger');
+    
 
     // console.log(getSelValue);
 });
@@ -215,6 +216,7 @@ $(document).on('change','#idProject',function(){//select Project Event
     }
    
     getCheckers();
+    $('.trgrp').remove();
 });
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
@@ -254,12 +256,14 @@ $(document).on('change','#idLocation',function(){//select Group Event
     MHValidation();
     $('#p3').text("");
     $(this).removeClass('border-danger');
+
     if($(this).val()=="WFH"){
         $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',true);
     }
     else{
          $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',false);
      }});
+     
 $(document).on('change', '#idMH', function(){
     $('#p10').text("");
     $(this).removeClass('border-danger');
