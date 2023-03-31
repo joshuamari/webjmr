@@ -76,7 +76,7 @@ $(document).ready(function(){//page Initialize Event
         // console.log(sidebarBtn);
         sidebarBtn.addEventListener("click", () => {
         $(".sidebar").toggleClass("close");
-        console.log("pinindot")
+        // console.log("pinindot")
         });
         sidebarBtn2.addEventListener("click", () => {
         $(".sidebar").addClass("close");
@@ -904,7 +904,7 @@ function copyEntries(){//copy entries from selected date
         copyDate:copyDate
      },
         function (data) {
-            console.log(data)
+            // console.log(data)
             getEntries();
             resetEntry();
             initCalendar();
@@ -980,9 +980,9 @@ function selectEntry(iVal){//edit selected entry
         primaryID : selectID
     },
         function (data) {
-            console.log(data);
+            // console.log(data);
             var dataSelect = $.parseJSON(data);
-            console.log(dataSelect);
+            // console.log(dataSelect);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $($('#idLocation').find(`option[loc-id=${dataSelect[0]}]`)).prop('selected',true).change();
             $('#idGroup').val(dataSelect[1]);
