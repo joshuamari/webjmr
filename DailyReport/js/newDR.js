@@ -310,7 +310,7 @@ $(document).on('click','#back2Project',function(){
 $(document).on('click','#drInstruction .btn-close',function(){
     $('#back2Project').click();
 })
-$(document).on('click','.itotr',function(){
+$(document).on('click','#selectBut',function(){
     selectEntry(this);
 })
 
@@ -400,7 +400,7 @@ function addRow(iVal){//map Entries for display
             break;
     }
     var addString = `
-    <tr id="${mht}_${pId}" title="${rmrks}" class="itotr">
+    <tr id="${mht}_${pId}" title="${rmrks}" >
     <td>${loc}</td>
     <td>${group}</td>
     <td>${project}</td>
@@ -408,7 +408,7 @@ function addRow(iVal){//map Entries for display
     <td>${desc}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
-    <td><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
+    <td><button class="btn btn-primary action selectBut" id="selectBut" title="Paste Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
     </td>
     </tr>
     `;
@@ -925,12 +925,7 @@ function editEntry(iVal){//edit selected entry
             console.log(dataEdit);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idGroup').val(dataEdit[1]);
-            var getLocs = Object.values(document.getElementsByClassName("clLoc"));
-            getLocs.forEach(element => {
-                if(dataEdit[0] == $(element).text()){
-                    $(element).click();
-                }
-            });
+
             getCheckers();
             getProjects();
             $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).attr('selected',true).change();
@@ -978,7 +973,7 @@ function editEntry(iVal){//edit selected entry
 function selectEntry(iVal){//edit selected entry
 
     // var trID = $($(iVal).parents()[1]).attr('id')
-    var trID=$(iVal).attr('id');
+    var trID = $($(iVal).parents()[1]).attr('id')
     selectID = trID.split("_")[1];
     
     $.post("ajax/getDataEdit.php", {
@@ -991,12 +986,7 @@ function selectEntry(iVal){//edit selected entry
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idLocation').val(dataSelect[0]);
             $('#idGroup').val(dataSelect[1]);
-            var getLocs = Object.values(document.getElementsByClassName("clLoc"));
-            getLocs.forEach(element => {
-                if(dataSelect[0] == $(element).text()){
-                    $(element).click();
-                }
-            });
+
             getCheckers();
             getProjects();
             $($('#idProject').find(`option[proj-id=${dataSelect[2]}]`)).attr('selected',true).change();
