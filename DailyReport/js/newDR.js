@@ -163,8 +163,8 @@ $(document).on('click','.pindot',function(){
     
 })
 $(document).on('change','#idGroup',function(){//select Group Event
-    // var getSelValue = $(this).children(":selected").attr("data-id");
-    // $('#idGroup').children(":selected").attr("data-id");
+    // var getSelValue = $(this).children(":selected").prop("data-id");
+    // $('#idGroup').children(":selected").prop("data-id");
     getProjects();
     // getCheckers();
     $('#p1').text("");
@@ -258,10 +258,10 @@ $(document).on('change','#idLocation',function(){//select Group Event
     $(this).removeClass('border-danger');
 
     if($(this).val()=="WFH"){
-        $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',true);
+        $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',true);
     }
     else{
-         $($('#idProject').find(`option[proj-id=${leaveID}]`)).attr('hidden',false);
+         $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',false);
      }});
      
 $(document).on('change', '#idMH', function(){
@@ -311,6 +311,8 @@ $(document).on('click','#drInstruction .btn-close',function(){
     $('#back2Project').click();
 })
 $(document).on('click','#selectBut',function(){
+    $('#idAdd').text("Add");
+    $('#idReset').text("Clear");
     selectEntry(this);
 })
 
@@ -594,7 +596,7 @@ function getJobs(iVal,xVal){//get Job Selection
             $('#idJRD').html(data);
             sequenceValidation();
             if(iVal==mngID || iVal==kiaID){
-                $($('#idJRD').children()[1]).attr("selected",true);
+                $($('#idJRD').children()[1]).prop("selected",true);
             }
         }
     );
@@ -607,7 +609,7 @@ function addEntries(iVal){//add Entries to Database
     var loc = $($('#idLocation').find('option:selected')).attr('loc-id');
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
-    var trgrp = $($('#trGroup').find('option:selected')).val();
+    var trgrp = $($('#trGroup').find('option:selected')).val()||'';
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id')||'';
     var tow = $($('#idTOW').find('option:selected')).attr('tow-id');
     var hour = $('#getHour').val()*60 || "0";
@@ -842,19 +844,19 @@ function MHValidation(){//enable/disable manhour type selection
         selLoc=$('#idLocation').val();
     }
     if(projID!=leaveID){//if Project selected is not LEAVE    
-        $("#idMH").attr('disabled',false);
+        $("#idMH").prop('disabled',false);
         $("#idMH").val('');
         if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
-            $("#idMH").attr('disabled',true);
+            $("#idMH").prop('disabled',true);
         }
         if(selLoc=="WFH"){
             $("#idMH").val('Regular');
-            $("#idMH").attr('disabled',true);
+            $("#idMH").prop('disabled',true);
         }
     }
     else{
-        $("#idMH").attr('disabled',true);
+        $("#idMH").prop('disabled',true);
          $("#idMH").val('');
          if(!isWorkDay(selLoc)){
             alert("Leave disabled on holidays/weekends");
@@ -920,19 +922,17 @@ function editEntry(iVal){//edit selected entry
         primaryID : editID
     },
         function (data) {
-            console.log(data);
             var dataEdit = $.parseJSON(data);
-            console.log(dataEdit);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idGroup').val(dataEdit[1]);
 
             getCheckers();
             getProjects();
-            $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).attr('selected',true).change();
+            $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).prop('selected',true).change();
             getItems(dataEdit[2]);
-            $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).attr('selected',true).change();
+            $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).prop('selected',true).change();
             getJobs(dataEdit[2],dataEdit[3]);
-            $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).attr('selected',true).change();
+            $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).prop('selected',true).change();
 
             // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
             // if(dataEdit[5].toString().split('.')[1] == undefined){
@@ -946,9 +946,9 @@ function editEntry(iVal){//edit selected entry
             getTOW(`${dataEdit[2]}`);
             disableTimeInput(`${dataEdit[2]}`);
             MHValidation();
-            $($('#idTOW').find(`option[tow-id=${dataEdit[7]}]`)).attr('selected',true).change();
+            $($('#idTOW').find(`option[tow-id=${dataEdit[7]}]`)).prop('selected',true).change();
             getTOWDesc(dataEdit[7]);
-            $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).attr('selected',true).change();
+            $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).prop('selected',true).change();
             $('#idRemarks').val(dataEdit[8]);
             if(dataEdit[9] != null){
                 // $(`button[2d3d-id=${dataEdit[9]}]`).click();
@@ -961,8 +961,8 @@ function editEntry(iVal){//edit selected entry
             if(dataEdit[11] != null){
                 // $('#idChecking').val(dataEdit[11]);
                 $("#forChecking").show();
-                $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).attr('selected',true).change();
-                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
+                $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).prop('selected',true).change();
+                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).prop('selected',true);`);
             }
             $('#trGroup').val(dataEdit[12]);
         }
@@ -972,7 +972,7 @@ function editEntry(iVal){//edit selected entry
 
 function selectEntry(iVal){//edit selected entry
 
-    // var trID = $($(iVal).parents()[1]).attr('id')
+    // var trID = $($(iVal).parents()[1]).prop('id')
     var trID = $($(iVal).parents()[1]).attr('id')
     selectID = trID.split("_")[1];
     
@@ -984,16 +984,16 @@ function selectEntry(iVal){//edit selected entry
             var dataSelect = $.parseJSON(data);
             console.log(dataSelect);
             // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
-            $('#idLocation').val(dataSelect[0]);
+            $($('#idLocation').find(`option[loc-id=${dataSelect[0]}]`)).prop('selected',true).change();
             $('#idGroup').val(dataSelect[1]);
 
             getCheckers();
             getProjects();
-            $($('#idProject').find(`option[proj-id=${dataSelect[2]}]`)).attr('selected',true).change();
+            $($('#idProject').find(`option[proj-id=${dataSelect[2]}]`)).prop('selected',true).change();
             getItems(dataSelect[2]);
-            $($('#idItem').find(`option[item-id=${dataSelect[3]}]`)).attr('selected',true).change();
+            $($('#idItem').find(`option[item-id=${dataSelect[3]}]`)).prop('selected',true).change();
             getJobs(dataSelect[2],dataSelect[3]);
-            $($('#idJRD').find(`option[job-id=${dataSelect[4]}]`)).attr('selected',true).change();
+            $($('#idJRD').find(`option[job-id=${dataSelect[4]}]`)).prop('selected',true).change();
 
             // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
             // if(dataEdit[5].toString().split('.')[1] == undefined){
@@ -1007,9 +1007,9 @@ function selectEntry(iVal){//edit selected entry
             getTOW(`${dataSelect[2]}`);
             disableTimeInput(`${dataSelect[2]}`);
             MHValidation();
-            $($('#idTOW').find(`option[tow-id=${dataSelect[7]}]`)).attr('selected',true).change();
+            $($('#idTOW').find(`option[tow-id=${dataSelect[7]}]`)).prop('selected',true).change();
             getTOWDesc(dataSelect[7]);
-            $($('#idMH').find(`option[mhid=${dataSelect[6]}]`)).attr('selected',true).change();
+            $($('#idMH').find(`option[mhid=${dataSelect[6]}]`)).prop('selected',true).change();
             $('#idRemarks').val(dataSelect[8]);
             if(dataSelect[9] != null){
                 // $(`button[2d3d-id=${dataEdit[9]}]`).click();
@@ -1022,8 +1022,8 @@ function selectEntry(iVal){//edit selected entry
             if(dataSelect[11] != null){
                 // $('#idChecking').val(dataEdit[11]);
                 $("#forChecking").show();
-                $($('#idChecking').find(`option[dataid=${dataSelect[11]}]`)).attr('selected',true).change();
-                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
+                $($('#idChecking').find(`option[dataid=${dataSelect[11]}]`)).prop('selected',true).change();
+                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).prop('selected',true);`);
             }
             $('#trGroup').val(dataSelect[12]);
         }
