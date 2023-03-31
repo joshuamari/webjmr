@@ -31,7 +31,7 @@ body {
     --green-color: #7bae37;
     
     /* ni-hide ko ppo yung scroll kasi naka vh naman na yung content (.cont) */
-    overflow: hidden;
+    
 }
 
 
@@ -601,6 +601,10 @@ footer{
 .right .table-container .table tbody tr:hover td{
     color: #fff;
 }
+.right .table-container .table tbody tr td:last-child{
+    white-space: nowrap;
+    
+}
 .right .btn-export{
     background: var(--card-color);
     background: linear-gradient(45deg, rgba(254,95,117,1) 0%, rgba(252,152,66,1) 100%);opacity: 1;
@@ -623,11 +627,32 @@ footer{
 .right .bot-table-container .table tbody tr:hover td{
     color: #fff;
 }
-.right .bot-table-container .table tbody th{
+.right .bot-table-container .table thead th{
     color: var(--header-color);
 }
-.right .table-container .table tbody th{
+.right .table-container .table thead th{
     color: var(--header-color);
+}
+.selectBut{
+    height: 40px;
+    width: 40px;
+    background-color: var(--main-blue);
+
+    margin: 2px;
+}
+.edit{
+    height: 40px;
+    width: 40px;
+    background-color: var(--yellow-color);
+
+    margin: 2px;
+}
+.delBut{
+    height: 40px;
+    width: 40px;
+    background-color: var(--red-color);
+ 
+    margin: 2px;
 }
 
 .ms .pindot{

@@ -310,6 +310,9 @@ $(document).on('click','#back2Project',function(){
 $(document).on('click','#drInstruction .btn-close',function(){
     $('#back2Project').click();
 })
+$(document).on('click','.itotr',function(){
+    selectEntry(this);
+})
 
 //#endregion
 
@@ -397,7 +400,7 @@ function addRow(iVal){//map Entries for display
             break;
     }
     var addString = `
-    <tr id="${mht}_${pId}" title="${rmrks}">
+    <tr id="${mht}_${pId}" title="${rmrks}" class="itotr">
     <td>${loc}</td>
     <td>${group}</td>
     <td>${project}</td>
@@ -405,7 +408,8 @@ function addRow(iVal){//map Entries for display
     <td>${desc}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
-    <td><button class="btn btn-warning" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger  delBut"><i class="text-light fa fa-trash"></i></button></td>
+    <td><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
+    </td>
     </tr>
     `;
     $('#drEntries').append(addString);
@@ -966,6 +970,72 @@ function editEntry(iVal){//edit selected entry
                 // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
             }
             $('#trGroup').val(dataEdit[12]);
+        }
+    );
+    isDrawing();
+}
+
+function selectEntry(iVal){//edit selected entry
+
+    // var trID = $($(iVal).parents()[1]).attr('id')
+    var trID=$(iVal).attr('id');
+    selectID = trID.split("_")[1];
+    
+    $.post("ajax/getDataEdit.php", {
+        primaryID : selectID
+    },
+        function (data) {
+            console.log(data);
+            var dataSelect = $.parseJSON(data);
+            console.log(dataSelect);
+            // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
+            $('#idLocation').val(dataSelect[0]);
+            $('#idGroup').val(dataSelect[1]);
+            var getLocs = Object.values(document.getElementsByClassName("clLoc"));
+            getLocs.forEach(element => {
+                if(dataSelect[0] == $(element).text()){
+                    $(element).click();
+                }
+            });
+            getCheckers();
+            getProjects();
+            $($('#idProject').find(`option[proj-id=${dataSelect[2]}]`)).attr('selected',true).change();
+            getItems(dataSelect[2]);
+            $($('#idItem').find(`option[item-id=${dataSelect[3]}]`)).attr('selected',true).change();
+            getJobs(dataSelect[2],dataSelect[3]);
+            $($('#idJRD').find(`option[job-id=${dataSelect[4]}]`)).attr('selected',true).change();
+
+            // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
+            // if(dataEdit[5].toString().split('.')[1] == undefined){
+            //     $('#getMin').val(0);
+            // }else{
+            //     $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
+            // }
+            $(`#getHour`).val(`${Math.floor(dataSelect[5]/60)}`);
+            $(`#getMin`).val(`${dataSelect[5] % 60}`);
+            isDrawing();
+            getTOW(`${dataSelect[2]}`);
+            disableTimeInput(`${dataSelect[2]}`);
+            MHValidation();
+            $($('#idTOW').find(`option[tow-id=${dataSelect[7]}]`)).attr('selected',true).change();
+            getTOWDesc(dataSelect[7]);
+            $($('#idMH').find(`option[mhid=${dataSelect[6]}]`)).attr('selected',true).change();
+            $('#idRemarks').val(dataSelect[8]);
+            if(dataSelect[9] != null){
+                // $(`button[2d3d-id=${dataEdit[9]}]`).click();
+                $(`#${dataSelect[9]}`).click()
+            }
+            if(dataSelect[10] == 1){
+                $('#idRev').click();
+            }
+            disableTimeInput(dataSelect[2]);
+            if(dataSelect[11] != null){
+                // $('#idChecking').val(dataEdit[11]);
+                $("#forChecking").show();
+                $($('#idChecking').find(`option[dataid=${dataSelect[11]}]`)).attr('selected',true).change();
+                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).attr('selected',true);`);
+            }
+            $('#trGroup').val(dataSelect[12]);
         }
     );
     isDrawing();
