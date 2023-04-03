@@ -833,7 +833,7 @@ function jobRow(iVal){//lay drawref table
   //$($(this).parent()).attr('id');//get TR ID
   
   var nonDefaults=``;
-  if(ifEditable(iVal) && allAccess.includes(empDetails['empNum'])){
+  if(ifEditable(selectedProject) || (selectedProject==trainingProjID && allAccess.includes(empDetails['empNum'])) || selectedProject==solProjID){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
