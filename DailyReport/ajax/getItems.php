@@ -55,6 +55,9 @@ if($projID == $mngProjID){
         case 'AM':
             $mngStatement=" AND fldID=4";
             break;
+        case 'CTE':
+            $mngStatement=" AND fldID=4";
+            break;
         case 'SSV':
             $mngStatement=" AND fldID=5";
             break;
