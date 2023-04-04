@@ -4,7 +4,7 @@ require_once "../Includes/dbconnectwebjmr.php";
 require_once "../Includes/dbconnectkdtph.php";
 #endregion
 #region Initialize Variable
-$output='';
+$output=array();
 $statement='';
 $kdtSearch='';
 $kdtGroup='';
@@ -46,7 +46,6 @@ if(!empty($_POST['ymSel'])){
 $defaultsQ="SELECT * FROM dailyreport WHERE fldDate LIKE '%$ymSel%' $statement ORDER BY fldEmployeeNum,fldDate";
 $defaultsStmt=$connwebjmr->query($defaultsQ);
 $defArr=$defaultsStmt->fetchAll();
-$count="1";
 if($defaultsStmt->rowCount()>0){
     foreach($defArr AS $dflts){
         $enum=$dflts['fldEmployeeNum'];
@@ -96,29 +95,9 @@ if($defaultsStmt->rowCount()>0){
         $nameQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum='$enum'";
         $nameStmt=$connkdt->query($nameQ);
         $ename=$nameStmt->fetchColumn();
-        $output .= <<<EOD
-        <tr>
-            <td>$count</td>
-            <td>$ename</td>
-            <td>$egrp</td>
-            <td>$edate</td>
-            <td>$eloc</td>
-            <td>$eproj</td>
-            <td>$eitm</td>
-            <td>$ejob</td>
-            <td>$e2d</td>
-            <td>$erev</td>
-            <td>$etow</td>
-            <td>$edur</td>
-            <td>$emh</td>
-        </tr>
-        EOD;
-        $count++;
+        array_push($output,"$ename||$egrp||$edate||$eloc||$eproj||$eitm||$ejob||$e2d||$erev||$etow||$edur||$emh");
     }
 }
-else{
-    $output="<tr><td colspan='13'>No entries</td></tr>";
-}
 #endregion
-echo $output;
+echo json_encode($output);
 ?>

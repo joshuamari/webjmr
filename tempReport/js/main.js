@@ -1,49 +1,50 @@
 
 //#region GLOBALS
-switch (document.location.hostname)
-{
-        case 'kdt-ph':
-            rootFolder = '//kdt-ph/'; 
-            break;
-        case 'localhost' :
-            rootFolder = '//localhost/'; 
-            break;
-        default : 
-            rootFolder = '//kdt-ph/update_test/';
-            break;
+switch (document.location.hostname) {
+  case 'kdt-ph':
+    rootFolder = '//kdt-ph/';
+    break;
+  case 'localhost':
+    rootFolder = '//localhost/';
+    break;
+  default:
+    rootFolder = '//kdt-ph/update_test/';
+    break;
 }
-var empDetails=[];
-$.ajaxSetup({async: false});
-$.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
-  empDetails=$.parseJSON(data);
+var empDetails = [];
+$.ajaxSetup({ async: false });
+$.ajax({
+  url: "Includes/checkLogin.php", success: function (data) { //ajax to check if user is logged in
+    empDetails = $.parseJSON(data);
 
-  if(empDetails.length<1){
-    window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+    if (empDetails.length < 1) {
+      window.location.href = rootFolder + '/welcome'; //if result is 0, redirect to log in page
+    }
+    jmcAccess();
   }
-  jmcAccess();
-}});
-$.ajaxSetup({async: true});
+});
+$.ajaxSetup({ async: true });
 //#endregion
 
 //#region BINDS
-$(document).ready(function(){
-  $.ajaxSetup({async: false});
+$(document).ready(function () {
+  $.ajaxSetup({ async: false });
   getMyGroups();
-  var dateToday = new Date();  
-  $('#monthSel').val(`${dateToday.getFullYear()}-${(dateToday.getMonth()+1).toString().padStart(2,'0')}`)
+  var dateToday = new Date();
+  $('#monthSel').val(`${dateToday.getFullYear()}-${(dateToday.getMonth() + 1).toString().padStart(2, '0')}`)
   showInputs();
-  $.ajaxSetup({async: true});
+  $.ajaxSetup({ async: true });
 });
-$(document).on('keyup','#searchMain',function(){
+$(document).on('keyup', '#searchMain', function () {
   showInputs();
 })
-$(document).on('change','#BUSel',function(){
+$(document).on('change', '#BUSel', function () {
   showInputs();
 })
-$(document).on('change','#monthSel',function(){
+$(document).on('change', '#monthSel', function () {
   showInputs();
 })
-$(document).on('click','#resetB',function(){
+$(document).on('click', '#resetB', function () {
   $('#searchMain').val('');
   $('#BUSel').val('');
   $('#monthSel').val('');
@@ -53,39 +54,67 @@ $(document).on('click','#resetB',function(){
 //#endregion
 
 //#region FUNCTIONS
-function jmcAccess(){//check if user has access to jmc
+function jmcAccess() {//check if user has access to jmc
   $.post("ajax/jmcAccess.php",
-  {
-    empNum:empDetails['empNum']
-  },
+    {
+      empNum: empDetails['empNum']
+    },
     function (data) {
-      if(data.trim()==0){
+      if (data.trim() == 0) {
         alert('Access denied');
-        window.location.href=rootFolder+'/welcome';
+        window.location.href = rootFolder + '/welcome';
       }
     }
   );
 }
-function showInputs(){
-  var search=$('#searchMain').val();
-  var empGroup=$('#BUSel').val();
-  var ymSel=$('#monthSel').val();
+function showInputs() {
+  $('#mainBod').empty()
+  var lDeets=[];
+  var search = $('#searchMain').val();
+  var empGroup = $('#BUSel').val();
+  var ymSel = $('#monthSel').val();
   $.post("ajax/showInputs.php",
-  {
-    search:search,
-    empGroup:empGroup,
-    ymSel:ymSel
-  },
+    {
+      search: search,
+      empGroup: empGroup,
+      ymSel: ymSel
+    },
     function (data) {
-      $('#mainBod').html(data);
+      lDeets=$.parseJSON(data);
+      lDeets.map(lVal);
     }
   );
 }
-function getMyGroups(){//get group selection
+function lVal(iVal) {
+
+  var splitVal = iVal.split('||');
+
+  $('#mainBod').append(`
+
+<tr>
+  <td>${($('#mainBod').children().length) + 1}</td>
+  <td>${splitVal[0]}</td>
+  <td>${splitVal[1]}</td>
+  <td>${splitVal[2]}</td>
+  <td>${splitVal[3]}</td>
+  <td>${splitVal[4]}</td>
+  <td>${splitVal[5]}</td>
+  <td>${splitVal[6]}</td>
+  <td>${splitVal[7]}</td>
+  <td>${splitVal[8]}</td>
+  <td>${splitVal[9]}</td>
+  <td>${splitVal[10]}</td>
+  <td>${splitVal[11]}</td>
+</tr>
+
+  `)
+
+}
+function getMyGroups() {//get group selection
   $.post("ajax/getMyGroup.php",
-  {
-    empNum:empDetails['empNum'],
-  },
+    {
+      empNum: empDetails['empNum'],
+    },
     function (data) {
       $('#BUSel').html(data);
     }
