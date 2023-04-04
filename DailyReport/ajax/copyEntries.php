@@ -28,10 +28,11 @@ $getChecking=NULL;
 $getDuration='';
 $getMHType='';
 $getRemarks='';
+$getTrGrp=NULL;
 #endregion
 #region Copy Entries Query
-$copyDRQ="INSERT INTO dailyreport(fldEmployeeNum,fldGroup,fldDate,fldLocation,fldProject,fldItem,fldJobRequestDescription,fld2D3D,fldRevision,fldTOW,fldChecker,fldDuration,fldMHType,fldRemarks,fldChangeLog) 
-VALUES(:empNum,:getGroup,:drDate,:getLocation,:getProject,:getItem,:getDescription,:getTwoThree,:getRev,:getType,:getChecking,:getDuration,:getMHType,:getRemarks,:logs)";
+$copyDRQ="INSERT INTO dailyreport(fldEmployeeNum,fldGroup,fldDate,fldLocation,fldProject,fldItem,fldJobRequestDescription,fld2D3D,fldRevision,fldTOW,fldChecker,fldDuration,fldMHType,fldRemarks,fldChangeLog,fldTrGroup) 
+VALUES(:empNum,:getGroup,:drDate,:getLocation,:getProject,:getItem,:getDescription,:getTwoThree,:getRev,:getType,:getChecking,:getDuration,:getMHType,:getRemarks,:logs,:getTrGrp)";
 $copyDRStmt=$connwebjmr->prepare($copyDRQ);
 $drQ ="SELECT * FROM dailyreport WHERE fldEmployeeNum=:empNum AND fldDate=:copyDate";
 $drStmt=$connwebjmr->prepare($drQ);
@@ -50,7 +51,8 @@ foreach($drArr AS $drEntries){
     $getDuration=$drEntries['fldDuration'];
     $getMHType=$drEntries['fldMHType'];
     $getRemarks=$drEntries['fldRemarks'];
-    $copyDRStmt->execute([":empNum"=>$empNum,":getGroup"=>$getGroup,":drDate"=>$drDate,":getLocation"=>$getLocation,":getProject"=>$getProject,":getItem"=>$getItem,":getDescription"=>$getDescription,":getTwoThree"=>$getTwoThree,":getRev"=>$getRev,":getType"=>$getType,":getChecking"=>$getChecking,":getDuration"=>$getDuration,":getMHType"=>$getMHType,":getRemarks"=>$getRemarks,":logs"=>$logs]);
+    $getTrGrp=$drEntries['fldTrGroup'];
+    $copyDRStmt->execute([":empNum"=>$empNum,":getGroup"=>$getGroup,":drDate"=>$drDate,":getLocation"=>$getLocation,":getProject"=>$getProject,":getItem"=>$getItem,":getDescription"=>$getDescription,":getTwoThree"=>$getTwoThree,":getRev"=>$getRev,":getType"=>$getType,":getChecking"=>$getChecking,":getDuration"=>$getDuration,":getMHType"=>$getMHType,":getRemarks"=>$getRemarks,":logs"=>$logs,":getTrGrp"=>$getTrGrp]);
 }
 
 #endregion
