@@ -52,6 +52,9 @@ if($defaultsStmt->rowCount()>0){
         $egrp=$dflts['fldGroup'];
         $edate=$dflts['fldDate'];
         $eloc=$dflts['fldLocation'];
+        $locQ="SELECT fldLocation FROM dispatch_locations WHERE fldID='$eloc'";
+        $locStmt=$connwebjmr->query($locQ);
+        $locName=$locStmt->fetchColumn();
         $eproject=$dflts['fldProject'];
         $projQ="SELECT fldProject,fldGroup FROM projectstable WHERE fldID='$eproject'";
         $projStmt=$connwebjmr->query($projQ);
@@ -95,7 +98,7 @@ if($defaultsStmt->rowCount()>0){
         $nameQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum='$enum'";
         $nameStmt=$connkdt->query($nameQ);
         $ename=$nameStmt->fetchColumn();
-        array_push($output,"$ename||$egrp||$edate||$eloc||$eproj||$eitm||$ejob||$e2d||$erev||$etow||$edur||$emh");
+        array_push($output,"$ename||$egrp||$edate||$locName||$eproj||$eitm||$ejob||$e2d||$erev||$etow||$edur||$emh");
     }
 }
 #endregion
