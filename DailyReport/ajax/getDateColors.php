@@ -34,7 +34,7 @@ $redDates=array();
 #endregion
 
 #region main
-$greenQ="SELECT fldDate FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate HAVING(SUM(fldDuration))=480";
+$greenQ="SELECT fldDate FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate HAVING(SUM(fldDuration))>=480";
 $greenStmt=$connwebjmr->query($greenQ);
 $greenArr=$greenStmt->fetchAll();
 foreach($greenArr AS $greens){
