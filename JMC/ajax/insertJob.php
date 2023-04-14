@@ -14,12 +14,12 @@ $grp=NULL;
 //         $itemID=$_REQUEST['itemID'];
 //     }
 // }
-if(!empty($_REQUEST['itemID'])){
-    $itemID=$_REQUEST['itemID'];
-}
-if($projID!=$leaveID){
+if($projID!=$leaveID && $projID!=$trainProjID){
     if(!empty($_REQUEST['grp'])){
         $grp=$_REQUEST['grp'];
+    }
+    if(!empty($_REQUEST['itemID'])){
+        $itemID=$_REQUEST['itemID'];
     }
 }
 $jobName='';
