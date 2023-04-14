@@ -48,7 +48,7 @@ body {
   height: 100%;
   width: 260px;
   background: var(--main-blue);
-  z-index: 99;
+  z-index: 1999;
   transition: all 0.5s ease;
 }
 
@@ -76,6 +76,12 @@ body {
 
 }
 
+.sidebar .logo-details .logo_name.home{
+  font-size: 17px;
+  color: #fff;
+  font-weight: 400;
+}
+
 .sidebar.close .logo-details .logo_name {
   transition-delay: 0s;
   opacity: 0;
@@ -83,7 +89,7 @@ body {
 }
 
 .sidebar .nav-links {
-  height: 100%;
+  height: calc(100% - 120px);
   padding: 30px 0 150px 0;
   overflow: auto;
 }
@@ -275,6 +281,7 @@ font-size: 11px;
 }
 
 .home-section .home-content {
+  height: calc(100vh - 60px);
 background: #eeeded;
 align-items: center;
 
@@ -418,7 +425,7 @@ letter-spacing: 2px;
 
   .jmc{
     width: 100%;
-    height: 94vh;
+    height: 100%;
     display: flex;
     align-items: center;
     position: relative;
@@ -427,7 +434,7 @@ letter-spacing: 2px;
   }
 
   .mainBody{
-    height: 90vh;
+    height: 100%;
     width: 100%;
   }
 
