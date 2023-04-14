@@ -33,7 +33,7 @@ $(document).ready(function () {//page Initialize Event
       },async:false
     });
     
-  $('.cs-loader').fadeOut(3000);
+  $('.cs-loader').fadeOut(1000);
   
   }
 );

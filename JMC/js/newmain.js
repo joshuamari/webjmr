@@ -83,7 +83,7 @@ $(document).ready(function(){
   });
   //#endregion
   $.ajaxSetup({async: true});
-  $('.cs-loader').fadeOut(3000);
+  $('.cs-loader').fadeOut(1000);
 });
 $(document).on('click','.editJrd-btn', function(){
     var getTR = $($(this).parents()[1]).children();

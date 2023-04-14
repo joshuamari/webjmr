@@ -127,7 +127,7 @@ $(document).ready(function(){//page Initialize Event
                     }
                 });
         //#endregion
-        $('.cs-loader').fadeOut(3000);
+        $('.cs-loader').fadeOut(1000);
     });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY
@@ -156,7 +156,7 @@ $(document).on('click','.pindot',function(){
     if($('.ms').hasClass('open')){
         $('.ms-lbl p').html(`<i class='bx bx-x' style='color:#fff; font-size:40px;'></i>`);
     }else{
-        $('.ms-lbl p').html(`Monthly Standard <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`);
+        $('.ms-lbl p').html(`Calendar <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`);
     }
    
     // $('.today-btn').click();
