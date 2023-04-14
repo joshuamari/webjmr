@@ -42,7 +42,7 @@ try {
   $oneBUTrainerID=$obuTrainStmt->fetchColumn();
 
   $KDTWAccess=['SYS','ANA','IT'];
-  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV','IT-SV','CTE'];
+  $managementPositions=['KDTP','SM','DM','AM','SSS','SSV','CTE'];
   $gods=['464','465','487'];
   $noMoreInputItemOfWorks=['6','10','15','17','19','21'];
   date_default_timezone_set('Asia/Manila');

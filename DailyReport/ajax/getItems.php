@@ -64,9 +64,6 @@ if($projID == $mngProjID){
         case 'SSS':
             $mngStatement=" AND fldID=5";
             break;
-        case 'IT-SV':
-            $mngStatement=" AND fldID=5";
-            break;
     }
 }
 #endregion
