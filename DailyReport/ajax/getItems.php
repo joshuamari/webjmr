@@ -75,7 +75,8 @@ $itemArr=$itemStmt->fetchAll();
 foreach($itemArr AS $item){
     $itemName=$item['fldItem'];
     $itemID=$item['fldID'];
-    $output.="<option item-id='$itemID'>$itemName</option>";
+    // $output.="<option item-id='$itemID'>$itemName</option>";
+    $output.="<li item-id='$itemID'>$itemName</li>";
 }
 #endregion
 echo $output;

@@ -1105,11 +1105,15 @@ footer{
         display: block;
     }
     .iow .content{
+        position: absolute;
         background: #fff;
-        margin-top: 10px;
+        margin-top: 5px;
         padding: 20px;
-        border-radius: 7px;
+    
         display: none;
+        border: 1px solid #333;
+    
+        z-index: 5;
     }
     .iow .content .search{
         position: relative;
@@ -1122,7 +1126,7 @@ footer{
     }
     .iow .content .options{
         margin-top: 10px;
-        max-height: 250px;
+        max-height: 220px;
         overflow-y: auto;
     }
     .iow .content .options::-webkit-scrollbar{
@@ -1137,7 +1141,7 @@ footer{
         border-radius: 25px;
     }
     .iow .content .options li{
-        height: 50px;
+        height: 35px;
         border-radius: 5px;
         display: flex;
         cursor: pointer;

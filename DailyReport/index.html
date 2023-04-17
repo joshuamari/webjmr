@@ -234,22 +234,18 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
                 </div> -->
                 <div class="col-12 my-2 iow">
-                  <div class="select-btn form-select">
-                    <span>Select Item of Works</span>
-                  </div>
+                  <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
+                  <select class="select-btn form-select" id="idItem" required>
+                    <option selected hidden disabled value="">Select Item of Works</option>
+                    <!-- <span class="display">Select Item of Works</span> -->
+                  </select>
                   <div class="content">
                     <div class="search">
                       <i class='bx bx-search ' ></i>
-                      <input type="text" class="form-control" placeholder="Search" style="padding-left: 30px;">
+                      <input type="text" class="form-control" id="searchitem" placeholder="Search" style="padding-left: 30px;">
                     </div>
                     <ul class="options p-0">
-                      <li>Sample Item1</li>
-                      <li>Sample Item2</li>
-                      <li>Sample Item3</li>
-                      <li>Sample Item4</li>
-                      <li>Hadtog</li>
-                      <li>Cheesedog</li>
-                      <li>waw</li>
+                      
                     </ul>
                   </div>
                   
