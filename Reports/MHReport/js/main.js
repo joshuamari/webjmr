@@ -48,6 +48,7 @@ $.ajaxSetup({async: true});
 //#region BINDS
 $(document).ready(function () {
   $.ajaxSetup({async: false});
+  setDate();
   getGroups();
   getTable();
   $.ajaxSetup({async: true});
@@ -64,6 +65,13 @@ $(document).on('change','#CO',function(){
 //#endregion
 
 //#region FUNCTIONS
+function setDate(){//set default month
+  var today = new Date();
+
+  var rawMonth = `${today.getMonth()+1}`;
+  var dateString = `${today.getFullYear()}-${rawMonth.padStart(2,"0")}`;
+  $('#monthSel').val(dateString);
+}
 function getTable(){
   $.ajaxSetup({async: false});
   var _testHeader=getTestHeader();

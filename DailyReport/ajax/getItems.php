@@ -3,7 +3,8 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected hidden>Select Item of Works</option>";
+// $output="<option value='' selected hidden>Select Item of Works</option>";
+$output=array();
 $projID='';
 if(!empty($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
@@ -66,9 +67,13 @@ if($projID == $mngProjID){
             break;
     }
 }
+$searchIOW='';
+if(!empty($_POST['searchIOW'])){
+    $searchIOW=$_POST['searchIOW'];
+}
 #endregion
 #region MyGroup Query
-$itemQ="SELECT * FROM itemofworkstable WHERE fldProject=:projID AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete=0 $mngStatement ORDER BY fldPriority";
+$itemQ="SELECT * FROM itemofworkstable WHERE fldProject=:projID AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete=0 $mngStatement AND fldItem LIKE '%$searchIOW%' ORDER BY fldPriority";
 $itemStmt=$connwebjmr->prepare($itemQ);
 $itemStmt->execute([":projID"=>$projID,":empGroup"=>$empGroup]);
 $itemArr=$itemStmt->fetchAll();
@@ -76,8 +81,9 @@ foreach($itemArr AS $item){
     $itemName=$item['fldItem'];
     $itemID=$item['fldID'];
     // $output.="<option item-id='$itemID'>$itemName</option>";
-    $output.="<li item-id='$itemID'>$itemName</li>";
+    // $output.="<li item-id='$itemID'>$itemName</li>";
+    array_push($output,"$itemID||$itemName");
 }
 #endregion
-echo $output;
+echo json_encode($output);
 ?>

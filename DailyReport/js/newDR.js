@@ -205,6 +205,7 @@ $(document).on('change','#idProject',function(){//select Project Event
         $('#idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
     }
     getItems(projID);
+    getItemSearch(projID)
     isDrawing();
     getTOW(projID);
     disableTimeInput(projID);
@@ -314,10 +315,6 @@ $(document).on('change','#trGroup',function(){
 $(document).on('click','#back2Project',function(){
     $('#drInstruction').modal('hide');
     $('#idItem').val(null).change();
-    if($('#idItem').val() == null || $('#idItem').val() == ""){
-        $('#idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
-    }
-
 })
 $(document).on('click','#drInstruction .btn-close',function(){
     $('#back2Project').click();
@@ -332,42 +329,49 @@ $(document).on('click','.select-btn',function(){
     $('.iow').toggleClass('active');
 })
 $(document).on('click','.options li',function(){
-    updateIow(this);
     $('.iow').removeClass('active');
-    
-    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
-    var itemID=$($('#idItem').find('option:selected')).attr('item-id');
-    
-    $('.trgrp').remove();
-    getLabel(itemID);
-    disableInputs(projID,itemID);
-    if(noMoreInputItems.includes(itemID)){
-        $('#drInstruction').modal('show');
-    }
-    trainingGroup(itemID);
-    getJobs(projID,itemID);
-    $('#p5').text("");
-    $(this).removeClass('border-danger');
+    var itemID=$(this).attr('item-id');
+    $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
+    // $('#searchitem').val(``).change();
+    // var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    // var itemID=$(this).attr('item-id');
+    // $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
+    // $('.trgrp').remove();
+    // disableInputs(projID,itemID);
+    // if(noMoreInputItems.includes(itemID)){
+    //     $('#drInstruction').modal('show');
+    // }
+    // trainingGroup(itemID);
+    // getJobs(projID,itemID);
+    // $('#p5').text("");
+    // $(this).removeClass('border-danger');
     
 })
-
+$(document).on('keyup','#searchitem',function(){
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    getItemSearch(projID);
+});
+$(document).on('search','#searchitem',function(){
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    getItemSearch(projID);
+});
 //#endregion
 
 //#region FUNCTIONS
 
-function updateIow(selectedIOW){//select the li 
+// function updateIow(selectedIOW){//select the li 
     
-    var itemid = $(selectedIOW).attr('item-id');
-    var display = $(selectedIOW).text();
+//     var itemid = $(selectedIOW).attr('item-id');
+//     var display = $(selectedIOW).text();
 
-    $('.display').text(display);
+//     $('.display').text(display);
 
-    var output = `<option selected hidden item-id="${itemid}">${display}</option>`;
+//     var output = `<option selected hidden item-id="${itemid}">${display}</option>`;
 
-    $('#idItem').empty().append(output);
+//     $('#idItem').empty().append(output);
 
     
-}
+// }
 
 function getDefaults(){//get Default Projects(GOW,Kaizen,etc.)
     var defaultsArray=[];
@@ -611,6 +615,9 @@ function getProjects(){//get Project Selection
     
 }
 function getItems(iVal){//get Item Selection
+    var itms=[];
+    $('#itemOptions').empty();
+    $('#idItem').html(`<option value='' hidden>Select Item of Works</option>`);
     $('#labell').remove();
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
@@ -619,10 +626,11 @@ function getItems(iVal){//get Item Selection
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
-        projID:iVal
+        projID:iVal,
     },
         function (data) {
-            $('.options').empty().append(data);
+            itms=$.parseJSON(data);
+            itms.map(fillItem);
             sequenceValidation();
             if(iVal==mngID){
                 $($('#idItem').children()[1]).prop("selected",true).change();
@@ -630,6 +638,39 @@ function getItems(iVal){//get Item Selection
         }
     );
     $.ajaxSetup({async: true}); 
+}
+function fillItem(iVal){
+    var itemDeets=iVal.split("||");
+    var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
+    var addStringMain=`<option hidden item-id='${itemDeets[0]}'>${itemDeets[1]}</option>`;
+    $(`#itemOptions`).append(addString);
+    $(`#idItem`).append(addStringMain);
+}
+function getItemSearch(iVal){//get Item Selection
+    var itms=[];
+    var searchIOW=$(`#searchitem`).val();
+    $('#itemOptions').empty();
+    $.ajaxSetup({async: false});
+    $.post("ajax/getItems.php",
+    {
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
+        empNum:empDetails['empNum'],
+        empPos:empDetails['empPos'],
+        projID:iVal,
+        searchIOW:searchIOW,
+    },
+        function (data) {
+            itms=$.parseJSON(data);
+            itms.map(fillItem);
+        }
+    );
+    $.ajaxSetup({async: true}); 
+}
+function fillItemSearch(iVal){
+    var itemDeets=iVal.split("||");
+    var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
+    $(`#itemOptions`).append(addString);
 }
 function getJobs(iVal,xVal){//get Job Selection
     $.ajaxSetup({async: false});
