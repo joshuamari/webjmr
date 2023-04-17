@@ -941,7 +941,7 @@ function MHValidation(){//enable/disable manhour type selection
     }
     if(projID!=leaveID){//if Project selected is not LEAVE    
         $("#idMH").prop('disabled',false);
-        $("#idMH").val('');
+        // $("#idMH").val('');
         if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
             $("#idMH").prop('disabled',true);
@@ -1010,6 +1010,8 @@ function copyEntries(){//copy entries from selected date
 function editEntry(iVal){//edit selected entry
     $('#idAdd').text("Save Changes");
     $('#idReset').text("Cancel");
+    $('#idLocation').val("");
+    // $('#idMH').val("");
 
     var trID = $($(iVal).parents()[1]).attr('id')
     editID = trID.split("_")[1];
