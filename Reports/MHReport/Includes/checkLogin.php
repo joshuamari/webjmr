@@ -1,19 +1,29 @@
 <?php
-include 'dbconnectkdtph.php';
-$output=1;
-if(!isset($_COOKIE["userID"])){ //
-    $output=0;
+require_once 'dbconnectkdtph.php'; //database connection
+$output=array();
+$userHash='';
+if(isset($_COOKIE['userID'])){
+    $userHash=$_COOKIE['userID'];
 }
-else{
-    $userHash=$_COOKIE["userID"];
-    $loginQ="SELECT fldUser FROM kdtlogin WHERE fldUserHash='$userHash'";
+if(!empty($userHash)){
+    $loginQ="SELECT fldEmployeeNum FROM kdtlogin WHERE fldUserHash='$userHash'";
     $loginStmt=$connkdt->query($loginQ);
     if($loginStmt->rowCount()>0){
-        $pcUserName=$loginStmt->fetchColumn();
+        $userLogin=$loginStmt->fetchColumn();
+        $output+=["empNum"=>$userLogin];
+        // $output=$userLogin;
     }
-    else{
-        $output=0;
+    $empDeetsQ="SELECT * FROM emp_prof WHERE fldEmployeeNum='$userLogin'";
+    $empDeetsStmt=$connkdt->query($empDeetsQ);
+    $empDeetsArr=$empDeetsStmt->fetchAll();
+    foreach($empDeetsArr AS $empdeets){
+        $output+=["empGroup"=>$empdeets['fldGroup']];
+        $output+=["empFName"=>$empdeets['fldFirstname']];
+        $output+=["empSName"=>$empdeets['fldSurname']];
+        $output+=["empNName"=>$empdeets['fldNick']];
+        $output+=["empDateHired"=>$empdeets['fldDateHired']];
+        $output+=["empPos"=>$empdeets['fldDesig']];
     }
 }
-echo $output;
+echo json_encode($output);
 ?>

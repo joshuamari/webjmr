@@ -1,30 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title>MH Report</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/mhreport.css">
-  <link rel="stylesheet" href="css/boxicons.css" />
-  <script src="js/jquery.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <!--#region BUSTER CALL  -->
-  <script>
-    $.ajax({
-      url: "ajax/getVersion.php", success: function (result) {
-        var script = document.createElement("script");
-        script.src = "js/main.js?version=" + result;
-        $('head').append(script);
-        console.log('version: ' + result);
-      }
-    });
-  </script>
-  <!--#endregion -->
-</head>
-<!-- <head>
   <title>MH Report</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
@@ -38,7 +14,7 @@
   <script>
 
     var busterCall = ["js/main.js","css/mhreport.css"];
-    $.post("../ajax/getVersion.php", {
+    $.post("ajax/getVersion.php", {
         busterCall : busterCall,
         titleName: "MH Report"
     },
@@ -48,7 +24,7 @@
     );
     
   </script>
-</head> -->
+</head>
 
 <body>
   <div class="home-content position-relative ">
@@ -68,7 +44,7 @@
           <div class="form-floating col-12 col-sm-4 col-xl-2 my-1 my-md-0">
          
             <select class="form-select"  id="buSel" aria-label="Select BU">
-              <option selected >SYS</option>
+              <option value='' selected hidden>Select Group</option>
               <option >ENV</option>
               <option >Two</option>
               <option >Three</option>
@@ -85,7 +61,7 @@
             <select class="form-select"  id="CO" aria-label="Select BU">
               <option value="1">First Half</option>
               <option value="2">Second Half</option>
-              <option value="2">Monthly</option>
+              <option value="3">Monthly</option>
 
             </select>
             <label for="CO" class="">Select Cut-off</label>

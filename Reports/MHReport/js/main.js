@@ -1,28 +1,29 @@
-// switch (document.location.hostname)
-// {
-//         case 'kdt-ph':
-//             rootFolder = '//kdt-ph/update_test/'; 
-//             break;
-//         case 'localhost' :
-//             rootFolder = '//localhost/'; 
-//             break;
-//         default : 
-//             rootFolder = '//kdt-ph/update_test/';
-//             break;
-// }
+//#region GLOBALS
+switch (document.location.hostname)
+{
+        case 'kdt-ph':
+            rootFolder = '//kdt-ph/update_test/'; 
+            break;
+        case 'localhost' :
+            rootFolder = '//localhost/'; 
+            break;
+        default : 
+            rootFolder = '//kdt-ph/update_test/';
+            break;
+}
 var dateNgayon = new Date();
-
+var empDetails=[];
 //emp#||Name||Group and Desig
 const empList = ['300||AAA||Env', '310||BBB||Env', '400||CCC||Env', '410||DDD||Env', '420||EEE||Env', '320||FFF||Pip', '330||GGG||Civ']
 
 //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
-const testHeader = ['Env||6311051-P300||Komuradai||P||51', 'Env||6311052-P300||Aizu||P||69', 'Env||6311053-P300||Kirishima||P||72', 'Env||61H3E35-020L||STP75||P||81', 'Env||61WXXXX-XXX1||KHI Indirect||P||87', 'Env||6311053-P300||Kirishima||J||89', 'Env||61HXXXX-XXXX||KHI Indirect||J||98', 'Env||61WXXXX-XXXX||KHI Indirect||J||112'];
+const testHeader = ['Env||6311051-P300||Komuradai||P||51-P', 'Env||6311052-P300||Aizu||P||69', 'Env||6311053-P300||Kirishima||P||72', 'Env||61H3E35-020L||STP75||P||81', 'Env||61WXXXX-XXX1||KHI Indirect||P||87', 'Env||6311053-P300||Kirishima||J||89', 'Env||61HXXXX-XXXX||KHI Indirect||J||98', 'Env||61WXXXX-XXXX||KHI Indirect||J||112'];
 
 //emp#||dbIndex||duration
-const entries = ['300||51||50', '300||89||80', '300||98||10', '300||112||10', '310||51||150', '400||69||100', '400||81||20', '400||87||30', '410||72||150', '320||69||50', '330||72||50']
+const entries = ['300||51-P||50', '300||89||80', '300||98||10', '300||112||10', '310||51||150', '400||69||100', '400||81||20', '400||87||30', '410||72||150', '320||69||50', '330||72||50']
 
 //pwede rin to galing db (initialize once)
-const codeArr = { Cem: "61W2201", Mil: "61W2201", Chem: "61W2252", Cryo: "61W2971", MH: "61W2202", AH: "61W2714", Env: "61W2322", EE: "61W2283", Civ: "61W2211", Pip: "61W2510", Boi: "61W2725", KHI: "61W2102", KDT: "61W2102-8900" }
+const codeArr = { CEM: "61W2201", MIL: "61W2201", CHE: "61W2252", CRY: "61W2971", MHAH: "61W2202", AH: "61W2714", ENV: "61W2322", EE: "61W2283", CIV: "61W2211", PIP: "61W2510", BOI: "61W2725", KHI: "61W2102", KDT: "61W2102-8900" }
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
 const mgaNahiram = ['Cem||6269420-P300||Hehe||P||469', 'EE||6242069-P100||Haha||P||999']
@@ -31,24 +32,152 @@ const mgaNahiram = ['Cem||6269420-P300||Hehe||P||469', 'EE||6242069-P100||Haha||
 const hiramEntries = ['410||469||5', '410||999||5', '320||469||5', '330||999||5'];
 
 //emp#||td class||duration
-const mngkdt = ['300||M1||130', '310||M1||120', '400||M1||50', '400||M2||10', '300||K1||2.5', '300||B1||2.5', '310||K1||5', '310||B1||5', '400||K1||2.5', '400||B1||2.5', '400||K2||1.5', '400||B2||1.5', '410||K1||5', '410||B1||5', '420||K1||75', '420||B1||75',
-];
+const mngkdt = ['300||M1||130', '310||M1||120', '400||M1||50', '400||M2||10', '300||K1||2.5', '300||B1||2.5', '310||K1||5', '310||B1||5', '400||K1||2.5', '400||B1||2.5', '400||K2||1.5', '400||B2||1.5', '410||K1||5', '410||B1||5', '420||K1||75', '420||B1||75'];
+//#endregion
 
-//emp#||
+$.ajaxSetup({async: false});
+$.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+  empDetails=$.parseJSON(data);
 
+  if(empDetails.length<1){
+    window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+  }
+}});
+$.ajaxSetup({async: true});
+
+//#region BINDS
 $(document).ready(function () {
-  // $.post("Includes/checkLogin.php",
-  //   {
-  //   },function(data,status){
-  //       if(data==0){
-  //           window.location.href=rootFolder+'/welcome';
-  //       }
-  //   });
-  createTable(testHeader, empList, entries, mgaNahiram, hiramEntries, mngkdt, $('#buSel').val());
+  $.ajaxSetup({async: false});
+  getGroups();
+  getTable();
+  $.ajaxSetup({async: true});
 })
+$(document).on('change','#buSel',function(){
+  getTable();
+});
+$(document).on('change','#monthSel',function(){
+  getTable();
+});
+$(document).on('change','#CO',function(){
+  getTable();
+});
+//#endregion
 
+//#region FUNCTIONS
+function getTable(){
+  $.ajaxSetup({async: false});
+  var _testHeader=getTestHeader();
+  var _empList=getEmplist();
+  var _entries=getEntries();
+  var _mgaNahiram=getMgaNahiram();
+  var _hiramEntries=getHiramEntries();
+  var _mngkdt=getMngKdt();
+  var _getGroup=$('#buSel').val();
+  createTable(_testHeader, _empList, _entries, _mgaNahiram, _hiramEntries, _mngkdt, _getGroup);
+  $.ajaxSetup({async: true});
+}
+function getTestHeader(){
+  var tHeader=[];
+  var getYMSel=$(`#monthSel`).val()
+var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getTestHeader.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      tHeader=$.parseJSON(data);
+    },
+    async=false
+  );
+  return tHeader;
+}
+function getEmplist(){
+  var eList=[];
+  var getYMSel=$(`#monthSel`).val()
+  var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getEmplist.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      eList=$.parseJSON(data);
+    },
+    async=false
+  );
+  return eList;
+}
+function getEntries(){
+  var entrs=[];
+  var getYMSel=$(`#monthSel`).val()
+  var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getEntries.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      entrs=$.parseJSON(data);
+    },
+    async=false
+  );
+  return entrs;
+}
+function getMgaNahiram(){
+  var mgaNhiram=[];
+  var getYMSel=$(`#monthSel`).val()
+  var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getMgaNahiram.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      mgaNhiram=$.parseJSON(data);
+    },
+    async=false
+  );
+  return mgaNhiram;
+}
+function getHiramEntries(){
+  var hramEntries=[];
+  var getYMSel=$(`#monthSel`).val()
+  var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getHiramEntries.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      hramEntries=$.parseJSON(data);
+    },
+    async=false
+  );
+  return hramEntries;
+}
+function getMngKdt(){
+  var mngakdt=[];
+  var getYMSel=$(`#monthSel`).val()
+  var getHalfSel=$(`#CO`).val()
+  $.post("ajax/getMngKdt.php",
+  {
+    getYMSel:getYMSel,
+    getHalfSel:getHalfSel,
+    getGroup:$('#buSel').val()
+  },
+    function (data) {
+      mngakdt=$.parseJSON(data);
+    },async=false
+  );
+  return mngakdt;
+}
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
-  // $('#mainTable').html(`<thead class="sticky-top">
   $('#mainTable').html(`<thead>
   <tr id="tr1">
     <th rowspan="4" title="Employee Number">#</th>
@@ -78,13 +207,10 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   afterSub(BU);
   pHead(bVal);
   $('#tr1').append(`<th rowspan="4">Monthly Man-hour per Person</th>`);
-  $('th,td').addClass('border border-secondary border-1 bg-white');
   $('.empRow').append(`<td class="mhpp"></td>`);
   $('#tot1').append(`<td id="tot1-mhpp"></td>`);
   $('#multiplier').append(`<td></td>`);
   $('#xd').append(`<td></td>`);
-
-
 
   //for entries
   // $($(".empRow[data-val='300']").children('td[data-val="51"]')).text('w3-black')
@@ -123,7 +249,7 @@ function addEmp(iVal) {
 }
 
 function pHead(iVal) {
-  iVal.forEach(function callback(element, index) {
+  iVal.forEach(function callback(element) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
     $('#tr1').append(`<th>${splitVal[0]}</th>`);
@@ -140,7 +266,7 @@ function pHead(iVal) {
 function afterSub(iVal) {
   var addThis = ["Management", "KDT", iVal];
   //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
-  var headers = [`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||P||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`];
+  var headers = [`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`];
   pHead(headers);
 }
 
@@ -215,3 +341,23 @@ function totmhpp(iVal){
   $('#tot1-mhpp').text(`${(parseFloat($('#tot1-mhpp').text() != "" ? $('#tot1-mhpp').text() : "0")) + parseFloat(rVal)}`);
   return rVal;
 }
+function getGroups(){
+  $('#buSel').html(`<option value='' selected hidden>Select Group</option>`)
+  var grps=[];
+  $.post("ajax/getMyGroups.php",
+  {
+    empNum:empDetails['empNum']
+  },
+    function (data) {
+      grps=$.parseJSON(data);
+      grps.map(fillGroup)
+      $('#buSel').val(empDetails['empGroup'])
+    },
+    async=false
+  );
+}
+function fillGroup(iVal){
+  var addString=`<option>${iVal}</option>`;
+  $('#buSel').append(addString);
+}
+//#endregion
