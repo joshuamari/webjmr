@@ -1094,6 +1094,62 @@ footer{
   }
 
 
+
+  
+    /* SELECT BUTTON */
+    .select-btn{
+        
+    }
+
+    .iow.active .content{
+        display: block;
+    }
+    .iow .content{
+        background: #fff;
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 7px;
+        display: none;
+    }
+    .iow .content .search{
+        position: relative;
+    }
+    .iow .content .search i{
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        line-height: 1.5 ;
+    }
+    .iow .content .options{
+        margin-top: 10px;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .iow .content .options::-webkit-scrollbar{
+        width: 7px;
+    }
+    .iow .content .options::-webkit-scrollbar-track{
+        background: #f1f1f1;
+        border-radius: 25px;
+    }
+    .iow .content .options::-webkit-scrollbar-thumb{
+        background: #ccc;
+        border-radius: 25px;
+    }
+    .iow .content .options li{
+        height: 50px;
+        border-radius: 5px;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        padding: 0 13px;
+    }
+    .iow .content .options li:hover{
+        background: #f2f2f2;
+    }
+
+
+
 @media (max-width: 550px) {
     
     .sidebar.close .nav-links li .sub-menu {
@@ -1166,6 +1222,7 @@ footer{
     footer div{
         font-size: 11px;
     }
+
 
 
 }
