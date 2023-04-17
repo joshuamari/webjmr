@@ -649,7 +649,7 @@ function addEntries(iVal){//add Entries to Database
         $('#idItem').addClass('border border-danger')
         mgaKulang.push("ITEM");
     }
-    if(!jobreq && !defaults.includes(proj)){
+    if(!jobreq && (proj!=leaveID || proj!=otherID)){
         $('#p6').text("Please select job request description");
         $('#idJRD').addClass('border border-danger')
         mgaKulang.push("JRD");
@@ -660,8 +660,13 @@ function addEntries(iVal){//add Entries to Database
     else{
         revision = 0;
     }
-    if(!tow && !defaults.includes(proj)){
-        $('#p11').text("Please select type of work");
+    if(!tow && (!defaults.includes(proj) || proj==leaveID)){
+        if(proj==leaveID){
+            $('#p11').text("Please select day type");
+        }
+        else{
+            $('#p11').text("Please select type of work");
+        }
         $('#idTOW').addClass('border border-danger')
         mgaKulang.push("TOW");
     }
