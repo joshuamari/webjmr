@@ -14,8 +14,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 body {
-    background: var(--darkest-blue);
-}
+  background-color: var(--darkest-blue);
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
+  overflow: hidden;
+  }
 
 :root{
     --main-blue: #3980c7;
@@ -33,6 +38,19 @@ body {
     /* ni-hide ko ppo yung scroll kasi naka vh naman na yung content (.cont) */
     
 }
+
+.home-content::-webkit-scrollbar{
+  width: 10px;
+}
+.home-content::-webkit-scrollbar-track{
+  background: #ebebeb;
+
+}
+.home-content::-webkit-scrollbar-thumb{
+  background: #6383a1;
+  border-radius: 25px;
+}
+
 
 
 
@@ -286,7 +304,7 @@ footer{
   background: var(--darkest-blue);
 
   width: 100%;
-  overflow: hidden;
+  overflow: auto !important;
   height: calc(100vh - 60px);
 }
 
@@ -313,6 +331,7 @@ footer{
   justify-content: space-between;
   padding: 0 20px 0 20px;
   background: #ffff;
+  z-index: 1230;
 }
 
 .home-section .home-topbar .bx-menu,

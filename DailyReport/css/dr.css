@@ -18,6 +18,18 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+.cont::-webkit-scrollbar{
+    width: 10px;
+}
+.cont::-webkit-scrollbar-track{
+    background: #ebebeb;
+  
+}
+.cont::-webkit-scrollbar-thumb{
+    background: #6383a1;
+    border-radius: 25px;
+}
+
 
 :root{
     --main-blue: #3980c7;
