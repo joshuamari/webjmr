@@ -1764,8 +1764,9 @@ function addColors(iVal){
 
     });
     holidates.forEach(element => {
-        
-        var spl = element.split("-");
+        console.log(element)
+        var rawHoliday=element.split("||");
+        var spl = rawHoliday[0].split("-");
         
         var mm = spl[1];
         var daa = spl[2];
@@ -1775,12 +1776,15 @@ function addColors(iVal){
         
         if (mm>nowmm){
             $(`.day.next-date:contains(${parseInt(daa)})`).addClass('holiday');
+            $(`.day.next-date:contains(${parseInt(daa)})`).prop('title',`${rawHoliday[1]}`);
         }
         else if(mm<nowmm){
             $(`.day.prev-date:contains(${parseInt(daa)})`).addClass('holiday');
+            $(`.day.next-date:contains(${parseInt(daa)})`).prop('title',`${rawHoliday[1]}`);
         }
         else{
             $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("holiday");
+            $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).prop('title',`${rawHoliday[1]}`);
         }
 
     });
