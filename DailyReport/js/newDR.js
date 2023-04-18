@@ -1780,7 +1780,7 @@ function addColors(iVal){
         }
         else if(mm<nowmm){
             $(`.day.prev-date:contains(${parseInt(daa)})`).addClass('holiday');
-            $(`.day.next-date:contains(${parseInt(daa)})`).prop('title',`${rawHoliday[1]}`);
+            $(`.day.prev-date:contains(${parseInt(daa)})`).prop('title',`${rawHoliday[1]}`);
         }
         else{
             $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("holiday");
