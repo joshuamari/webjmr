@@ -28,12 +28,24 @@ $lastDate=date("Y-m-t",strtotime($curMonth));
 if(date('N', strtotime($lastDate)) != 6){
     $lastDate=date("Y-m-d",strtotime($lastDate."+1 Saturday"));
 }
+$loc="KDT";
 $allDates=array();
 $greenDates=array();
 $redDates=array();
+$montHolidays=array();
 #endregion
 
 #region main
+$monthHQ="SELECT fldDate,fldHoliday FROM kdtholiday WHERE (fldLocation='$loc' AND fldHolidayType != 2) AND fldDate>='$startDate' AND fldDate<='$lastDate'";
+$monthHStmt=$connkdt->query($monthHQ);
+if($monthHStmt->rowCount()>0){
+    $monthHArr=$monthHStmt->fetchAll();
+    foreach($monthHArr AS $monthHS){
+        $holidate=$monthHS['fldDate'];
+        $holiname=$monthHS['fldHoliday'];
+        array_push($montHolidays,"$holidate||$holiname");
+    }
+}
 $greenQ="SELECT fldDate FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate HAVING(SUM(fldDuration))>=480";
 $greenStmt=$connwebjmr->query($greenQ);
 $greenArr=$greenStmt->fetchAll();
