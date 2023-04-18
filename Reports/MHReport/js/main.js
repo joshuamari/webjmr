@@ -296,14 +296,22 @@ function total(){
   // Multiplied (2 || 2.85) .xTot
   var getXTot = $('.xTot');
   for(let x = 0 ; x < getXTot.length ; x++){
-    $(getXTot[x]).text(parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text()) * parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text()));
+    var totalmh=parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text());
+    var multi=parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text())
+    var overall=Math.round(((totalmh*multi) + Number.EPSILON) * 100) / 100
+    $(getXTot[x]).text(overall);
+    // $(getXTot[x]).text(parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text()) * parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text()));
     // $('#xd-st').text(`${ parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0") + parseFloat($(getXTot[x]).text())}`);
   }
 
   // total ng multiplied
   var mTot = $('#xd-st').prevAll(".xTot");
   for(let x = 0 ; x < mTot.length ; x++){
-    $('#xd-st').text(`${ parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0") + parseFloat($(mTot[x]).text())}`);
+    var mtotleft=parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0");
+    var mtotright=parseFloat($(mTot[x]).text());
+    var mtottotal=Math.round(((mtotleft+mtotright) + Number.EPSILON) * 100) / 100
+    // $('#xd-st').text(`${ parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0") + parseFloat($(mTot[x]).text())}`);
+    $('#xd-st').text(`${mtottotal}`);
   }
 
   //subTot $('.st')
@@ -325,6 +333,7 @@ var rVal = 0;
 for(let x = 0 ; x < getTots.length ; x++){
   rVal += parseFloat(getTots[x].innerText != "" ? getTots[x].innerText : "0");
 }
+rVal=Math.round(((rVal) + Number.EPSILON) * 100) / 100
 return rVal;
 }
 
@@ -334,6 +343,7 @@ function sTot(iVal){
   for(let x = 0 ; x < getsTot.length ; x++){
     rVal += parseFloat($(getsTot[x]).text()!= "" ? $(getsTot[x]).text() : "0")
   }
+  rVal=Math.round(((rVal) + Number.EPSILON) * 100) / 100
   //total ng subTot
   $('#tot1-st').text(`${parseFloat($('#tot1-st').text() != "" ? $('#tot1-st').text() : "0") + parseFloat(rVal)}`)
   return rVal;
@@ -345,6 +355,7 @@ function totmhpp(iVal){
   for(let x = 0 ; x < getLeft.length ; x++){
     rVal += parseFloat($(getLeft[x]).text() != "" ? $(getLeft[x]).text() : "0");
   }
+  rVal=Math.round(((rVal) + Number.EPSILON) * 100) / 100
   //total ng mhpp
   $('#tot1-mhpp').text(`${(parseFloat($('#tot1-mhpp').text() != "" ? $('#tot1-mhpp').text() : "0")) + parseFloat(rVal)}`);
   return rVal;
