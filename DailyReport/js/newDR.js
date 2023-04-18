@@ -168,6 +168,7 @@ $(document).on('change','#idGroup',function(){//select Group Event
     // var getSelValue = $(this).children(":selected").prop("data-id");
     // $('#idGroup').children(":selected").prop("data-id");
     getProjects();
+  
     // getCheckers();
     $('#p1').text("");
     $(this).removeClass('border-danger');
@@ -205,7 +206,7 @@ $(document).on('change','#idProject',function(){//select Project Event
         $('#idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
     }
     getItems(projID);
-    getItemSearch(projID)
+    // getItemSearch(projID)
     isDrawing();
     getTOW(projID);
     disableTimeInput(projID);
@@ -238,7 +239,7 @@ $(document).on('change','#idItem',function(){//select Item Event
     }
     trainingGroup(itemID);
     getJobs(projID,itemID);
-    getJRDSearch(projID,itemID);
+    // getJRDSearch(projID,itemID);
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
@@ -264,15 +265,17 @@ $(document).on('click','button[edit-entry]',function(){//click edit event
 });
 $(document).on('change','#idLocation',function(){//select Group Event  
     MHValidation();
+    
     $('#p3').text("");
     $(this).removeClass('border-danger');
 
-    if($(this).val()=="WFH"){
-        $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',true);
-    }
-    else{
-         $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',false);
-     }});
+    // if($(this).val()=="WFH"){
+    //     $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',true);
+    // }
+    // else{
+    //      $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',false);
+    //  }
+    });
      
 $(document).on('change', '#idMH', function(){
     $('#p10').text("");
@@ -326,29 +329,35 @@ $(document).on('click','#selectBut',function(){
     selectEntry(this);
 })
 
-$(document).on('click','.select-btn',function(){
+$(document).on('click','#idProject',function(){
+    $('.proj').toggleClass('active');
+});
+
+$(document).on('click','#projOptions li',function(){
+    $('.proj').removeClass('active');
+    var projID=$(this).attr('proj-id');
+    $($('#idProject').find(`option[proj-id=${projID}]`)).prop('selected',true).change(); 
+})
+
+$(document).on('keyup','#searchproj',function(){
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    getProjSearch();
+});
+$(document).on('search','#searchproj',function(){
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    getProjSearch();
+});
+
+$(document).on('click','#idItem',function(){
     $('.iow').toggleClass('active');
 })
 
 $(document).on('click','#itemOptions li',function(){
     $('.iow').removeClass('active');
     var itemID=$(this).attr('item-id');
-    $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
-    // $('#searchitem').val(``).change();
-    // var projID=$($('#idProject').find('option:selected')).attr('proj-id');
-    // var itemID=$(this).attr('item-id');
-    // $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
-    // $('.trgrp').remove();
-    // disableInputs(projID,itemID);
-    // if(noMoreInputItems.includes(itemID)){
-    //     $('#drInstruction').modal('show');
-    // }
-    // trainingGroup(itemID);
-    // getJobs(projID,itemID);
-    // $('#p5').text("");
-    // $(this).removeClass('border-danger');
-    
+    $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change(); 
 })
+
 $(document).on('keyup','#searchitem',function(){
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     getItemSearch(projID);
@@ -357,6 +366,7 @@ $(document).on('search','#searchitem',function(){
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     getItemSearch(projID);
 });
+
 
 $(document).on('click','#idJRD',function(){
     $('.jord').toggleClass('active');
@@ -381,20 +391,6 @@ $(document).on('search','#searchjrd',function(){
 //#endregion
 
 //#region FUNCTIONS
-
-// function updateIow(selectedIOW){//select the li 
-    
-//     var itemid = $(selectedIOW).attr('item-id');
-//     var display = $(selectedIOW).text();
-
-//     $('.display').text(display);
-
-//     var output = `<option selected hidden item-id="${itemid}">${display}</option>`;
-
-//     $('#idItem').empty().append(output);
-
-    
-// }
 
 function getDefaults(){//get Default Projects(GOW,Kaizen,etc.)
     var defaultsArray=[];
@@ -619,24 +615,80 @@ function sequenceValidation(){//sequence Checking Project->Item->Job
         $('#idProject').prop('disabled',false);
     }
 }
-function getProjects(){//get Project Selection
+// function getProjects(){//get Project Selection
 
+//     $.ajaxSetup({async: false});
+//     $.post("ajax/getProjects.php",
+//     {
+//         // empGroup:empDetails['empGroup'],
+//         empGroup:$('#idGroup').val(),
+//         empNum:empDetails['empNum'],
+//         empPos:empDetails['empPos']
+//     },
+//         function (data) {
+//             $('#idProject').html(data);
+//             $('#idProject').val("").change();
+//         }
+//     );
+//     $.ajaxSetup({async: true});
+    
+// }
+
+function getProjects(){//get PROJECT Selection
+    var proj=[];
+   $('#projOptions,#idProject').empty();
+    $('#idProject').html(`<option value='' hidden>Select Project</option>`);
+    
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
-        empPos:empDetails['empPos']
+        empPos:empDetails['empPos'],
     },
         function (data) {
-            $('#idProject').html(data);
-            $('#idProject').val("").change();
+          
+            proj=$.parseJSON(data);
+            console.log(proj)
+            proj.map(fillProj);
+            sequenceValidation();
         }
     );
-    $.ajaxSetup({async: true});
-    
+    $.ajaxSetup({async: true}); 
 }
+function fillProj(iVal){
+    console.log("oo")
+    var projDeets=iVal.split("||");
+    
+    var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}</li>`;
+    var addStringMain=`<option hidden proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</option>`;
+    $(`#projOptions`).append(addString);
+    $(`#idProject`).append(addStringMain);
+}
+function getProjSearch(){//get Item Selection
+    var proj=[];
+    var searchProj=$(`#searchproj`).val();
+    $('#projOptions').empty();
+    $.ajaxSetup({async: false});
+    $.post("ajax/getProjects.php",
+    {
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
+        empNum:empDetails['empNum'],
+        empPos:empDetails['empPos'],
+        searchProj:searchProj,
+    },
+        function (data) {
+            proj=$.parseJSON(data);
+            proj.map(fillProj);
+            
+        }
+    );
+    $.ajaxSetup({async: true}); 
+}
+
+
 function getItems(iVal){//get Item Selection
     var itms=[];
     $('#itemOptions').empty();

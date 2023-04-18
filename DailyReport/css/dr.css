@@ -992,6 +992,13 @@ footer{
 .day.weekend{
     background-color: #e3e5e9;
 }
+/* HOLIDAY */
+.day.holiday{
+    background-color: rgba(252, 152, 66,.5) !important;
+}
+.calendar .days .day.holiday.active::before{
+    box-shadow: 0 0 10px 2px rgba(252, 152, 66,.75) !important;
+}
 
 
 /*loaderrrrr*/
@@ -1095,8 +1102,61 @@ footer{
 
 
 
+    /* SELECT PROJECT */
+    
+    .proj.active .content{
+        display: block;
+    }
+    .proj .content{
+        position: absolute;
+        background: #fff;
+        margin-top: 5px;
+        padding: 20px;
+    
+        display: none;
+        border: 1px solid #333;
+    
+        z-index: 5;
+    }
+    .proj .content .search{
+        position: relative;
+    }
+    .proj .content .search i{
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        line-height: 1.5 ;
+    }
+    .proj .content .options{
+        margin-top: 10px;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+    .proj .content .options::-webkit-scrollbar{
+        width: 7px;
+    }
+    .proj .content .options::-webkit-scrollbar-track{
+        background: #f1f1f1;
+        border-radius: 25px;
+    }
+    .proj .content .options::-webkit-scrollbar-thumb{
+        background: #ccc;
+        border-radius: 25px;
+    }
+    .proj .content .options li{
+        height: 35px;
+        border-radius: 5px;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        padding: 0 13px;
+    }
+    .proj .content .options li:hover{
+        background: #f2f2f2;
+    }
+
   
-    /* SELECT BUTTON */
+    /* SELECT ITEM OF WORKS */
 
     .iow.active .content{
         display: block;
@@ -1200,6 +1260,8 @@ footer{
     .jord .content .options li:hover{
         background: #f2f2f2;
     }
+
+
 
 
 

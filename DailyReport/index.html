@@ -213,7 +213,7 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p3" role="alert"></span>
                 </div>
 
-                <div class="col-12 my-2">
+                <!-- <div class="col-12 my-2">
                   <label for="idProject" class="form-label">Project</label>
                   <div class="input-group">
                     <select class="form-select" id="idProject" required>
@@ -221,6 +221,23 @@
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
+                </div> -->
+
+                <div class="col-12 my-2 proj">
+                  <label for="idProj" id="projlbl" class="form-label">Project</label>
+                  <select class="select-btn form-select" id="idProject" required>
+                    <option selected hidden disabled value="">Select Project</option>
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class='bx bx-search ' ></i>
+                      <input type="search" class="form-control" id="searchproj" placeholder="Search" style="padding-left: 30px;">
+                    </div>
+                    <ul id="projOptions" class="options p-0">
+                      
+                    </ul>
+                  </div>
+                <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
                 </div>
 
                 <!-- <div class="col-12 my-2 iow">
