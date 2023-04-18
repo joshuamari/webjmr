@@ -1097,9 +1097,6 @@ footer{
 
   
     /* SELECT BUTTON */
-    .select-btn{
-        
-    }
 
     .iow.active .content{
         display: block;
@@ -1151,6 +1148,59 @@ footer{
     .iow .content .options li:hover{
         background: #f2f2f2;
     }
+
+    /*SELECT JRD */
+    .jord.active .content{
+        display: block;
+    }
+    .jord .content{
+        position: absolute;
+        background: #fff;
+        margin-top: 5px;
+        padding: 20px;
+    
+        display: none;
+        border: 1px solid #333;
+    
+        z-index: 5;
+    }
+    .jord .content .search{
+        position: relative;
+    }
+    .jord .content .search i{
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        line-height: 1.5 ;
+    }
+    .jord .content .options{
+        margin-top: 10px;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+    .jord .content .options::-webkit-scrollbar{
+        width: 7px;
+    }
+    .jord .content .options::-webkit-scrollbar-track{
+        background: #f1f1f1;
+        border-radius: 25px;
+    }
+    .jord .content .options::-webkit-scrollbar-thumb{
+        background: #ccc;
+        border-radius: 25px;
+    }
+    .jord .content .options li{
+        height: 35px;
+        border-radius: 5px;
+        display: flex;
+        cursor: pointer;
+        align-items: center;
+        padding: 0 13px;
+    }
+    .jord .content .options li:hover{
+        background: #f2f2f2;
+    }
+
 
 
 

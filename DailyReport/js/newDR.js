@@ -238,6 +238,7 @@ $(document).on('change','#idItem',function(){//select Item Event
     }
     trainingGroup(itemID);
     getJobs(projID,itemID);
+    getJRDSearch(projID,itemID);
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
@@ -328,7 +329,8 @@ $(document).on('click','#selectBut',function(){
 $(document).on('click','.select-btn',function(){
     $('.iow').toggleClass('active');
 })
-$(document).on('click','.options li',function(){
+
+$(document).on('click','#itemOptions li',function(){
     $('.iow').removeClass('active');
     var itemID=$(this).attr('item-id');
     $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
@@ -354,6 +356,27 @@ $(document).on('keyup','#searchitem',function(){
 $(document).on('search','#searchitem',function(){
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     getItemSearch(projID);
+});
+
+$(document).on('click','#idJRD',function(){
+    $('.jord').toggleClass('active');
+})
+$(document).on('click','#jrdOptions li',function(){
+    $('.jord').removeClass('active');
+    var jrdID=$(this).attr('job-id');
+    $($('#idJRD').find(`option[job-id=${jrdID}]`)).prop('selected',true).change();
+})
+$(document).on('keyup','#searchjrd',function(){
+    var itemID=$($('#idItem').find('option:selected')).attr('item-id');
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    
+    getJRDSearch(projID,itemID);
+});
+$(document).on('search','#searchjrd',function(){
+    var itemID=$($('#idItem').find('option:selected')).attr('item-id');
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id');
+    
+    getJRDSearch(projID,itemID);
 });
 //#endregion
 
@@ -667,32 +690,84 @@ function getItemSearch(iVal){//get Item Selection
     );
     $.ajaxSetup({async: true}); 
 }
-function fillItemSearch(iVal){
-    var itemDeets=iVal.split("||");
-    var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
-    $(`#itemOptions`).append(addString);
-}
-function getJobs(iVal,xVal){//get Job Selection
+// function getJobs(iVal,xVal){//get Job Selection
+//     $.ajaxSetup({async: false});
+//     $('#idJRD').val('');
+//     $.post("ajax/getJobs.php",
+//     {
+//         // empGroup:empDetails['empGroup'],
+//         empGroup:$('#idGroup').val(),
+//         empNum:empDetails['empNum'],
+//         projID:iVal,
+//         itemID:xVal
+//     },
+//         function (data) {
+//             $('#idJRD').html(data);
+//             sequenceValidation();
+//             if(iVal==mngID || iVal==kiaID){
+//                 $($('#idJRD').children()[1]).prop("selected",true);
+//             }
+//         }
+//     );
+//     $.ajaxSetup({async: true});
+// }
+
+function getJobs(iVal,xVal){//get Item Selection
+    var jobs=[];
+    $('#jrdOptions').empty();
+    $('#idJRD').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
-    $('#idJRD').val('');
     $.post("ajax/getJobs.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
+        empPos:empDetails['empPos'],
         projID:iVal,
         itemID:xVal
     },
         function (data) {
-            $('#idJRD').html(data);
+            jobs=$.parseJSON(data);
+            jobs.map(fillJobs);
             sequenceValidation();
             if(iVal==mngID || iVal==kiaID){
-                $($('#idJRD').children()[1]).prop("selected",true);
+                $($('#idJRD').children()[1]).prop("selected",true).change();
             }
         }
     );
-    $.ajaxSetup({async: true});
+    $.ajaxSetup({async: true}); 
 }
+function fillJobs(iVal){
+    var jrdDeets=iVal.split("||");
+    var addString=`<li job-id='${jrdDeets[0]}'>${jrdDeets[1]}</li>`;
+    var addStringMain=`<option hidden job-id='${jrdDeets[0]}'>${jrdDeets[1]}</option>`;
+    $(`#jrdOptions`).append(addString);
+    $(`#idJRD`).append(addStringMain);
+}
+function getJRDSearch(iVal,xVal){//get Item Selection
+    var jrd=[];
+    var searchjrd=$(`#searchjrd`).val();
+    $('#jrdOptions').empty();
+    $.ajaxSetup({async: false});
+    $.post("ajax/getJobs.php",
+    {
+        // empGroup:empDetails['empGroup'],
+        empGroup:$('#idGroup').val(),
+        empNum:empDetails['empNum'],
+        empPos:empDetails['empPos'],
+        projID:iVal,
+        itemID:xVal,
+        searchjrd:searchjrd,
+    },
+        function (data) {
+            jrd=$.parseJSON(data);
+            jrd.map(fillJobs);
+        }
+    );
+    $.ajaxSetup({async: true}); 
+}
+
+
 function addEntries(iVal){//add Entries to Database
     var tutri=$('input[name="radio"]:checked').val();
     var grp = $('#idGroup').val();
@@ -1286,13 +1361,13 @@ $.ajax({
 });
 }
 function getLabel(itemOfWorkID){
-    $('#labell').remove();
     $.post("ajax/getLabel.php",
     {
         itemID:itemOfWorkID
     },
         function (data) {
             if(data.trim()){
+                $('#labell').remove();
                 //display label
                 // console.log(data.trim())
                 $('#p5').after(`

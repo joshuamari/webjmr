@@ -111,7 +111,7 @@
           </li>
           <li>
             <div class="iocn-link">
-                <a class="row-cols-12 ey" href="../Reports/reports.html">
+                <a class="row-cols-12 ey" href="../Reports/">
                     <i class='bx bxs-report'></i>
                     <span class="link_name col-9">Reports</span>
 
@@ -253,18 +253,37 @@
                 
 
 
-                <div class="col-12 my-2 " id="idJRDDiv">
+                <!-- <div class="col-12 my-2 " id="idJRDDiv">
                   <label for="idJRD" class="form-label">Job Request Description</label>
                   <div class="input-group">
                     <select class="form-select" id="idJRD" required>
                       <option value="" disabled selected>Select Job Request Description</option>
-                      <!-- <option>Tapa Flakes</option>
-                      <option>Hatsilog</option>
-                      <option>Zagu</option> -->
+                      
                     </select>
                   </div>
                   <span class="col-12 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
+                </div> -->
+
+                <div class="col-12 my-2 jord" id="idJRDDiv">
+                  <label for="idJRD" class="form-label">Job Request Description</label>
+                  <select class=" form-select" id="idJRD" required>
+                    <option selected hidden disabled value="">Select Job Request Description</option>
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class='bx bx-search ' ></i>
+                      <input type="search" class="form-control" id="searchjrd" placeholder="Search" style="padding-left: 30px;">
+                    </div>
+                    <ul id="jrdOptions" class="options p-0">
+                      
+                    </ul>
+                  </div>
+                <span class="col-12 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
                 </div>
+
+
+
+
 
                 <div class="col-12 my-2 d-none" id="id2DDiv">
                   <label for="2d3d" class="form-label">2D/3D</label>

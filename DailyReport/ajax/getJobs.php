@@ -3,7 +3,8 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected hidden>Select Job Request Description</option>";
+// $output="<option value='' selected hidden>Select Job Request Description</option>";
+$output=array();
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
     $empGroup=$_REQUEST['empGroup'];
@@ -39,19 +40,26 @@ if($spStmt->rowCount()>0){
 else{
     $sharedProjects="";
 }
+$searchjrd='';
+if(!empty($_POST['searchjrd'])){
+    $searchjrd=$_POST['searchjrd'];
+}
 #endregion
 #region MyGroup Query
 if($itemID!=''){
-    $jobQ="SELECT * FROM drawingreference WHERE fldProject=:projID $statement AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete=0 ORDER BY fldPriority";
+    $jobQ="SELECT * FROM drawingreference WHERE fldProject=:projID $statement AND fldActive=1 AND (fldGroup=:empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete=0 AND fldJob LIKE '%$searchjrd%' ORDER BY fldPriority";
     $jobStmt=$connwebjmr->prepare($jobQ);
     $jobStmt->execute([":projID"=>$projID,":empGroup"=>$empGroup]);
     $jobArr=$jobStmt->fetchAll();
     foreach($jobArr AS $job){
         $jobName=$job['fldJob'];
         $jobID=$job['fldID'];
-        $output.="<option job-id='$jobID'>$jobName</option>";
+
+        // $output.="<option job-id='$jobID'>$jobName</option>";
+
+        array_push($output,"$jobID||$jobName");
     }
 }
 #endregion
-echo $output;
+echo json_encode($output);
 ?>
