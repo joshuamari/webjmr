@@ -43,7 +43,8 @@ if($monthHStmt->rowCount()>0){
     foreach($monthHArr AS $monthHS){
         $holidate=$monthHS['fldDate'];
         $holiname=$monthHS['fldHoliday'];
-        array_push($montHolidays,"$holidate||$holiname");
+        // array_push($montHolidays,"$holidate||$holiname");
+        array_push($montHolidays,$holidate);
     }
 }
 $greenQ="SELECT fldDate FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate HAVING(SUM(fldDuration))>=480";
@@ -65,7 +66,7 @@ while($startDate<=$lastDate){
     $startDate=date("Y-m-d",strtotime($startDate."+1 day"));
 }
 
-$allDates=[$greenDates,$redDates];
+$allDates=[$greenDates,$redDates,$montHolidays];
 #endregion
 
 #region function

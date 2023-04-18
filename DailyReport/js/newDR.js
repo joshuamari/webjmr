@@ -1706,6 +1706,7 @@ function fillDayta(iVal){
 function addColors(iVal){
     var greenDates=[];
     var redDates=[];
+    var holidates=[]
     var allDates=[];
     // $().addClass('green');
     $.ajaxSetup({async: false});
@@ -1719,6 +1720,7 @@ function addColors(iVal){
             allDates=$.parseJSON(data);
             greenDates=allDates[0];
             redDates=allDates[1];
+            holidates=allDates[2];
         }
     );
     $.ajaxSetup({async: true});
@@ -1758,6 +1760,27 @@ function addColors(iVal){
         }
         else{
             $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("red").removeClass("green");
+        }
+
+    });
+    holidates.forEach(element => {
+        
+        var spl = element.split("-");
+        
+        var mm = spl[1];
+        var daa = spl[2];
+        var d = new Date(iVal);
+        var nowmm = d.getMonth()+1;
+        
+        
+        if (mm>nowmm){
+            $(`.day.next-date:contains(${parseInt(daa)})`).addClass('holiday');
+        }
+        else if(mm<nowmm){
+            $(`.day.prev-date:contains(${parseInt(daa)})`).addClass('holiday');
+        }
+        else{
+            $(".day").not('.next-date').not('.prev-date').filter(function() {    return $(this).text() === `${parseInt(daa)}`; }).addClass("holiday");
         }
 
     });
