@@ -392,9 +392,21 @@ $(document).on('click','#btnPrint',function(){
 });
 
 $(document).on('click','#btnExport',function(){
+  var cOff;
+  switch($('#CO').val()){
+    case "1":
+      cOff="First Half";
+      break;
+    case "2":
+      cOff="Second Half";
+      break;
+    case "3":
+      cOff="Monthly";
+      break;
+  }
   $('#mainTable').table2excel({
     name: `${$('#grpSel').val()} Summary`,
-    filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${$('#CO').val()} Man-Hour Report`
+    filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
   })
 });
 
