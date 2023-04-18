@@ -11,6 +11,7 @@
   <script src="js/jquery.js"></script>
   <script src="js/jquery.inview.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.table2excel.js"></script>
   <script>
 
     var busterCall = ["js/main.js","css/mhreport.css"];
@@ -28,7 +29,7 @@
 
 <body>
   <div class="home-content position-relative ">
-    <div class="title">
+    <div class="title xPrint">
       <h1>MH Report Table</h1>
      
       <a href="../" class="backbtn ">
@@ -69,8 +70,8 @@
         </div>
         
         <div class="right pe-2 pe-lg-0">
-          <button class="btn btn-primary" style="background-color:#395dc7 ;">PRINT</button>
-          <button class="btn btn-outline-success">EXPORT</button>
+          <button id="btnPrint" class="xPrint btn btn-primary" style="background-color:#395dc7 ;">PRINT</button>
+          <button id="btnExport" class="xPrint btn btn-outline-success">EXPORT</button>
         </div>
         
         
