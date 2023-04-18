@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output="<option value='' selected hidden>Select Project...</option>";
+$output=array();
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
     $empGroup=$_REQUEST['empGroup'];
@@ -39,10 +39,14 @@ if($spStmt->rowCount()>0){
 else{
     $sharedProjects="";
 }
+$searchProj='';
+if(!empty($_POST['searchProj'])){
+    $searchProj=$_POST['searchProj'];
+}
 #endregion
 #region MyGroup Query
 if($empGroup!=''){
-    $projQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup=:empGroup $sharedProjects) AND fldActive=1 AND fldDelete=0 $kdtw $mngStatement ORDER BY fldDirect DESC,fldPriority";
+    $projQ="SELECT * FROM projectstable WHERE (fldGroup IS NULL OR fldGroup=:empGroup $sharedProjects) AND fldActive=1 AND fldDelete=0 $kdtw $mngStatement AND fldProject LIKE '%$searchProj%' ORDER BY fldDirect DESC,fldPriority";
     $projStmt=$connwebjmr->prepare($projQ);
     $projStmt->execute([":empGroup"=>$empGroup]);
     $projArr=$projStmt->fetchAll();
@@ -54,9 +58,11 @@ if($empGroup!=''){
         }
         $projName=$projs['fldProject'];
         $projID=$projs['fldID'];
-        $output.="<option proj-id='$projID'>$projName$groupAppend</option>";
+        // $output.="<option proj-id='$projID'>$projName$groupAppend</option>";
+
+        array_push($output,"$projID||$projName||$groupAppend");
     }
 }
 #endregion
-echo $output;
+echo json_encode($output);
 ?>
