@@ -380,3 +380,22 @@ function fillGroup(iVal){
   $('#buSel').append(addString);
 }
 //#endregion
+
+//#region Print and Export
+
+$(document).on('click','#btnPrint',function(){
+  $('.xPrint').toggle();
+  $('.lower').toggleClass('lower lower_');
+  print();
+  $('.lower_').toggleClass('lower lower_');
+  $('.xPrint').toggle();
+});
+
+$(document).on('click','#btnExport',function(){
+  $('#mainTable').table2excel({
+    name: `${$('#grpSel').val()} Summary`,
+    filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${$('#CO').val()} Man-Hour Report`
+  })
+});
+
+//#endregion
