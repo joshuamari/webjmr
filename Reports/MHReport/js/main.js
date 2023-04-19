@@ -272,10 +272,13 @@ function pHead(iVal) {
 }
 
 function afterSub(iVal) {
-  var addThis = ["Management", "KDT", iVal];
-  //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
-  var headers = [`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`];
-  pHead(headers);
+  const except = ["SYS", "IT", "ANA", "ETCL", "MPM"];
+
+  if(!except.includes(iVal)){
+    pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`]);
+  }else{
+    pHead([`KDT||61W2102-8900||100%||P||K1`,`KDT||61W2102-8900||100%||J||K2`]);
+  }
 }
 
 function addEntries(iVal) {
