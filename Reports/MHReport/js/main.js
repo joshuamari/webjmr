@@ -23,7 +23,7 @@ const testHeader = ['Env||6311051-P300||Komuradai||P||51-P', 'Env||6311052-P300|
 const entries = ['300||51-P||50', '300||89||80', '300||98||10', '300||112||10', '310||51||150', '400||69||100', '400||81||20', '400||87||30', '410||72||150', '320||69||50', '330||72||50']
 
 //pwede rin to galing db (initialize once)
-const codeArr = { CEM: "61W2201", MIL: "61W2201", CHE: "61W2252", CRY: "61W2971", MHAH: "61W2202", AH: "61W2714", ENV: "61W2322", EE: "61W2283", CIV: "61W2211", PIP: "61W2510", BOI: "61W2725", KHI: "61W2102", KDT: "61W2102-8900" }
+const codeArr = { CEM: "61W2201", MIL: "61W2201", CHE: "61W2252", CRY: "61W2971", MHAH: "61W2202", AH: "61W2714", ENV: "61W2322", EE: "61W2283", CIV: "61W2211", PIP: "61W2510", BOI: "61W2723", KHI: "61W2102", KDT: "61W2102-8900" }
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
 const mgaNahiram = ['Cem||6269420-P300||Hehe||P||469', 'EE||6242069-P100||Haha||P||999']
@@ -188,7 +188,7 @@ function getMngKdt(){
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
-    <th rowspan="4" title="Employee Number">#</th>
+    <th rowspan="4" title="Employee Number" class="text-center">#</th>
     <th rowspan="4">Name</th>
     <th>Budget in Charge</th>
   </tr>
@@ -207,16 +207,16 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
 </tbody>`);
   addEmp(eVal);
   pHead(hVal);
-  $('#tr1').append(`<th rowspan="4">Sub-total</th>`);
-  $('.empRow').append(`<td class="st"></td>`);
-  $('#tot1').append(`<td id="tot1-st"></td>`);
-  $('#multiplier').append(`<td></td>`);
-  $('#xd').append(`<td id="xd-st"></td>`);
+  $('#tr1').append(`<th rowspan="4" class="st-color">Sub-total</th>`);
+  $('.empRow').append(`<td class="st st-color"></td>`);
+  $('#tot1').append(`<td id="tot1-st" class="st-color"></td>`);
+  $('#multiplier').append(`<td class="st-color"></td>`);
+  $('#xd').append(`<td id="xd-st" class="st-color"></td>`);
   afterSub(BU);
   pHead(bVal);
-  $('#tr1').append(`<th rowspan="4">Monthly Man-hour per Person</th>`);
-  $('.empRow').append(`<td class="mhpp"></td>`);
-  $('#tot1').append(`<td id="tot1-mhpp"></td>`);
+  $('#tr1').append(`<th rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
+  $('.empRow').append(`<td class="mhpp mhpp-color"></td>`);
+  $('#tot1').append(`<td id="tot1-mhpp" class="mhpp-color" ></td>`);
   $('#multiplier').append(`<td></td>`);
   $('#xd').append(`<td></td>`);
 
@@ -260,6 +260,12 @@ function pHead(iVal) {
   iVal.forEach(function callback(element) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
+
+    if(!splitVal[1]){
+
+      splitVal[1]=codeArr[splitVal[0]];
+
+    }
     $('#tr1').append(`<th>${splitVal[0]}</th>`);
     $('#tr2').append(`<th>${splitVal[1]}</th>`);
     $('#tr3').append(`<th>${splitVal[2]}</th>`);
