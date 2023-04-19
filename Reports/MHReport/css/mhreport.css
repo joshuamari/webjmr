@@ -20,6 +20,9 @@ h1, h2, h3, h4, h5, h6 {
 td,th{
     border: 1px solid #777;
     color: #333;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
 }
 
 
@@ -29,7 +32,16 @@ body {
     width: 100%;
     
 }
-
+.st-color{
+  background: #7fb5eb !important;
+}
+.mhpp-color{
+  background:var(--yellow-color) !important;
+}
+#multiplier td:last-of-type,
+#xd td:last-of-type{
+  background:var(--yellow-color) !important;
+}
 .content::-webkit-scrollbar{
   width: 10px;
 }
