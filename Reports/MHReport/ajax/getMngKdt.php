@@ -61,9 +61,9 @@ $grpMem.=")";
 
 #region main
 //emp#||dbIndex||duration(7,8,9,11,13,22,23,24)
-$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldEmployeeNum IS NOT NULL $proj $grpMem) $dateCompare GROUP BY dr.fldProject,dr.fldEmployeeNum";
+$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((fldTrGroup=:getGroup) OR dr.fldEmployeeNum IS NOT NULL $proj $grpMem AND fldTrGroup IS NULL) $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
 $mngkdtStmt=$connwebjmr->prepare($mngkdtQ);
-$mngkdtStmt->execute();
+$mngkdtStmt->execute([":getGroup"=>$getGroup]);
 if($mngkdtStmt->rowCount()>0){
     $mngkdtArr=$mngkdtStmt->fetchAll();
     foreach($mngkdtArr AS $mngkdt){
@@ -74,7 +74,12 @@ if($mngkdtStmt->rowCount()>0){
         $thrs = ((float)$mngkdt['totalHrs'])/60;
         $kdtCode='';
         if($pID==$mngProjID){
-            $kdtCode='M';
+            if(in_array($getGroup,$noCounterpartBU)){
+                $kdtCode='K';
+            }
+            else{
+                $kdtCode='M';
+            }
         }
         else{
             if(in_array($itemID,$kdtWholeItems)){
@@ -101,4 +106,5 @@ if($mngkdtStmt->rowCount()>0){
 #endregion
 //$.ajaxSetup({async: false});
 echo json_encode($mngakdt);
+// echo $mngkdtQ;
 ?>

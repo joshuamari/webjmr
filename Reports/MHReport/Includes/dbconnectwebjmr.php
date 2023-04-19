@@ -23,6 +23,17 @@ try {
   $kdtWholeItems=['1','2','16','18','20'];
   $khiWholeItems=['3','4','5','12','14'];
   $halfItems=['7','8','9','11','13','22','23','24'];
+  $noCounterpartBU=array();
+  $ncpbQ="SELECT fldBU FROM kdtbu WHERE fldKHICounterpart=0";
+  $ncpbStmt=$connkdt->query($ncpbQ);
+  if($ncpbStmt->rowCount()>0){
+    $ncpbArr=$ncpbStmt->fetchAll();
+    foreach($ncpbArr AS $ncpbs){
+      array_push($noCounterpartBU,$ncpbs['fldBU']);
+    }
+  }
+  $industrialB=array("CEM","MIL","ETCL","MPM");
+  $mgaU=array("CEM","MIL");
   $itMembers=array();
   $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
   $itStmt=$connkdt->query($itQ);

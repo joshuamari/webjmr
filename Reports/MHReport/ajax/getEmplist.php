@@ -10,9 +10,16 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$getGroup='';
+$getGroups=array();
+$rawGetGroup='';
 if(!empty($_POST['getGroup'])){
-    $getGroup=$_POST['getGroup'];
+    $rawGetGroup=$_POST['getGroup'];
+    if(in_array($rawGetGroup,$mgaU)){
+        $getGroups=$industrialB;
+    }
+    else{
+        array_push($getGroups,$rawGetGroup);
+    }
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -34,7 +41,12 @@ if($cutOff=="3"){
     $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
+
 $eList=array();
+#endregion
+
+#region main
+foreach($getGroups AS $getGroup){
 $mgaEmp='';
 $mgaEmpNgBU='';
 $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup=:getGroup AND fldNick<>''";
@@ -49,7 +61,7 @@ if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     $mgaEmpNgBU.=")";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:getGroup) $mgaEmpNgBU) $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:getGroup) $mgaEmpNgBU OR fldTrGroup=:getGroup) $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute([":getGroup"=>$getGroup]);
 if($empsStmt->rowCount()>0){
@@ -61,9 +73,6 @@ if($empsStmt->rowCount()>0){
     $mgaEmp=rtrim($mgaEmp,",");
     $mgaEmp.=")";
 }
-#endregion
-
-#region main
 //emp#||Name||Group and Desig
 if(!empty($mgaEmp)){
     $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup=:getGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
@@ -76,10 +85,14 @@ if(!empty($mgaEmp)){
             $ename = $el['ename'];
             $egroup = $el['fldGroup'];
             $edesig = $el['fldDesig'];
-            array_push($eList,"$enum||$ename||$edesig of $egroup");
+            if(!in_array("$enum||$ename||$edesig of $egroup",$eList)){
+                array_push($eList,"$enum||$ename||$edesig of $egroup");
+            }
         }
     }
 }
+}
+
 
 #endregion
 
