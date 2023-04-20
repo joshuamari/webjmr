@@ -42,6 +42,7 @@ $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 
   if(empDetails.length<1){
     window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
   }
+  jmcAccess();
 }});
 $.ajaxSetup({async: true});
 
@@ -71,6 +72,19 @@ function setDate(){//set default month
   var rawMonth = `${today.getMonth()+1}`;
   var dateString = `${today.getFullYear()}-${rawMonth.padStart(2,"0")}`;
   $('#monthSel').val(dateString);
+}
+function jmcAccess(){//check if user has access to jmc
+  $.post("ajax/jmcAccess.php",
+  {
+    empNum:empDetails['empNum']
+  },
+    function (data) {
+      if(data.trim()==0){
+        alert('Access denied');
+        window.location.href='../';
+      }
+    }
+  );
 }
 function getTable(){
   $.ajaxSetup({async: false});
