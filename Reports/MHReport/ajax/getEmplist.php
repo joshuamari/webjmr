@@ -75,7 +75,7 @@ if($empsStmt->rowCount()>0){
 }
 //emp#||Name||Group and Desig
 if(!empty($mgaEmp)){
-    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup=:getGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
+    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup=:getGroup THEN 1 ELSE fldGroup END, CASE WHEN fldDesig='SM' THEN 1 ELSE 2 END,fldEmployeeNum";
     $elStmt=$connkdt->prepare($elQ);
     $elStmt->execute([":getGroup"=>$getGroup]);
     if($elStmt->rowCount()>0){
