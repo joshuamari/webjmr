@@ -483,7 +483,7 @@ function addRow(iVal){//map Entries for display
     <td>${desc}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
-    <td><button class="btn btn-primary action selectBut" id="selectBut" title="Paste Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
+    <td><button class="btn btn-primary action selectBut" id="selectBut" title="Duplicate Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
     </td>
     </tr>
     `;
