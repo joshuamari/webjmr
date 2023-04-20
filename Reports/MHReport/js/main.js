@@ -281,7 +281,7 @@ function pHead(iVal) {
 
     }
     $('#tr1').append(`<th>${splitVal[0]}</th>`);
-    $('#tr2').append(`<th>${splitVal[1]}</th>`);
+    $('#tr2').append(`<th>${splitVal[1] == undefined ? "" : splitVal[1]}</th>`);
     $('#tr3').append(`<th>${splitVal[2]}</th>`);
     $('#tr4').append(`<th>${splitVal[3]}</th>`);
     $('.empRow').append(`<td data-val="${splitVal[4]}"></td>`);
