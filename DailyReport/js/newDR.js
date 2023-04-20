@@ -661,7 +661,7 @@ function fillProj(iVal){
     console.log("oo")
     var projDeets=iVal.split("||");
     
-    var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}</li>`;
+    var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</li>`;
     var addStringMain=`<option hidden proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</option>`;
     $(`#projOptions`).append(addString);
     $(`#idProject`).append(addStringMain);
@@ -1764,7 +1764,7 @@ function addColors(iVal){
 
     });
     holidates.forEach(element => {
-        console.log(element)
+        // console.log(element)
         var rawHoliday=element.split("||");
         var spl = rawHoliday[0].split("-");
         
