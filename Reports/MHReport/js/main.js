@@ -416,6 +416,7 @@ $(document).on('click','#btnPrint',function(){
 
 $(document).on('click','#btnExport',function(){
   var cOff;
+  $('#mainTable').removeClass('ayos');
   switch($('#CO').val()){
     case "1":
       cOff="First Half";
@@ -431,6 +432,7 @@ $(document).on('click','#btnExport',function(){
     name: `${$('#grpSel').val()} Summary`,
     filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
   })
+  $('#mainTable').addClass('ayos');
 });
 
 //#endregion
