@@ -329,9 +329,22 @@ $(document).on('click','#selectBut',function(){
     selectEntry(this);
 })
 
-$(document).on('click','#idProject',function(){
+$(document).on('click','#idProject',function(event){
+    event.stopPropagation();
     $('.proj').toggleClass('active');
+    
 });
+$(document).on('click','body',function(event){
+    if(!$('.proj .content').is(event.target) && $('.proj .content').has(event.target).length === 0){
+        $('.proj').removeClass('active');
+    }
+    if(!$('.iow .content').is(event.target) && $('.iow .content').has(event.target).length === 0){
+        $('.iow').removeClass('active');
+    }
+    if(!$('.jord .content').is(event.target) && $('.jord .content').has(event.target).length === 0){
+        $('.jord').removeClass('active');
+    }
+})
 
 $(document).on('click','#projOptions li',function(){
     $('.proj').removeClass('active');
@@ -348,8 +361,10 @@ $(document).on('search','#searchproj',function(){
     getProjSearch();
 });
 
-$(document).on('click','#idItem',function(){
+$(document).on('click','#idItem',function(event){
+    event.stopPropagation();
     $('.iow').toggleClass('active');
+
 })
 
 $(document).on('click','#itemOptions li',function(){
@@ -368,8 +383,10 @@ $(document).on('search','#searchitem',function(){
 });
 
 
-$(document).on('click','#idJRD',function(){
+$(document).on('click','#idJRD',function(event){
+    event.stopPropagation();
     $('.jord').toggleClass('active');
+
 })
 $(document).on('click','#jrdOptions li',function(){
     $('.jord').removeClass('active');
@@ -388,6 +405,7 @@ $(document).on('search','#searchjrd',function(){
     
     getJRDSearch(projID,itemID);
 });
+
 //#endregion
 
 //#region FUNCTIONS
