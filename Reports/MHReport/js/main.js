@@ -292,7 +292,7 @@ function pHead(iVal) {
 }
 
 function afterSub(iVal) {
-  const except = ["SYS", "IT", "ANA", "ETCL", "MPM"];
+  const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG"];
 
   if(!except.includes(iVal)){
     pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`]);
