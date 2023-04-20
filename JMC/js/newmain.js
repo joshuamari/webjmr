@@ -349,7 +349,7 @@ function jmcAccess(){//check if user has access to jmc
     function (data) {
       if(data.trim()==0){
         alert('Access denied');
-        window.location.href=rootFolder+'/welcome';
+        window.location.href='../';
       }
     }
   );
