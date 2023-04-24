@@ -23,7 +23,7 @@ const testHeader = ['Env||6311051-P300||Komuradai||P||51-P', 'Env||6311052-P300|
 const entries = ['300||51-P||50', '300||89||80', '300||98||10', '300||112||10', '310||51||150', '400||69||100', '400||81||20', '400||87||30', '410||72||150', '320||69||50', '330||72||50']
 
 //pwede rin to galing db (initialize once)
-const codeArr = { CEM: "61W2201", MIL: "61W2201", CHE: "61W2252", CRY: "61W2971", MHAH: "61W2202", AH: "61W2714", ENV: "61W2322", EE: "61W2283", CIV: "61W2211", PIP: "61W2510", BOI: "61W2723", KHI: "61W2102", KDT: "61W2102-8900" }
+const codeArr = { CEM: "61W2201-8900", MIL: "61W2201-8900", CHE: "61W2252-8900", CRY: "61W2971-8900", MHAH: "61W2202-8900", AH: "61W2714-8900", ENV: "61W2322-8900", EE: "61W2283-8900", CIV: "61W2211-8900", PIP: "61W2510-8900", BOI: "61W2723-8900", KHI: "61W2102-8900", KDT: "61W2102-8900" }
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
 const mgaNahiram = ['Cem||6269420-P300||Hehe||P||469', 'EE||6242069-P100||Haha||P||999']

@@ -16,8 +16,15 @@ if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
     if(in_array($rawGetGroup,$mgaU)){
         $getGroups=$industrialB;
+        $mgaInd="(";
+        foreach($mgaU AS $ind){
+            $mgaInd.="'$ind',";
+        }
+        $mgaInd=rtrim($mgaInd,',');
+        $mgaInd.=")";
     }
     else{
+        $mgaInd="";
         array_push($getGroups,$rawGetGroup);
     }
 }
@@ -27,12 +34,9 @@ foreach($getGroups AS $gps){
 }
 $mgaGroup=rtrim($mgaGroup,',');
 $mgaGroup.=")";
-$mgaInd="(";
-foreach($mgaU AS $ind){
-    $mgaInd.="'$ind',";
+if(!in_array($rawGetGroup,$mgaU)){
+    $mgaInd=$mgaGroup;
 }
-$mgaInd=rtrim($mgaInd,',');
-$mgaInd.=")";
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
 $ymSel=$firstDay;

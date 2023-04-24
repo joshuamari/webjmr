@@ -19,6 +19,9 @@ try {
   $mngProjQ="SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt=$connwebjmr->query($mngProjQ);
   $mngProjID=$mngProjStmt->fetchColumn();
+  $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
+  $trainProjStmt=$connwebjmr->query($trainProjQ);
+  $trainProjID=$trainProjStmt->fetchColumn();
   $gods=['464','465','487'];
   $kdtWholeItems=['1','2','16','18','20'];
   $khiWholeItems=['3','4','5','12','14'];

@@ -52,22 +52,21 @@ $mgaGroup.=")";
 #endregion
 
 #region main
-
 $mgaEmp='';
 $mgaEmpNgBU='';
 $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup AND fldNick<>''";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
-    $mgaEmpNgBU.=" OR fldEmployeeNum IN (";
+    $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
     $enbArr=$empNgBUStmt->fetchAll();
     foreach($enbArr AS $enbs){
         $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
     }
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    $mgaEmpNgBU.=")";
+    $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup IN $mgaGroup))";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup) $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup  OR (fldProject='$mngProjID' AND fldGroup IN $mgaGroup)) $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){
@@ -81,7 +80,7 @@ if($empsStmt->rowCount()>0){
 }
 //emp#||Name||Group and Desig
 if(!empty($mgaEmp)){
-    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup='$rawGetGroup' THEN 1 ELSE fldGroup END, CASE WHEN fldDesig='SM' THEN 1 ELSE 2 END,fldEmployeeNum";
+    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldDesig='SM' THEN 1 WHEN fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN fldGroup='$rawGetGroup' THEN 1 ELSE fldGroup END,fldEmployeeNum";
     $elStmt=$connkdt->prepare($elQ);
     $elStmt->execute();
     if($elStmt->rowCount()>0){

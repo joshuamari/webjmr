@@ -10,9 +10,32 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$getGroup='';
+$getGroups=array();
+$rawGetGroup='';
 if(!empty($_POST['getGroup'])){
-    $getGroup=$_POST['getGroup'];
+    $rawGetGroup=$_POST['getGroup'];
+    if(in_array($rawGetGroup,$mgaU)){
+        $getGroups=$industrialB;
+        $mgaInd="(";
+        foreach($mgaU AS $ind){
+            $mgaInd.="'$ind',";
+        }
+        $mgaInd=rtrim($mgaInd,',');
+        $mgaInd.=")";
+    }
+    else{
+        $mgaInd="";
+        array_push($getGroups,$rawGetGroup);
+    }
+}
+$mgaGroup="(";
+foreach($getGroups AS $gps){
+    $mgaGroup.="'$gps',";
+}
+$mgaGroup=rtrim($mgaGroup,',');
+$mgaGroup.=")";
+if(!in_array($rawGetGroup,$mgaU)){
+    $mgaInd=$mgaGroup;
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -35,7 +58,7 @@ if($cutOff=="3"){
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $mngakdt=array();
-$proj=' AND dr.fldProject IN (';
+$proj="(";
 foreach($defaultProjID AS $dpi){
     if($dpi!=$leaveID){
         $proj.="'$dpi',";
@@ -44,26 +67,40 @@ foreach($defaultProjID AS $dpi){
 $proj=rtrim($proj,",");
 $proj.=")";
 
-$grpMem="";
-$grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup=:getGroup";
-$grpMemStmt=$connkdt->prepare($grpMemQ);
-$grpMemStmt->execute([":getGroup"=>$getGroup]);
-if($grpMemStmt->rowCount()>0){
-    $grpMemArr=$grpMemStmt->fetchAll();
-    $grpMem.=" AND dr.fldEmployeeNum IN(";
-    foreach($grpMemArr AS $gMem){
-        $grpMem.="'".$gMem['fldEmployeeNum']."',";
+$mgaEmp='';
+$mgaEmpNgBU='';
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup AND fldNick<>''";
+$empNgBUStmt=$connkdt->prepare($empNgBUQ);
+$empNgBUStmt->execute();
+if($empNgBUStmt->rowCount()>0){
+    $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
+    $enbArr=$empNgBUStmt->fetchAll();
+    foreach($enbArr AS $enbs){
+        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
     }
-    $grpMem=rtrim($grpMem,",");
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup IN $mgaGroup))";
 }
-$grpMem.=")";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup  OR (fldProject='$mngProjID' AND fldGroup IN $mgaGroup)) $dateCompare";
+$empsStmt=$connwebjmr->prepare($empsQ);
+$empsStmt->execute();
+if($empsStmt->rowCount()>0){
+    $mgaEmp.=" AND fldEmployeeNum IN (";
+    $empsArr=$empsStmt->fetchAll();
+    foreach($empsArr AS $emps){
+        $mgaEmp.="'".$emps['fldEmployeeNum']."',";
+    }
+    $mgaEmp=rtrim($mgaEmp,",");
+
+    $mgaEmp.=")";
+}
 #endregion
 
 #region main
 //emp#||dbIndex||duration(7,8,9,11,13,22,23,24)
-$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((fldTrGroup=:getGroup) OR dr.fldEmployeeNum IS NOT NULL $proj $grpMem AND fldTrGroup IS NULL) $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
+$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND dr.fldGroup IN $mgaGroup) $mgaEmp $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
 $mngkdtStmt=$connwebjmr->prepare($mngkdtQ);
-$mngkdtStmt->execute([":getGroup"=>$getGroup]);
+$mngkdtStmt->execute();
 if($mngkdtStmt->rowCount()>0){
     $mngkdtArr=$mngkdtStmt->fetchAll();
     foreach($mngkdtArr AS $mngkdt){
@@ -74,7 +111,7 @@ if($mngkdtStmt->rowCount()>0){
         $thrs = ((float)$mngkdt['totalHrs'])/60;
         $kdtCode='';
         if($pID==$mngProjID){
-            if(in_array($getGroup,$noCounterpartBU)){
+            if(in_array($rawGetGroup,$noCounterpartBU)){
                 $kdtCode='K';
             }
             else{
@@ -90,7 +127,7 @@ if($mngkdtStmt->rowCount()>0){
             }
             if(in_array($itemID,$halfItems)){
                 $kdtCode='K';
-                if(!in_array($getGroup,$noCounterpartBU)){
+                if(!in_array($rawGetGroup,$noCounterpartBU)){
                     $thrs=$thrs/2;
                     array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");
                     $kdtCode='B';
