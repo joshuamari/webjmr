@@ -332,6 +332,9 @@ $(document).on('click','#selectBut',function(){
 $(document).on('click','#idProject',function(event){
     event.stopPropagation();
     $('.proj').toggleClass('active');
+    $('.jord').removeClass('active');
+    $('.iow').removeClass('active');
+    $(this).blur();
     
 });
 $(document).on('click','body',function(event){
@@ -364,6 +367,9 @@ $(document).on('search','#searchproj',function(){
 $(document).on('click','#idItem',function(event){
     event.stopPropagation();
     $('.iow').toggleClass('active');
+    $('.proj').removeClass('active');
+    $('.jord').removeClass('active');
+    $(this).blur();
 
 })
 
@@ -386,6 +392,9 @@ $(document).on('search','#searchitem',function(){
 $(document).on('click','#idJRD',function(event){
     event.stopPropagation();
     $('.jord').toggleClass('active');
+    $('.iow').removeClass('active');
+    $('.proj').removeClass('active');
+    $(this).blur();
 
 })
 $(document).on('click','#jrdOptions li',function(){
