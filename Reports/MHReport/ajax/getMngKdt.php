@@ -89,10 +89,12 @@ if($mngkdtStmt->rowCount()>0){
                 $kdtCode='B';
             }
             if(in_array($itemID,$halfItems)){
-                $thrs=$thrs/2;
                 $kdtCode='K';
-                array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");
-                $kdtCode='B';
+                if(!in_array($getGroup,$noCounterpartBU)){
+                    $thrs=$thrs/2;
+                    array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");
+                    $kdtCode='B';
+                }
             }
         }
         array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");

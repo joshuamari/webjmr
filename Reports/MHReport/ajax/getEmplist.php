@@ -43,15 +43,21 @@ if($cutOff=="3"){
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 
 $eList=array();
+$mgaGroup="(";
+foreach($getGroups AS $gps){
+    $mgaGroup.="'$gps',";
+}
+$mgaGroup=rtrim($mgaGroup,',');
+$mgaGroup.=")";
 #endregion
 
 #region main
-foreach($getGroups AS $getGroup){
+
 $mgaEmp='';
 $mgaEmpNgBU='';
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup=:getGroup AND fldNick<>''";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup AND fldNick<>''";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
-$empNgBUStmt->execute([":getGroup"=>$getGroup]);
+$empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU.=" OR fldEmployeeNum IN (";
     $enbArr=$empNgBUStmt->fetchAll();
@@ -61,9 +67,9 @@ if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     $mgaEmpNgBU.=")";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:getGroup) $mgaEmpNgBU OR fldTrGroup=:getGroup) $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup) $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
-$empsStmt->execute([":getGroup"=>$getGroup]);
+$empsStmt->execute();
 if($empsStmt->rowCount()>0){
     $mgaEmp.=" AND fldEmployeeNum IN (";
     $empsArr=$empsStmt->fetchAll();
@@ -75,9 +81,9 @@ if($empsStmt->rowCount()>0){
 }
 //emp#||Name||Group and Desig
 if(!empty($mgaEmp)){
-    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup=:getGroup THEN 1 ELSE fldGroup END, CASE WHEN fldDesig='SM' THEN 1 ELSE 2 END,fldEmployeeNum";
+    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldGroup='$rawGetGroup' THEN 1 ELSE fldGroup END, CASE WHEN fldDesig='SM' THEN 1 ELSE 2 END,fldEmployeeNum";
     $elStmt=$connkdt->prepare($elQ);
-    $elStmt->execute([":getGroup"=>$getGroup]);
+    $elStmt->execute();
     if($elStmt->rowCount()>0){
         $elArr=$elStmt->fetchAll();
         foreach($elArr AS $el){
@@ -91,7 +97,7 @@ if(!empty($mgaEmp)){
         }
     }
 }
-}
+
 
 
 #endregion

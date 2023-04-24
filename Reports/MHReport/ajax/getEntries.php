@@ -42,15 +42,20 @@ if($cutOff=="3"){
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $entries=array();
-
+$mgaGroup="(";
+foreach($getGroups AS $gps){
+    $mgaGroup.="'$gps',";
+}
+$mgaGroup=rtrim($mgaGroup,',');
+$mgaGroup.=")";
 #endregion
 
 #region main
-foreach($getGroups AS $getGroup){
+// foreach($getGroups AS $getGroup){
 $proj='';
-$projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:getGroup)) $dateCompare";
+$projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup)) $dateCompare";
 $projStmt=$connwebjmr->prepare($projsQ);
-$projStmt->execute([":getGroup"=>$getGroup]);
+$projStmt->execute();
 if($projStmt->rowCount()>0){
     $proj.=" AND dr.fldProject IN (";
     $projsArr=$projStmt->fetchAll();
@@ -79,7 +84,7 @@ if($entStmt->rowCount()>0){
         // array_push($entries,"$enum||$projID-$locCode||$thrs");
     }
 }
-}
+// }
 #endregion
 
 #region function

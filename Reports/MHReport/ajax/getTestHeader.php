@@ -43,28 +43,33 @@ if($cutOff=="3"){
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $testHeader=array();
+$mgaGroup="(";
+foreach($getGroups AS $gps){
+    $mgaGroup.="'$gps',";
+}
+$mgaGroup=rtrim($mgaGroup,',');
+$mgaGroup.=")";
+
 #endregion
 
 #region main
 //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
-foreach($getGroups AS $getGroup){
-$thQ="SELECT pt.fldProject AS projName,pt.fldOrder AS projOrder,pt.fldID AS projID,dr.fldLocation,dl.fldCode AS locCode FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:getGroup)) $dateCompare GROUP BY dr.fldProject,locCode ORDER BY CASE WHEN locCode=0 THEN 1 ELSE 2 END,pt.fldOrder,pt.fldProject";
-// echo $thq;
+$thQ="SELECT pt.fldProject AS projName,pt.fldOrder AS projOrder,pt.fldID AS projID,dr.fldLocation,dl.fldCode AS locCode,pt.fldGroup AS pGroup FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup)) $dateCompare GROUP BY dr.fldProject,locCode ORDER BY CASE WHEN locCode=0 THEN 1 ELSE 2 END,pt.fldGroup,pt.fldOrder,pt.fldProject";
 $thStmt=$connwebjmr->prepare($thQ);
-$thStmt->execute([":getGroup"=>$getGroup]);
+$thStmt->execute();
     if($thStmt->rowCount()>0){
         $thArr=$thStmt->fetchAll();
-        foreach($thArr AS $key=>$ths){
+        foreach($thArr AS $ths){
             $orderNum = stringify($ths['projOrder']);
             $projName = stringify($ths['projName']);
             $projID = $ths['projID'];
+            $pGroup = $ths['pGroup'];
             $locCode = ($ths['locCode']==0) ? 'P':'J';
-            if(!in_array("$getGroup||$orderNum||$projName||$locCode||$projID-$locCode",$testHeader)){
-                array_push($testHeader,"$getGroup||$orderNum||$projName||$locCode||$projID-$locCode");
+            if(!in_array("$pGroup||$orderNum||$projName||$locCode||$projID-$locCode",$testHeader)){
+                array_push($testHeader,"$pGroup||$orderNum||$projName||$locCode||$projID-$locCode");
             }
         }
     }
-}
 #endregion
 
 #region function

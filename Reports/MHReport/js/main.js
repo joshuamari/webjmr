@@ -109,6 +109,7 @@ var getHalfSel=$(`#CO`).val()
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       tHeader=$.parseJSON(data);
     },
     async=false
@@ -126,6 +127,7 @@ function getEmplist(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       eList=$.parseJSON(data);
     },
     async=false
@@ -143,6 +145,7 @@ function getEntries(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       entrs=$.parseJSON(data);
     },
     async=false
@@ -160,6 +163,7 @@ function getMgaNahiram(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       mgaNhiram=$.parseJSON(data);
     },
     async=false
@@ -177,6 +181,7 @@ function getHiramEntries(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       hramEntries=$.parseJSON(data);
     },
     async=false
@@ -194,6 +199,7 @@ function getMngKdt(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       mngakdt=$.parseJSON(data);
     },async=false
   );
