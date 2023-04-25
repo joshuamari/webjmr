@@ -34,7 +34,7 @@ $getTrGrp=NULL;
 $copyDRQ="INSERT INTO dailyreport(fldEmployeeNum,fldGroup,fldDate,fldLocation,fldProject,fldItem,fldJobRequestDescription,fld2D3D,fldRevision,fldTOW,fldChecker,fldDuration,fldMHType,fldRemarks,fldChangeLog,fldTrGroup) 
 VALUES(:empNum,:getGroup,:drDate,:getLocation,:getProject,:getItem,:getDescription,:getTwoThree,:getRev,:getType,:getChecking,:getDuration,:getMHType,:getRemarks,:logs,:getTrGrp)";
 $copyDRStmt=$connwebjmr->prepare($copyDRQ);
-$drQ ="SELECT * FROM dailyreport WHERE fldEmployeeNum=:empNum AND fldDate=:copyDate";
+$drQ ="SELECT dr.*,pt.fldDelete AS projDel FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE dr.fldEmployeeNum=:empNum AND dr.fldDate=:copyDate";
 $drStmt=$connwebjmr->prepare($drQ);
 $drStmt->execute([":empNum"=>$empNum,":copyDate"=>$copyDate]);
 $drArr = $drStmt -> fetchAll();
@@ -52,7 +52,10 @@ foreach($drArr AS $drEntries){
     $getMHType=$drEntries['fldMHType'];
     $getRemarks=$drEntries['fldRemarks'];
     $getTrGrp=$drEntries['fldTrGroup'];
-    $copyDRStmt->execute([":empNum"=>$empNum,":getGroup"=>$getGroup,":drDate"=>$drDate,":getLocation"=>$getLocation,":getProject"=>$getProject,":getItem"=>$getItem,":getDescription"=>$getDescription,":getTwoThree"=>$getTwoThree,":getRev"=>$getRev,":getType"=>$getType,":getChecking"=>$getChecking,":getDuration"=>$getDuration,":getMHType"=>$getMHType,":getRemarks"=>$getRemarks,":logs"=>$logs,":getTrGrp"=>$getTrGrp]);
+    $projDel=$drEntries['projDel'];
+    if($projDel==0){
+        $copyDRStmt->execute([":empNum"=>$empNum,":getGroup"=>$getGroup,":drDate"=>$drDate,":getLocation"=>$getLocation,":getProject"=>$getProject,":getItem"=>$getItem,":getDescription"=>$getDescription,":getTwoThree"=>$getTwoThree,":getRev"=>$getRev,":getType"=>$getType,":getChecking"=>$getChecking,":getDuration"=>$getDuration,":getMHType"=>$getMHType,":getRemarks"=>$getRemarks,":logs"=>$logs,":getTrGrp"=>$getTrGrp]);
+    }
 }
 
 #endregion

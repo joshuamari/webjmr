@@ -18,7 +18,7 @@ if(!empty($_POST['empNum'])){
 }
 $output=array();
 $projs=array();
-$projQ="SELECT DISTINCT(fldProject),fldDelete FROM dailyreport WHERE fldDate='$getDate' AND fldEmployeeNum='$empNum'";
+$projQ="SELECT DISTINCT(fldProject) FROM dailyreport WHERE fldDate='$getDate' AND fldEmployeeNum='$empNum'";
 $projStmt=$connwebjmr->query($projQ);
 $projArr=$projStmt->fetchAll();
 if($projStmt->rowCount()>0){

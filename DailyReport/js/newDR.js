@@ -488,7 +488,7 @@ function addRow(iVal){//map Entries for display
     var rmrks = iVal.split('||')[8];
     var del = ``;
     if(iVal.split('||')[9]==1){
-        del=`(Deleted)`;
+        del=`<strong>(Deleted)</strong>`;
     }
     const mhtyp = ["Regular", "OT", "Leave"];
     switch(mht){
@@ -509,7 +509,7 @@ function addRow(iVal){//map Entries for display
     <tr id="${mht}_${pId}" title="${rmrks}" >
     <td>${loc}</td>
     <td>${group}</td>
-    <td>${project}${del}</td>
+    <td>${del}${project}</td>
     <td>${item}</td>
     <td>${desc}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
