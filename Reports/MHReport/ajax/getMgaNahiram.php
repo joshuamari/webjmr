@@ -14,28 +14,6 @@ $getGroups=array();
 $rawGetGroup='';
 if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
-    if(in_array($rawGetGroup,$mgaU)){
-        $getGroups=$industrialB;
-        $mgaInd="(";
-        foreach($mgaU AS $ind){
-            $mgaInd.="'$ind',";
-        }
-        $mgaInd=rtrim($mgaInd,',');
-        $mgaInd.=")";
-    }
-    else{
-        $mgaInd="";
-        array_push($getGroups,$rawGetGroup);
-    }
-}
-$mgaGroup="(";
-foreach($getGroups AS $gps){
-    $mgaGroup.="'$gps',";
-}
-$mgaGroup=rtrim($mgaGroup,',');
-$mgaGroup.=")";
-if(!in_array($rawGetGroup,$mgaU)){
-    $mgaInd=$mgaGroup;
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -60,11 +38,11 @@ $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $hiram=array();
 
 
-$proj=' AND dr.fldProject NOT IN (';
+$proj=" AND dr.fldProject NOT IN (";
 foreach($defaultProjID AS $dpi){
     $proj.="'$dpi',";
 }
-$projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaInd) OR fldTrGroup IN $mgaInd) $dateCompare GROUP BY dr.fldProject,dr.fldLocation";
+$projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup')) $dateCompare";
 $projStmt=$connwebjmr->prepare($projsQ);
 $projStmt->execute();
 if($projStmt->rowCount()>0){
@@ -82,21 +60,55 @@ $proj.=")";
 
 #region main
 
-$grpMem="";
-$grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup";
-$grpMemStmt=$connkdt->prepare($grpMemQ);
-$grpMemStmt->execute();
-if($grpMemStmt->rowCount()>0){
-    $grpMemArr=$grpMemStmt->fetchAll();
-    $grpMem.=" AND dr.fldEmployeeNum IN(";
-    foreach($grpMemArr AS $gMem){
-        $grpMem.="'".$gMem['fldEmployeeNum']."',";
+// $grpMem="";
+// $grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup'";
+// $grpMemStmt=$connkdt->prepare($grpMemQ);
+// $grpMemStmt->execute();
+// if($grpMemStmt->rowCount()>0){
+//     $grpMemArr=$grpMemStmt->fetchAll();
+//     $grpMem.=" AND dr.fldEmployeeNum IN(";
+//     foreach($grpMemArr AS $gMem){
+//         $grpMem.="'".$gMem['fldEmployeeNum']."',";
+//     }
+//     $grpMem=rtrim($grpMem,",");
+//     $grpMem.=")";
+// }
+$mgaEmpStmt='';
+$mgaEmpNgBU="";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<>'DM'";
+$empNgBUStmt=$connkdt->prepare($empNgBUQ);
+$empNgBUStmt->execute();
+if($empNgBUStmt->rowCount()>0){
+    $mgaEmpNgBU.="(";
+    $enbArr=$empNgBUStmt->fetchAll();
+    foreach($enbArr AS $enbs){
+        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
     }
-    $grpMem=rtrim($grpMem,",");
-    $grpMem.=")";
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
+    $mgaEmpNgBU.=")";
+    $mgaEmpStmt="AND fldEmployeeNum NOT IN";
+}
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
+$empsStmt=$connwebjmr->prepare($empsQ);
+$empsStmt->execute();
+if($empsStmt->rowCount()>0){
+    if(!empty($mgaEmpNgBU)){
+        $mgaEmpNgBU=rtrim($mgaEmpNgBU,")");
+        $mgaEmpNgBU.=",";
+    }
+    else{
+        $mgaEmpNgBU="(";
+    }
+    $empsArr=$empsStmt->fetchAll();
+    foreach($empsArr AS $emps){
+        $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
+    }
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    $mgaEmpNgBU.=")";
 }
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
-$hiramQ="SELECT pt.fldGroup,pt.fldOrder,pt.fldProject,dl.fldCode AS locCode,dr.fldEmployeeNum,dr.fldTrGroup,dr.fldProject AS projID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dl.fldID=dr.fldLocation WHERE ((dr.fldGroup IN $mgaInd AND dr.fldTrGroup IS NOT NULL) OR dr.fldEmployeeNum IS NOT NULL $proj $grpMem) $dateCompare  GROUP BY dr.fldProject,locCode";
+$hiramQ="SELECT pt.fldGroup,pt.fldOrder,pt.fldProject,dl.fldCode AS locCode,dr.fldEmployeeNum,dr.fldTrGroup,dr.fldProject AS projID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dl.fldID=dr.fldLocation WHERE ((dr.fldGroup='$rawGetGroup' AND dr.fldTrGroup IS NOT NULL) OR dr.fldEmployeeNum IS NOT NULL $proj AND fldEmployeeNum IN $mgaEmpNgBU) $dateCompare  GROUP BY dr.fldProject,locCode";
 $hiramStmt=$connwebjmr->prepare($hiramQ);
 $hiramStmt->execute();
 if($hiramStmt->rowCount()>0){

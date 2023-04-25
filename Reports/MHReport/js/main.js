@@ -281,13 +281,13 @@ function pHead(iVal) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
 
-    if(!splitVal[1]){
+    // if(!splitVal[1]){
 
-      splitVal[1]=codeArr[splitVal[0]];
+    //   splitVal[1]=codeArr[splitVal[0]];
 
-    }
+    // }
     $('#tr1').append(`<th>${splitVal[0]}</th>`);
-    $('#tr2').append(`<th>${splitVal[1] == undefined ? "" : splitVal[1]}</th>`);
+    $('#tr2').append(`<th>${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
     $('#tr3').append(`<th>${splitVal[2]}</th>`);
     $('#tr4').append(`<th>${splitVal[3]}</th>`);
     $('.empRow').append(`<td data-val="${splitVal[4]}"></td>`);
@@ -298,7 +298,7 @@ function pHead(iVal) {
 }
 
 function afterSub(iVal) {
-  const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG"];
+  const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG","DXT","INT"];
 
   if(!except.includes(iVal)){
     pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`]);

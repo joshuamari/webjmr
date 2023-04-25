@@ -14,28 +14,6 @@ $getGroups=array();
 $rawGetGroup='';
 if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
-    if(in_array($rawGetGroup,$mgaU)){
-        $getGroups=$industrialB;
-        $mgaInd="(";
-        foreach($mgaU AS $ind){
-            $mgaInd.="'$ind',";
-        }
-        $mgaInd=rtrim($mgaInd,',');
-        $mgaInd.=")";
-    }
-    else{
-        $mgaInd="";
-        array_push($getGroups,$rawGetGroup);
-    }
-}
-$mgaGroup="(";
-foreach($getGroups AS $gps){
-    $mgaGroup.="'$gps',";
-}
-$mgaGroup=rtrim($mgaGroup,',');
-$mgaGroup.=")";
-if(!in_array($rawGetGroup,$mgaU)){
-    $mgaInd=$mgaGroup;
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -67,38 +45,38 @@ foreach($defaultProjID AS $dpi){
 $proj=rtrim($proj,",");
 $proj.=")";
 
-$mgaEmp='';
-$mgaEmpNgBU='';
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup AND fldNick<>''";
-$empNgBUStmt=$connkdt->prepare($empNgBUQ);
-$empNgBUStmt->execute();
-if($empNgBUStmt->rowCount()>0){
-    $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
-    $enbArr=$empNgBUStmt->fetchAll();
-    foreach($enbArr AS $enbs){
-        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
-    }
-    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup IN $mgaGroup))";
-}
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup  OR (fldProject='$mngProjID' AND fldGroup IN $mgaGroup)) $dateCompare";
-$empsStmt=$connwebjmr->prepare($empsQ);
-$empsStmt->execute();
-if($empsStmt->rowCount()>0){
-    $mgaEmp.=" AND fldEmployeeNum IN (";
-    $empsArr=$empsStmt->fetchAll();
-    foreach($empsArr AS $emps){
-        $mgaEmp.="'".$emps['fldEmployeeNum']."',";
-    }
-    $mgaEmp=rtrim($mgaEmp,",");
+// $mgaEmp='';
+// $mgaEmpNgBU='';
+// $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>''";
+// $empNgBUStmt=$connkdt->prepare($empNgBUQ);
+// $empNgBUStmt->execute();
+// if($empNgBUStmt->rowCount()>0){
+//     $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
+//     $enbArr=$empNgBUStmt->fetchAll();
+//     foreach($enbArr AS $enbs){
+//         $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+//     }
+//     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+//     $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
+// }
+// $empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') $mgaEmpNgBU OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $dateCompare";
+// $empsStmt=$connwebjmr->prepare($empsQ);
+// $empsStmt->execute();
+// if($empsStmt->rowCount()>0){
+//     $mgaEmp.=" AND fldEmployeeNum IN (";
+//     $empsArr=$empsStmt->fetchAll();
+//     foreach($empsArr AS $emps){
+//         $mgaEmp.="'".$emps['fldEmployeeNum']."',";
+//     }
+//     $mgaEmp=rtrim($mgaEmp,",");
 
-    $mgaEmp.=")";
-}
+//     $mgaEmp.=")";
+// }
 #endregion
 
 #region main
 //emp#||dbIndex||duration(7,8,9,11,13,22,23,24)
-$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND dr.fldGroup IN $mgaGroup) $mgaEmp $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
+$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND (dr.fldGroup='$rawGetGroup' OR dr.fldTrGroup='$rawGetGroup')) $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
 $mngkdtStmt=$connwebjmr->prepare($mngkdtQ);
 $mngkdtStmt->execute();
 if($mngkdtStmt->rowCount()>0){

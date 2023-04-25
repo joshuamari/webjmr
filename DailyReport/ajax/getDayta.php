@@ -18,7 +18,7 @@ if(!empty($_POST['empNum'])){
 }
 $output=array();
 $projs=array();
-$projQ="SELECT DISTINCT(fldProject) FROM dailyreport WHERE fldDate='$getDate' AND fldEmployeeNum='$empNum'";
+$projQ="SELECT DISTINCT(fldProject),fldDelete FROM dailyreport WHERE fldDate='$getDate' AND fldEmployeeNum='$empNum'";
 $projStmt=$connwebjmr->query($projQ);
 $projArr=$projStmt->fetchAll();
 if($projStmt->rowCount()>0){
@@ -31,7 +31,7 @@ if($projStmt->rowCount()>0){
 
 #region main
 foreach($projs AS $prj){
-    $projHoursQ="SELECT pt.fldProject AS projName,SUM(dr.fldDuration) AS projMinute FROM dailyreport AS dr LEFT OUTER JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE dr.fldDate='$getDate' AND dr.fldEmployeeNum='$empNum' AND dr.fldProject='$prj'";
+    $projHoursQ="SELECT pt.fldProject AS projName,SUM(dr.fldDuration) AS projMinute,pt.fldDelete AS projDel FROM dailyreport AS dr LEFT OUTER JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE dr.fldDate='$getDate' AND dr.fldEmployeeNum='$empNum' AND dr.fldProject='$prj'";
     $projHoursStmt=$connwebjmr->query($projHoursQ);
     $projHArr=$projHoursStmt->fetchAll();
     if($projHoursStmt->rowCount()>0){
@@ -39,7 +39,8 @@ foreach($projs AS $prj){
             $projName=$prjHN['projName'];
             $projMinute=$prjHN['projMinute'];
             $projHour=$projMinute/60;
-            array_push($output,"$projName||$projHour");
+            $projDel=$prjHN['projDel'];
+            array_push($output,"$projName||$projHour||$projDel");
         }
     }
 

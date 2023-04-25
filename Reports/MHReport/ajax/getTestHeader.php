@@ -13,12 +13,6 @@ date_default_timezone_set('Asia/Manila');
 $getGroups=array();
 if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
-    if(in_array($rawGetGroup,$mgaU)){
-        $getGroups=$mgaU;
-    }
-    else{
-        array_push($getGroups,$rawGetGroup);
-    }
 }
 
 // $getGroups=array("CEM");
@@ -43,18 +37,12 @@ if($cutOff=="3"){
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $testHeader=array();
-$mgaGroup="(";
-foreach($getGroups AS $gps){
-    $mgaGroup.="'$gps',";
-}
-$mgaGroup=rtrim($mgaGroup,',');
-$mgaGroup.=")";
 
 #endregion
 
 #region main
 //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
-$thQ="SELECT pt.fldProject AS projName,pt.fldOrder AS projOrder,pt.fldID AS projID,dr.fldLocation,dl.fldCode AS locCode,pt.fldGroup AS pGroup FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup)) $dateCompare GROUP BY dr.fldProject,locCode ORDER BY CASE WHEN locCode=0 THEN 1 ELSE 2 END,pt.fldGroup,pt.fldOrder,pt.fldProject";
+$thQ="SELECT pt.fldProject AS projName,pt.fldOrder AS projOrder,pt.fldID AS projID,dr.fldLocation,dl.fldCode AS locCode,pt.fldGroup AS pGroup,pt.fldDelete AS projDel FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup')) $dateCompare GROUP BY dr.fldProject,locCode ORDER BY CASE WHEN locCode=0 THEN 1 ELSE 2 END,pt.fldGroup,pt.fldOrder,pt.fldProject";
 $thStmt=$connwebjmr->prepare($thQ);
 $thStmt->execute();
     if($thStmt->rowCount()>0){
@@ -65,8 +53,9 @@ $thStmt->execute();
             $projID = $ths['projID'];
             $pGroup = $ths['pGroup'];
             $locCode = ($ths['locCode']==0) ? 'P':'J';
+            $projDel = ($ths['projDel']==1) ? '(Deleted)':'';
             if(!in_array("$pGroup||$orderNum||$projName||$locCode||$projID-$locCode",$testHeader)){
-                array_push($testHeader,"$pGroup||$orderNum||$projName||$locCode||$projID-$locCode");
+                array_push($testHeader,"$pGroup||$orderNum||$projDel$projName||$locCode||$projID-$locCode||$projDel");
             }
         }
     }

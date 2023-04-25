@@ -14,12 +14,6 @@ $getGroups=array();
 $rawGetGroup='';
 if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
-    if(in_array($rawGetGroup,$mgaU)){
-        $getGroups=$industrialB;
-    }
-    else{
-        array_push($getGroups,$rawGetGroup);
-    }
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -43,59 +37,64 @@ if($cutOff=="3"){
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 
 $eList=array();
-$mgaGroup="(";
-foreach($getGroups AS $gps){
-    $mgaGroup.="'$gps',";
-}
-$mgaGroup=rtrim($mgaGroup,',');
-$mgaGroup.=")";
 #endregion
 
 #region main
-$mgaEmp='';
-$mgaEmpNgBU='';
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup IN $mgaGroup AND fldNick<>''";
+$mgaEmpStmt='';
+$mgaEmpNgBU="";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<>'DM'";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
-    $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
+    $mgaEmpNgBU.="(";
     $enbArr=$empNgBUStmt->fetchAll();
     foreach($enbArr AS $enbs){
         $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
     }
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup IN $mgaGroup))";
+    // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
+    $mgaEmpNgBU.=")";
+    $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup IN $mgaGroup) $mgaEmpNgBU OR fldTrGroup IN $mgaGroup  OR (fldProject='$mngProjID' AND fldGroup IN $mgaGroup)) $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){
-    $mgaEmp.=" AND fldEmployeeNum IN (";
+    if(!empty($mgaEmpNgBU)){
+        $mgaEmpNgBU=rtrim($mgaEmpNgBU,")");
+        $mgaEmpNgBU.=",";
+    }
+    else{
+        $mgaEmpNgBU="(";
+    }
     $empsArr=$empsStmt->fetchAll();
     foreach($empsArr AS $emps){
-        $mgaEmp.="'".$emps['fldEmployeeNum']."',";
+        $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
     }
-    $mgaEmp=rtrim($mgaEmp,",");
-    $mgaEmp.=")";
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    $mgaEmpNgBU.=")";
 }
 //emp#||Name||Group and Desig
-if(!empty($mgaEmp)){
-    $elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename,fldGroup,fldDesig FROM emp_prof WHERE fldNick<>'' $mgaEmp ORDER BY CASE WHEN fldDesig='SM' THEN 1 WHEN fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN fldGroup='$rawGetGroup' THEN 1 ELSE fldGroup END,fldEmployeeNum";
-    $elStmt=$connkdt->prepare($elQ);
-    $elStmt->execute();
-    if($elStmt->rowCount()>0){
-        $elArr=$elStmt->fetchAll();
-        foreach($elArr AS $el){
-            $enum = $el['fldEmployeeNum'];
-            $ename = $el['ename'];
-            $egroup = $el['fldGroup'];
-            $edesig = $el['fldDesig'];
-            if(!in_array("$enum||$ename||$edesig of $egroup",$eList)){
-                array_push($eList,"$enum||$ename||$edesig of $egroup");
-            }
+
+$elQ="SELECT ep.fldEmployeeNum,CONCAT(ep.fldSurname,', ',ep.fldFirstname) AS ename,ep.fldGroup,ep.fldDesig,kdtd.fldDeptCode FROM emp_prof AS ep LEFT OUTER JOIN departments AS kdtd ON ep.fldEmployeeNum=kdtd.fldManager WHERE ep.fldNick<>'' AND ep.fldEmployeeNum IN $mgaEmpNgBU ORDER BY CASE WHEN ep.fldDesig='SM' THEN 1 WHEN ep.fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN ep.fldGroup='$rawGetGroup' THEN 1 ELSE ep.fldGroup END,ep.fldEmployeeNum";
+$elStmt=$connkdt->prepare($elQ);
+$elStmt->execute();
+if($elStmt->rowCount()>0){
+    $elArr=$elStmt->fetchAll();
+    foreach($elArr AS $el){
+        $enum = $el['fldEmployeeNum'];
+        $ename = $el['ename'];
+        $egroup = $el['fldGroup'];
+        $edesig = $el['fldDesig'];
+        if($edesig=="DM"){
+            $egroup=$el['fldDeptCode'];
+        }
+        if(!in_array("$enum||$ename||$edesig of $egroup",$eList)){
+            array_push($eList,"$enum||$ename||$edesig of $egroup");
         }
     }
 }
+
 
 
 
@@ -106,5 +105,5 @@ if(!empty($mgaEmp)){
 #endregion
 //$.ajaxSetup({async: false});
 echo json_encode($eList);
-// echo $empsQ;
+// echo $elQ;
 ?>

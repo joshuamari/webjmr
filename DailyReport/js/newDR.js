@@ -486,6 +486,10 @@ function addRow(iVal){//map Entries for display
     var hour = parseFloat(iVal.split('||')[6]);
     var mht = iVal.split('||')[7];
     var rmrks = iVal.split('||')[8];
+    var del = ``;
+    if(iVal.split('||')[9]==1){
+        del=`(Deleted)`;
+    }
     const mhtyp = ["Regular", "OT", "Leave"];
     switch(mht){
         case "0":
@@ -505,7 +509,7 @@ function addRow(iVal){//map Entries for display
     <tr id="${mht}_${pId}" title="${rmrks}" >
     <td>${loc}</td>
     <td>${group}</td>
-    <td>${project}</td>
+    <td>${project}${del}</td>
     <td>${item}</td>
     <td>${desc}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
@@ -1723,9 +1727,13 @@ function getDayta(iVal){
 }
 function fillDayta(iVal){
     var prj = iVal.split('||')[0];
+    var del=``;
+    if(iVal.split('||')[2]==1){
+        del=`<strong>(Deleted)</strong>`;
+    }
     var prjHrs = iVal.split('||')[1];
     var addString=`<tr>
-    <td>${prj}</td>
+    <td>${del}${prj}</td>
     <td>${prjHrs}</td>
   </tr>`;
     $('#pHoursTable').append(addString);
