@@ -35,8 +35,6 @@ try {
       array_push($noCounterpartBU,$ncpbs['fldBU']);
     }
   }
-  $industrialB=array("CEM","MIL","ETCL","MPM");
-  $mgaU=array("CEM","MIL");
   $itMembers=array();
   $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
   $itStmt=$connkdt->query($itQ);
