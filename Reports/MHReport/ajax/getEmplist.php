@@ -42,7 +42,7 @@ $eList=array();
 #region main
 $mgaEmpStmt='';
 $mgaEmpNgBU="";
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<>'DM'";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<> CASE WHEN fldGroup<>'ADM' THEN 'DM' ELSE 'KDTP' END";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
