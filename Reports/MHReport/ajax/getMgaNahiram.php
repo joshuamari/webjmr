@@ -87,9 +87,9 @@ if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
     $mgaEmpNgBU.=")";
-    $mgaEmpStmt="AND fldEmployeeNum IN";
+    $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject='$mngProjID' AND fldGroup='$rawGetGroup') $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){

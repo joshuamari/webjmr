@@ -208,18 +208,18 @@ function getMngKdt(){
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
-    <th rowspan="4" title="Employee Number" class="text-center">#</th>
-    <th rowspan="4">Name</th>
-    <th>Budget in Charge</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" title="Employee Number" class="text-center">#</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
   </tr>
   <tr id="tr2">
-    <th>Order No.</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Order No.</th>
   </tr>
   <tr id="tr3">
-    <th>Project</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Project</th>
   </tr>
   <tr id="tr4">
-    <th>Location</th>
+    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Location</th>
   </tr>
 </thead>
 <tbody id="mainTbody">
@@ -227,18 +227,18 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
 </tbody>`);
   addEmp(eVal);
   pHead(hVal);
-  $('#tr1').append(`<th rowspan="4" class="st-color">Sub-total</th>`);
-  $('.empRow').append(`<td class="st st-color"></td>`);
-  $('#tot1').append(`<td id="tot1-st" class="st-color"></td>`);
-  $('#multiplier').append(`<td class="st-color"></td>`);
-  $('#xd').append(`<td id="xd-st" class="st-color"></td>`);
+  $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="st-color">Sub-total</th>`);
+  $('.empRow').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="st st-color"></td>`);
+  $('#tot1').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-st" class="st-color"></td>`);
+  $('#multiplier').append(`<td data-f-name="MS PGothic" data-b-a-s="thin" class="st-color"></td>`);
+  $('#xd').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" id="xd-st" class="st-color"></td>`);
   afterSub(BU);
   pHead(bVal);
-  $('#tr1').append(`<th rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
-  $('.empRow').append(`<td class="mhpp mhpp-color"></td>`);
-  $('#tot1').append(`<td id="tot1-mhpp" class="mhpp-color" ></td>`);
-  $('#multiplier').append(`<td></td>`);
-  $('#xd').append(`<td></td>`);
+  $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
+  $('.empRow').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="mhpp mhpp-color"></td>`);
+  $('#tot1').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
+  $('#multiplier').append(`<td data-f-name="MS PGothic" data-b-a-s="thin"></td>`);
+  $('#xd').append(`<td data-f-name="MS PGothic" data-b-a-s="thin"></td>`);
 
   //for entries
   // $($(".empRow[data-val='300']").children('td[data-val="51"]')).text('w3-black')
@@ -254,24 +254,24 @@ function addEmp(iVal) {
     var splitVal = element.split('||');
     $('#mainTbody').append(`
   <tr class="empRow" data-val="${splitVal[0]}">
-  <td>${splitVal[0]}</td>
-  <td>${splitVal[1]}</td>
-  <td>${splitVal[2]}</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">${splitVal[2]}</td>
   </tr>
   `)
   });
   $('#mainTbody').append(`
 <tr id="tot1">
-  <td colspan="2">Total Man-Hour per Order</td>
-  <td>Hr</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">Total Man-Hour per Order</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">Hr</td>
 </tr>
 <tr id="multiplier">
-  <td colspan="2">単価</td>
-  <td>（千円）</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">単価</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 <tr id="xd">
-  <td colspan="2">請求額</td>
-  <td>（千円）</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">請求額</td>
+  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 `);
 }
@@ -280,20 +280,24 @@ function pHead(iVal) {
   iVal.forEach(function callback(element) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
-
-    // if(!splitVal[1]){
-
-    //   splitVal[1]=codeArr[splitVal[0]];
-
-    // }
-    $('#tr1').append(`<th>${splitVal[0]}</th>`);
-    $('#tr2').append(`<th>${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
-    $('#tr3').append(`<th>${splitVal[2]}</th>`);
-    $('#tr4').append(`<th>${splitVal[3]}</th>`);
-    $('.empRow').append(`<td data-val="${splitVal[4]}"></td>`);
-    $('#tot1').append(`<td data-tot="${splitVal[4]}" class="tot"></td>`);
-    $('#multiplier').append(`<td class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
-    $('#xd').append(`<td data-xtot="${splitVal[4]}" class="xTot"></td>`);
+    var multi=``;
+    if(splitVal[0]==$(`#buSel`).val() || splitVal[0]=="KDT" || splitVal[0]=="Management"){
+      if(splitVal[3]=="P"){
+        multi=2;
+      }
+      else{
+        multi=2.85;
+      }
+    }
+    $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
+    $('#tr2').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
+    $('#tr3').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
+    $('#tr4').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
+    $('.empRow').append(`<td data-f-name="MS PGothic" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
+    $('#tot1').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
+    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
+    $('#multiplier').append(`<td data-f-color="7030A0" data-f-name="MS PGothic" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
+    $('#xd').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
   });
 }
 
@@ -328,6 +332,10 @@ function total(){
     var totalmh=parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text());
     var multi=parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text())
     var overall=Math.round(((totalmh*multi) + Number.EPSILON) * 100) / 100
+    if(!overall && overall!=0){
+      overall=`他部門請求`;
+      $(getXTot[x]).attr('data-f-color','');
+    }
     $(getXTot[x]).text(overall);
     // $(getXTot[x]).text(parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text()) * parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text()));
     // $('#xd-st').text(`${ parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0") + parseFloat($(getXTot[x]).text())}`);
@@ -434,10 +442,17 @@ $(document).on('click','#btnExport',function(){
       cOff="Monthly";
       break;
   }
-  $('#mainTable').table2excel({
-    name: `${$('#grpSel').val()} Summary`,
-    filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
-  })
+  // $('#mainTable').table2excel({
+  //   name: `${$('#grpSel').val()} Summary`,
+  //   filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
+  // })
+  // $(`#mainTable`).attr('data-cols-width','10,20,30');
+  TableToExcel.convert(document.getElementById("mainTable"), {
+    name: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report.xlsx`,
+    sheet: {
+      name: `${$('#buSel').val()}`
+    }
+  });
   $('#mainTable').addClass('ayos');
 });
 

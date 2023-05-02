@@ -59,21 +59,55 @@ $proj.=")";
 
 #region main
 
-$grpMem="";
-$grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup'";
-$grpMemStmt=$connkdt->prepare($grpMemQ);
-$grpMemStmt->execute();
-if($grpMemStmt->rowCount()>0){
-    $grpMemArr=$grpMemStmt->fetchAll();
-    $grpMem.=" AND dr.fldEmployeeNum IN(";
-    foreach($grpMemArr AS $gMem){
-        $grpMem.="'".$gMem['fldEmployeeNum']."',";
+// $grpMem="";
+// $grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup'";
+// $grpMemStmt=$connkdt->prepare($grpMemQ);
+// $grpMemStmt->execute();
+// if($grpMemStmt->rowCount()>0){
+//     $grpMemArr=$grpMemStmt->fetchAll();
+//     $grpMem.=" AND dr.fldEmployeeNum IN(";
+//     foreach($grpMemArr AS $gMem){
+//         $grpMem.="'".$gMem['fldEmployeeNum']."',";
+//     }
+//     $grpMem=rtrim($grpMem,",");
+// }
+// $grpMem.=")";
+$mgaEmpStmt='';
+$mgaEmpNgBU="";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<>'DM'";
+$empNgBUStmt=$connkdt->prepare($empNgBUQ);
+$empNgBUStmt->execute();
+if($empNgBUStmt->rowCount()>0){
+    $mgaEmpNgBU.="(";
+    $enbArr=$empNgBUStmt->fetchAll();
+    foreach($enbArr AS $enbs){
+        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
     }
-    $grpMem=rtrim($grpMem,",");
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
+    $mgaEmpNgBU.=")";
+    $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
-$grpMem.=")";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject='$mngProjID' AND fldGroup='$rawGetGroup') $mgaEmpStmt $mgaEmpNgBU $dateCompare";
+$empsStmt=$connwebjmr->prepare($empsQ);
+$empsStmt->execute();
+if($empsStmt->rowCount()>0){
+    if(!empty($mgaEmpNgBU)){
+        $mgaEmpNgBU=rtrim($mgaEmpNgBU,")");
+        $mgaEmpNgBU.=",";
+    }
+    else{
+        $mgaEmpNgBU="(";
+    }
+    $empsArr=$empsStmt->fetchAll();
+    foreach($empsArr AS $emps){
+        $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
+    }
+    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+    $mgaEmpNgBU.=")";
+}
 //emp#||dbIndex||duration
-$hiramEntQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((dr.fldGroup='$rawGetGroup' AND dr.fldTrGroup IS NOT NULL) OR dr.fldEmployeeNum IS NOT NULL $proj $grpMem) $dateCompare  GROUP BY dr.fldProject,dr.fldEmployeeNum,locCode";
+$hiramEntQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((dr.fldGroup='$rawGetGroup' AND dr.fldTrGroup IS NOT NULL) OR dr.fldEmployeeNum IS NOT NULL $proj AND fldEmployeeNum IN $mgaEmpNgBU) $dateCompare  GROUP BY dr.fldProject,dr.fldEmployeeNum,locCode";
 $hiramEntStmt=$connwebjmr->prepare($hiramEntQ);
 $hiramEntStmt->execute();
 if($hiramEntStmt->rowCount()>0){
