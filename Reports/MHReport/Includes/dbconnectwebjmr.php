@@ -19,6 +19,9 @@ try {
   $mngProjQ="SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt=$connwebjmr->query($mngProjQ);
   $mngProjID=$mngProjStmt->fetchColumn();
+  $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
+  $trainProjStmt=$connwebjmr->query($trainProjQ);
+  $trainProjID=$trainProjStmt->fetchColumn();
   $gods=['464','465','487'];
   $kdtWholeItems=['1','2','16','18','20'];
   $khiWholeItems=['3','4','5','12','14'];
@@ -32,8 +35,6 @@ try {
       array_push($noCounterpartBU,$ncpbs['fldBU']);
     }
   }
-  $industrialB=array("CEM","MIL","ETCL","MPM");
-  $mgaU=array("CEM","MIL");
   $itMembers=array();
   $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
   $itStmt=$connkdt->query($itQ);

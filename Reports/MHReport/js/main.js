@@ -23,7 +23,7 @@ const testHeader = ['Env||6311051-P300||Komuradai||P||51-P', 'Env||6311052-P300|
 const entries = ['300||51-P||50', '300||89||80', '300||98||10', '300||112||10', '310||51||150', '400||69||100', '400||81||20', '400||87||30', '410||72||150', '320||69||50', '330||72||50']
 
 //pwede rin to galing db (initialize once)
-const codeArr = { CEM: "61W2201", MIL: "61W2201", CHE: "61W2252", CRY: "61W2971", MHAH: "61W2202", AH: "61W2714", ENV: "61W2322", EE: "61W2283", CIV: "61W2211", PIP: "61W2510", BOI: "61W2723", KHI: "61W2102", KDT: "61W2102-8900" }
+const codeArr = { CEM: "61W2201-8900", MIL: "61W2201-8900", CHE: "61W2252-8900", CRY: "61W2971-8900", MHAH: "61W2202-8900", AH: "61W2714-8900", ENV: "61W2322-8900", EE: "61W2283-8900", CIV: "61W2211-8900", PIP: "61W2510-8900", BOI: "61W2723-8900", KHI: "61W2102-8900", KDT: "61W2102-8900" }
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
 const mgaNahiram = ['Cem||6269420-P300||Hehe||P||469', 'EE||6242069-P100||Haha||P||999']
@@ -109,6 +109,7 @@ var getHalfSel=$(`#CO`).val()
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       tHeader=$.parseJSON(data);
     },
     async=false
@@ -126,6 +127,7 @@ function getEmplist(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       eList=$.parseJSON(data);
     },
     async=false
@@ -143,6 +145,7 @@ function getEntries(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       entrs=$.parseJSON(data);
     },
     async=false
@@ -160,6 +163,7 @@ function getMgaNahiram(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       mgaNhiram=$.parseJSON(data);
     },
     async=false
@@ -177,6 +181,7 @@ function getHiramEntries(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       hramEntries=$.parseJSON(data);
     },
     async=false
@@ -194,6 +199,7 @@ function getMngKdt(){
     getGroup:$('#buSel').val()
   },
     function (data) {
+      // console.log(data)
       mngakdt=$.parseJSON(data);
     },async=false
   );
@@ -202,18 +208,18 @@ function getMngKdt(){
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
-    <th rowspan="4" title="Employee Number" class="text-center">#</th>
-    <th rowspan="4">Name</th>
-    <th>Budget in Charge</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" title="Employee Number" class="text-center">#</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
   </tr>
   <tr id="tr2">
-    <th>Order No.</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Order No.</th>
   </tr>
   <tr id="tr3">
-    <th>Project</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Project</th>
   </tr>
   <tr id="tr4">
-    <th>Location</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Location</th>
   </tr>
 </thead>
 <tbody id="mainTbody">
@@ -221,18 +227,18 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
 </tbody>`);
   addEmp(eVal);
   pHead(hVal);
-  $('#tr1').append(`<th rowspan="4" class="st-color">Sub-total</th>`);
-  $('.empRow').append(`<td class="st st-color"></td>`);
-  $('#tot1').append(`<td id="tot1-st" class="st-color"></td>`);
-  $('#multiplier').append(`<td class="st-color"></td>`);
-  $('#xd').append(`<td id="xd-st" class="st-color"></td>`);
+  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="st-color">Sub-total</th>`);
+  $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="st st-color"></td>`);
+  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-st" class="st-color"></td>`);
+  $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="st-color"></td>`);
+  $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" id="xd-st" class="st-color"></td>`);
   afterSub(BU);
   pHead(bVal);
-  $('#tr1').append(`<th rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
-  $('.empRow').append(`<td class="mhpp mhpp-color"></td>`);
-  $('#tot1').append(`<td id="tot1-mhpp" class="mhpp-color" ></td>`);
-  $('#multiplier').append(`<td></td>`);
-  $('#xd').append(`<td></td>`);
+  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
+  $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="mhpp mhpp-color"></td>`);
+  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
+  $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"></td>`);
+  $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"></td>`);
 
   //for entries
   // $($(".empRow[data-val='300']").children('td[data-val="51"]')).text('w3-black')
@@ -248,24 +254,24 @@ function addEmp(iVal) {
     var splitVal = element.split('||');
     $('#mainTbody').append(`
   <tr class="empRow" data-val="${splitVal[0]}">
-  <td>${splitVal[0]}</td>
-  <td>${splitVal[1]}</td>
-  <td>${splitVal[2]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">${splitVal[2]}</td>
   </tr>
   `)
   });
   $('#mainTbody').append(`
 <tr id="tot1">
-  <td colspan="2">Total Man-Hour per Order</td>
-  <td>Hr</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">Total Man-Hour per Order</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">Hr</td>
 </tr>
 <tr id="multiplier">
-  <td colspan="2">単価</td>
-  <td>（千円）</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">単価</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 <tr id="xd">
-  <td colspan="2">請求額</td>
-  <td>（千円）</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">請求額</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 `);
 }
@@ -274,25 +280,29 @@ function pHead(iVal) {
   iVal.forEach(function callback(element) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
-
-    if(!splitVal[1]){
-
-      splitVal[1]=codeArr[splitVal[0]];
-
+    var multi=``;
+    if(splitVal[0]==$(`#buSel`).val() || splitVal[0]=="KDT" || splitVal[0]=="Management"){
+      if(splitVal[3]=="P"){
+        multi=2;
+      }
+      else{
+        multi=2.85;
+      }
     }
-    $('#tr1').append(`<th>${splitVal[0]}</th>`);
-    $('#tr2').append(`<th>${splitVal[1] == undefined ? "" : splitVal[1]}</th>`);
-    $('#tr3').append(`<th>${splitVal[2]}</th>`);
-    $('#tr4').append(`<th>${splitVal[3]}</th>`);
-    $('.empRow').append(`<td data-val="${splitVal[4]}"></td>`);
-    $('#tot1').append(`<td data-tot="${splitVal[4]}" class="tot"></td>`);
-    $('#multiplier').append(`<td class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
-    $('#xd').append(`<td data-xtot="${splitVal[4]}" class="xTot"></td>`);
+    $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
+    $('#tr2').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
+    $('#tr3').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
+    $('#tr4').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
+    $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
+    $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
+    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
+    $('#multiplier').append(`<td data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
+    $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
   });
 }
 
 function afterSub(iVal) {
-  const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG"];
+  const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG","DXT","INT"];
 
   if(!except.includes(iVal)){
     pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`]);
@@ -322,6 +332,10 @@ function total(){
     var totalmh=parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text());
     var multi=parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text())
     var overall=Math.round(((totalmh*multi) + Number.EPSILON) * 100) / 100
+    if(!overall && overall!=0){
+      overall=`他部門請求`;
+      $(getXTot[x]).attr('data-f-color','');
+    }
     $(getXTot[x]).text(overall);
     // $(getXTot[x]).text(parseFloat($(`.tot[data-tot="${$($(getTots)[x]).attr('data-tot')}"]`).text()) * parseFloat($(`.multiplier-${$($(getTots)[x]).attr('data-tot')}`).text()));
     // $('#xd-st').text(`${ parseFloat($('#xd-st').text() != ""? $('#xd-st').text() : "0") + parseFloat($(getXTot[x]).text())}`);
@@ -428,10 +442,17 @@ $(document).on('click','#btnExport',function(){
       cOff="Monthly";
       break;
   }
-  $('#mainTable').table2excel({
-    name: `${$('#grpSel').val()} Summary`,
-    filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
-  })
+  // $('#mainTable').table2excel({
+  //   name: `${$('#grpSel').val()} Summary`,
+  //   filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
+  // })
+  // $(`#mainTable`).attr('data-cols-width','10,20,30');
+  TableToExcel.convert(document.getElementById("mainTable"), {
+    name: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report.xlsx`,
+    sheet: {
+      name: `${$('#buSel').val()}`
+    }
+  });
   $('#mainTable').addClass('ayos');
 });
 

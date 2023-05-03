@@ -10,9 +10,10 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$getGroup='';
+$getGroups=array();
+$rawGetGroup='';
 if(!empty($_POST['getGroup'])){
-    $getGroup=$_POST['getGroup'];
+    $rawGetGroup=$_POST['getGroup'];
 }
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
@@ -35,7 +36,7 @@ if($cutOff=="3"){
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $mngakdt=array();
-$proj=' AND dr.fldProject IN (';
+$proj="(";
 foreach($defaultProjID AS $dpi){
     if($dpi!=$leaveID){
         $proj.="'$dpi',";
@@ -44,26 +45,40 @@ foreach($defaultProjID AS $dpi){
 $proj=rtrim($proj,",");
 $proj.=")";
 
-$grpMem="";
-$grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup=:getGroup";
-$grpMemStmt=$connkdt->prepare($grpMemQ);
-$grpMemStmt->execute([":getGroup"=>$getGroup]);
-if($grpMemStmt->rowCount()>0){
-    $grpMemArr=$grpMemStmt->fetchAll();
-    $grpMem.=" AND dr.fldEmployeeNum IN(";
-    foreach($grpMemArr AS $gMem){
-        $grpMem.="'".$gMem['fldEmployeeNum']."',";
-    }
-    $grpMem=rtrim($grpMem,",");
-}
-$grpMem.=")";
+// $mgaEmp='';
+// $mgaEmpNgBU='';
+// $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>''";
+// $empNgBUStmt=$connkdt->prepare($empNgBUQ);
+// $empNgBUStmt->execute();
+// if($empNgBUStmt->rowCount()>0){
+//     $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
+//     $enbArr=$empNgBUStmt->fetchAll();
+//     foreach($enbArr AS $enbs){
+//         $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+//     }
+//     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
+//     $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
+// }
+// $empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') $mgaEmpNgBU OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $dateCompare";
+// $empsStmt=$connwebjmr->prepare($empsQ);
+// $empsStmt->execute();
+// if($empsStmt->rowCount()>0){
+//     $mgaEmp.=" AND fldEmployeeNum IN (";
+//     $empsArr=$empsStmt->fetchAll();
+//     foreach($empsArr AS $emps){
+//         $mgaEmp.="'".$emps['fldEmployeeNum']."',";
+//     }
+//     $mgaEmp=rtrim($mgaEmp,",");
+
+//     $mgaEmp.=")";
+// }
 #endregion
 
 #region main
 //emp#||dbIndex||duration(7,8,9,11,13,22,23,24)
-$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((fldTrGroup=:getGroup) OR dr.fldEmployeeNum IS NOT NULL $proj $grpMem AND fldTrGroup IS NULL) $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
+$mngkdtQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND (dr.fldGroup='$rawGetGroup' OR dr.fldTrGroup='$rawGetGroup')) $dateCompare GROUP BY locCode,CASE WHEN dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') THEN dr.fldProject END,dr.fldEmployeeNum";
 $mngkdtStmt=$connwebjmr->prepare($mngkdtQ);
-$mngkdtStmt->execute([":getGroup"=>$getGroup]);
+$mngkdtStmt->execute();
 if($mngkdtStmt->rowCount()>0){
     $mngkdtArr=$mngkdtStmt->fetchAll();
     foreach($mngkdtArr AS $mngkdt){
@@ -74,7 +89,7 @@ if($mngkdtStmt->rowCount()>0){
         $thrs = ((float)$mngkdt['totalHrs'])/60;
         $kdtCode='';
         if($pID==$mngProjID){
-            if(in_array($getGroup,$noCounterpartBU)){
+            if(in_array($rawGetGroup,$noCounterpartBU)){
                 $kdtCode='K';
             }
             else{
@@ -89,10 +104,12 @@ if($mngkdtStmt->rowCount()>0){
                 $kdtCode='B';
             }
             if(in_array($itemID,$halfItems)){
-                $thrs=$thrs/2;
                 $kdtCode='K';
-                array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");
-                $kdtCode='B';
+                if(!in_array($rawGetGroup,$noCounterpartBU)){
+                    $thrs=$thrs/2;
+                    array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");
+                    $kdtCode='B';
+                }
             }
         }
         array_push($mngakdt,"$enum||$kdtCode$locCode||$thrs");

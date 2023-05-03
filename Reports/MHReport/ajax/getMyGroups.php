@@ -12,7 +12,7 @@ if(isset($_REQUEST['empNum'])){
 #endregion
 #region MyGroup Query
 if(in_array($empNum,$reportAllGroupAccess)){
-    $allGroupQ="SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldBU NOT IN ('SHI','INT','DXT') ORDER BY fldBU";
+    $allGroupQ="SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldBU NOT IN ('SHI') ORDER BY fldBU";
     $allGroupStmt=$connkdt->query($allGroupQ);
     if($allGroupStmt->rowCount()>0){
         $allGroupArr=$allGroupStmt->fetchAll();
