@@ -106,6 +106,9 @@ if($empsStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     $mgaEmpNgBU.=")";
 }
+else{
+    $mgaEmpNgBU="('')";
+}
 //emp#||dbIndex||duration
 $hiramEntQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE ((dr.fldGroup='$rawGetGroup' AND dr.fldTrGroup IS NOT NULL) OR dr.fldEmployeeNum IS NOT NULL $proj AND fldEmployeeNum IN $mgaEmpNgBU) $dateCompare  GROUP BY dr.fldProject,dr.fldEmployeeNum,locCode";
 $hiramEntStmt=$connwebjmr->prepare($hiramEntQ);
