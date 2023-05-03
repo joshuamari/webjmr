@@ -65,10 +65,10 @@ body {
 .mhpp-color{
   background:var(--yellow-color) !important;
 }
-#multiplier td:last-of-type,
+/* #multiplier td:last-of-type,
 #xd td:last-of-type{
   background:var(--yellow-color) !important;
-}
+} */
 .content::-webkit-scrollbar{
   width: 10px;
 }
