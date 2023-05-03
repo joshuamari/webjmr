@@ -208,18 +208,18 @@ function getMngKdt(){
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" title="Employee Number" class="text-center">#</th>
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" title="Employee Number" class="text-center">#</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
   </tr>
   <tr id="tr2">
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Order No.</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Order No.</th>
   </tr>
   <tr id="tr3">
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Project</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Project</th>
   </tr>
   <tr id="tr4">
-    <th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true">Location</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Location</th>
   </tr>
 </thead>
 <tbody id="mainTbody">
@@ -227,18 +227,18 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
 </tbody>`);
   addEmp(eVal);
   pHead(hVal);
-  $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="st-color">Sub-total</th>`);
-  $('.empRow').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="st st-color"></td>`);
-  $('#tot1').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-st" class="st-color"></td>`);
-  $('#multiplier').append(`<td data-f-name="MS PGothic" data-b-a-s="thin" class="st-color"></td>`);
-  $('#xd').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" id="xd-st" class="st-color"></td>`);
+  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="st-color">Sub-total</th>`);
+  $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="st st-color"></td>`);
+  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-st" class="st-color"></td>`);
+  $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="st-color"></td>`);
+  $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" id="xd-st" class="st-color"></td>`);
   afterSub(BU);
   pHead(bVal);
-  $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
-  $('.empRow').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="mhpp mhpp-color"></td>`);
-  $('#tot1').append(`<td data-f-name="MS PGothic" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
-  $('#multiplier').append(`<td data-f-name="MS PGothic" data-b-a-s="thin"></td>`);
-  $('#xd').append(`<td data-f-name="MS PGothic" data-b-a-s="thin"></td>`);
+  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
+  $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="mhpp mhpp-color"></td>`);
+  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
+  $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"></td>`);
+  $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"></td>`);
 
   //for entries
   // $($(".empRow[data-val='300']").children('td[data-val="51"]')).text('w3-black')
@@ -254,24 +254,24 @@ function addEmp(iVal) {
     var splitVal = element.split('||');
     $('#mainTbody').append(`
   <tr class="empRow" data-val="${splitVal[0]}">
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">${splitVal[2]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">${splitVal[2]}</td>
   </tr>
   `)
   });
   $('#mainTbody').append(`
 <tr id="tot1">
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">Total Man-Hour per Order</td>
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">Hr</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">Total Man-Hour per Order</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">Hr</td>
 </tr>
 <tr id="multiplier">
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">単価</td>
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">（千円）</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">単価</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 <tr id="xd">
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left" colspan="2">請求額</td>
-  <td data-f-name="MS PGothic" data-b-a-s="thin" data-a-h="left">（千円）</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" colspan="2">請求額</td>
+  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left">（千円）</td>
 </tr>
 `);
 }
@@ -289,15 +289,15 @@ function pHead(iVal) {
         multi=2.85;
       }
     }
-    $('#tr1').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
-    $('#tr2').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
-    $('#tr3').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
-    $('#tr4').append(`<th data-f-name="MS PGothic" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
-    $('.empRow').append(`<td data-f-name="MS PGothic" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
-    $('#tot1').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
+    $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
+    $('#tr2').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
+    $('#tr3').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
+    $('#tr4').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
+    $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
+    $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
     // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
-    $('#multiplier').append(`<td data-f-color="7030A0" data-f-name="MS PGothic" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
-    $('#xd').append(`<td data-f-name="MS PGothic" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
+    $('#multiplier').append(`<td data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
+    $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
   });
 }
 
