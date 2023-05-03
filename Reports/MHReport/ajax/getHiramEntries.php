@@ -106,7 +106,7 @@ if($empsStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     $mgaEmpNgBU.=")";
 }
-else{
+if(empty($mgaEmpNgBU)){
     $mgaEmpNgBU="('')";
 }
 //emp#||dbIndex||duration

@@ -74,7 +74,7 @@ if($empsStmt->rowCount()>0){
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     $mgaEmpNgBU.=")";
 }
-else{
+if(empty($mgaEmpNgBU)){
     $mgaEmpNgBU="('')";
 }
 //emp#||Name||Group and Desig

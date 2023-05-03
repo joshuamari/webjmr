@@ -281,6 +281,8 @@ function pHead(iVal) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
     var multi=``;
+    var backColorE=``;
+    var backColorH=``;
     if(splitVal[0]==$(`#buSel`).val() || splitVal[0]=="KDT" || splitVal[0]=="Management"){
       if(splitVal[3]=="P"){
         multi=2;
@@ -288,16 +290,21 @@ function pHead(iVal) {
       else{
         multi=2.85;
       }
+      backColorE=`C6E0B4`;
     }
-    $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
-    $('#tr2').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
-    $('#tr3').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
-    $('#tr4').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
-    $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
-    $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
+    else{
+      backColorH=`BFBFBF`;
+      backColorE=`BFBFBF`;
+    }
+    $('#tr1').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
+    $('#tr2').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
+    $('#tr3').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
+    $('#tr4').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
+    $('.empRow').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
+    $('#tot1').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
     // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
-    $('#multiplier').append(`<td data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
-    $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
+    $('#multiplier').append(`<td data-fill-color="${backColorH}" data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
+    $('#xd').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
   });
 }
 
