@@ -436,7 +436,7 @@ function addFooter(){
     <td>Unit Rate</td>
     <td>（千円）</td>
     <td></td>
-    <td colspan="10">注意：本表はシステム出力され計算式は含まれていないため、数値を変更した場合は合計や請求額の再計算をお願いします。</td>
+    <td data-f-color="ff0000" colspan="10">注意：本表はシステム出力され計算式は含まれていないため、数値を変更した場合は合計や請求額の再計算をお願いします。</td>
   </tr>
   <tr style="display:none">
     <td>P</td>
