@@ -217,7 +217,7 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
   </tr>
   <tr id="tr1">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">#</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">Employee Number</th>
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
   </tr>
@@ -445,7 +445,7 @@ function addFooter(){
     <td>Unit Rate</td>
     <td>（千円）</td>
     <td></td>
-    <td>注意：本表はシステム出力され計算式は含まれていないため、数値を変更した場合は合計や請求額の再計算をお願いします。</td>
+    <td colspan="10">注意：本表はシステム出力され計算式は含まれていないため、数値を変更した場合は合計や請求額の再計算をお願いします。</td>
   </tr>
   <tr style="display:none">
     <td>P</td>
