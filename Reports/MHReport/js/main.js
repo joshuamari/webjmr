@@ -207,8 +207,17 @@ function getMngKdt(){
 }
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
+  <tr style="display:none">
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${BU}</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#monthSel').val()}</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">日付</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">確認者</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
+  </tr>
   <tr id="tr1">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" title="Employee Number" class="text-center">#</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">#</th>
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
   </tr>
@@ -246,6 +255,7 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   addEntries(mVal);
   addEntries(pVal);
   total();
+  addFooter();
 }
 
 function addEmp(iVal) {
@@ -427,6 +437,29 @@ function fillGroup(iVal){
   $('#buSel').append(addString);
 }
 //#endregion
+
+function addFooter(){
+  var addString =`
+  <tr style="display:none">
+    <td>単価</td>
+    <td>Unit Rate</td>
+    <td>（千円）</td>
+    <td></td>
+    <td>注意：本表はシステム出力され計算式は含まれていないため、数値を変更した場合は合計や請求額の再計算をお願いします。</td>
+  </tr>
+  <tr style="display:none">
+    <td>P</td>
+    <td>Philippines</td>
+    <td>2.0</td>
+  </tr>
+  <tr style="display:none">
+    <td>J</td>
+    <td>Japan or Overseas</td>
+    <td>2.85</td>
+  </tr>
+  `;
+  $('#mainTbody').append(addString);
+}
 
 //#region Print and Export
 
