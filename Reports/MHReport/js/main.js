@@ -441,12 +441,12 @@ function addFooter(){
   <tr style="display:none">
     <td>P</td>
     <td>Philippines</td>
-    <td>2.0</td>
+    <td data-f-color="7030A0">2.0</td>
   </tr>
   <tr style="display:none">
     <td>J</td>
     <td>Japan or Overseas</td>
-    <td>2.85</td>
+    <td data-f-color="7030A0">2.85</td>
   </tr>
   `;
   $('#mainTbody').append(addString);
