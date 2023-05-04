@@ -207,16 +207,6 @@ function getMngKdt(){
 }
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
-  <tr style="display:none">
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${BU}</th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#monthSel').val()}</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">日付</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">確認者</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
-  </tr>
-  <tr></tr>
   <tr id="tr1">
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">Employee Number</th>
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
@@ -473,6 +463,19 @@ $(document).on('click','#btnPrint',function(){
 });
 
 $(document).on('click','#btnExport',function(){
+  var addString = `
+  <tr class="fx" style="display:none">
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#buSel').val()}</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#monthSel').val()}</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">日付</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">確認者</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
+  </tr>
+  <tr class="fx"></tr>`;
+  
+  $('thead').prepend(addString);
   var cOff;
   $('#mainTable').removeClass('ayos');
   switch($('#CO').val()){
@@ -497,6 +500,7 @@ $(document).on('click','#btnExport',function(){
       name: `${$('#buSel').val()}`
     }
   });
+  $('.fx').remove();
   $('#mainTable').addClass('ayos');
 });
 
