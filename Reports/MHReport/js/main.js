@@ -208,18 +208,18 @@ function getMngKdt(){
 function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">Employee Number</th>
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Budget in Charge</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">Emp. No.</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle" rowspan="4">Name</th>
+    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin">Budget in Charge</th>
   </tr>
   <tr id="tr2">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Order No.</th>
+    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin">Order No.</th>
   </tr>
   <tr id="tr3">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Project</th>
+    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin">Project</th>
   </tr>
   <tr id="tr4">
-    <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true">Location</th>
+    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin">Location</th>
   </tr>
 </thead>
 <tbody id="mainTbody">
@@ -233,9 +233,9 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   // $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="st-color"></td>`);
   // $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" id="xd-st" class="st-color"></td>`);
   afterSub(BU);
-  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
+  $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle" rowspan="4" class="mhpp-color">Monthly Man-hour per Person</th>`);
   $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="mhpp mhpp-color"></td>`);
-  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
+  $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-mhpp" class="mhpp-color" ></td>`);
   $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="mhpp-color"></td>`);
   $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="mhpp-color"></td>`);
 
@@ -255,9 +255,9 @@ function addEmp(iVal) {
     var splitVal = element.split('||');
     $('#mainTbody').append(`
   <tr class="empRow" data-val="${splitVal[0]}">
-  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
-  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
-  <td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" class="frfr">${splitVal[2]}</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="left">${splitVal[0]}</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-wrap="false" data-a-h="left">${splitVal[1]}</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="left" class="frfr">${splitVal[2]}</td>
   </tr>
   `)
   });
@@ -297,15 +297,15 @@ function pHead(iVal) {
       backColorH=`BFBFBF`;
       backColorE=`BFBFBF`;
     }
-    $('#tr1').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center">${splitVal[0]}</th>`);
-    $('#tr2').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
-    $('#tr3').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
-    $('#tr4').append(`<th data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
-    $('.empRow').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
-    $('#tot1').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
+    $('#tr1').append(`<th data-a-v="middle" data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${splitVal[0]}</th>`);
+    $('#tr2').append(`<th data-a-v="middle" data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[1] == "undefined" ? "" : splitVal[1]}</th>`);
+    $('#tr3').append(`<th data-a-v="middle" data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-a-wrap="false">${splitVal[2]}</th>`);
+    $('#tr4').append(`<th data-a-v="middle" data-fill-color="${backColorH}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center">${splitVal[3]}</th>`);
+    $('.empRow').append(`<td data-a-v="middle" data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" data-val="${splitVal[4]}"></td>`);
+    $('#tot1').append(`<td data-a-v="middle" data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`);
     // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
-    $('#multiplier').append(`<td data-fill-color="${backColorH}" data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
-    $('#xd').append(`<td data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
+    $('#multiplier').append(`<td data-a-v="middle" data-fill-color="${backColorH}" data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="s" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`);
+    $('#xd').append(`<td data-a-v="middle" data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="s" data-a-h="center" data-xtot="${splitVal[4]}" class="xTot"></td>`);
   });
 }
 
@@ -315,7 +315,7 @@ function afterSub(iVal) {
   if(iVal == "DXT"){
     pHead([`Management||${codeArr[iVal]}||100%||P||M1`,`Management||${codeArr[iVal]}||100%||j||M2`,`KDT||${codeArr["KDT"]}||100%||P||K1`, `KDT||${codeArr["KDT"]}||100%||J||K2`])
   }else if(!except.includes(iVal)){
-    pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`]);
+    pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`]);
   }else{
     pHead([`KDT||61W2102-8900||100%||P||K1`,`KDT||61W2102-8900||100%||J||K2`]);
   }
@@ -441,12 +441,12 @@ function addFooter(){
   <tr style="display:none">
     <td>P</td>
     <td>Philippines</td>
-    <td>2.0</td>
+    <td data-f-color="7030A0">2.0</td>
   </tr>
   <tr style="display:none">
     <td>J</td>
     <td>Japan or Overseas</td>
-    <td>2.85</td>
+    <td data-f-color="7030A0">2.85</td>
   </tr>
   `;
   $('#mainTbody').append(addString);
@@ -465,13 +465,13 @@ $(document).on('click','#btnPrint',function(){
 $(document).on('click','#btnExport',function(){
   var addString = `
   <tr class="fx" style="display:none">
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#buSel').val()}</th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">${$('#monthSel').val()}</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">日付</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
-  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle">確認者</th>
-  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle"></th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$('#buSel').val()}</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$('#monthSel').val()}</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">日付</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
+  <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">確認者</th>
+  <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
   </tr>
   <tr class="fx"></tr>`;
   

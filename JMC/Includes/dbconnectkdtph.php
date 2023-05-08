@@ -5,7 +5,7 @@ $password = "";
 try {
   $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
   $devs=["464","465","487"];
-
+  $sys=["212","355","409"];
   $itMembers=array();
   $itQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
   $itStmt=$connkdt->query($itQ);
@@ -14,7 +14,7 @@ try {
     array_push($itMembers,$its['fldEmployeeNum']);
   }
   $allAccess=array();
-  $allAccess=array_merge($devs,$itMembers);
+  $allAccess=array_merge($devs,$itMembers,$sys);
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
