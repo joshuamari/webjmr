@@ -54,7 +54,7 @@ const otTest2 = ["69_o||kdtSimplifiedClashCheck"];
 const otQ = {464: otTest1, 465: otTest2};
 
 //projectdbIndex||empID||day||hours if OT //projectdbIndex_o||empID||day||hours
-const entries = ["10||464||3||8","10||464||4||8","10||464||12||8","10||464||13||8","10||464||14||4","420||464||14||4","10||464||17||8","10||464||18||8","10||464||19||8","10||464||20||8","10||464||24||8","10||464||25||4","420||464||25||4","10||464||26||8","10||464||27||8","10||464||28||8","10||487||3||8","10||487||4||8","10||487||12||8","10||487||13||8","10||487||14||8","10||487||17||8","10||487||18||4","10||487||19||4","99||487||18||4","99||487||19||4","10||487||20||8","10||487||24||8","10||487||25||8","10||487||26||8","10||487||27||8","10||487||28||8","69||465||11||4","69||465||12||4","69||465||13||4","69||465||14||4","69||465||18||4","69||465||19||4","69||465||20||4","69||465||24||4","69||465||25||4","69||465||26||4","69||465||27||4","69||465||28||4","10||465||3||4","10||465||4||4","10||465||11||4","10||465||12||4","10||465||13||4","10||465||14||4","10||465||18||4","10||465||19||4","10||465||20||4","10||465||24||4","10||465||25||4","10||465||26||4","10||465||27||4","10||465||28||4","420_o||464||13||2","420_o||464||14||2","420_o||464||26||2","69_o||465||13||2","69_o||465||15||8","69_o||465||13||2"];
+const entries = ["10||464||3||8","10||464||4||8","10||464||12||8","10||464||13||8","10||464||14||4","420||464||14||4","SL||464||17||8","10||464||18||8","10||464||19||8","10||464||20||8","10||464||24||8","10||464||25||4","420||464||25||4","10||464||26||8","10||464||27||8","10||464||28||8","10||487||3||8","10||487||4||8","10||487||12||8","10||487||13||8","10||487||14||8","10||487||17||8","10||487||18||4","10||487||19||4","99||487||18||4","99||487||19||4","10||487||20||8","10||487||24||8","10||487||25||8","10||487||26||8","10||487||27||8","10||487||28||8","69||465||11||4","69||465||12||4","69||465||13||4","69||465||14||4","69||465||18||4","69||465||19||4","69||465||20||4","69||465||24||4","69||465||25||4","69||465||26||4","69||465||27||4","69||465||28||4","10||465||3||4","10||465||4||4","10||465||11||4","10||465||12||4","10||465||13||4","10||465||14||4","VL||465||18||4","10||465||19||4","10||465||20||4","10||465||24||4","10||465||25||4","10||465||26||4","10||465||27||4","10||465||28||4","420_o||464||13||2","420_o||464||14||2","420_o||464||26||2","69_o||465||13||2","69_o||465||15||8","69_o||465||13||2"];
 //#endregion
 
 //GLOBALS
@@ -75,31 +75,43 @@ $(document).on('change','#monthSel',function(){
 })
 
 function createTable(iVal,mVal){
+  allPjArr.length = 0;
   //clearTable
   $('#mainThead').empty();
   $('#mainTbody').empty();
+  $('#msubThead').empty();
+  $('#msubTbody').empty();
   
   //header
   maxDate = parseInt((new Date(iVal.split('-')[0],iVal.split('-')[1],0)).getDate());
-  $('#mainThead').html(`<th>Employee Name</th><th>Project</th>`);
-
+  $('#mainThead').html(`<th style="width:250px">Employee Name</th><th style="width:300px">Project</th>`);
+  $('#subThead').html(`<th style="width:250px"></th><th style="width:300px">Project</th>`);
   //body na
   //add member then project for every member
   mVal.map(addMP);
+
+  allPjArr.map(addSubMP);
   
   //addDates
   for(let x = 1 ; x <= maxDate ; x++){
     $('#mainThead').append(`<th>${x.toString().padStart(2,"0")}</th>`);
-    $('.pRow,.oRow,.tRow').append('<td class="count"></td>');
+    $('#subThead').append(`<th>${x.toString().padStart(2,"0")}</th>`);
+    $('.pRow,.oRow,.tRow,.lRow').append('<td class="count"></td>');
   }
-  $('#mainThead').append('<th>TOTAL</th>');
-  $('.pRow,.oRow,.tRow').append('<td class="rTotal"></td>');
+  $('#mainThead,#subThead').append('<th>TOTAL</th>');
+  // $('#subThead').append('<th>TOTAL</th>');
+  $('.pRow,.oRow,.tRow,.lRow').append('<td class="rTotal"></td>');
 
   //latag entries
   genEntries(entries);
 
   genTotal();
 };
+
+function addSubMP(iVal){
+  console.log(iVal)
+
+}
 
 function addMP(iVal){
   var eID = iVal.split("||")[0];
@@ -112,7 +124,7 @@ function addMP(iVal){
 
   data.forEach(element => {
     allPjArr.push(element);
-    allPjArr = allPjArr.filter(onlyUnique)
+    allPjArr = allPjArr.filter(onlyUnique);
     var splitVal = element.split('||');
     addString += `<tr class="pRow regular r_${eID}" data-val="${eID}_${splitVal[0]}"><td></td><td>${splitVal[1]}</td></tr>`;
   }); 
@@ -128,6 +140,12 @@ function addMP(iVal){
     addString += `<tr class="pRow ot o_${eID}" data-val="${eID}_${splitVal[0]}"><td></td><td>OT - ${splitVal[1]}</td></tr>`
   });
 
+  //leavessss
+  addString += `<tr class="pRow leave" data-val="${eID}_VL"><td></td><td>VL</td></tr>
+  <tr class="pRow leave" data-val="${eID}_SL"><td></td><td>SL</td></tr>
+  <tr class="pRow leave" data-val="${eID}_OL"><td><td>EL,PL,ML,Others</td></tr>
+  <tr class="lRow" data-val="${eID}"><td><td>LEAVE</td></tr>`
+
   $('#mainTbody').append(addString);
 }
 
@@ -141,15 +159,23 @@ function genEntries(iVal){
 };
 
 function genTotal(){
+  //total OT
+  var oRows = $('.oRow');
+  for(let x = 0 ; x < oRows.length ; x++){
+    oTot(oRows[x])
+  }
+
   //total Hours
   var tRows = $('.tRow');
   for(let x = 0 ; x < tRows.length ; x++){
     empTot(tRows[x]);
   }
-  //total OT
-  var oRows = $('.oRow');
-  for(let x = 0 ; x < oRows.length ; x++){
-    oTot(oRows[x])
+
+  //total Leaves
+  var lRows = $('.lRow');
+  for(let x = 0 ; x < lRows.length ; x++){
+    lTot(lRows[x]);
+    console.log(lRows[x])
   }
 
   //total sa right
@@ -164,8 +190,23 @@ function genTotal(){
   }
 }
 
+function lTot(iVal){
+  var eID = $(iVal).attr('data-val');
+  var getTots = $(iVal).children();
+  getTots.length -= 1;
+
+  for(let x = 2 ; x < getTots.length ; x++){
+    var addVal = 0;
+    addVal += parseFloat($($(`.leave[data-val="${eID}_VL"]`).children()[x]).text() == "" ? 0 : $($(`.leave[data-val="${eID}_VL"]`).children()[x]).text());
+    addVal += parseFloat($($(`.leave[data-val="${eID}_SL"]`).children()[x]).text() == "" ? 0 : $($(`.leave[data-val="${eID}_SL"]`).children()[x]).text());
+    addVal += parseFloat($($(`.leave[data-val="${eID}_OL"]`).children()[x]).text() == "" ? 0 : $($(`.leave[data-val="${eID}_OL"]`).children()[x]).text());
+    $(getTots[x]).text(addVal == 0 ? "" : addVal);
+  }
+}
+
 function empTot(iVal){
   var eID = $(iVal).attr('data-val');
+  var oRows = $(`.oRow[data-val="${eID}"]`).children();
   var getTots = $(iVal).children();
   getTots.length -= 1;
 
@@ -175,6 +216,7 @@ function empTot(iVal){
     for(let y = 0 ; y < getER.length ; y++){
       addVal += parseFloat($($(getER[y]).children()[x]).text() == "" ? 0 : $($(getER[y]).children()[x]).text());
     }
+    addVal += $(oRows[x]).text() == "" ? 0 : parseFloat($(oRows[x]).text());
     $(getTots[x]).text(addVal == 0 ? "" : addVal);
   }
 }
