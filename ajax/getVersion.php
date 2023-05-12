@@ -1,9 +1,7 @@
 <?php
-// $rawJSDateChange=filemtime("../js/main.js");
-// $wrsJSVersion=date("Ymd",$rawJSDateChange);
-// echo $wrsJSVersion;
-$ajaxArr = $_REQUEST["busterCall"];
+$ajaxArr = $_REQUEST["busterCall"];//files for cache busting
 $titleName = $_REQUEST["titleName"];
+//headstring is for replacing contents in html <head>
 $headString="<title>$titleName</title>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta charset='UTF-8'>
@@ -17,8 +15,7 @@ $headString="<title>$titleName</title>
 <script src='js/neoBootstrap.js'></script>
 <script src='js/popper.js'></script>";
 $addString = "";
-//ADD TO ULI SA HEADSTRING BAT DI NAGANA
-// <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 foreach($ajaxArr AS $element){
     switch(explode("/",$element)[0]){
         case "js":

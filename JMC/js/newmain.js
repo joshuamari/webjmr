@@ -1,4 +1,3 @@
-
 //#region GLOBALS
 switch (document.location.hostname)
 {
@@ -9,10 +8,11 @@ switch (document.location.hostname)
             rootFolder = '//localhost/'; 
             break;
         default : 
-            rootFolder = '//kdt-ph/update_test/';
+            rootFolder = '//kdt-ph/';
             break;
 }
 var empDetails=[];
+checkLogin();
 const defaults =getDefaults();
 var projects=[];
 var items=[];
@@ -31,16 +31,6 @@ const solProjID=getSolProjID();
 const trainingProjID=getTrainingProjID();
 const noMoreInputItems=getNoMoreInputItems();
 const allAccess=getAllAccess();
-$.ajaxSetup({async: false});
-$.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
-  empDetails=$.parseJSON(data);
-
-  if(empDetails.length<1){
-    window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
-  }
-  jmcAccess();
-}});
-$.ajaxSetup({async: true});
 //#endregion
 
 //#region BINDS
@@ -50,7 +40,6 @@ $(document).ready(function(){
       ifSmallScreen();
       getMyGroups();
       getBUICGroups();
-      // checkTestAccess();
       getShareGroups();
 
   //#region sidebar shits
@@ -341,6 +330,18 @@ $(document).on('click','.removeAccess',function(){
 //#endregion
 
 //#region FUNCTIONS
+function checkLogin(){//check if user is logged in
+  $.ajaxSetup({async: false});
+  $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+    empDetails=$.parseJSON(data);
+
+    if(empDetails.length<1){
+      window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+    }
+    jmcAccess();
+  }});
+  $.ajaxSetup({async: true});
+}
 function jmcAccess(){//check if user has access to jmc
   $.post("ajax/jmcAccess.php",
   {
@@ -1127,7 +1128,7 @@ function checkAddShare(){
   }
   return vool;
 }
-function getSolProjID(){
+function getSolProjID(){//get database id of solution project
     var spID=``;
     $.ajax({
       url: "ajax/getSolProjID.php",
@@ -1138,7 +1139,7 @@ function getSolProjID(){
     });
     return spID;
 }
-function getTrainingProjID(){
+function getTrainingProjID(){//get database id of training project
   var trID=``;
   $.ajax({
     url: "ajax/getTrainingProjID.php",
@@ -1149,7 +1150,7 @@ function getTrainingProjID(){
   });
   return trID;
 }
-function getNoMoreInputItems(){
+function getNoMoreInputItems(){//get ids of no more input items
   var nmiIDs=[];
   $.ajax({
     url: "ajax/getNoMoreInputItems.php",

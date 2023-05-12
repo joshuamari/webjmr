@@ -8,10 +8,11 @@ switch (document.location.hostname)
             rootFolder = '//localhost/'; 
             break;
         default : 
-            rootFolder = '//kdt-ph/update_test/';
+            rootFolder = '//kdt-ph/';
             break;
 }
 var empDetails=[];
+checkLogin();
 var editID = ""
 const defaults =getDefaults();
 var regCount=0;
@@ -29,24 +30,9 @@ const oneBUTrainerID=getOneBUTrainerID();
 
 //#region BINDS
 $(document).ready(function(){//page Initialize Event
-    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
-        empDetails=$.parseJSON(data);
-        if(empDetails.length<1){//if result is 0, redirect to log in page
-          window.location.href=rootFolder+'/welcome'; 
-        }
-        else{//if result is not 0, store employee number in global variable
-        //   console.log(empDetails);
-        //   console.log("logged in: employee#"+empDetails['empNum']);
-        //   console.log("logged in: firstname"+empDetails['empFName']);
         $('.hello-user').text(empDetails['empFName']);
-        // checkTestAccess();
-        }
-      },async:false});
         ifSmallScreen();
         initializeDate();
-        
-        // $('#msv').hide();
-        // $($('#msv').nextAll()).hide();
         getMyGroups();
         getDispatchLoc();
         getTOW();
@@ -418,7 +404,14 @@ $(document).on('search','#searchjrd',function(){
 //#endregion
 
 //#region FUNCTIONS
-
+function checkLogin(){//check if user is logged in
+    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
+        empDetails=$.parseJSON(data);
+        if(empDetails.length<1){//if result is 0, redirect to log in page
+          window.location.href=rootFolder+'/welcome'; 
+        }
+      },async:false});
+}
 function getDefaults(){//get Default Projects(GOW,Kaizen,etc.)
     var defaultsArray=[];
     $.ajax({
@@ -1338,7 +1331,7 @@ function checkTestAccess(){//check if has access to testing
       }
     );
 }
-function getLeaveID(){
+function getLeaveID(){//get database id of leave project
     var lvID=``;
     $.ajax({
       url: "ajax/getLeaveID.php",
@@ -1350,7 +1343,7 @@ function getLeaveID(){
     return lvID;
 }
 
-function getOtherID(){
+function getOtherID(){//get database id of other project
     var oID=``;
     $.ajax({
       url: "ajax/getOtherID.php",
@@ -1361,7 +1354,7 @@ function getOtherID(){
     });
     return oID;
 }
-function getMngID(){
+function getMngID(){//get database id of management project
     var mngID=``;
     $.ajax({
       url: "ajax/getMngID.php",
@@ -1372,7 +1365,7 @@ function getMngID(){
     });
     return mngID;
 }
-function getKiaID(){
+function getKiaID(){//get database id of kdt internal
     var kiaID=``;
     $.ajax({
       url: "ajax/getKiaID.php",
@@ -1383,7 +1376,7 @@ function getKiaID(){
     });
     return kiaID;
 }
-function getNoMoreInputItems(){
+function getNoMoreInputItems(){//get ids of no more input
     var nmiIDs=[];
     $.ajax({
       url: "ajax/getNoMoreInputItems.php",
@@ -1394,7 +1387,7 @@ function getNoMoreInputItems(){
     });
     return nmiIDs;
   }
-function disableInputs(iVal,xVal){
+function disableInputs(iVal,xVal){//disable input for no more inputs
     $('#getHour').prop('disabled',true);
     $('#getMin').prop('disabled',true);
     $('#idMH').prop('disabled',true);
@@ -1415,7 +1408,7 @@ function disableInputs(iVal,xVal){
         $('#idAdd').prop('disabled',false);
      }
 }
-function trainingGroup(iVal) {
+function trainingGroup(iVal) {//check if item of work is for training for one bu
     if(iVal==oneBUTrainerID){
         $('.iow').after(`
     <div class="col-12 my-2 trgrp">
@@ -1435,7 +1428,7 @@ function trainingGroup(iVal) {
     }
     
 }
-function getTRGroups(){
+function getTRGroups(){//get groups for training group selection
 $.ajax({
     url: "ajax/getGroups.php",
     success: function (response) {
@@ -1443,7 +1436,7 @@ $.ajax({
     },async:false
 });
 }
-function getLabel(itemOfWorkID){
+function getLabel(itemOfWorkID){//display label of selected item of work
     $.post("ajax/getLabel.php",
     {
         itemID:itemOfWorkID
@@ -1461,7 +1454,7 @@ function getLabel(itemOfWorkID){
     );
    
 }
-function getOneBUTrainerID(){
+function getOneBUTrainerID(){//get databse id of one bu train itemofworks
     var obutrainID=``;
     $.ajax({
       url: "ajax/getOneBUTrainerID.php",
