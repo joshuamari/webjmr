@@ -8,7 +8,7 @@ switch (document.location.hostname) {
     rootFolder = '//localhost/';
     break;
   default:
-    rootFolder = '//kdt-ph/update_test/';
+    rootFolder = '//kdt-ph/';
     break;
 }
 var empDetails = [];

@@ -2,13 +2,13 @@
 switch (document.location.hostname)
 {
         case 'kdt-ph':
-            rootFolder = '//kdt-ph/update_test/'; 
+            rootFolder = '//kdt-ph/'; 
             break;
         case 'localhost' :
             rootFolder = '//localhost/'; 
             break;
         default : 
-            rootFolder = '//kdt-ph/update_test/';
+            rootFolder = '//kdt-ph/';
             break;
 }
 //#endregion

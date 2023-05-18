@@ -40,13 +40,13 @@ const jobHeader =  `<th class="w3-border" width="1%">No.</th>
 switch (document.location.hostname)
 {
         case 'kdt-ph':
-            rootFolder = '//kdt-ph/update_test/'; 
+            rootFolder = '//kdt-ph/'; 
             break;
         case 'localhost' :
             rootFolder = '//localhost/'; 
             break;
         default : 
-            rootFolder = '//kdt-ph/update_test/';
+            rootFolder = '//kdt-ph/';
             break;
 }
 var empDetails=[];
