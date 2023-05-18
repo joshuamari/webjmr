@@ -34,7 +34,7 @@ $(document).ready(function () {//page Initialize Event
 //       var access=data.trim();
 //       if(access=='0'){
 //         alert('Access denied')
-//         window.location.href = rootFolder + "/welcome";
+//         window.location.href = rootFolder + "/KDTPortalLogin";
 //       }
 //     }
 //   );
@@ -44,7 +44,7 @@ function checkLogin(){//check if user is logged in
     $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
       empDetails=$.parseJSON(data);
       if(Object.keys(empDetails).length<1){
-        window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+        window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page
       }
     }});
   $.ajaxSetup({async: true});

@@ -19,7 +19,7 @@ $(document).ready(function(){//page Initialize Event
     $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
         empDetails=$.parseJSON(data);
         if(empDetails.length<1){//if result is 0, redirect to log in page
-          window.location.href=rootFolder+'/welcome'; 
+          window.location.href=rootFolder+'/KDTPortalLogin'; 
         }
         else{//if result is not 0, store employee number in global variable
         //   console.log(empDetails);

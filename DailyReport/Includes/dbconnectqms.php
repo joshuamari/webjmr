@@ -11,7 +11,7 @@ try {
 #region checkLogin
 include 'dbconnectkdtph.php';
 if(empty($userHash)){ //
-  header("Location: ../welcome");
+  header("Location: ../KDTPortalLogin");
 }
 else{
   $loginQ="SELECT fldUser FROM kdtlogin WHERE fldUserHash='$userHash'";
@@ -20,7 +20,7 @@ else{
       $pcUserName=$loginStmt->fetchColumn();
   }
   else{
-      header("Location: ../welcome");
+      header("Location: ../KDTPortalLogin");
   }
 }
 #endregion

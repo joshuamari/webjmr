@@ -408,7 +408,7 @@ function checkLogin(){//check if user is logged in
     $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
         empDetails=$.parseJSON(data);
         if(Object.keys(empDetails).length<1){//if result is 0, redirect to log in page
-          window.location.href=rootFolder+'/welcome'; 
+          window.location.href=rootFolder+'/KDTPortalLogin'; 
         }
       },async:false});
 }
@@ -1326,7 +1326,7 @@ function checkTestAccess(){//check if has access to testing
         var access=data.trim();
         if(access=='0'){
             alert('Access denied');
-          window.location.href = rootFolder + "/welcome";
+          window.location.href = rootFolder + "/KDTPortalLogin";
         }
       }
     );

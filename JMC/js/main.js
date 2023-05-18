@@ -54,7 +54,7 @@ $(document).ready(function(){
   $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
     empDetails=$.parseJSON(data);
     if(empDetails.length<1){
-      window.location.href=rootFolder+'/welcome'; //if result is 0, redirect to log in page
+      window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page
     }
     else{
       console.log(empDetails);

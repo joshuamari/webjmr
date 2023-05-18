@@ -18,7 +18,7 @@ $.ajax({
     empDetails = $.parseJSON(data);
 
     if (empDetails.length < 1) {
-      window.location.href = rootFolder + '/welcome'; //if result is 0, redirect to log in page
+      window.location.href = rootFolder + '/KDTPortalLogin'; //if result is 0, redirect to log in page
     }
     jmcAccess();
   }
@@ -62,7 +62,7 @@ function jmcAccess() {//check if user has access to jmc
     function (data) {
       if (data.trim() == 0) {
         alert('Access denied');
-        window.location.href = rootFolder + '/welcome';
+        window.location.href = rootFolder + '/KDTPortalLogin';
       }
     }
   );
