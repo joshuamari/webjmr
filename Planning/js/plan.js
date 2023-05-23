@@ -264,8 +264,13 @@ $(document).on('search','#searchjrd',function(){
     getJRDSearch(projID,itemID);
 });
 $(document).on('click', '.badge', function(){
-    $('.bdge').html(`<button class="badge text-center text-bg-success p-2 w-100 border-0 done">Done - 12/22/2023</button>`)
-    
+    $('#editStatus').modal('show');
+
+
+})
+$(document).on('click', '#idEditStatus', function(){
+    $('#editStatus').modal('hide');
+    $('.bdge').html(`<button class="badge done bg-success border-0  w-100">Finished - 12/22/2023</button>`)
 })
 $(document).on('click', '#editPlanning', function(){
     var getTR = $(this).closest('tr');
