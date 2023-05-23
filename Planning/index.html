@@ -60,7 +60,237 @@
         </div>
       </div>
       <!--#endregion-->
-      <!--#endregion MODAL END-->
+
+
+      <!--#region add Entry -->
+      <div class="modal fade" id="addPlanningEntry" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #3980c7;">
+              <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel">Add Planning Entry</h1>
+              <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body   ">
+              <div class="row">
+
+                <div class="col-12 my-2">
+                  <label for="idGroup" class="form-label">Group</label>
+                  <div class="input-group">
+                    <select class="form-select" id="idGroup" placeholder="Select Group" required>
+                      
+                    </select>
+                  </div>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p1" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 proj">
+                  <label for="idProj" id="projlbl" class="form-label">Project</label>
+                  <select class="select-btn form-select" id="idProject" required>
+                    <option selected hidden disabled value="">Select Project</option>
+                  </select>
+                  <div class="proj content">
+                    <div class="search">
+                      <i class='bx bx-search ' ></i>
+                      <input type="search" class="form-control" id="searchproj" placeholder="Search" style="padding-left: 30px;">
+                    </div>
+                    <ul id="projOptions" class="options p-0">
+                      
+                    </ul>
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p2" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 iow">
+                  <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
+                  <select class="select-btn form-select" id="idItem" required>
+                    <option selected hidden disabled value="">Select Item of Works</option>
+                    <!-- <span class="display">Select Item of Works</span> -->
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class='bx bx-search ' ></i>
+                      <input type="search" class="form-control" id="searchitem" placeholder="Search" style="padding-left: 30px;">
+                    </div>
+                    <ul id="itemOptions" class="options p-0">
+                      
+                    </ul>
+                  </div>
+                <span class="col-12 mt-1 alert-danger text-danger" id="p3" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 jord" id="idJRDDiv">
+                  <label for="idJRD" class="form-label">Job Request Description</label>
+                  <select class=" form-select" id="idJRD" required>
+                    <option selected hidden disabled value="">Select Job Request Description</option>
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class='bx bx-search ' ></i>
+                      <input type="search" class="form-control" id="searchjrd" placeholder="Search" style="padding-left: 30px;">
+                    </div>
+                    <ul id="jrdOptions" class="options p-0">
+                      
+                    </ul>
+                  </div>
+                <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2">
+                  <label for="idEmp" class="form-label">Employee</label>
+                  <div class="input-group">
+                    <select class="form-select" id="idEmp" required >
+                      <option hidden>Select Employee</option>
+                      <option>Collene Keith F. MEdrano</option>
+                      <option>Collene Keith F. MEdrano</option>
+                    </select>
+                  </div>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
+                </div>
+
+                
+
+                <div class="col-12 my-2 datepicker">
+                  <label for="idStartDate" class="form-label">Start Date</label>
+                  <input type="date"class="form-control"id="idStartDate" required />
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 datepicker">
+                  <label for="idEndDate" class="form-label">End Date</label>
+                  <input type="date"class="form-control"id="idEndDate" required />
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p7" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2">
+                  <label for="idMH" class="form-label">MH Alloted</label>
+                  <input type="number"class="form-control"id="idMH" min="1" placeholder="00"  required/>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p8" role="alert"></span>
+                </div>
+
+                
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary border-0" id="idAdd" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
+              ">Add</button>
+              <button type="button" class="btn btn-secondary border-0 cancel" data-bs-dismiss="modal"
+              ">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--#endregion-->
+            <!--#region edit Entry -->
+            <div class="modal fade" id="editPlanningEntry" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header" style="background-color: #3980c7;">
+                    <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel">Edit Planning Entry</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body   ">
+                    <div class="row">
+      
+                      <div class="col-12 my-2">
+                        <label for="idGroup" class="form-label">Group</label>
+                        <div class="input-group">
+                          <select class="form-select" id="editGroup" placeholder="Select Group" required>
+                            
+                          </select>
+                        </div>
+                      </div>
+      
+                      <div class="col-12 my-2 proj">
+                        <label for="idProj" id="projlbl" class="form-label">Project</label>
+                        <select class="select-btn form-select" id="idProject" required>
+                          <option selected hidden disabled value="">Select Project</option>
+                        </select>
+                        <div class="proj content">
+                          <div class="search">
+                            <i class='bx bx-search ' ></i>
+                            <input type="search" class="form-control" id="searchproj" placeholder="Search" style="padding-left: 30px;">
+                          </div>
+                          <ul id="projOptions" class="options p-0">
+                            
+                          </ul>
+                        </div>
+                      </div>
+      
+                      <div class="col-12 my-2 iow">
+                        <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
+                        <select class="select-btn form-select" id="idItem" required>
+                          <option selected hidden disabled value="">Select Item of Works</option>
+                          <!-- <span class="display">Select Item of Works</span> -->
+                        </select>
+                        <div class="content">
+                          <div class="search">
+                            <i class='bx bx-search ' ></i>
+                            <input type="search" class="form-control" id="searchitem" placeholder="Search" style="padding-left: 30px;">
+                          </div>
+                          <ul id="itemOptions" class="options p-0">
+                            
+                          </ul>
+                        </div>
+                      </div>
+      
+                      <div class="col-12 my-2 jord" id="idJRDDiv">
+                        <label for="idJRD" class="form-label">Job Request Description</label>
+                        <select class=" form-select" id="idJRD" required>
+                          <option selected hidden disabled value="">Select Job Request Description</option>
+                        </select>
+                        <div class="content">
+                          <div class="search">
+                            <i class='bx bx-search ' ></i>
+                            <input type="search" class="form-control" id="searchjrd" placeholder="Search" style="padding-left: 30px;">
+                          </div>
+                          <ul id="jrdOptions" class="options p-0">
+                            
+                          </ul>
+                        </div>
+                      </div>
+      
+                      <div class="col-12 my-2">
+                        <label for="idEmp" class="form-label">Employee</label>
+                        <div class="input-group">
+                          <select class="form-select" id="idEmp" required>
+                            <option hidden>Select Employee</option>
+                            <option>Collene Keith F. MEdrano</option>
+                            <option>Collene Keith F. MEdrano</option>
+                          </select>
+                        </div>
+                      </div>
+      
+                      
+      
+                      <div class="col-12 my-2 datepicker">
+                        <label for="idStartDate" class="form-label">Start Date</label>
+                        <input type="date"class="form-control"id="idStartDate" required/>
+                      </div>
+      
+                      <div class="col-12 my-2 datepicker">
+                        <label for="idEndDate" class="form-label">End Date</label>
+                        <input type="date"class="form-control"id="idEndDate" required/>
+                      </div>
+      
+                      <div class="col-12 my-2">
+                        <label for="idMH" class="form-label">MH Alloted</label>
+                        <input type="number"class="form-control"id="idMH" min="1" placeholder="00" required/>
+                      </div>
+      
+                      
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary border-0" id="idEdit" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
+                    ">Save</button>
+                    <button type="button" class="btn btn-secondary border-0 cancel1" data-bs-dismiss="modal"
+                    ">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--#endregion-->
+            <!--#endregion MODAL END-->
 
   <div class="sidebar close fixed-top ">
       <div class="position-relative d-flex justify-content-between align-items-center">
@@ -191,297 +421,98 @@
                     
           <div class="page-title col-12 px-3 pb-3 m-0 ">
             <h2 class="title ps-2 m-0">Planning</h2>    
-          </div> 
-          <div class="left col-12 col-lg-3 position-relative d-flex aligns-items-center justify-content-center">
-            <div class=" shadow m-0 p-0 px-md-3 mb-3 rounded-3 bg-light"style="width:100%">
-              
-              <div class="left-cont row py-3 px-3">
-
-                <div class="col-12 my-2">
-                  <label for="idGroup" class="form-label">Group</label>
-                  <div class="input-group">
-                    <select class="form-select" id="idGroup" placeholder="Select Group" required>
-                      
-                    </select>
-                  </div>
-                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p1" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2 proj">
-                  <label for="idProj" id="projlbl" class="form-label">Project</label>
-                  <select class="select-btn form-select" id="idProject" required>
-                    <option selected hidden disabled value="">Select Project</option>
-                  </select>
-                  <div class="proj content">
-                    <div class="search">
-                      <i class='bx bx-search ' ></i>
-                      <input type="search" class="form-control" id="searchproj" placeholder="Search" style="padding-left: 30px;">
-                    </div>
-                    <ul id="projOptions" class="options p-0">
-                      
-                    </ul>
-                  </div>
-                  <span class="col-12 mt-1 alert-danger text-danger" id="p2" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2 iow">
-                  <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
-                  <select class="select-btn form-select" id="idItem" required>
-                    <option selected hidden disabled value="">Select Item of Works</option>
-                    <!-- <span class="display">Select Item of Works</span> -->
-                  </select>
-                  <div class="content">
-                    <div class="search">
-                      <i class='bx bx-search ' ></i>
-                      <input type="search" class="form-control" id="searchitem" placeholder="Search" style="padding-left: 30px;">
-                    </div>
-                    <ul id="itemOptions" class="options p-0">
-                      
-                    </ul>
-                  </div>
-                <span class="col-12 mt-1 alert-danger text-danger" id="p3" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2 jord" id="idJRDDiv">
-                  <label for="idJRD" class="form-label">Job Request Description</label>
-                  <select class=" form-select" id="idJRD" required>
-                    <option selected hidden disabled value="">Select Job Request Description</option>
-                  </select>
-                  <div class="content">
-                    <div class="search">
-                      <i class='bx bx-search ' ></i>
-                      <input type="search" class="form-control" id="searchjrd" placeholder="Search" style="padding-left: 30px;">
-                    </div>
-                    <ul id="jrdOptions" class="options p-0">
-                      
-                    </ul>
-                  </div>
-                <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2">
-                  <label for="idEmp" class="form-label">Employee</label>
-                  <div class="input-group">
-                    <select class="form-select" id="idEmp" required>
-                      <option hidden>Select Employee</option>
-                      <option>Collene Keith F. MEdrano</option>
-                      <option>Collene Keith F. MEdrano</option>
-                    </select>
-                  </div>
-                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
-                </div>
-
-                
-
-                <div class="col-12 my-2 datepicker">
-                  <label for="idStartDate" class="form-label">Start Date</label>
-                  <input type="date"class="form-control"id="idStartDate" required/>
-                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2 datepicker">
-                  <label for="idEndDate" class="form-label">End Date</label>
-                  <input type="date"class="form-control"id="idEndDate" required/>
-                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p7" role="alert"></span>
-                </div>
-
-                <div class="col-12 my-2 datepicker">
-                  <label for="idMH" class="form-label">MH Alloted</label>
-                  <input type="number"class="form-control"id="idMH" min="1" placeholder="00" required/>
-                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p8" role="alert"></span>
-                </div>
-
-
-                
-                
-                <div class="row col-12 my-4 d-flex">
-                  <div class="col-md-6 col-12 my-0">
-                  <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-add w-100 fw-bold" id="idAdd">
-                    Add
-                  </button>
-                </div>
-                <div class="col-md-6 col-12 my-0">
-                  <button type="button" class="my-2 my-md-0 btn btn-reset text-uppercase w-100 fw-bold" id="idReset">
-                    Clear
-                  </button>
-                </div>
-                <!-- <div class="col-md-3 col-12 my-0">
-                  <button type="button" class="my-2 my-md-0 btn btn-edit text-uppercase w-100 " id="btn-edit" disabled>
-                    Edit
-                  </button>
-                </div> -->
-                </div>
-                
-              </div>
-            </div>
           </div>
 
-          <div class="right d-none col-12 col-lg-6  position-relative d-flex flex-column aligns-items-center justify-content-center">
+          <div class="right  col-12  position-relative d-flex flex-column aligns-items-center justify-content-center">
           
             
           
-            <div class="top-right   position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light"style="width:100%">
-              <div class=" row right-cont  py-4 px-3">
-                
-                <div class="col-12 my-2">
-                  <label for="idCopyDate" class="form-label">Copy From</label>
-                  <div class="row">
-                    <div class="col-8">
-                      <input type="date"class="form-control "id="idCopyDate"required/>
-                    </div>
-                    <div class="col-4">
-                      <button id="idCopy" class="btn btn-warning w-100 fw-bold">COPY</button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div class="row position-relative d-flex align-items-center justify-content-center">
-                    <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardReg">
-                        <div class="circle">
-                          <h5 class="card-title" id="regCount">8</h5>
-                        </div>
-                        <div class="content">
-                          <p>REGULAR</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardOt">
-                        <div class="circle">
-                          <h5 class="card-title" id="otCount">8</h5>
-                        </div>
-                        <div class="content">
-                          <p>OVERTIME</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardLv">
-                        <div class="circle">
-                          <h5 class="card-title" id="lvCount">8</h5>
-                        </div>
-                        <div class="content">
-                          <p>LEAVE</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    
-                  </div>
-                </div>
-
-                <div class="table-container col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 "style="height: fit-content; max-height:500px; box-shadow: 0 0 25px rgb(0 0 0/25%);" >
-                
-                    <table class="table  table-hover overflow-auto">
-                      <thead class="col-header sticky-top bg-body">
-                        <tr>
-                          <th>Location</th>
-                          <th>Group</th>
-                          <th>Project</th>
-                          <th>Item</th>
-                          <th>Description</th>
-                          <th>Hour</th>
-                          <th>MH Type</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody id="drEntries">
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                
-                  
-                </div>
-
-                <!-- <div class="col-12 my-2">
-                  <label for="idCopyDate" class="form-label">Copy From</label>
-                  <div class="row">
-                    <div class="col-8">
-                      <input type="date"class="form-control "id="idCopyDate"required/>
-                    </div>
-                    <div class="col-4">
-                      <button id="idCopy" class="btn btn-warning w-100 fw-bold">COPY</button>
-                    </div>
-                  </div>
-                </div> -->
-
-                <!-- <div class="row col-12 my-4 d-flex">
-                  <div class="col-md-12 col-12 my-0">
-                  <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-export w-100" id="btn-export">
-                    EXPORT
-                  </button>
-                </div>
-
-              </div> -->
-            </div>
-            </div>
-          
-            
-            
-            <div class="bot-right d-none  position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light" style="width: 100%;">
-              <div class="row py-4 px-3">
-                <div class="bot-title col-12 ">
-                  <h2>Calendar</h2>
-                </div>
-
-                <div class="bot-table-container">
-                  <table class="table table-striped table-hover overflow-auto">
-                    <thead>
-                      <tr id="idDays" class="sticky-top">
-                        <th>Project</th>
-                        <th>01</th>
-                        <th>01</th>
-                        <th>01</th>
-                        <th>01</th>
-                        <th>01</th>
-                        <th>01</th>
-                      </tr>
-                    </thead>
-                    <tbody id="drEntries-bot">
-                      <tr>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                      </tr>
-                      <tr>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                        <td>##</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="top-right   position-relative shadow m-0 rounded-3 p-4 mb-3 bg-light"style="width:100%">
+              <div class="header d-flex py-2">
+                <h1 class="" style="margin-right: auto;">Title</h1>
+                <button class="btn addEntry-btn" data-bs-toggle="modal" data-bs-target="#addPlanningEntry">Add Entry</button>
               </div>
+              <div class="table-cont overflow-auto">
+                <table class="table table-hover ">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Group</th>
+                    <th scope="col" class="text-center">Project</th>
+                    <th scope="col" class="text-center">Item of Works</th>
+                    <th scope="col" class="text-center">JRD</th>
+                    <th scope="col" class="text-center">Employee</th>
+                    <th class="text-center" scope="col">Start Date</th>
+                    <th scope="col" class="text-center">End Date</th>
+                    <th scope="col" class="text-center">Man Hour</th>
+                    <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row" class="text-center">1</th>
+                    <td class="text-center">SYS</td>
+                    <td class="text-center">Project ito</td>
+                    <td class="text-center">Sample ITEm</td>
+                    <td class="text-center">sample JRD</td>
+                    <td class="text-center">Mark Pangilinan</td>
+                    <td class="text-center">06/12/2023</td>
+                    <td class="text-center">12/7/2023</td>
+                    <td class="text-center">80</td>
+                    <td class="text-center">
+                      <div class="bdge ">
+                        <button class="badge text-bg-warning border-0  w-100">Ongoing</button>
+                     </div>
+                    </td>
+                    <td class="text-center"><button id="editPlanning" class="btn btn-primary edit" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button></td>
+                    
+                    
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-center">2</th>
+                    <td class="text-center">SYS</td>
+                    <td class="text-center">Project nga</td>
+                    <td class="text-center">Sample ITEm</td>
+                    <td class="text-center">sample JRD</td>
+                    <td class="text-center">Michael Angelo</td>
+                    <td class="text-center">06/12/2023</td>
+                    <td class="text-center">12/7/2023</td>
+                    <td class="text-center">80</td>
+                    <td class="text-center">
+                      <div class="bdge ">
+                        <button class="badge text-bg-warning border-0  w-100">Ongoing</button>
+                     </div>
+                    </td>
+                    <td class="text-center"><button id="editPlanning" class="btn btn-primary edit" title="edit"><i class='bx bx-edit-alt w-100 text-white' ></i></button></td>
+                    
+                    
+                  </tr>
+                  <tr>
+                    <th scope="row" class="text-center">3</th>
+                    <td class="text-center">SYS</td>
+                    <td class="text-center">Project YES</td>
+                    <td class="text-center">Sample ITEm</td>
+                    <td class="text-center">sample JRD</td>
+                    <td class="text-center">Donatello</td>
+                    <td class="text-center">06/12/2023</td>
+                    <td class="text-center">12/7/2023</td>
+                    <td class="text-center">80</td>
+                    <td class="text-center">
+                      <div class="bdge ">
+                        <button class="badge text-bg-warning border-0  w-100">Ongoing</button>
+                     </div>
+                    </td>
+                    <td class="text-center"><button id="editPlanning" class="btn btn-primary edit " title="edit"><i class='bx bx-edit-alt w-100 text-white' ></i></button></td>
+                    
+                    
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              
             </div>
+          
  
           </div>
         

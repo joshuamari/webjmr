@@ -15,14 +15,6 @@ $getGroup='';
 if(isset($_REQUEST['getGroup'])){
     $getGroup=$_REQUEST['getGroup'];
 }
-$drDate='';
-if(isset($_REQUEST['getDate'])){
-    $drDate=$_REQUEST['getDate'];
-}
-$getLocation='';
-if(isset($_REQUEST['getLocation'])){
-    $getLocation=$_REQUEST['getLocation'];
-}
 $getProject='';
 if(isset($_REQUEST['getProject'])){
     $getProject=$_REQUEST['getProject'];
@@ -35,39 +27,21 @@ $getDescription=NULL;
 if(!empty($_REQUEST['getDescription'])){
     $getDescription=$_REQUEST['getDescription'];
 }
-$getTwoThree=NULL;
-if(isset($_REQUEST['getTwoThree']) && !empty($_REQUEST['getTwoThree'])){
-    $getTwoThree=$_REQUEST['getTwoThree'];
+$getEmp='';
+if(isset($_REQUEST['getEmp'])){
+    $getEmp=$_REQUEST['getEmp'];
 }
-$getRev='0';
-if(isset($_REQUEST['getRev'])){
-    if($_REQUEST['getRev']){
-        $getRev="1";
-    }
+$getsDate='';
+if(isset($_REQUEST['getsDate'])){
+    $getsDate=$_REQUEST['getsDate'];
 }
-$getType='';
-if(isset($_REQUEST['getType'])){
-    $getType=$_REQUEST['getType'];
+$geteDate='';
+if(isset($_REQUEST['geteDate'])){
+    $geteDate=$_REQUEST['geteDate'];
 }
-$getChecking=NULL;
-if(isset($_REQUEST['getChecking']) && !empty($_REQUEST['getChecking'])){
-    $getChecking=$_REQUEST['getChecking'];
-}
-$getDuration='';
-if(isset($_REQUEST['getDuration'])){
-    $getDuration=$_REQUEST['getDuration'];
-}
-$getMHType='';
-if(isset($_REQUEST['getMHType'])){
-    $getMHType=$_REQUEST['getMHType'];
-}
-$getRemarks=NULL;
-if(!empty($_REQUEST['getRemarks'])){
-    $getRemarks=$_REQUEST['getRemarks'];
-}
-$getTrGrp=NULL;
-if(!empty($_REQUEST['getTrGrp'])){
-    $getTrGrp=$_REQUEST['getTrGrp'];
+$getMH='';
+if(isset($_REQUEST['getMH'])){
+    $getMH=$_REQUEST['getMH'];
 }
 $logs=date("YmdHis")."_".$empNum;
 #endregion
