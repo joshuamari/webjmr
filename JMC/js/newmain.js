@@ -591,6 +591,7 @@ function deleteProject(iVal){//delete selected project from database
   $.post("ajax/deleteProject.php",
   {
     trID:iVal,
+    empID:empDetails['empNum']
   },
     function (data) {
       $('#cancelDelProj').click();
@@ -694,7 +695,7 @@ function itemRow(iVal){//lay item table
       </div>  
     </td>
     <td>
-    <button class="btn btn-warning editItem"><i class='bx bx-edit fs-5' ></i></button>
+    <button class="btn btn-warning editItem" title="Edit"><i class='bx bx-edit fs-5' ></i></button>
     <button class="btn btn-danger delBut" data-bs-toggle="modal" data-bs-target="#deleteItemModal"><i class='bx bx-trash fs-5'></i></button>
     </td>`;
   }
@@ -754,6 +755,7 @@ function deleteItem(iVal){//delete selected item in database
   $.post("ajax/deleteItem.php",
   {
     trID:iVal,
+    empID:empDetails['empNum']
   },
     function (data) {
       $('#cancelDelItem').click();
@@ -842,7 +844,7 @@ function jobRow(iVal){//lay drawref table
       </div>  
     </td>
     <td>
-    <button class="btn btn-warning editJrd-btn"><i class='bx bx-edit fs-5' ></i></button>
+    <button class="btn btn-warning editJrd-btn" title="Edit"><i class='bx bx-edit fs-5' ></i></button>
     <button class="btn btn-danger delBut" data-bs-toggle="modal" data-bs-target="#deleteJRDModal"><i class='bx bx-trash fs-5'></i></button>
     </td>`;
   }
@@ -922,6 +924,7 @@ function deleteJob(iVal){//delete jrd from database
   $.post("ajax/deleteJob.php",
   {
     trID:iVal,
+    empID:empDetails['empNum']
   },
     function (data) {
       $('#cancelDelJob').click();
