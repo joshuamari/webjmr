@@ -662,6 +662,9 @@ footer{
 .right .planned .table tbody{
     white-space: nowrap;
 }
+.right .planned .table tbody tr{
+    cursor: pointer;
+}
 .selectBut{
     height: 40px;
     width: 40px;
