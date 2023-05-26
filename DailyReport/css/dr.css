@@ -543,15 +543,16 @@ footer{
 .right .card{
     position: relative;
     width: 100%;
-    height: 100px;
+    height: 80px;
     background: #fff;
-    margin: 20px;
+    margin: 15px;
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 0px 25px rgba(0,0,0,0.2);
     transition: ease 0.5s;
     z-index: 1;
     border: none;
+
 }
 .right .card::after{
     width: 100%;
@@ -563,7 +564,7 @@ footer{
     top: 0;
     left: 0;
     z-index: -1;
-    clip-path: circle(75px at 50% 0);
+    clip-path: polygon(0 0, 60% 0, 45% 100%, 0% 100%);   
     transition: .5s;
 }
 .right .card.new::after{
@@ -572,7 +573,7 @@ footer{
 
 }
 .right .card:hover::after{
-    clip-path: circle(100%);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
 .right .card:hover .card-title{
     font-size: 50px;
@@ -583,11 +584,12 @@ footer{
 
 .right .card .circle{
     position: relative;
-    width: 100%;
     height: 100%;
-    
     clip-path: circle(75px at 50% 0);
     text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 .right .card .circle .card-title{
     color: #fff;
@@ -600,6 +602,10 @@ footer{
     bottom: 0px;
     padding: 8px;
     text-align: center;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }
 .right .card .content p{
     color: var(--text-color);
@@ -651,6 +657,10 @@ footer{
 }
 .right .table-container .table thead th{
     color: var(--header-color);
+}
+.right .planned .table thead,
+.right .planned .table tbody{
+    white-space: nowrap;
 }
 .selectBut{
     height: 40px;
