@@ -400,6 +400,9 @@ $(document).on('search','#searchjrd',function(){
     
     getJRDSearch(projID,itemID);
 });
+$(document).on('click','#plannedItems tr', function(){
+    $('#drPlanning').modal('show');
+})
 
 //#endregion
 

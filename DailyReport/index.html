@@ -60,6 +60,70 @@
         </div>
       </div>
       <!--#endregion-->
+
+      <!--#region Planning Modal -->
+      <div class="modal fade" id="drPlanning" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #3980c7;">
+              <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel">My Planned Tasks</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+             
+                <div class="row mb-3 position-relative">
+                  <label for="projectPlan" class="col-4 col-form-label">Project</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="projectPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="itemPlan" class="col-4 col-form-label">Item of Works</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="itemPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="jrdPlan" class="col-4 col-form-label">Job Request Description</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="jrdPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="sdatePlan" class="col-4 col-form-label">Start Date</label>
+                  <div class="col-8">
+                    <input type="date" class="form-control" id="sdatePlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="edatePlan" class="col-4 col-form-label">End Date</label>
+                  <div class="col-8">
+                    <input type="date" class="form-control" id="edatePlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="mhPlan" class="col-4 col-form-label">Remaining MH</label>
+                  <div class="col-8">
+                    <input type="number" class="form-control" id="mhPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="statusPlan" class="col-4 col-form-label">Status</label>
+                  <div class="col-8">
+                    <span class="badge text-bg-warning fs-5">Ongoing</span>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary border-0" id="ok" data-bs-dismiss="modal" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
+              ">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--#endregion-->
       <!--#endregion MODAL END-->
 
   <div class="sidebar close fixed-top ">
@@ -548,16 +612,16 @@
                 <div class="planned col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 mt-4"style="height: 315px; max-height:315px; box-shadow: 0 0 25px rgb(0 0 0/25%);" >
                   <div class="header py-3 px-2">
                     <h3>My Planned Tasks</h3>
+                    <small><i class='bx bx-info-circle '></i>Please click each row to see more details about the item</small>
                   </div>
                   <table class="table  table-hover overflow-auto">
                     <thead class="col-header sticky-top bg-body">
                       <tr>
                         <th>Project</th>
-                        <th>Item of Works</th>
+                   
                         <th>JRD</th>
-                        <th>Start Date</th>
                         <th>End Date</th>
-                        <th>Manhour Remaining</th>
+                        <th>MH Remaining</th>
                         <th>Status</th>
                         
                       </tr>
@@ -565,9 +629,8 @@
                     <tbody id="plannedItems">
                       <tr>
                         <td>Kirishima</td>
-                        <td>6311053-51AD-1-R0</td>
+           
                         <td>D-15_Air Duct</td>
-                        <td>May 26, 2023</td>
                         <td>June 26, 2023</td>
                         <td>80</td>
                         <td>
@@ -577,9 +640,8 @@
                       </tr>
                       <tr>
                         <td>Kirishima</td>
-                        <td>6311053-51AD-1-R0</td>
+
                         <td>D-15_Air Duct</td>
-                        <td>May 26, 2023</td>
                         <td>June 26, 2023</td>
                         <td>80</td>
                         <td>
