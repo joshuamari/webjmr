@@ -8,33 +8,20 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
     <link rel="stylesheet" href="css/plan.css"/>
     <link rel="stylesheet" href="css/boxicons.css" />
-
     <script src="js/jquery.js"></script>
-
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!-- <script
-    src="js/jquery-ui.js"
-    integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
-    crossorigin="anonymous"></script> -->
     <!--#region BUSTER CALL  -->
     <script>
-      // $.ajax({url: "ajax/getVersion.php", success: function(result){
-      //     var script = document.createElement("script");
-      //     script.src = "js/dr.js?version="+result;
-      //     $('head').append(script);
-      //     console.log('version: '+result);
-      // }});
       var busterCall = ["js/plan.js","css/plan.css"];
       $.post("ajax/getVersion.php", {
           busterCall : busterCall,
-          titleName: "Daily Report"
+          titleName: "Planning"
       },
           function (data) {
           $('head').html(data);
           }
       );
-      
     </script>
     <!--#endregion -->
   </head>
@@ -118,7 +105,7 @@
                 <span class="col-12 mt-1 alert-danger text-danger" id="p3" role="alert"></span>
                 </div>
 
-                <div class="col-12 my-2 jord" id="idJRDDiv">
+                <div class="col-12 my-2 jord">
                   <label for="idJRD" class="form-label">Job Request Description</label>
                   <select class=" form-select" id="idJRD" required>
                     <option selected hidden disabled value="">Select Job Request Description</option>
@@ -174,13 +161,13 @@
               <button type="button" class="btn btn-primary border-0" id="idAdd" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
               ">Add</button>
               <button type="button" class="btn btn-secondary border-0 cancel" data-bs-dismiss="modal"
-              ">Cancel</button>
+              >Cancel</button>
             </div>
           </div>
         </div>
       </div>
       <!--#endregion-->
-            <!--#region edit Entry -->
+      <!--#region edit Entry -->
             <div class="modal fade" id="editPlanningEntry" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -192,9 +179,9 @@
                     <div class="row">
 
                       <div class="col-12 my-2">
-                        <label for="idGroup" class="form-label">Group</label>
+                        <label for="idGroupEdit" class="form-label">Group</label>
                         <div class="input-group">
-                          <select class="form-select" id="idGroup" placeholder="Select Group" required>
+                          <select class="form-select" id="idGroupEdit" placeholder="Select Group" required>
                             
                           </select>
                         </div>
@@ -202,16 +189,16 @@
                       </div>
       
                       <div class="col-12 my-2 proj">
-                        <label for="idProj" id="projlbl" class="form-label">Project</label>
-                        <select class="select-btn form-select" id="idProject" required>
+                        <label for="idProjectEdit" id="projlbl" class="form-label">Project</label>
+                        <select class="select-btn form-select" id="idProjectEdit" required>
                           <option selected hidden disabled value="">Select Project</option>
                         </select>
-                        <div class="proj content">
+                        <div class="projEdit content">
                           <div class="search">
                             <i class='bx bx-search ' ></i>
-                            <input type="search" class="form-control" id="searchproj" placeholder="Search" style="padding-left: 30px;">
+                            <input type="search" class="form-control" id="searchprojEdit" placeholder="Search" style="padding-left: 30px;">
                           </div>
-                          <ul id="projOptions" class="options p-0">
+                          <ul id="projOptionsEdit" class="options p-0">
                             
                           </ul>
                         </div>
@@ -219,34 +206,33 @@
                       </div>
       
                       <div class="col-12 my-2 iow">
-                        <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
-                        <select class="select-btn form-select" id="idItem" required>
+                        <label for="idItemEdit" id="itemlbl" class="form-label">Item of Works</label>
+                        <select class="select-btn form-select" id="idItemEdit" required>
                           <option selected hidden disabled value="">Select Item of Works</option>
-                          <!-- <span class="display">Select Item of Works</span> -->
                         </select>
                         <div class="content">
                           <div class="search">
                             <i class='bx bx-search ' ></i>
-                            <input type="search" class="form-control" id="searchitem" placeholder="Search" style="padding-left: 30px;">
+                            <input type="search" class="form-control" id="searchitemEdit" placeholder="Search" style="padding-left: 30px;">
                           </div>
-                          <ul id="itemOptions" class="options p-0">
+                          <ul id="itemOptionsEdit" class="options p-0">
                             
                           </ul>
                         </div>
                       <span class="col-12 mt-1 alert-danger text-danger" id="e3" role="alert"></span>
                       </div>
       
-                      <div class="col-12 my-2 jord" id="idJRDDiv">
-                        <label for="idJRD" class="form-label">Job Request Description</label>
-                        <select class=" form-select" id="idJRD" required>
+                      <div class="col-12 my-2 jord">
+                        <label for="idJRDEdit" class="form-label">Job Request Description</label>
+                        <select class=" form-select" id="idJRDEdit" required>
                           <option selected hidden disabled value="">Select Job Request Description</option>
                         </select>
                         <div class="content">
                           <div class="search">
                             <i class='bx bx-search ' ></i>
-                            <input type="search" class="form-control" id="searchjrd" placeholder="Search" style="padding-left: 30px;">
+                            <input type="search" class="form-control" id="searchjrdEdit" placeholder="Search" style="padding-left: 30px;">
                           </div>
-                          <ul id="jrdOptions" class="options p-0">
+                          <ul id="jrdOptionsEdit" class="options p-0">
                             
                           </ul>
                         </div>
@@ -254,9 +240,9 @@
                       </div>
       
                       <div class="col-12 my-2">
-                        <label for="idEmp" class="form-label">Employee</label>
+                        <label for="idEmpEdit" class="form-label">Employee</label>
                         <div class="input-group">
-                          <select class="form-select" id="idEmp" required >
+                          <select class="form-select" id="idEmpEdit" required >
                             <option hidden>Select Employee</option>
                             <option>Collene Keith F. MEdrano</option>
                             <option>Collene Keith F. MEdrano</option>
@@ -268,14 +254,14 @@
                       
       
                       <div class="col-12 my-2 datepicker">
-                        <label for="idStartDate" class="form-label">Start Date</label>
-                        <input type="date"class="form-control"id="idStartDate" required />
+                        <label for="idStartDateEdit" class="form-label">Start Date</label>
+                        <input type="date"class="form-control"id="idStartDateEdit" required />
                         <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="e6" role="alert"></span>
                       </div>
       
                       <div class="col-12 my-2 datepicker">
-                        <label for="idEndDate" class="form-label">End Date</label>
-                        <input type="date"class="form-control"id="idEndDate" required />
+                        <label for="idEndDateEdit" class="form-label">End Date</label>
+                        <input type="date"class="form-control"id="idEndDateEdit" required />
                         <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="e7" role="alert"></span>
                       </div>
       
@@ -292,7 +278,7 @@
                     <button type="button" class="btn btn-primary border-0" id="idEdit" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
                     ">Save</button>
                     <button type="button" class="btn btn-secondary border-0 cancel1" data-bs-dismiss="modal"
-                    ">Cancel</button>
+                    >Cancel</button>
                   </div>
                 </div>
               </div>
@@ -317,7 +303,7 @@
                     <button type="button" class="btn btn-primary border-0" id="idEditStatus" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
                     ">Proceed</button>
                     <button type="button" class="btn btn-secondary border-0 cancel1" data-bs-dismiss="modal"
-                    ">Cancel</button>
+                    >Cancel</button>
                   </div>
                 </div>
               </div>

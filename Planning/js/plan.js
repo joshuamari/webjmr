@@ -8,36 +8,19 @@ switch (document.location.hostname)
             rootFolder = '//localhost/'; 
             break;
         default : 
-            rootFolder = '//kdt-ph/update_test/';
+            rootFolder = '//kdt-ph/';
             break;
 }
 var empDetails=[];
 var editID = "";
-var mgaKulang = [];
-
 
 //#endregion
-
+checkLogin();
 //#region BINDS
 $(document).ready(function(){//page Initialize Event
-    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
-        empDetails=$.parseJSON(data);
-        if(empDetails.length<1){//if result is 0, redirect to log in page
-          window.location.href=rootFolder+'/KDTPortalLogin'; 
-        }
-        else{//if result is not 0, store employee number in global variable
-        //   console.log(empDetails);
-        //   console.log("logged in: employee#"+empDetails['empNum']);
-        //   console.log("logged in: firstname"+empDetails['empFName']);
         $('.hello-user').text(empDetails['empFName']);
-        // checkTestAccess();
-        }
-      },async:false});
         ifSmallScreen();
-        initializeDate();
-
         getMyGroups();
-        getEntries();
         sequenceValidation();
         sequenceEditValidation();
        
@@ -71,61 +54,19 @@ $(document).ready(function(){//page Initialize Event
         $(".sidebar").addClass("close");
         });
         //#endregion
-
-        //#region input time validation
-        var inputHour = document.getElementById("getHour");
-            
-                var invalidChars = [
-                    "-",
-                    "+",
-                    "e",
-                    "."
-                ];
-
-                inputHour.addEventListener("input", function() {
-                    this.value = this.value.replace(/[e\+\-\.]/gi, "");
-                });
-                
-
-                inputHour.addEventListener("keydown", function(e) {
-                    if (invalidChars.includes(e.key)) {
-                        e.preventDefault();
-                    }
-                });
-        var inputMin = document.getElementById("getMin");
-            
-                var invalidChars = [
-                    "-",
-                    "+",
-                    "e",
-                    "."
-                ];
-
-                inputMin.addEventListener("input", function() {
-                    this.value = this.value.replace(/[e\+\-\.]/gi, "");
-                });
-                
-
-                inputMin.addEventListener("keydown", function(e) {
-                    if (invalidChars.includes(e.key)) {
-                        e.preventDefault();
-                    }
-                });
-        //#endregion
         $('.cs-loader').fadeOut(1000);
     });
 
 
 $(document).on('change','#idGroup',function(){//select Group Event
-
+    $('#idProject').val(null).change();
     getProjects();
     $('#p1').text("");
     $(this).removeClass('border-danger');
     $('.iow').removeClass('active');
-    
 });
-$(document).on('change','#editPlanningEntry #idGroup',function(){//select Group Event
-
+$(document).on('change','#idGroupEdit',function(){//select Group Event
+    $('#idProjectEdit').val(null).change();
     getEditProjects();
     $('#e1').text("");
     $(this).removeClass('border-danger');
@@ -134,27 +75,27 @@ $(document).on('change','#editPlanningEntry #idGroup',function(){//select Group 
 
 $(document).on('change','#idProject',function(){//select Project Event
     var projID=$($(this).find('option:selected')).attr('proj-id');//get ID of selected Project
-    $('#idJRD').val('');//clear Job Request Description
+    $('#idJRD').val(null).change();//clear Job Request Description
     $('#idItem').val(null).change();
     if($('#idItem').val() == null || $('#idItem').val() == ""){
         $('#idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
     }
     getItems(projID);
-    // getItemSearch(projID)
+    getEmployees();
     $('.iow').removeClass('active');
     $('#p2').text("");
     $(this).removeClass('border-danger');
 });
 
-$(document).on('change','#editPlanningEntry #idProject',function(){//select Project Event
+$(document).on('change','#idProjectEdit',function(){//select Project Event
     var projID=$($(this).find('option:selected')).attr('proj-id');//get ID of selected Project
-    $('#editPlanningEntry #idJRD').val('');//clear Job Request Description
-    $('#editPlanningEntry #idItem').val(null).change();
-    if($('#editPlanningEntry #idItem').val() == null || $('#idItem').val() == ""){
-        $('#editPlanningEntry #idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
+    $('#idJRDEdit').val('');//clear Job Request Description
+    $('#idItemEdit').val(null).change();
+    if($('#idItemEdit').val() == null || $('#idItem').val() == ""){
+        $('#idItemEdit').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
     }
     getEditItems(projID);
-    // getItemSearch(projID)
+    getEmployees();
     $('#editPlanningEntry .iow').removeClass('active');
     $('#e2').text("");
     $(this).removeClass('border-danger');
@@ -171,8 +112,8 @@ $(document).on('change','#idItem',function(){//select Item Event
     $('#p3').text("");
     $(this).removeClass('border-danger');
 });
-$(document).on('change','#editPlanningEntry #idItem',function(){//select Item Event
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('change','#idItemEdit',function(){//select Item Event
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     var itemID=$($(this).find('option:selected')).attr('item-id');
     
     getEditJobs(projID,itemID);
@@ -184,7 +125,7 @@ $(document).on('change', '#idJRD', function(){
     $('#p4').text("");
     $(this).removeClass('border-danger');
 })
-$(document).on('change', '#editPlanningEntry #idJRD', function(){
+$(document).on('change', '#idJRDEdit', function(){
     $('#e4').text("");
     $(this).removeClass('border-danger');
 })
@@ -192,7 +133,7 @@ $(document).on('change', '#idEmp', function(){
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
-$(document).on('change', '#editPlanningEntry #idEmp', function(){
+$(document).on('change', '#idEmpEdit', function(){
     $('#e5').text("");
     $(this).removeClass('border-danger');
 })
@@ -200,7 +141,7 @@ $(document).on('change','#idStartDate',function(){//select Date Event
     $('#p6').text("");
     $(this).removeClass('border-danger');
 });
-$(document).on('change','#editPlanningEntry #idStartDate',function(){//select Date Event
+$(document).on('change','#idStartDateEdit',function(){//select Date Event
     $('#e6').text("");
     $(this).removeClass('border-danger');
 });
@@ -208,7 +149,7 @@ $(document).on('change','#idEndDate',function(){//select Date Event
     $('#p7').text("");
     $(this).removeClass('border-danger');
 });
-$(document).on('change','#editPlanningEntry #idEndDate',function(){//select Date Event
+$(document).on('change','#idEndDateEdit',function(){//select Date Event
     $('#e7').text("");
     $(this).removeClass('border-danger');
 });
@@ -230,6 +171,13 @@ $(document).on('click',' #idEdit',function(){
 })
 
 $(document).on('click','#idProject',function(event){
+    event.stopPropagation();
+    $('.proj').toggleClass('active');
+    $('.jord').removeClass('active');
+    $('.iow').removeClass('active');
+    $(this).blur();
+});
+$(document).on('click','#idProjectEdit',function(event){
     event.stopPropagation();
     $('.proj').toggleClass('active');
     $('.jord').removeClass('active');
@@ -258,10 +206,10 @@ $(document).on('click','#projOptions li',function(){
     var projID=$(this).attr('proj-id');
     $($('#idProject').find(`option[proj-id=${projID}]`)).prop('selected',true).change(); 
 })
-$(document).on('click','#editPlanningEntry #projOptions li',function(){
+$(document).on('click','#projOptionsEdit li',function(){
     $('#editPlanningEntry .proj').removeClass('active');
     var projID=$(this).attr('proj-id');
-    $($('#editPlanningEntry #idProject').find(`option[proj-id=${projID}]`)).prop('selected',true).change(); 
+    $($('#idProjectEdit').find(`option[proj-id=${projID}]`)).prop('selected',true).change(); 
 })
 
 $(document).on('keyup','#searchproj',function(){
@@ -272,16 +220,24 @@ $(document).on('search','#searchproj',function(){
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     getProjSearch();
 });
-$(document).on('keyup','#editPlanningEntry #searchproj',function(){
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('keyup','#searchprojEdit',function(){
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     getEditProjSearch();
 });
-$(document).on('search','#editPlanningEntry #searchproj',function(){
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('search','#searchprojEdit',function(){
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     getEditProjSearch();
 });
 
 $(document).on('click','#idItem',function(event){
+    event.stopPropagation();
+    $('.iow').toggleClass('active');
+    $('.proj').removeClass('active');
+    $('.jord').removeClass('active');
+    $(this).blur();
+
+})
+$(document).on('click','#idItemEdit',function(event){
     event.stopPropagation();
     $('.iow').toggleClass('active');
     $('.proj').removeClass('active');
@@ -295,10 +251,10 @@ $(document).on('click','#itemOptions li',function(){
     var itemID=$(this).attr('item-id');
     $($('#idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change(); 
 })
-$(document).on('click','#editPlanningEntry #itemOptions li',function(){
+$(document).on('click','#itemOptionsEdit li',function(){
     $('#editPlanningEntry .iow').removeClass('active');
     var itemID=$(this).attr('item-id');
-    $($('#editPlanningEntry #idItem').find(`option[item-id=${itemID}]`)).prop('selected',true).change(); 
+    $($('#idItemEdit').find(`option[item-id=${itemID}]`)).prop('selected',true).change(); 
 })
 
 $(document).on('keyup','#searchitem',function(){
@@ -310,16 +266,23 @@ $(document).on('search','#searchitem',function(){
     getItemSearch(projID);
 });
 
-$(document).on('keyup','#editPlanningEntry #searchitem',function(){
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('keyup','#searchitemEdit',function(){
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     getEditItemSearch(projID);
 });
-$(document).on('search','#editPlanningEntry #searchitem',function(){
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('search','#searchitemEdit',function(){
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     getEditItemSearch(projID);
 });
 
 $(document).on('click','#idJRD',function(event){
+    event.stopPropagation();
+    $('.jord').toggleClass('active');
+    $('.iow').removeClass('active');
+    $('.proj').removeClass('active');
+    $(this).blur();
+})
+$(document).on('click','#idJRDEdit',function(event){
     event.stopPropagation();
     $('.jord').toggleClass('active');
     $('.iow').removeClass('active');
@@ -331,10 +294,10 @@ $(document).on('click','#jrdOptions li',function(){
     var jrdID=$(this).attr('job-id');
     $($('#idJRD').find(`option[job-id=${jrdID}]`)).prop('selected',true).change();
 })
-$(document).on('click','#editPlanningEntry #jrdOptions li',function(){
+$(document).on('click','#jrdOptionsEdit li',function(){
     $('#editPlanningEntry .jord').removeClass('active');
     var jrdID=$(this).attr('job-id');
-    $($('#editPlanningEntry #idJRD').find(`option[job-id=${jrdID}]`)).prop('selected',true).change();
+    $($('#idJRDEdit').find(`option[job-id=${jrdID}]`)).prop('selected',true).change();
 })
 $(document).on('keyup','#searchjrd',function(){
     var itemID=$($('#idItem').find('option:selected')).attr('item-id');
@@ -342,9 +305,9 @@ $(document).on('keyup','#searchjrd',function(){
     
     getJRDSearch(projID,itemID);
 });
-$(document).on('keyup','#editPlanningEntry #searchjrd',function(){
-    var itemID=$($('#editPlanningEntry #idItem').find('option:selected')).attr('item-id');
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('keyup','#searchjrdEdit',function(){
+    var itemID=$($('#idItemEdit').find('option:selected')).attr('item-id');
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     
     getEditJRDSearch(projID,itemID);
 });
@@ -354,9 +317,9 @@ $(document).on('search','#searchjrd',function(){
     
     getJRDSearch(projID,itemID);
 });
-$(document).on('search','#editPlanningEntry #searchjrd',function(){
-    var itemID=$($('#editPlanningEntry #idItem').find('option:selected')).attr('item-id');
-    var projID=$($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
+$(document).on('search','#searchjrdEdit',function(){
+    var itemID=$($('#idItemEdit').find('option:selected')).attr('item-id');
+    var projID=$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     
     getEditJRDSearch(projID,itemID);
 });
@@ -382,17 +345,18 @@ $(document).on('click', '.cancel1', function(){
 //#endregion
 
 //#region FUNCTIONS
-
-
-function initializeDate(){//Initialize Selected Date
-    $.ajax({
-        url: "ajax/getDate.php",
-        success: function (response) {
-            $('#idDRDate').val(response);
-        },async:false
-    });
-
-}
+function checkLogin(){//check if user is logged in
+    $.ajaxSetup({async: false});
+    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+      empDetails=$.parseJSON(data);
+  
+      if(Object.keys(empDetails).length<1){
+        window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page
+      }
+    //   jmcAccess();
+    }});
+    $.ajaxSetup({async: true});
+  }
 function getMyGroups(){//get Group Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getMyGroups.php",
@@ -401,12 +365,36 @@ function getMyGroups(){//get Group Selection
     },
         function (data) {
             $('#idGroup').html(data);
-            $('#editPlanningEntry #idGroup').html(data);
+            $('#idGroupEdit').html(data);
         }
     );
     $.ajaxSetup({async: true});
 }
-
+function getEmployees(){
+    $(`#idEmp`).html(`<option hidden="">Select Employee</option>`);
+    $(`#idEmpEdit`).html(`<option hidden="">Select Employee</option>`);
+    var projID=$($('#idProject').find('option:selected')).attr('proj-id')||$($('#idProjectEdit').find('option:selected')).attr('proj-id');
+    var emps=[];
+    $.ajaxSetup({async: false});
+    $.post("ajax/getEmployees.php",
+    {
+        projID:projID
+    },
+        function (data) {
+            emps=$.parseJSON(data);
+            emps.map(fillEmployee);
+            console.log(emps)
+        }
+    );
+    $.ajaxSetup({async: true});
+}
+function fillEmployee(empDeets){
+    console.log(empDeets)
+    var empDts=empDeets.split("||");
+    var addString=`<option emp-id='${empDts[0]}'>${empDts[1]}</option>`;
+    $(`#idEmp`).append(addString);
+    $(`#idEmpEdit`).append(addString);
+}
 function addRow(iVal){//map Entries for display
     // ["primary_id||location||group||project||item||description||hour||mht"]
     var pId = iVal.split('||')[0];
@@ -452,62 +440,42 @@ function addRow(iVal){//map Entries for display
     `;
     $('#drEntries').append(addString);
 }
-function getEntries(){//get Daily Report Entries
-    regCount=0;
-    otCount=0;
-    lvCount=0;
-    $('#drEntries').empty();
-    $.post("ajax/getEntries.php",
-    {
-        curDay:$('#idDRDate').val(),
-        empNum:empDetails['empNum']
-    },
-    function (data) {
-        var entries=$.parseJSON(data);
-        if(entries.length>0){
-            entries.map(addRow);
-        }
-        else{
-            var addString = `<tr ><td colspan='8'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
-    $('#drEntries').append(addString);
-        }
-        
-    }
-    );
-}
-
 function sequenceValidation(){//sequence Checking Project->Item->Job
     $('#idProject').prop('disabled',true);
     $('#idItem').prop('disabled',true);
     $('#idJRD').prop('disabled',true);
+    $('#idEmp').prop('disabled',true);
     if($("#idItem").prop('selectedIndex')>0){
         $('#idJRD').prop('disabled',false);
     }
     if($("#idProject").prop('selectedIndex')>0){
         $('#idItem').prop('disabled',false);
+        $('#idEmp').prop('disabled',false);
     }
     if($("#idGroup").prop('selectedIndex')>0){
         $('#idProject').prop('disabled',false);
     }
 }
 function sequenceEditValidation(){//sequence Checking Project->Item->Job
-    $('#editPlanningEntry #idProject').prop('disabled',true);
-    $('#editPlanningEntry #idItem').prop('disabled',true);
-    $('#editPlanningEntry #idJRD').prop('disabled',true);
-    if($("#editPlanningEntry #idItem").prop('selectedIndex')>0){
-        $('#editPlanningEntry #idJRD').prop('disabled',false);
+    $('#idProjectEdit').prop('disabled',true);
+    $('#idItemEdit').prop('disabled',true);
+    $('#idJRDEdit').prop('disabled',true);
+    $('#idEmpEdit').prop('disabled',true);
+    if($("#idItemEdit").prop('selectedIndex')>0){
+        $('#idJRDEdit').prop('disabled',false);
     }
-    if($("#editPlanningEntry #idProject").prop('selectedIndex')>0){
-        $('#editPlanningEntry #idItem').prop('disabled',false);
+    if($("#idProjectEdit").prop('selectedIndex')>0){
+        $('#idItemEdit').prop('disabled',false);
+        $('#idEmpEdit').prop('disabled',false);
     }
-    if($("#editPlanningEntry #idGroup").prop('selectedIndex')>0){
-        $('#editPlanningEntry #idProject').prop('disabled',false);
+    if($("#idGroupEdit").prop('selectedIndex')>0){
+        $('#idProjectEdit').prop('disabled',false);
     }
 }
 
 function getProjects(){//get PROJECT Selection
     var proj=[];
-   $('#projOptions,#idProject').empty();
+   $('#projOptions').empty();
     $('#idProject').html(`<option value='' hidden>Select Project</option>`);
     
     $.ajaxSetup({async: false});
@@ -521,7 +489,6 @@ function getProjects(){//get PROJECT Selection
         function (data) {
           
             proj=$.parseJSON(data);
-            console.log(proj)
             proj.map(fillProj);
             sequenceValidation();
         }
@@ -531,21 +498,20 @@ function getProjects(){//get PROJECT Selection
 
 function getEditProjects(){//get edit PROJECT Selection
     var proj=[];
-   $('#editPlanningEntry #projOptions,#editPlanningEntry #idProject').empty();
-    $('#editPlanningEntry #idProject').html(`<option value='' hidden>Select Project</option>`);
+   $('#projOptionsEdit').empty();
+    $('#idProjectEdit').html(`<option value='' hidden>Select Project</option>`);
     
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
     },
         function (data) {
           
             proj=$.parseJSON(data);
-            console.log(proj)
             proj.map(fillEditProj);
             sequenceEditValidation();
         }
@@ -563,12 +529,11 @@ function fillProj(iVal){
 }
 
 function fillEditProj(iVal){
-
     var projDeets=iVal.split("||");
     var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</li>`;
     var addStringMain=`<option hidden proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</option>`;
-    $(`#editPlanningEntry #projOptions`).append(addString);
-    $(`#editPlanningEntry #idProject`).append(addStringMain);
+    $(`#projOptionsEdit`).append(addString);
+    $(`#idProjectEdit`).append(addStringMain);
 }
 
 function getProjSearch(){//get Proj Selection
@@ -595,13 +560,13 @@ function getProjSearch(){//get Proj Selection
 
 function getEditProjSearch(){//get Proj Selection
     var proj=[];
-    var searchProj=$(`#editPlanningEntry #searchproj`).val();
-    $('#editPlanningEntry #projOptions').empty();
+    var searchProj=$(`#searchprojEdit`).val();
+    $('#projOptionsEdit').empty();
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
         searchProj:searchProj,
@@ -642,13 +607,13 @@ function getItems(iVal){//get Item Selection
 
 function getEditItems(iVal){//get Item Selection
     var itms=[];
-    $('#editPlanningEntry #itemOptions').empty();
-    $('#editPlanningEntry #idItem').html(`<option value='' hidden>Select Item of Works</option>`);
+    $('#itemOptionsEdit').empty();
+    $('#idItemEdit').html(`<option value='' hidden>Select Item of Works</option>`);
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
         projID:iVal,
@@ -676,8 +641,8 @@ function fillEditItem(iVal){
     var itemDeets=iVal.split("||");
     var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
     var addStringMain=`<option hidden item-id='${itemDeets[0]}'>${itemDeets[1]}</option>`;
-    $(`#editPlanningEntry #itemOptions`).append(addString);
-    $(`#editPlanningEntry #idItem`).append(addStringMain);
+    $(`#itemOptionsEdit`).append(addString);
+    $(`#idItemEdit`).append(addStringMain);
 }
 function getItemSearch(iVal){//get Item Selection
     var itms=[];
@@ -702,13 +667,13 @@ function getItemSearch(iVal){//get Item Selection
 }
 function getEditItemSearch(iVal){//get Item Selection
     var itms=[];
-    var searchIOW=$(`#editPlanningEntry #searchitem`).val();
-    $('#editPlanningEntry #itemOptions').empty();
+    var searchIOW=$(`#searchitemEdit`).val();
+    $('#itemOptionsEdit').empty();
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
         projID:iVal,
@@ -747,13 +712,13 @@ function getJobs(iVal,xVal){//get Item Selection
 }
 function getEditJobs(iVal,xVal){//get Item Selection
     var jobs=[];
-    $('#editPlanningEntry #jrdOptions').empty();
-    $('#editPlanningEntry #idJRD').html(`<option value='' hidden>Select Job Request Description</option>`);
+    $('#jrdOptionsEdit').empty();
+    $('#idJRDEdit').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
     $.post("ajax/getJobs.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
         projID:iVal,
@@ -780,8 +745,8 @@ function fillEditJobs(iVal){
     var jrdDeets=iVal.split("||");
     var addString=`<li job-id='${jrdDeets[0]}'>${jrdDeets[1]}</li>`;
     var addStringMain=`<option hidden job-id='${jrdDeets[0]}'>${jrdDeets[1]}</option>`;
-    $(`#editPlanningEntry #jrdOptions`).append(addString);
-    $(`#editPlanningEntry #idJRD`).append(addStringMain);
+    $(`#jrdOptionsEdit`).append(addString);
+    $(`#idJRDEdit`).append(addStringMain);
 }
 function getJRDSearch(iVal,xVal){//get Item Selection
     var jrd=[];
@@ -807,13 +772,13 @@ function getJRDSearch(iVal,xVal){//get Item Selection
 }
 function getEditJRDSearch(iVal,xVal){//get Item Selection
     var jrd=[];
-    var searchjrd=$(`#editPlanningEntry #searchjrd`).val();
-    $('#editPlanningEntry #jrdOptions').empty();
+    var searchjrd=$(`#searchjrdEdit`).val();
+    $('#jrdOptionsEdit').empty();
     $.ajaxSetup({async: false});
     $.post("ajax/getJobs.php",
     {
         // empGroup:empDetails['empGroup'],
-        empGroup:$('#editPlanningEntry #idGroup').val(),
+        empGroup:$('#idGroupEdit').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
         projID:iVal,
@@ -838,6 +803,7 @@ function addEntries(){//add Entries to Database
     var sdate = $('#idStartDate').val();
     var edate = $('#idEndDate').val();
     var mh = $('#idMH').val();
+    var mgaKulang=[];
 
     
     if(!grp){
@@ -905,9 +871,6 @@ function addEntries(){//add Entries to Database
             cache: false,
              processData: false,
              success: function (data) {
-                 // console.log(data)
-                 
-                getEntries();
                 resetEntry();
                 
             }
@@ -916,49 +879,49 @@ function addEntries(){//add Entries to Database
 }
 
 function editEntries(){//add Entries to Database
-    var grp = $('#editPlanningEntry #idGroup').val();
-    var proj = $($('#editPlanningEntry #idProject').find('option:selected')).attr('proj-id');
-    var item = $($('#editPlanningEntry #idItem').find('option:selected')).attr('item-id');
-    var jobreq = $($('#editPlanningEntry #idJRD').find('option:selected')).attr('job-id');
-    var emp = $($('#editPlanningEntry #idEmp').find('option:selected')).attr('emp-id');
-    var sdate = $('#editPlanningEntry #idStartDate').val();
-    var edate = $('#editPlanningEntry #idEndDate').val();
+    var grp = $('#idGroupEdit').val();
+    var proj = $($('#idProjectEdit').find('option:selected')).attr('proj-id');
+    var item = $($('#idItemEdit').find('option:selected')).attr('item-id');
+    var jobreq = $($('#idJRDEdit').find('option:selected')).attr('job-id');
+    var emp = $($('#idEmpEdit').find('option:selected')).attr('emp-id');
+    var sdate = $('#idStartDateEdit').val();
+    var edate = $('#idEndDateEdit').val();
     var mh = $('#editPlanningEntry #idMH').val();
-
+    var mgaKulang=[];
     
     if(!grp){
         $('#e1').text("Please select group");
-        $('#editPlanningEntry #idGroup').addClass('border border-danger')
+        $('#idGroupEdit').addClass('border border-danger')
         mgaKulang.push("GROUP");
     }
     if(!proj){
         $('#e2').text("Please select project");
-        $('#editPlanningEntry #idProject').addClass('border border-danger')
+        $('#idProjectEdit').addClass('border border-danger')
         mgaKulang.push("PROJECT");
     }
     if(!item){
         $('#e3').text("Please select item of works");
-        $('#editPlanningEntry #idItem').addClass('border border-danger')
+        $('#idItemEdit').addClass('border border-danger')
         mgaKulang.push("ITEM");
     }
     if(!jobreq){
         $('#e4').text("Please select job request description");
-        $('#editPlanningEntry #idJRD').addClass('border border-danger')
+        $('#idJRDEdit').addClass('border border-danger')
         mgaKulang.push("JRD");
     }
     if(!emp){
         $('#e5').text("Please select employee");
-        $('#editPlanningEntry #idEmp').addClass('border border-danger')
+        $('#idEmpEdit').addClass('border border-danger')
         mgaKulang.push("EMP");
     }
     if(!sdate){
         $('#e6').text("Please input start date");
-        $('#editPlanningEntry #idStartDate').addClass('border border-danger')
+        $('#idStartDateEdit').addClass('border border-danger')
         mgaKulang.push("SDATE");
     }
     if(!edate){
         $('#e7').text("Please input end date");
-        $('#editPlanningEntry #idEndDate').addClass('border border-danger')
+        $('#idEndDateEdit').addClass('border border-danger')
         mgaKulang.push("EDATE");
     }
     if(!mh){
@@ -991,8 +954,6 @@ function editEntries(){//add Entries to Database
             cache: false,
              processData: false,
              success: function (data) {
-                 
-                getEntries();
                 resetEditEntry();
                 
             }
@@ -1001,16 +962,7 @@ function editEntries(){//add Entries to Database
 }
 
 
-function deleteEntry(iVal){//delete Entries from Database
-    $.post("ajax/deleteEntry.php",
-    {
-        trID:iVal
-    },
-        function (data) {
-            getEntries();
-        }
-    );
-}
+
 function resetEntry(){//reset Inputs
     $("#idGroup,#idProject,#idItem,#idJRD,#idEmp,#idStartDate,#idEndDate,#idMH").val("").change();
     $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8").text("");
@@ -1018,32 +970,13 @@ function resetEntry(){//reset Inputs
     sequenceValidation();
 }
 function resetEditEntry(){//reset Inputs
-    $("#editPlanningEntry #idGroup,#editPlanningEntry #idProject,#editPlanningEntry #idItem,#editPlanningEntry #idJRD,#editPlanningEntry #idEmp,#editPlanningEntry #idStartDate,#editPlanningEntry #idEndDate,#editPlanningEntry #idMH").val("").change();
+    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#editPlanningEntry #idMH").val("").change();
     $("#e1,#e2,#e3,#e4,#e5,#e6,#e7,#e8").text("");
-    $("#editPlanningEntry #idGroup,#editPlanningEntry #idProject,#editPlanningEntry #idItem,#editPlanningEntry #idJRD,#editPlanningEntry #idEmp,#editPlanningEntry #idStartDate,#editPlanningEntry #idEndDate,#editPlanningEntry #idMH").removeClass('border border-danger');
+    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#editPlanningEntry #idMH").removeClass('border border-danger');
     sequenceEditValidation();
 }
 
-function isWorkDay(iVal){//check if work day
-    var isWorkDay=false;
-    var selDate=$("#idDRDate").val();
-    var selLoc=iVal;
-    if(selLoc==null){
-        selLoc="KDT";
-    }
-    $.ajaxSetup({async: false});
-    $.post("ajax/checkWorkDay.php",
-    {
-        selDate:selDate,
-        selLoc:selLoc
-    },
-        function (data) {
-            isWorkDay=$.parseJSON(data);
-        }
-    );
-    $.ajaxSetup({async: true});
-    return isWorkDay;
-}
+
 
 
 function ifSmallScreen(){//responsive
@@ -1058,20 +991,6 @@ function ifSmallScreen(){//responsive
     }
 }
 
-function checkTestAccess(){//check if has access to testing
-    $.post("ajax/checkTestAccess.php",
-    {
-      empNum:empDetails['empNum']
-    },
-      function (data) {
-        var access=data.trim();
-        if(access=='0'){
-            alert('Access denied');
-          window.location.href = rootFolder + "/welcome";
-        }
-      }
-    );
-}
 
 
 
