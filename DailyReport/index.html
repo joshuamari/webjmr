@@ -60,6 +60,70 @@
         </div>
       </div>
       <!--#endregion-->
+
+      <!--#region Planning Modal -->
+      <div class="modal fade" id="drPlanning" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header" style="background-color: #3980c7;">
+              <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel">My Planned Tasks</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+             
+                <div class="row mb-3 position-relative">
+                  <label for="projectPlan" class="col-4 col-form-label">Project</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="projectPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="itemPlan" class="col-4 col-form-label">Item of Works</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="itemPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="jrdPlan" class="col-4 col-form-label">Job Request Description</label>
+                  <div class="col-8">
+                    <input type="text" class="form-control" id="jrdPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="sdatePlan" class="col-4 col-form-label">Start Date</label>
+                  <div class="col-8">
+                    <input type="date" class="form-control" id="sdatePlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="edatePlan" class="col-4 col-form-label">End Date</label>
+                  <div class="col-8">
+                    <input type="date" class="form-control" id="edatePlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="mhPlan" class="col-4 col-form-label">Remaining MH</label>
+                  <div class="col-8">
+                    <input type="number" class="form-control" id="mhPlan" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label for="statusPlan" class="col-4 col-form-label">Status</label>
+                  <div class="col-8">
+                    <span class="badge text-bg-warning fs-5">Ongoing</span>
+                  </div>
+                </div>
+              </div>
+            
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary border-0" id="ok" data-bs-dismiss="modal" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
+              ">Close</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--#endregion-->
       <!--#endregion MODAL END-->
 
   <div class="sidebar close fixed-top ">
@@ -427,7 +491,7 @@
                 
                 </div>
                 
-                <div class="row col-12 my-4 d-flex">
+                <div class="row col-12 my-4 d-flex" style="margin-top: 100px !important;">
                   <div class="col-md-6 col-12 my-0">
                   <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-add w-100 fw-bold" id="idAdd">
                     Add
@@ -454,7 +518,7 @@
             
           
             <div class="top-right   position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light"style="width:100%">
-              <div class=" row right-cont  py-4 px-3">
+              <div class=" row right-cont  py-3 px-3">
                 
                 <div class="col-12 my-2">
                   <label for="idCopyDate" class="form-label">Copy From</label>
@@ -471,43 +535,41 @@
                 <div class="col-12">
                   <div class="row position-relative d-flex align-items-center justify-content-center">
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardReg">
-                        <div class="circle">
+                      <div class="card mx-auto row" id="cardReg">
+                        <div class="circle col-6">
                           <h5 class="card-title" id="regCount">8</h5>
                         </div>
-                        <div class="content">
+                        <div class="content col-6">
                           <p>REGULAR</p>
                         </div>
                       </div>
                     </div>
 
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardOt">
-                        <div class="circle">
+                      <div class="card mx-auto row" id="cardOt">
+                        <div class="circle col-6">
                           <h5 class="card-title" id="otCount">8</h5>
                         </div>
-                        <div class="content">
+                        <div class="content col-6">
                           <p>OVERTIME</p>
                         </div>
                       </div>
                     </div>
 
                     <div class="col-12 col-md-4 mb-sm-0">
-                      <div class="card mx-auto" id="cardLv">
-                        <div class="circle">
+                      <div class="card mx-auto row" id="cardLv">
+                        <div class="circle col-6">
                           <h5 class="card-title" id="lvCount">8</h5>
                         </div>
-                        <div class="content">
+                        <div class="content col-6">
                           <p>LEAVE</p>
                         </div>
                       </div>
                     </div>
-
-                    
                   </div>
                 </div>
 
-                <div class="table-container col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 "style="height: fit-content; max-height:500px; box-shadow: 0 0 25px rgb(0 0 0/25%);" >
+                <div class="table-container col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 "style="height: 250px; max-height:250px; box-shadow: 0 0 25px rgb(0 0 0/25%);" >
                 
                     <table class="table  table-hover overflow-auto">
                       <thead class="col-header sticky-top bg-body">
@@ -547,26 +609,53 @@
                   
                 </div>
 
-                <!-- <div class="col-12 my-2">
-                  <label for="idCopyDate" class="form-label">Copy From</label>
-                  <div class="row">
-                    <div class="col-8">
-                      <input type="date"class="form-control "id="idCopyDate"required/>
-                    </div>
-                    <div class="col-4">
-                      <button id="idCopy" class="btn btn-warning w-100 fw-bold">COPY</button>
-                    </div>
+                <div class="planned col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 mt-4"style="height: 315px; max-height:315px; box-shadow: 0 0 25px rgb(0 0 0/25%);" >
+                  <div class="header py-3 px-2">
+                    <h3>My Planned Tasks</h3>
+                    <small><i class='bx bx-info-circle '></i>Please click each row to see more details about the item.</small>
                   </div>
-                </div> -->
+                  <table class="table  table-hover overflow-auto">
+                    <thead class="col-header sticky-top bg-body">
+                      <tr>
+                        <th>Project</th>
+                   
+                        <th>JRD</th>
+                        <th>End Date</th>
+                        <th>MH Remaining</th>
+                        <th>Status</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody id="plannedItems">
+                      <tr>
+                        <td>Kirishima</td>
+           
+                        <td>D-15_Air Duct</td>
+                        <td>June 26, 2023</td>
+                        <td>80</td>
+                        <td>
+                          <span class="badge text-bg-warning">Ongoing</span>
+                        </td>
+                       
+                      </tr>
+                      <tr>
+                        <td>Kirishima</td>
 
-                <!-- <div class="row col-12 my-4 d-flex">
-                  <div class="col-md-12 col-12 my-0">
-                  <button type="submit" class="my-2 my-md-0  btn text-uppercase btn-export w-100" id="btn-export">
-                    EXPORT
-                  </button>
-                </div>
+                        <td>D-15_Air Duct</td>
+                        <td>June 26, 2023</td>
+                        <td>80</td>
+                        <td>
+                          <span class="badge text-bg-success">Finished</span>
+                        </td>
+                        
+                      </tr>
+                    </tbody>
+                  </table>
+              
+                
+              </div>
+             
 
-              </div> -->
             </div>
             </div>
           
