@@ -23,6 +23,7 @@ $(document).ready(function(){//page Initialize Event
         getMyGroups();
         sequenceValidation();
         sequenceEditValidation();
+        dateValidation();
        
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
@@ -140,6 +141,7 @@ $(document).on('change', '#idEmpEdit', function(){
 $(document).on('change','#idStartDate',function(){//select Date Event
     $('#p6').text("");
     $(this).removeClass('border-danger');
+    dateValidation();
 });
 $(document).on('change','#idStartDateEdit',function(){//select Date Event
     $('#e6').text("");
@@ -383,13 +385,11 @@ function getEmployees(){
         function (data) {
             emps=$.parseJSON(data);
             emps.map(fillEmployee);
-            console.log(emps)
         }
     );
     $.ajaxSetup({async: true});
 }
 function fillEmployee(empDeets){
-    console.log(empDeets)
     var empDts=empDeets.split("||");
     var addString=`<option emp-id='${empDts[0]}'>${empDts[1]}</option>`;
     $(`#idEmp`).append(addString);
@@ -792,25 +792,38 @@ function getEditJRDSearch(iVal,xVal){//get Item Selection
     );
     $.ajaxSetup({async: true}); 
 }
-
+function isStartGreaterThanEnd(startDate,endDate){
+    var sdate = new Date(startDate);
+    var edate = new Date(endDate);
+    if(sdate <= edate) {
+        return true;
+    }
+    return false;
+}
+function dateValidation(){
+ $("#idEndDate").prop('disabled',true);
+ var startDate=$("#idStartDate").val();
+ var endDate=$("#idEndDate").val();
+ if(!isStartGreaterThanEnd(startDate,endDate)){
+    $("#idEndDate").val(startDate);
+ }
+ if(startDate){
+    $("#idEndDate").attr('min',startDate);
+    $("#idEndDate").prop('disabled',false);
+ }
+}
 
 function addEntries(){//add Entries to Database
-    var grp = $('#idGroup').val();
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id');
     var emp = $($('#idEmp').find('option:selected')).attr('emp-id');
     var sdate = $('#idStartDate').val();
     var edate = $('#idEndDate').val();
-    var mh = $('#idMH').val();
+    var mh = ($('#idMH').val())*60;
     var mgaKulang=[];
 
     
-    if(!grp){
-        $('#p1').text("Please select group");
-        $('#idGroup').addClass('border border-danger')
-        mgaKulang.push("GROUP");
-    }
     if(!proj){
         $('#p2').text("Please select project");
         $('#idProject').addClass('border border-danger')
@@ -841,16 +854,13 @@ function addEntries(){//add Entries to Database
         $('#idEndDate').addClass('border border-danger')
         mgaKulang.push("EDATE");
     }
-    if(!mh){
+    if(!mh ||mh==0){
         $('#p8').text("Please input man hour");
         $('#idMH').addClass('border border-danger')
         mgaKulang.push("MH");
     }
 
     var fd= new FormData()
-    fd.append("getGroup",grp);
-    fd.append("getProject",proj);
-    fd.append("getItem",item);
     fd.append("getDescription",jobreq);
     fd.append("getEmp",emp);
     fd.append("getsDate",sdate);
