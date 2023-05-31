@@ -24,6 +24,7 @@ $(document).ready(function(){//page Initialize Event
         sequenceValidation();
         sequenceEditValidation();
         dateValidation();
+        getPlans();
        
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
@@ -160,7 +161,7 @@ $(document).on('change', '#idMH', function(){
     $('#p8').text("");
     $(this).removeClass('border-danger');
 });
-$(document).on('change', '#editPlanningEntry #idMH', function(){
+$(document).on('change', '#idMHEdit', function(){
     $('#e8').text("");
     $(this).removeClass('border-danger');
 });
@@ -326,16 +327,20 @@ $(document).on('search','#searchjrdEdit',function(){
     getEditJRDSearch(projID,itemID);
 });
 $(document).on('click', '.badge', function(){
+    var planID = $(this).closest("tr").attr("plan-id");
+    editID=planID;
     $('#editStatus').modal('show');
-
 
 })
 $(document).on('click', '#idEditStatus', function(){
     $('#editStatus').modal('hide');
-    $('.bdge').html(`<button class="badge done bg-success border-0  w-100">Finished - 12/22/2023</button>`)
+    updateStatus();
+    // $('.bdge').html(`<button class="badge done bg-success border-0  w-100">Finished - 12/22/2023</button>`)
 })
-$(document).on('click', '#editPlanning', function(){
-    var getTR = $(this).closest('tr');
+$(document).on('click', '.editPlanningButton', function(){
+    var planID = $(this).closest("tr").attr("plan-id");
+    editID=planID;
+    getEdeets(planID);
 })
 $(document).on('click', '.cancel', function(){
     resetEntry();
@@ -814,6 +819,7 @@ function dateValidation(){
 }
 
 function addEntries(){//add Entries to Database
+    var grp = $('#idGroup').val();
     var proj = $($('#idProject').find('option:selected')).attr('proj-id');
     var item = $($('#idItem').find('option:selected')).attr('item-id');
     var jobreq = $($('#idJRD').find('option:selected')).attr('job-id');
@@ -823,7 +829,11 @@ function addEntries(){//add Entries to Database
     var mh = ($('#idMH').val())*60;
     var mgaKulang=[];
 
-    
+    if(!grp){
+        $('#p1').text("Please select group");
+        $('#idGroup').addClass('border border-danger')
+        mgaKulang.push("GROUP");
+    }
     if(!proj){
         $('#p2').text("Please select project");
         $('#idProject').addClass('border border-danger')
@@ -882,6 +892,8 @@ function addEntries(){//add Entries to Database
              processData: false,
              success: function (data) {
                 resetEntry();
+                getPlans();
+                $(".cancel").click();
                 
             }
         });
@@ -896,7 +908,7 @@ function editEntries(){//add Entries to Database
     var emp = $($('#idEmpEdit').find('option:selected')).attr('emp-id');
     var sdate = $('#idStartDateEdit').val();
     var edate = $('#idEndDateEdit').val();
-    var mh = $('#editPlanningEntry #idMH').val();
+    var mh = ($('#idMHEdit').val())*60;
     var mgaKulang=[];
     
     if(!grp){
@@ -936,36 +948,33 @@ function editEntries(){//add Entries to Database
     }
     if(!mh){
         $('#e8').text("Please input man hour");
-        $('#editPlanningEntry #idMH').addClass('border border-danger')
+        $('#idMHEdit').addClass('border border-danger')
         mgaKulang.push("MH");
     }
 
     var fd= new FormData()
-    fd.append("getGroup",grp);
-    fd.append("getProject",proj);
-    fd.append("getItem",item);
     fd.append("getDescription",jobreq);
     fd.append("getEmp",emp);
     fd.append("getsDate",sdate);
     fd.append("geteDate",edate);
     fd.append("getMH",mh);
-    fd.append("empNum",empDetails['empNum']);
+    fd.append("planID",editID)
     if(mgaKulang.length>0){
         console.log(mgaKulang)
         return;
     }
     else{
-            
          $.ajax({
             type: "POST",
-            url: "ajax/EditEntries.php",
+            url: "ajax/editPlanningEntries.php",
             data: fd,
             contentType: false,
             cache: false,
              processData: false,
              success: function (data) {
                 resetEditEntry();
-                
+                getPlans();
+                $(".cancel1").click();
             }
         });
     }
@@ -980,13 +989,103 @@ function resetEntry(){//reset Inputs
     sequenceValidation();
 }
 function resetEditEntry(){//reset Inputs
-    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#editPlanningEntry #idMH").val("").change();
+    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit").val("").change();
     $("#e1,#e2,#e3,#e4,#e5,#e6,#e7,#e8").text("");
-    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#editPlanningEntry #idMH").removeClass('border border-danger');
+    $("#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit").removeClass('border border-danger');
     sequenceEditValidation();
 }
-
-
+function getPlans(){
+    var plans=[];
+    // var defaultBody=``;
+    // $(`#planningTable`).html(defaultBody)
+    $(`#planningTable`).empty()
+    $.post("ajax/getPlans.php",
+    {
+        getPlanner:empDetails['empNum']
+    },
+        function (data) {
+            plans=$.parseJSON(data);
+            plans.map(fillPlans);
+        }
+    );
+}
+function fillPlans(planString){
+    var projCount=$("#planningTable tr").length + 1;
+    var planStringArray=planString.split("||");
+    var planID=planStringArray[0];
+    var projGroup=planStringArray[1];
+    var projName=planStringArray[2];
+    var projItem=planStringArray[3];
+    var projJob=planStringArray[4];
+    var projEmp=planStringArray[5];
+    var projStart=planStringArray[6];
+    var projEnd=planStringArray[7];
+    var projMH=planStringArray[8];
+    var projStatus=planStringArray[9];
+    var statusBadge=`<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
+    if(projStatus.length>0){
+        statusBadge=`<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
+    }
+    var addString=`<tr plan-id="${planID}">
+    <th scope="row" class="text-center">${projCount}</th>
+    <td class="text-center">${projGroup}</td>
+    <td class="text-center">${projName}</td>
+    <td class="text-center">${projItem}</td>
+    <td class="text-center">${projJob}</td>
+    <td class="text-center">${projEmp}</td>
+    <td class="text-center">${projStart}</td>
+    <td class="text-center">${projEnd}</td>
+    <td class="text-center">${projMH}</td>
+    <td class="text-center">
+      <div class="bdge ">
+        ${statusBadge}
+     </div>
+    </td>
+    <td class="text-center"><button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button></td>
+  </tr>`;
+    $(`#planningTable`).append(addString);
+}
+function getEdeets(planID){
+    var eDeets=[];
+    $.post("ajax/getEdeets.php",
+    {
+        planID:planID
+    },
+        function (data) {
+            eDeets=$.parseJSON(data);
+            eDeets.map(fillEditPlan);
+        }
+    );
+}
+function fillEditPlan(editDetails){
+    var eDeets=editDetails.split("||");
+    var projGroup=eDeets[0];
+    var projID=eDeets[1];
+    var itemID=eDeets[2];
+    var jobID=eDeets[3];
+    var empID=eDeets[4];
+    var projStart=eDeets[5];
+    var projEnd=eDeets[6];
+    var projMH=eDeets[7];
+    $('#idGroupEdit').val(projGroup).change();
+    $($('#idProjectEdit').find(`option[proj-id=${projID}]`)).prop('selected',true).change();
+    $($('#idItemEdit').find(`option[item-id=${itemID}]`)).prop('selected',true).change();
+    $($('#idJRDEdit').find(`option[job-id=${jobID}]`)).prop('selected',true).change();
+    $($('#idEmpEdit').find(`option[emp-id=${empID}]`)).prop('selected',true).change();
+    $('#idStartDateEdit').val(projStart).change();
+    $('#idEndDateEdit').val(projEnd).change();
+    $('#idMHEdit').val(projMH).change();
+}
+function updateStatus(){
+    $.post("ajax/updateStatus.php",
+    {
+        planID:editID
+    },
+        function (data) {
+            getPlans();
+        }
+    );
+}
 
 
 function ifSmallScreen(){//responsive
