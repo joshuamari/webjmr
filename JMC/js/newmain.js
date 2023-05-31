@@ -180,13 +180,13 @@ $(document).on('click','.hoverProjNext',function(){
   $('#selectedProject').html(selectedProjectString);
   getItems();
 });
-$(document).on('click','.itemIcon',function(){
+$(document).on('click','.hoverItemNext',function(){
   getItems();
   $('.project').addClass('d-none');
   $('.item').addClass('d-none');
   $('.jrd').removeClass('d-none');
   var getTitle = $($($(this).parent()).nextAll()[0]).text();
-  var getID = $($(this).parents()[1]).attr('id');
+  var getID = $($(this).parent()).attr('id');
   selectedItems=getID.split("_")[1];
   selectedItemsString=getTitle;
   $('#selectedItem').html(selectedItemsString);
@@ -194,32 +194,32 @@ $(document).on('click','.itemIcon',function(){
   checkJRDADD();
   checkJRDAddDiv();
 })
-$(document).on({
-  mouseenter: function () {
-    var dznuts=$(this).parent().prop('id').split('_')[1];
-    if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
-      $($(this).find('.itemPrio')).hide();
-      $($(this).find('.itemIcon')).show();
-    }
-  },
-  mouseleave: function () {
-    var dznuts=$(this).parent().prop('id').split('_')[1];
-    if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
-      $($(this).find('.itemPrio')).show();
-      $($(this).find('.itemIcon')).hide();
-    }
-  }
-}, ".hoverItemNext");
-$(document).on({
-  mouseenter: function () {
-    $($(this).find('.projPrio')).hide();
-    $($(this).find('.projIcon')).show();
-  },
-  mouseleave: function () {
-    $($(this).find('.projPrio')).show();
-    $($(this).find('.projIcon')).hide();
-  }
-}, ".hoverProjNext");
+// $(document).on({
+//   mouseenter: function () {
+//     var dznuts=$(this).parent().prop('id').split('_')[1];
+//     if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
+//       $($(this).find('.itemPrio')).hide();
+//       $($(this).find('.itemIcon')).show();
+//     }
+//   },
+//   mouseleave: function () {
+//     var dznuts=$(this).parent().prop('id').split('_')[1];
+//     if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
+//       $($(this).find('.itemPrio')).show();
+//       $($(this).find('.itemIcon')).hide();
+//     }
+//   }
+// }, ".hoverItemNext");
+// $(document).on({
+//   mouseenter: function () {
+//     $($(this).find('.projPrio')).hide();
+//     $($(this).find('.projIcon')).show();
+//   },
+//   mouseleave: function () {
+//     $($(this).find('.projPrio')).show();
+//     $($(this).find('.projIcon')).hide();
+//   }
+// }, ".hoverProjNext");
 $(document).on('change','#myGroup',function(){
   getProjects();
   // $('.projIcon,.itemIcon').hide();
@@ -381,7 +381,7 @@ function getProjects(){//get projects
       projects=$.parseJSON(data);
       fillProj();
       selectedProject='';
-      $('.projIcon').hide();
+      // $('.projIcon').hide();
       $('#projTable').sortable({
           items: 'tr:not(.dontMove)',
           update:function(event,ui){
@@ -446,7 +446,8 @@ function projRow(iVal){//lay project table
   }
 
   var addString=`<tr class=" text-center ${draggable}" id="p_${trID}">
-  <td class="hoverProjNext"><span class="projPrio">${parseInt($('#projTable').children().length) + 1}</span><span class="projIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+  <td class="hoverProjNext p-0 position-relative" title="Click to go to Item of Works"><span class="arw"></span>
+  <span class="projPrio">${parseInt($('#projTable').children().length) + 1}</span></td>
   <td>${iTitle}</td>
   <td>${iOrder}</td>
   <td>${iBU}</td>
@@ -672,6 +673,11 @@ function fillItem(){//set item to lay
   // }
 }
 function itemRow(iVal){//lay item table
+  // 
+  // 
+  // IF WALANG JRD PALITAN ANG CURSOR NG $(selector).css("cursor","auto");
+  // 
+  // 
   var iTitle = iVal.split('||')[0];
   var trID = iVal.split('||')[1] || "";
   var iActive = iVal.split('||')[2] || "";
@@ -705,7 +711,8 @@ function itemRow(iVal){//lay item table
   }
 
   var addString=`<tr class=" text-center ${draggable}" id="i_${trID}">
-  <td class="hoverItemNext"><span class="itemPrio">${parseInt($('#itemTable').children().length) + 1}</span><span class="itemIcon"><i class='bx bxs-right-arrow fs-3 m-0 p-0' ></i></span></td>
+  <td class="hoverItemNext p-0 position-relative" title="Click to go to Item of Works"><span class="arw"></span>
+  <span class="itemPrio">${parseInt($('#itemTable').children().length) + 1}</span></td>
   <td>${iTitle}</td>
   ${nonDefaults}
 </tr>`;

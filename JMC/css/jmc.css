@@ -449,6 +449,24 @@ letter-spacing: 2px;
     height: 100%;
     width: 100%;
   }
+  #projTable .arw,
+  #itemTable .arw{
+    display: block;
+    height: 57px;
+    width: 100%;
+    background-color: var(--tertiary-blue);
+    clip-path: polygon(75% 0, 100% 50%, 75% 100%, 0 100%, 0 0);
+  }
+  #projTable .projPrio,
+  #itemTable .itemPrio{
+    position: absolute;
+    top: 15px;
+    left: 22px;
+  }
+  .hoverProjNext,
+  .hoverItemNext{
+    cursor:pointer;
+  }
 
   .project, .item, .jrd{
     position: relative;
@@ -591,7 +609,7 @@ letter-spacing: 2px;
   align-items: center;
 }
 .item .content .table-container table tbody tr:hover{
-  background: var(--tertiary-blue);
+  background: var(--main-blue);
 }
 .item .content .table-container table tbody tr:hover td{
   color: #fff;
