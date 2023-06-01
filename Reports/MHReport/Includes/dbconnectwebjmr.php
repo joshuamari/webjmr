@@ -24,6 +24,7 @@ try {
   $trainProjID=$trainProjStmt->fetchColumn();
   $gods=['464','465','487'];
   $sys=["212","355","409"];
+  $specialRequestNiSirLou=["483","474"];
   $kdtWholeItems=['1','2','16','18','20'];
   $khiWholeItems=['3','4','5','12','14'];
   $halfItems=['7','8','9','11','13','22','23','24'];
@@ -51,7 +52,7 @@ try {
     array_push($mgaSM,$sms['fldEmployeeNum']);
   }
   $reportAllGroupAccess=[];
-  $reportAllGroupAccess=array_merge($gods,$itMembers,$mgaSM,$sys);
+  $reportAllGroupAccess=array_merge($gods,$itMembers,$mgaSM,$sys,$specialRequestNiSirLou);
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
