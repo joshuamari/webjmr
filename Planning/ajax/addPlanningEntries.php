@@ -36,8 +36,8 @@ if(!empty($_POST['getMH'])){
 #endregion
 
 #region Entries Query
-$insertQ="INSERT INTO planning(fldPlanner, fldDatePlanned, fldEmployeeNum, fldJob, fldStartDate, fldEndDate, fldHours) 
-VALUES(:empNum,:datePlanned,:getEmp,:getDescription,:getsDate,:geteDate,:getMH)";
+$insertQ="INSERT INTO planning(fldPlanner, fldDatePlanned, fldEmployeeNum, fldJob, fldStartDate, fldEndDate, fldHours, fldDateModified) 
+VALUES(:empNum,:datePlanned,:getEmp,:getDescription,:getsDate,:geteDate,:getMH,:datePlanned)";
 $insertStmt=$connwebjmr->prepare($insertQ);
 $insertStmt->execute([":empNum"=>$empNum,":datePlanned"=>$datePlanned,":getEmp"=>$getEmp,":getDescription"=>$getDescription,":getsDate"=>$getsDate,":geteDate"=>$geteDate,":getMH"=>$getMH]);
 #endregion
