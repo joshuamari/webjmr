@@ -996,16 +996,21 @@ function resetEditEntry(){//reset Inputs
 }
 function getPlans(){
     var plans=[];
-    // var defaultBody=``;
-    // $(`#planningTable`).html(defaultBody)
     $(`#planningTable`).empty()
+    var defaultBody=`<tr><td colspan="12" class="text-center">No Entries Found</td></tr>`;
     $.post("ajax/getPlans.php",
     {
         getPlanner:empDetails['empNum']
     },
         function (data) {
             plans=$.parseJSON(data);
-            plans.map(fillPlans);
+            if(plans.length>0){
+                plans.map(fillPlans);
+            }
+            else{
+                $(`#planningTable`).html(defaultBody);
+            }
+            
         }
     );
 }
@@ -1021,7 +1026,8 @@ function fillPlans(planString){
     var projStart=planStringArray[6];
     var projEnd=planStringArray[7];
     var projMH=planStringArray[8];
-    var projStatus=planStringArray[9];
+    var usedHours=planStringArray[9];
+    var projStatus=planStringArray[10];
     var statusBadge=`<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
     if(projStatus.length>0){
         statusBadge=`<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
@@ -1036,6 +1042,7 @@ function fillPlans(planString){
     <td class="text-center">${projStart}</td>
     <td class="text-center">${projEnd}</td>
     <td class="text-center">${projMH}</td>
+    <td class="text-center">${usedHours}</td>
     <td class="text-center">
       <div class="bdge ">
         ${statusBadge}
