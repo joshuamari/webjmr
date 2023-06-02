@@ -39,7 +39,7 @@ $(document).ready(function(){//page Initialize Event
         getEntries();
         sequenceValidation();
         initCalendar();
-       
+        getPlans();
         //#region sidebarshits
         let arrow = document.querySelectorAll(".arrow");
 
@@ -400,8 +400,10 @@ $(document).on('search','#searchjrd',function(){
     
     getJRDSearch(projID,itemID);
 });
-$(document).on('click','#plannedItems tr', function(){
+$(document).on('click','.planEntries', function(){
     $('#drPlanning').modal('show');
+    var planID = $(this).attr("plan-id");
+    getDeets(planID);
 })
 
 //#endregion
@@ -1467,6 +1469,86 @@ function getOneBUTrainerID(){//get databse id of one bu train itemofworks
       async: false
     });
     return obutrainID;
+}
+function getPlans(){
+    var plans=[];
+    $(`#plannedItems`).empty()
+    var defaultBody=`<tr><td colspan="6" class="text-center">No Entries Found</td></tr>`;
+    $.post("ajax/getPlans.php",
+    {
+        getEmployee:empDetails['empNum']
+    },
+        function (data) {
+            plans=$.parseJSON(data);
+            if(plans.length>0){
+                plans.map(fillPlans);
+            }
+            else{
+                $(`#plannedItems`).html(defaultBody);
+            }
+            
+        }
+    );
+}
+function fillPlans(planString){
+    var planStringArray=planString.split("||");
+    var planID=planStringArray[0];
+    var projName=planStringArray[1];
+    var projJob=planStringArray[2];
+    var projEnd=planStringArray[3];
+    var projMH=planStringArray[4];
+    var usedHours=planStringArray[5];
+    var projStatus=planStringArray[6];
+    var statusBadge=`<span class="badge text-bg-warning">Ongoing</span>`;
+    if(projStatus.length>0){
+        statusBadge=`<span class="badge text-bg-success" title="${projStatus}">Finished</span>`;
+    }
+    var addString=`<tr class="planEntries" plan-id="${planID}">
+    <td>${projName}</td>
+    <td>${projJob}</td>
+    <td>${projEnd}</td>
+    <td>${projMH}</td>
+    <td>${usedHours}</td>
+    <td>
+        ${statusBadge}
+    </td>
+  </tr>`;
+    $(`#plannedItems`).append(addString);
+}
+function getDeets(planID){
+    var deets=[];
+    $.post("ajax/getDeets.php",
+    {
+        planID:planID,
+        empID:empDetails['empNum']
+    },
+        function (data) {
+            deets=$.parseJSON(data);
+            deets.map(fillEditPlan);
+        }
+    );
+}
+function fillEditPlan(editDetails){
+    var eDeets=editDetails.split("||");
+    var projName=eDeets[0];
+    var itemName=eDeets[1];
+    var jobName=eDeets[2];
+    var projStart=eDeets[3];
+    var projEnd=eDeets[4];
+    var projMHRemaining=eDeets[5];
+    var projStatus=eDeets[6];
+    var statusBadge=`<span class="badge text-bg-warning fs-5">Ongoing</span>`;
+    if(projStatus.length>0){
+        statusBadge=`<span class="badge text-bg-success fs-5" title="${projStatus}">Finished</span>`;
+    }
+    $(`#projectPlan`).val(projName);
+    $(`#itemPlan`).val(itemName);
+    $(`#jrdPlan`).val(jobName);
+    $(`#sDatePlan`).val(projStart);
+    $(`#eDatePlan`).val(projEnd);
+    $(`#mhPlan`).val(projMHRemaining);
+    $(`#projectPlan`).val(projName);
+    $(`#statusPlan`).html(statusBadge);
 }
 //#endregion
 

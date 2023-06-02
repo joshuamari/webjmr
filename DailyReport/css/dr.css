@@ -662,7 +662,7 @@ footer{
 .right .planned .table tbody{
     white-space: nowrap;
 }
-.right .planned .table tbody tr{
+.right .planned .table .planEntries{
     cursor: pointer;
 }
 .selectBut{
