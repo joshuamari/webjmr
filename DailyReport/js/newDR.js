@@ -877,6 +877,7 @@ function addEntries(addMode){//add Entries to Database
                     }
                     isDrawing();
                     initCalendar();
+                    getPlans();
                 }
             });
         }
@@ -1029,6 +1030,7 @@ function copyEntries(){//copy entries from selected date
             getEntries();
             resetEntry();
             initCalendar();
+            getPlans();
         }
     );
 }
