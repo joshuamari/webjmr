@@ -890,6 +890,7 @@ function deleteEntry(tableRowID){//delete Entries from Database
         function (data) {
             getEntries();
             initCalendar();
+            getPlans();
         }
     );
 }
