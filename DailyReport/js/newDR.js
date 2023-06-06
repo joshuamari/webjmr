@@ -61,19 +61,12 @@ $(document).ready(function(){//page Initialize Event
         let sidebar = document.querySelector(".sidebar");
         let sidebarBtn = document.querySelector(".menu-one");
         let sidebarBtn2 = document.querySelector(".menu-two");
-        // console.log(sidebarBtn);
         sidebarBtn.addEventListener("click", () => {
         $(".sidebar").toggleClass("close");
-        // console.log("pinindot")
         });
         sidebarBtn2.addEventListener("click", () => {
         $(".sidebar").addClass("close");
         });
-        //#endregion
-        //#region
-
-      
-
         //#endregion
         //#region input time validation
         var inputHour = document.getElementById("getHour");
@@ -145,22 +138,13 @@ $(document).on('click','.pindot',function(){
         $('.ms-lbl p').html(`<i class='bx bx-x' style='color:#fff; font-size:40px;'></i>`);
     }else{
         $('.ms-lbl p').html(`Calendar <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`);
-    }
-   
-    // $('.today-btn').click();
-    
+    }    
 })
 $(document).on('change','#idGroup',function(){//select Group Event
-    // var getSelValue = $(this).children(":selected").prop("data-id");
-    // $('#idGroup').children(":selected").prop("data-id");
     getProjects();
-  
-    // getCheckers();
     $('#p1').text("");
     $(this).removeClass('border-danger');
     $('.iow').removeClass('active');
-
-    // console.log(getSelValue);
 });
 $(document).on('change','#idDRDate',function(){//select Date Event
     getEntries();
@@ -192,7 +176,6 @@ $(document).on('change','#idProject',function(){//select Project Event
         $('#idItem').empty().append(`<option selected hidden disabled value="">Select Item of Works</option>`);
     }
     getItems(projID);
-    // getItemSearch(projID)
     isDrawing();
     getTOW(projID);
     disableTimeInput(projID);
@@ -216,7 +199,6 @@ $(document).on('change','#idProject',function(){//select Project Event
 $(document).on('change','#idItem',function(){//select Item Event
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
     var itemID=$($(this).find('option:selected')).attr('item-id');
-    
     $('.trgrp').remove();
     getLabel(itemID);
     disableInputs(projID,itemID);
@@ -225,7 +207,6 @@ $(document).on('change','#idItem',function(){//select Item Event
     }
     trainingGroup(itemID);
     getJobs(projID,itemID);
-    // getJRDSearch(projID,itemID);
     $('#p5').text("");
     $(this).removeClass('border-danger');
 })
@@ -251,16 +232,8 @@ $(document).on('click','button[edit-entry]',function(){//click edit event
 });
 $(document).on('change','#idLocation',function(){//select Group Event  
     MHValidation();
-    
     $('#p3').text("");
     $(this).removeClass('border-danger');
-
-    // if($(this).val()=="WFH"){
-    //     $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',true);
-    // }
-    // else{
-    //      $($('#idProject').find(`option[proj-id=${leaveID}]`)).prop('hidden',false);
-    //  }
     });
      
 $(document).on('change', '#idMH', function(){
@@ -287,14 +260,11 @@ $(document).on('click', '.today-btn', function(){
     $('#gotomonth').val("");
 })
 $(document).on('click','.day', function() {
-    
     $('.day').each(function(){
         $(this).removeClass("active");
     })
     $(this).addClass("active");
-    // console.log("click")
     var hatdog = $(this).text();
-    // console.log(hatdog)
     getActiveDay(hatdog);
     
 })
@@ -391,13 +361,11 @@ $(document).on('click','#jrdOptions li',function(){
 $(document).on('keyup','#searchjrd',function(){
     var itemID=$($('#idItem').find('option:selected')).attr('item-id');
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
-    
     getJRDSearch(projID,itemID);
 });
 $(document).on('search','#searchjrd',function(){
     var itemID=$($('#idItem').find('option:selected')).attr('item-id');
     var projID=$($('#idProject').find('option:selected')).attr('proj-id');
-    
     getJRDSearch(projID,itemID);
 });
 $(document).on('click','.planEntries', function(){
@@ -457,14 +425,14 @@ function getDispatchLoc(){//get Dispatch Location Selection
         }
     });
 }
-function getTOW(iVal){//get Types of Work Selection
+function getTOW(projID){//get Types of Work Selection
     $.ajaxSetup({async: false});
     $("#idTOW").prop('selectedIndex',0);
     $("#idChecking").prop('selectedIndex',0);
     $("#forChecking").hide();
     $.post("ajax/getTOW.php",
     {
-        projID:iVal
+        projID:projID
     },
         function (data) {
             $('#idTOW').html(data);
@@ -473,19 +441,19 @@ function getTOW(iVal){//get Types of Work Selection
     );
     $.ajaxSetup({async: true});
 }
-function addRow(iVal){//map Entries for display
+function addRow(entriesArrayElement){//map Entries for display
     // ["primary_id||location||group||project||item||description||hour||mht"]
-    var pId = iVal.split('||')[0];
-    var loc = iVal.split('||')[1];
-    var group = iVal.split('||')[2];
-    var project = iVal.split('||')[3];
-    var item = iVal.split('||')[4];
-    var desc = iVal.split('||')[5];
-    var hour = parseFloat(iVal.split('||')[6]);
-    var mht = iVal.split('||')[7];
-    var rmrks = iVal.split('||')[8];
+    var pId = entriesArrayElement.split('||')[0];
+    var loc = entriesArrayElement.split('||')[1];
+    var group = entriesArrayElement.split('||')[2];
+    var project = entriesArrayElement.split('||')[3];
+    var item = entriesArrayElement.split('||')[4];
+    var desc = entriesArrayElement.split('||')[5];
+    var hour = parseFloat(entriesArrayElement.split('||')[6]);
+    var mht = entriesArrayElement.split('||')[7];
+    var rmrks = entriesArrayElement.split('||')[8];
     var del = ``;
-    if(iVal.split('||')[9]==1){
+    if(entriesArrayElement.split('||')[9]==1){
         del=`<strong>(Deleted)</strong>`;
     }
     const mhtyp = ["Regular", "OT", "Leave"];
@@ -549,19 +517,6 @@ function getMHCount(){//get MH Counter Values
     var getTRs = Object.values($('#drEntries').children());
     getTRs.length -= 2;
     getTRs.forEach(element => {
-        // var mhType=(element.id)[0];
-        // var hr=parseFloat($($(element).children()[5]).text());
-        // switch(mhType){
-        //     case "0":
-        //         reg+=hr;
-        //         break;
-        //     case "1":
-        //         ot+=hr;
-        //         break;
-        //     case "2":
-        //         lv+=hr;
-        //         break;
-        // }
         loc=$($(element).children()[0]).text();
         });
     
@@ -605,30 +560,6 @@ function getMHCount(){//get MH Counter Values
             }
         }
     }
-        // if(reg>8){
-        //     $('#cardReg').addClass('new');
-        //     $('#regCount').text(reg);
-        // }
-        // else{
-        //     $('#cardReg').removeClass('new');
-        //     $('#regCount').text(reg);
-        // }
-        // if(ot>8){
-        //     $('#cardOt').addClass('new');
-        //     $('#otCount').text(ot);
-        // }
-        // else{
-        //     $('#cardOt').removeClass('new');
-        //     $('#otCount').text(ot);
-        // }
-        // if(lv>8){
-        //     $('#cardLv').addClass('new');
-        //     $('#lvCount').text(lv);
-        // }
-        // else{
-        //     $('#cardLv').removeClass('new');
-        //     $('#lvCount').text(lv);
-        // }
 }
 function sequenceValidation(){//sequence Checking Project->Item->Job
     $('#idProject').prop('disabled',true);
@@ -644,24 +575,6 @@ function sequenceValidation(){//sequence Checking Project->Item->Job
         $('#idProject').prop('disabled',false);
     }
 }
-// function getProjects(){//get Project Selection
-
-//     $.ajaxSetup({async: false});
-//     $.post("ajax/getProjects.php",
-//     {
-//         // empGroup:empDetails['empGroup'],
-//         empGroup:$('#idGroup').val(),
-//         empNum:empDetails['empNum'],
-//         empPos:empDetails['empPos']
-//     },
-//         function (data) {
-//             $('#idProject').html(data);
-//             $('#idProject').val("").change();
-//         }
-//     );
-//     $.ajaxSetup({async: true});
-    
-// }
 
 function getProjects(){//get PROJECT Selection
     var proj=[];
@@ -671,25 +584,20 @@ function getProjects(){//get PROJECT Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
     },
         function (data) {
-          
             proj=$.parseJSON(data);
-            console.log(proj)
             proj.map(fillProj);
             sequenceValidation();
         }
     );
     $.ajaxSetup({async: true}); 
 }
-function fillProj(iVal){
-    console.log("oo")
-    var projDeets=iVal.split("||");
-    
+function fillProj(projArrayElement){
+    var projDeets=projArrayElement.split("||");
     var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</li>`;
     var addStringMain=`<option hidden proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</option>`;
     $(`#projOptions`).append(addString);
@@ -702,7 +610,6 @@ function getProjSearch(){//get Item Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getProjects.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
@@ -711,14 +618,12 @@ function getProjSearch(){//get Item Selection
         function (data) {
             proj=$.parseJSON(data);
             proj.map(fillProj);
-            
         }
     );
     $.ajaxSetup({async: true}); 
 }
 
-
-function getItems(iVal){//get Item Selection
+function getItems(projID){//get Item Selection
     var itms=[];
     $('#itemOptions').empty();
     $('#idItem').html(`<option value='' hidden>Select Item of Works</option>`);
@@ -726,42 +631,40 @@ function getItems(iVal){//get Item Selection
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
-        projID:iVal,
+        projID:projID,
     },
         function (data) {
             itms=$.parseJSON(data);
             itms.map(fillItem);
             sequenceValidation();
-            if(iVal==mngID){
+            if(projID==mngID){
                 $($('#idItem').children()[1]).prop("selected",true).change();
             }
         }
     );
     $.ajaxSetup({async: true}); 
 }
-function fillItem(iVal){
-    var itemDeets=iVal.split("||");
+function fillItem(itemArrayElement){
+    var itemDeets=itemArrayElement.split("||");
     var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
     var addStringMain=`<option hidden item-id='${itemDeets[0]}'>${itemDeets[1]}</option>`;
     $(`#itemOptions`).append(addString);
     $(`#idItem`).append(addStringMain);
 }
-function getItemSearch(iVal){//get Item Selection
+function getItemSearch(projID){//get Item Selection
     var itms=[];
     var searchIOW=$(`#searchitem`).val();
     $('#itemOptions').empty();
     $.ajaxSetup({async: false});
     $.post("ajax/getItems.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
-        projID:iVal,
+        projID:projID,
         searchIOW:searchIOW,
     },
         function (data) {
@@ -771,73 +674,50 @@ function getItemSearch(iVal){//get Item Selection
     );
     $.ajaxSetup({async: true}); 
 }
-// function getJobs(iVal,xVal){//get Job Selection
-//     $.ajaxSetup({async: false});
-//     $('#idJRD').val('');
-//     $.post("ajax/getJobs.php",
-//     {
-//         // empGroup:empDetails['empGroup'],
-//         empGroup:$('#idGroup').val(),
-//         empNum:empDetails['empNum'],
-//         projID:iVal,
-//         itemID:xVal
-//     },
-//         function (data) {
-//             $('#idJRD').html(data);
-//             sequenceValidation();
-//             if(iVal==mngID || iVal==kiaID){
-//                 $($('#idJRD').children()[1]).prop("selected",true);
-//             }
-//         }
-//     );
-//     $.ajaxSetup({async: true});
-// }
 
-function getJobs(iVal,xVal){//get Item Selection
+function getJobs(projID,itemID){//get Item Selection
     var jobs=[];
     $('#jrdOptions').empty();
     $('#idJRD').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
     $.post("ajax/getJobs.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
-        projID:iVal,
-        itemID:xVal
+        projID:projID,
+        itemID:itemID
     },
         function (data) {
             jobs=$.parseJSON(data);
             jobs.map(fillJobs);
             sequenceValidation();
-            if(iVal==mngID || iVal==kiaID){
+            if(projID==mngID || projID==kiaID){
                 $($('#idJRD').children()[1]).prop("selected",true).change();
             }
         }
     );
     $.ajaxSetup({async: true}); 
 }
-function fillJobs(iVal){
-    var jrdDeets=iVal.split("||");
+function fillJobs(jobArrayElement){
+    var jrdDeets=jobArrayElement.split("||");
     var addString=`<li job-id='${jrdDeets[0]}'>${jrdDeets[1]}</li>`;
     var addStringMain=`<option hidden job-id='${jrdDeets[0]}'>${jrdDeets[1]}</option>`;
     $(`#jrdOptions`).append(addString);
     $(`#idJRD`).append(addStringMain);
 }
-function getJRDSearch(iVal,xVal){//get Item Selection
+function getJRDSearch(projID,itemID){//get Item Selection
     var jrd=[];
     var searchjrd=$(`#searchjrd`).val();
     $('#jrdOptions').empty();
     $.ajaxSetup({async: false});
     $.post("ajax/getJobs.php",
     {
-        // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
         empPos:empDetails['empPos'],
-        projID:iVal,
-        itemID:xVal,
+        projID:projID,
+        itemID:itemID,
         searchjrd:searchjrd,
     },
         function (data) {
@@ -849,7 +729,7 @@ function getJRDSearch(iVal,xVal){//get Item Selection
 }
 
 
-function addEntries(iVal){//add Entries to Database
+function addEntries(addMode){//add Entries to Database
     var tutri=$('input[name="radio"]:checked').val();
     var grp = $('#idGroup').val();
     var date = $('#idDRDate').val();
@@ -970,19 +850,17 @@ function addEntries(iVal){//add Entries to Database
     fd.append("getMHType",mhtype);
     fd.append("getRemarks",remarks);
     fd.append("getChecking",checker);
-    fd.append("addType",iVal);
+    fd.append("addType",addMode);
     fd.append("empNum",empDetails['empNum']);
     if(mgaKulang.length>0){
         console.log(mgaKulang)
         return;
     }
     else{
-         
         //for (var pair of fd.entries()) {
         //   console.log(pair[0]+ ', ' + pair[1]);    
         //}
         // return;
-            
              $.ajax({
                 type: "POST",
                 url: "ajax/addEntries.php",
@@ -991,8 +869,6 @@ function addEntries(iVal){//add Entries to Database
                 cache: false,
                  processData: false,
                  success: function (data) {
-                     // console.log(data)
-                     
                     getEntries();
                     resetEntry();
                     if($('#idAdd').text()!="Add"){
@@ -1005,10 +881,10 @@ function addEntries(iVal){//add Entries to Database
             });
         }
     }
-function deleteEntry(iVal){//delete Entries from Database
+function deleteEntry(tableRowID){//delete Entries from Database
     $.post("ajax/deleteEntry.php",
     {
-        trID:iVal
+        trID:tableRowID
     },
         function (data) {
             getEntries();
@@ -1025,10 +901,10 @@ function resetEntry(){//reset Inputs
     $('.checker').addClass('d-none');
     sequenceValidation();
 }
-function disableTimeInput(iVal){//disable Time Input
+function disableTimeInput(projID){//disable Time Input
     $('#getHour').prop('disabled',false);
     $('#getMin').prop('disabled',false);
-    if(iVal==leaveID){
+    if(projID==leaveID){
         $('#getHour').prop('disabled',true);
         $('#getMin').prop('disabled',true);
     }
@@ -1057,9 +933,7 @@ function hasJRD(){
     var isDrawing = true;
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
     var selGroup=$("#idGroup").val();
-    // isDrawing=((!defaults.includes(projID) || projID=='2') && projID);
     isDrawing=(projID!=leaveID&&projID!=otherID);
-    // return isDrawing;
     if(isDrawing){
         $("#idJRDDiv").removeClass("d-none");
     }
@@ -1072,14 +946,11 @@ function hasTOW(){
     var projID=$($("#idProject").find('option:selected')).attr('proj-id');
     var selGroup=$("#idGroup").val();
     isDrawing=(!defaults.includes(projID) && projID);
-    // return isDrawing;
     if(isDrawing){
-        // $("#idJRDDiv").removeClass("d-none");
         $("#idTowDiv").removeClass("d-none");
         $("#idTowDescDiv").removeClass("d-none");
     }
     else{
-        // $("#idJRDDiv").addClass("d-none");
         $("#idTowDiv").addClass("d-none");
         $("#idTowDescDiv").addClass("d-none");
     }
@@ -1097,7 +968,6 @@ function MHValidation(){//enable/disable manhour type selection
     }
     if(projID!=leaveID){//if Project selected is not LEAVE    
         $("#idMH").prop('disabled',false);
-        // $("#idMH").val('');
         if(!isWorkDay(selLoc)){
             $("#idMH").val('Overtime');
             $("#idMH").prop('disabled',true);
@@ -1116,10 +986,10 @@ function MHValidation(){//enable/disable manhour type selection
         }
     }
 }
-function isWorkDay(iVal){//check if work day
+function isWorkDay(location){//check if work day
     var isWorkDay=false;
     var selDate=$("#idDRDate").val();
-    var selLoc=iVal;
+    var selLoc=location;
     if(selLoc==null){
         selLoc="KDT";
     }
@@ -1136,10 +1006,10 @@ function isWorkDay(iVal){//check if work day
     $.ajaxSetup({async: true});
     return isWorkDay;
 }
-function getTOWDesc(iVal){//get TOW Selection
+function getTOWDesc(typesOfWorkID){//get TOW Selection
     $.post("ajax/getTOWDesc.php",
      {
-        towID:iVal
+        towID:typesOfWorkID
      },
         function (data) {
             $("#towDesc").html(data.trim());
@@ -1156,20 +1026,18 @@ function copyEntries(){//copy entries from selected date
         copyDate:copyDate
      },
         function (data) {
-            // console.log(data)
             getEntries();
             resetEntry();
             initCalendar();
         }
     );
 }
-function editEntry(iVal){//edit selected entry
+function editEntry(currentObject){//edit selected entry
     $('#idAdd').text("Save Changes");
     $('#idReset').text("Cancel");
     $('#idLocation').val("");
-    // $('#idMH').val("");
 
-    var trID = $($(iVal).parents()[1]).attr('id')
+    var trID = $($(currentObject).parents()[1]).attr('id')
     editID = trID.split("_")[1];
     
     $.post("ajax/getDataEdit.php", {
@@ -1177,9 +1045,7 @@ function editEntry(iVal){//edit selected entry
     },
         function (data) {
             var dataEdit = $.parseJSON(data);
-            // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $('#idGroup').val(dataEdit[1]);
-
             getCheckers();
             getProjects();
             $($('#idProject').find(`option[proj-id=${dataEdit[2]}]`)).prop('selected',true).change();
@@ -1187,13 +1053,6 @@ function editEntry(iVal){//edit selected entry
             $($('#idItem').find(`option[item-id=${dataEdit[3]}]`)).prop('selected',true).change();
             getJobs(dataEdit[2],dataEdit[3]);
             $($('#idJRD').find(`option[job-id=${dataEdit[4]}]`)).prop('selected',true).change();
-
-            // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
-            // if(dataEdit[5].toString().split('.')[1] == undefined){
-            //     $('#getMin').val(0);
-            // }else{
-            //     $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
-            // }
             $(`#getHour`).val(`${Math.floor(dataEdit[5]/60)}`);
             $(`#getMin`).val(`${dataEdit[5] % 60}`);
             isDrawing();
@@ -1205,7 +1064,6 @@ function editEntry(iVal){//edit selected entry
             $($('#idMH').find(`option[mhid=${dataEdit[6]}]`)).prop('selected',true).change();
             $('#idRemarks').val(dataEdit[8]);
             if(dataEdit[9] != null){
-                // $(`button[2d3d-id=${dataEdit[9]}]`).click();
                 $(`#${dataEdit[9]}`).click()
             }
             if(dataEdit[10] == 1){
@@ -1213,10 +1071,8 @@ function editEntry(iVal){//edit selected entry
             }
             disableTimeInput(dataEdit[2]);
             if(dataEdit[11] != null){
-                // $('#idChecking').val(dataEdit[11]);
                 $("#forChecking").show();
                 $($('#idChecking').find(`option[dataid=${dataEdit[11]}]`)).prop('selected',true).change();
-                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).prop('selected',true);`);
             }
             $('#trGroup').val(dataEdit[12]);
         }
@@ -1224,23 +1080,16 @@ function editEntry(iVal){//edit selected entry
     isDrawing();
 }
 
-function selectEntry(iVal){//edit selected entry
-
-    // var trID = $($(iVal).parents()[1]).prop('id')
-    var trID = $($(iVal).parents()[1]).attr('id')
+function selectEntry(currentObject){//edit selected entry
+    var trID = $($(currentObject).parents()[1]).attr('id')
     selectID = trID.split("_")[1];
-    
     $.post("ajax/getDataEdit.php", {
         primaryID : selectID
     },
         function (data) {
-            // console.log(data);
             var dataSelect = $.parseJSON(data);
-            // console.log(dataSelect);
-            // var dataEdit = ["KDT","SYS",6,3,"Training",8,0,1,"test",null,null];
             $($('#idLocation').find(`option[loc-id=${dataSelect[0]}]`)).prop('selected',true).change();
             $('#idGroup').val(dataSelect[1]);
-
             getCheckers();
             getProjects();
             $($('#idProject').find(`option[proj-id=${dataSelect[2]}]`)).prop('selected',true).change();
@@ -1248,13 +1097,6 @@ function selectEntry(iVal){//edit selected entry
             $($('#idItem').find(`option[item-id=${dataSelect[3]}]`)).prop('selected',true).change();
             getJobs(dataSelect[2],dataSelect[3]);
             $($('#idJRD').find(`option[job-id=${dataSelect[4]}]`)).prop('selected',true).change();
-
-            // $('#getHour').val(dataEdit[5].toString().split('.')[0]);
-            // if(dataEdit[5].toString().split('.')[1] == undefined){
-            //     $('#getMin').val(0);
-            // }else{
-            //     $('#getMin').val(parseFloat(`.${dataEdit[5].toString().split('.')[1]}`)*60);
-            // }
             $(`#getHour`).val(`${Math.floor(dataSelect[5]/60)}`);
             $(`#getMin`).val(`${dataSelect[5] % 60}`);
             isDrawing();
@@ -1266,7 +1108,6 @@ function selectEntry(iVal){//edit selected entry
             $($('#idMH').find(`option[mhid=${dataSelect[6]}]`)).prop('selected',true).change();
             $('#idRemarks').val(dataSelect[8]);
             if(dataSelect[9] != null){
-                // $(`button[2d3d-id=${dataEdit[9]}]`).click();
                 $(`#${dataSelect[9]}`).click()
             }
             if(dataSelect[10] == 1){
@@ -1274,10 +1115,8 @@ function selectEntry(iVal){//edit selected entry
             }
             disableTimeInput(dataSelect[2]);
             if(dataSelect[11] != null){
-                // $('#idChecking').val(dataEdit[11]);
                 $("#forChecking").show();
                 $($('#idChecking').find(`option[dataid=${dataSelect[11]}]`)).prop('selected',true).change();
-                // console.log(`$($('#idChecking').find("option[dataid=${dataEdit[11]}]")).prop('selected',true);`);
             }
             $('#trGroup').val(dataSelect[12]);
         }
@@ -1392,15 +1231,15 @@ function getNoMoreInputItems(){//get ids of no more input
     });
     return nmiIDs;
   }
-function disableInputs(iVal,xVal){//disable input for no more inputs
+function disableInputs(projID,itemID){//disable input for no more inputs
     $('#getHour').prop('disabled',true);
     $('#getMin').prop('disabled',true);
     $('#idMH').prop('disabled',true);
     $('#idRemarks').prop('disabled',true);
     $('#idAdd').prop('disabled',true);
     
-     if(iVal!=leaveID){
-            if(!noMoreInputItems.includes(xVal)){
+     if(projID!=leaveID){
+            if(!noMoreInputItems.includes(itemID)){
             $('#idRemarks').prop('disabled',false);
             $('#idAdd').prop('disabled',false);
             $('#getHour').prop('disabled',false);
@@ -1413,8 +1252,8 @@ function disableInputs(iVal,xVal){//disable input for no more inputs
         $('#idAdd').prop('disabled',false);
      }
 }
-function trainingGroup(iVal) {//check if item of work is for training for one bu
-    if(iVal==oneBUTrainerID){
+function trainingGroup(itemID) {//check if item of work is for training for one bu
+    if(itemID==oneBUTrainerID){
         $('.iow').after(`
     <div class="col-12 my-2 trgrp">
                   <label for="trGroup" class="form-label">Group of Trainees</label>
@@ -1449,8 +1288,6 @@ function getLabel(itemOfWorkID){//display label of selected item of work
         function (data) {
             if(data.trim()){
                 $('#labell').remove();
-                //display label
-                // console.log(data.trim())
                 $('#p5').after(`
                 <span class="col-12 alert-primary text-primary" id="labell" role="alert">${data}</span>
                 `)
@@ -1580,7 +1417,6 @@ const months = [
 //function to add days
 
 function initCalendar() {
-    // console.log("hehe");
     const firstDay = new Date(year, month , 1);
     const lastDay = new Date(year, month + 1, 0);
     const prevLastDay = new Date(year, month, 0);
@@ -1589,30 +1425,23 @@ function initCalendar() {
     const day = firstDay.getDay();
     const nextDays = 7 - lastDay.getDay() -1;
     var mhColor=``;
-    // date.innerHTML = months[month] + " " + year;
     //month upper center
     $('.date').html(months[month] + " " + year);
         //#region prev month days
         let days = "";
         for ( let x=day; x>0; x--){
             var newDate = new Date(year, month-1, prevDays-x + 1);
-            // mhColor=checkValidMH(formatDate((prevDays-x + 1)+" "+months[month-1]+ " "+year))
-            if(newDate.getDay()==0 ){
-            days += `<div class="day prev-date weekend ${mhColor}">${prevDays-x + 1}</div>`;
-            }
-            else{
-                days += `<div class="day prev-date ${mhColor}">${prevDays-x + 1}</div>`
-            }
-            // 
-            // console.log("prev",prevDays-x + 1);
-            // console.log("prev",newDate);
+                if(newDate.getDay()==0 ){
+                days += `<div class="day prev-date weekend ${mhColor}">${prevDays-x + 1}</div>`;
+                }
+                else{
+                    days += `<div class="day prev-date ${mhColor}">${prevDays-x + 1}</div>`
+                }
             }
         //#endregion
         //#region current month days
         for (let i = 1; i <=lastDate; i++){
         //if day is today add class today
-        
-        // mhColor=checkValidMH(formatDate(i+" "+months[month]+ " "+year))
             if(i == new Date().getDate() && year== new Date().getFullYear() && month == new Date().getMonth()){
                 var newDate = new Date(year, month, i);
                     if(newDate.getDay()==0){
@@ -1639,7 +1468,6 @@ function initCalendar() {
         //#endregion
         //#region next month days  
         for(let j=1; j<= nextDays; j++){
-            // mhColor=checkValidMH(formatDate(j+" "+months[month+1]+ " "+year))
             var newDate = new Date(year, month+1, j);
             if(newDate.getDay()!=6 ){
                 days += `<div class="day next-date  ${mhColor}">${j}</div>`;
@@ -1647,14 +1475,11 @@ function initCalendar() {
             else{
                 days += `<div class="day next-date weekend ${mhColor}">${j}</div>`;
             }
-            // console.log("next",newDate)
         }
         //#endregion
-    // daysContainer.innerHTML = days;  
      $('.days').html(days);
      addListener();
      addColors(formatDate(1+" "+months[month]+ " "+year));
-    //  alert(formatDate(1+" "+months[month]+ " "+year))
     }
 
 
@@ -1705,11 +1530,10 @@ function getActiveDay(date){
     const dayName = day.toString().split(" ")[0];
     $('.event-day').html(dayName);
     $('.event-date').html(date+" "+months[month]+ " "+year);
-    // console.log(formatDate(date+" "+months[month]+ " "+year))
     getDayta(formatDate(date+" "+months[month]+ " "+year));
 }
-function formatDate(iVal) {
-    var d = new Date(iVal),
+function formatDate(rawDate) {
+    var d = new Date(rawDate),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -1725,7 +1549,6 @@ function addListener() {
     const days = document.querySelectorAll(".day");
     days.forEach((day) => {
       day.addEventListener("click", (e) => {
-        // getActiveDay(e.target.innerHTML);
         activeDay = Number(e.target.innerHTML);
         //remove active
         days.forEach((day) => {
@@ -1767,19 +1590,18 @@ function addListener() {
       });
     });
 }
-function getDayta(iVal){
+function getDayta(rawDate){
     $('#pHoursTable').empty();
     var projHours=[];
     var mhArr=[0,0,0,0];
     $.ajaxSetup({async: false});
     $.post("ajax/getDayta.php",
     {
-        getDate:iVal,
+        getDate:rawDate,
         empNum:empDetails['empNum']
     },
         function (data) {
             projHours=$.parseJSON(data);
-            // console.log(projHours)
             if(projHours.length>0){
                 projHours.map(fillDayta);
             }
@@ -1791,7 +1613,7 @@ function getDayta(iVal){
     $.ajaxSetup({async: true});
     $.post("ajax/getMHDayta.php",
     {
-        getDate:iVal,
+        getDate:rawDate,
         empNum:empDetails['empNum']
     },
         function (data) {
@@ -1803,33 +1625,31 @@ function getDayta(iVal){
         }
     );
 }
-function fillDayta(iVal){
-    var prj = iVal.split('||')[0];
+function fillDayta(projectDetailsArrayElement){
+    var prj = projectDetailsArrayElement.split('||')[0];
     var del=``;
-    if(iVal.split('||')[2]==1){
+    if(projectDetailsArrayElement.split('||')[2]==1){
         del=`<strong>(Deleted)</strong>`;
     }
-    var prjHrs = iVal.split('||')[1];
+    var prjHrs = projectDetailsArrayElement.split('||')[1];
     var addString=`<tr>
     <td>${del}${prj}</td>
     <td>${prjHrs}</td>
   </tr>`;
     $('#pHoursTable').append(addString);
 }
-function addColors(iVal){
+function addColors(currentMonth){
     var greenDates=[];
     var redDates=[];
     var holidates=[]
     var allDates=[];
-    // $().addClass('green');
     $.ajaxSetup({async: false});
     $.post("ajax/getDateColors.php",
     {
-        curMonth:iVal,
+        curMonth:currentMonth,
         empNum:empDetails['empNum']
     },
         function (data) {
-            // console.log(data)
             allDates=$.parseJSON(data);
             greenDates=allDates[0];
             redDates=allDates[1];
@@ -1843,7 +1663,7 @@ function addColors(iVal){
         
         var m = spl[1];
         var da = spl[2];
-        var d = new Date(iVal);
+        var d = new Date(currentMonth);
         var nowm = d.getMonth()+1;
         if (m>nowm){
             $(`.day.next-date:contains(${parseInt(da)})`).addClass('green').removeClass('red');
@@ -1861,7 +1681,7 @@ function addColors(iVal){
         
         var mm = spl[1];
         var daa = spl[2];
-        var d = new Date(iVal);
+        var d = new Date(currentMonth);
         var nowmm = d.getMonth()+1;
         
         
@@ -1877,13 +1697,12 @@ function addColors(iVal){
 
     });
     holidates.forEach(element => {
-        // console.log(element)
         var rawHoliday=element.split("||");
         var spl = rawHoliday[0].split("-");
         
         var mm = spl[1];
         var daa = spl[2];
-        var d = new Date(iVal);
+        var d = new Date(currentMonth);
         var nowmm = d.getMonth()+1;
         
         
