@@ -592,6 +592,7 @@ function getProjects(){//get PROJECT Selection
             proj=$.parseJSON(data);
             proj.map(fillProj);
             sequenceValidation();
+            $('#idProject').val('').change()
         }
     );
     $.ajaxSetup({async: true}); 

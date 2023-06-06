@@ -409,23 +409,19 @@ function fillProj(){//set items to lay
   projects.map(projRow);
   // defaults.map(projRow); //pang defaults lang to
 }
-function projRow(iVal){//lay project table
-  var iTitle = iVal.split('||')[0];
-  var trID = iVal.split('||')[1] || "";
-  var iOrder =  iVal.split('||')[2] || "";
-  var iBU = iVal.split('||')[3] || "";
-  var iActive = iVal.split('||')[4] || "";
-  var iPrio = iVal.split('||')[5] || "";
+function projRow(projArrayElement){//lay project table
+  var iTitle = projArrayElement.split('||')[0];
+  var trID = projArrayElement.split('||')[1] || "";
+  var iOrder =  projArrayElement.split('||')[2] || "";
+  var iBU = projArrayElement.split('||')[3] || "";
+  var iActive = projArrayElement.split('||')[4] || "";
+  var iPrio = projArrayElement.split('||')[5] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
     activeStatus="";
     draggable="dontMove"
   }
-  //$('#flexSwitchCheckChecked1').is(":checked")
-  //$('#flexSwitchCheckChecked1').prop("checked",false)
-  //$($(this).parent()).attr('id');//get TR ID
-  
   var nonDefaults=``;
   if(ifEditable(trID)){
     nonDefaults=`
@@ -456,9 +452,9 @@ function projRow(iVal){//lay project table
   $('#projTable').append(addString);
 
 }
-function ifEditable(iVal){//check if non default
+function ifEditable(trID){//check if non default
   var vool=false;
-  if(!defaults.includes(iVal)){
+  if(!defaults.includes(trID)){
     vool=true;
   }
   return vool;
@@ -540,15 +536,15 @@ function ifSmallScreen(){
     $(".menu-two").addClass('d-none');
   }
 }
-function changeActive(iVal,xVal){//set active/inactive
-  var trType=iVal.split("_")[0];
-  var trID=iVal.split("_")[1];
+function changeActive(tableRowID,checkValue){//set active/inactive
+  var trType=tableRowID.split("_")[0];
+  var trID=tableRowID.split("_")[1];
   $.post("ajax/changeActive.php",
   {
     trType:trType,
     trID:trID,
     empGroup:$('#myGroup').val(),
-    isCheck:xVal
+    isCheck:checkValue
   },
     function (data) {
       switch(trType){
@@ -588,10 +584,10 @@ function addProject(){//add project to database
     }
   );
 }
-function deleteProject(iVal){//delete selected project from database
+function deleteProject(projID){//delete selected project from database
   $.post("ajax/deleteProject.php",
   {
-    trID:iVal,
+    trID:projID,
     empID:empDetails['empNum']
   },
     function (data) {
@@ -609,8 +605,8 @@ function getBUICGroups(){//get buic group selection
     }
   });
 }
-function updateProject(iVal){//update selected project in database
-  var id=iVal;
+function updateProject(projID){//update selected project in database
+  var id=projID;
   var editPName=$('#editPName').val();
   var editPOrder=$('#editPOrder').val();
   var editPBUIC=$('#buicEdit').val();
@@ -672,26 +668,22 @@ function fillItem(){//set item to lay
   //   otherVal.map(itemRow)
   // }
 }
-function itemRow(iVal){//lay item table
+function itemRow(itemArrayElement){//lay item table
   // 
   // 
   // IF WALANG JRD PALITAN ANG CURSOR NG $(selector).css("cursor","auto");
   // 
   // 
-  var iTitle = iVal.split('||')[0];
-  var trID = iVal.split('||')[1] || "";
-  var iActive = iVal.split('||')[2] || "";
-  var iPrio = iVal.split('||')[3] || "";
+  var iTitle = itemArrayElement.split('||')[0];
+  var trID = itemArrayElement.split('||')[1] || "";
+  var iActive = itemArrayElement.split('||')[2] || "";
+  var iPrio = itemArrayElement.split('||')[3] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
     activeStatus="";
     draggable="dontMove"
   }
-  //$('#flexSwitchCheckChecked1').is(":checked")
-  //$('#flexSwitchCheckChecked1').prop("checked",false)
-  //$($(this).parent()).attr('id');//get TR ID
-  
   var nonDefaults=``;
   if(ifEditable(selectedProject)){
     nonDefaults=`
@@ -758,10 +750,10 @@ function clearJModal(){//clear draw ref add modal fields
   $('#jrdKdtDl').val('');
   $('#jrdMh').val('');
 }
-function deleteItem(iVal){//delete selected item in database
+function deleteItem(itemID){//delete selected item in database
   $.post("ajax/deleteItem.php",
   {
-    trID:iVal,
+    trID:itemID,
     empID:empDetails['empNum']
   },
     function (data) {
@@ -770,9 +762,9 @@ function deleteItem(iVal){//delete selected item in database
     }
   );
 }
-function updateItem(iVal){//update selected item in database
+function updateItem(itemID){//update selected item in database
   var val=$('#editIName').val();
-  var id=iVal;
+  var id=itemID;
   $.post("ajax/updateItems.php",
   {
     val:val,
@@ -820,28 +812,24 @@ function fillJob(){//set draw refs to lay
   jobs.map(jobRow)
   getGOWJob();
 }
-function jobRow(iVal){//lay drawref table
-  var iTitle = iVal.split('||')[0];
-  var trID = iVal.split('||')[1] || "";
-  var trNoSheet = iVal.split('||')[2] || "";
-  var trPaperSize = iVal.split('||')[3] || "";
-  var trDrawName = iVal.split('||')[4] || "";
-  var trKHIDate = iVal.split('||')[5] || "";
-  var trKHIC = iVal.split('||')[6] || "";
-  var trKHIDeadline = iVal.split('||')[7] || "";
-  var trKDTDeadline = iVal.split('||')[8] || "";
-  var trExpMH = iVal.split('||')[9] || "";
-  var iActive = iVal.split('||')[10] || "";
+function jobRow(jobArrayElement){//lay drawref table
+  var iTitle = jobArrayElement.split('||')[0];
+  var trID = jobArrayElement.split('||')[1] || "";
+  var trNoSheet = jobArrayElement.split('||')[2] || "";
+  var trPaperSize = jobArrayElement.split('||')[3] || "";
+  var trDrawName = jobArrayElement.split('||')[4] || "";
+  var trKHIDate = jobArrayElement.split('||')[5] || "";
+  var trKHIC = jobArrayElement.split('||')[6] || "";
+  var trKHIDeadline = jobArrayElement.split('||')[7] || "";
+  var trKDTDeadline = jobArrayElement.split('||')[8] || "";
+  var trExpMH = jobArrayElement.split('||')[9] || "";
+  var iActive = jobArrayElement.split('||')[10] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
     activeStatus="";
     draggable="dontMove"
   }
-  //$('#flexSwitchCheckChecked1').is(":checked")
-  //$('#flexSwitchCheckChecked1').prop("checked",false)
-  //$($(this).parent()).attr('id');//get TR ID
-  
   var nonDefaults=``;
   if(ifEditable(selectedProject) || (selectedProject==trainingProjID && allAccess.includes(empDetails['empNum'])) || selectedProject==solProjID){
     nonDefaults=`
@@ -927,10 +915,10 @@ function addJob(){//add jrd to database
     }
   );
 }
-function deleteJob(iVal){//delete jrd from database
+function deleteJob(jobID){//delete jrd from database
   $.post("ajax/deleteJob.php",
   {
-    trID:iVal,
+    trID:jobID,
     empID:empDetails['empNum']
   },
     function (data) {
@@ -1024,8 +1012,8 @@ function checkJRDEdit(){//check if jrd edit has engineering fields
   }
   return vool;
 }
-function updateJob(iVal){//update selected drawing reference in database
-  var id=iVal;
+function updateJob(jobID){//update selected drawing reference in database
+  var id=jobID;
   var editJName=$('#editJName').val();
   var editJSheet=$('#editJSheet').val();
   var editJPaper=$('#editJPaper').val();
@@ -1088,10 +1076,10 @@ function getShareEmployees(){//get members of selected group in share jmc modal
     }
   );
 }
-function getSharedList(iVal){//get members shared with selected project
+function getSharedList(projID){//get members shared with selected project
   $.post("ajax/getSharedList.php",
   {
-    projID:iVal
+    projID:projID
   },
     function (data) {
       $('#sharedList').html(data)
@@ -1112,11 +1100,11 @@ function shareProject(){//share project to selected member
     }
   );
 }
-function removeShare(iVal){//remove project access from selected member
+function removeShare(employeeNumber){//remove project access from selected member
   $.post("ajax/removeShare.php",
   {
     projID:shareAccess,
-    empNum:iVal
+    empNum:employeeNumber
   },
     function (data) {
       getSharedList(shareAccess);
@@ -1182,5 +1170,4 @@ function getAllAccess(){
   });
   return allAccessIDs;
 }
-// var projID=$($(this).find('option:selected')).attr('proj-id');
 //#endregion
