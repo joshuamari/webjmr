@@ -205,7 +205,7 @@ function getMngKdt(){
   );
   return mngakdt;
 }
-function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
+function createTable(mainProjects, employeeList, mainProjEntries, hiramProjects, hiramProjEntries, mngProjEntries, BU) {
   $('#mainTable').html(`<thead>
   <tr id="tr1">
     <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle" class="text-center" rowspan="4" title="Employee Number">Emp. No.</th>
@@ -225,8 +225,8 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
 <tbody id="mainTbody">
 
 </tbody>`);
-  addEmp(eVal);
-  pHead(hVal);
+  addEmp(employeeList);
+  pHead(mainProjects);
   // $('#tr1').append(`<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"	data-f-bold="true" data-a-h="center" data-a-v="middle" rowspan="4" class="st-color">Sub-total</th>`);
   // $('.empRow').append(`<td data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" class="st st-color"></td>`);
   // $('#tot1').append(`<td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" id="tot1-st" class="st-color"></td>`);
@@ -239,19 +239,19 @@ function createTable(hVal, eVal, nVal, bVal, pVal, mVal, BU) {
   $('#multiplier').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="mhpp-color"></td>`);
   $('#xd').append(`<td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" class="mhpp-color"></td>`);
 
-  pHead(bVal);
+  pHead(hiramProjects);
   //for entries
   // $($(".empRow[data-val='300']").children('td[data-val="51"]')).text('w3-black')
-  addEntries(nVal);
-  addEntries(mVal);
-  addEntries(pVal);
+  addEntries(mainProjEntries);
+  addEntries(mngProjEntries);
+  addEntries(hiramProjEntries);
   total();
   addFooter();
 }
 
-function addEmp(iVal) {
+function addEmp(empList) {
   //emp#||Name||Group and Desig
-  iVal.forEach(element => {
+  empList.forEach(element => {
     var splitVal = element.split('||');
     $('#mainTbody').append(`
   <tr class="empRow" data-val="${splitVal[0]}">
@@ -277,8 +277,8 @@ function addEmp(iVal) {
 `);
 }
 
-function pHead(iVal) {
-  iVal.forEach(function callback(element) {
+function pHead(projHeader) {
+  projHeader.forEach(function callback(element) {
     //Grp||Proj Code||Proj Name||Location(P/J)||dbIndex
     var splitVal = element.split("||");
     var multi=``;
@@ -309,20 +309,20 @@ function pHead(iVal) {
   });
 }
 
-function afterSub(iVal) {
+function afterSub(kdtGroup) {
   const except = ["SYS", "IT", "ANA", "ETCL", "MPM","MNG","INT"];
 
-  if(iVal == "DXT"){
-    pHead([`Management||${codeArr[iVal]}||100%||P||M1`,`Management||${codeArr[iVal]}||100%||j||M2`,`KDT||${codeArr["KDT"]}||100%||P||K1`, `KDT||${codeArr["KDT"]}||100%||J||K2`])
-  }else if(!except.includes(iVal)){
-    pHead([`Management||${codeArr[iVal]}||100%||P||M1`, `Management||${codeArr[iVal]}||100%||J||M2`, `${iVal}||${codeArr[iVal]}||50%||P||B1`, `${iVal}||${codeArr[iVal]}||50%||J||B2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`]);
+  if(kdtGroup == "DXT"){
+    pHead([`Management||${codeArr[kdtGroup]}||100%||P||M1`,`Management||${codeArr[kdtGroup]}||100%||j||M2`,`KDT||${codeArr["KDT"]}||100%||P||K1`, `KDT||${codeArr["KDT"]}||100%||J||K2`])
+  }else if(!except.includes(kdtGroup)){
+    pHead([`Management||${codeArr[kdtGroup]}||100%||P||M1`, `Management||${codeArr[kdtGroup]}||100%||J||M2`, `${kdtGroup}||${codeArr[kdtGroup]}||50%||P||B1`, `${kdtGroup}||${codeArr[kdtGroup]}||50%||J||B2`, `KDT||${codeArr["KDT"]}||50%||P||K1`, `KDT||${codeArr["KDT"]}||50%||J||K2`]);
   }else{
     pHead([`KDT||61W2102-8900||100%||P||K1`,`KDT||61W2102-8900||100%||J||K2`]);
   }
 }
 
-function addEntries(iVal) {
-  iVal.forEach(element => {
+function addEntries(entriesArrayElement) {
+  entriesArrayElement.forEach(element => {
     var splitVal = element.split('||');
     //emp#||dbIndex||duration
     $($(`.empRow[data-val='${splitVal[0]}']`).children(`td[data-val="${splitVal[1]}"]`)).text(splitVal[2]);
@@ -423,8 +423,8 @@ function getGroups(){
     async=false
   );
 }
-function fillGroup(iVal){
-  var addString=`<option>${iVal}</option>`;
+function fillGroup(groupArrayElement){
+  var addString=`<option>${groupArrayElement}</option>`;
   $('#buSel').append(addString);
 }
 //#endregion
