@@ -23,7 +23,13 @@ try {
   $trainProjStmt=$connwebjmr->query($trainProjQ);
   $trainProjID=$trainProjStmt->fetchColumn();
   $gods=['464','465','487'];
-  $sys=["212","355","409"];
+  $sys=array();
+  $sysQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,465,487,466)";
+  $sysStmt=$connkdt->query($sysQ);
+  $sysArr=$sysStmt->fetchAll();
+  foreach($sysArr AS $syss){
+    array_push($sys,$syss['fldEmployeeNum']);
+  }
   $specialRequestNiSirLou=["483","474"];
   $kdtWholeItems=['1','2','16','18','20'];
   $khiWholeItems=['3','4','5','12','14'];
