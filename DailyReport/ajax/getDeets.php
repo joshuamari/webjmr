@@ -1,6 +1,7 @@
 <?php
 #region Require Database Connections
 require_once '../Includes/dbconnectwebjmr.php';
+require_once '../Includes/dbconnectkdtph.php';
 #endregion
 
 #region set timezone
@@ -36,8 +37,10 @@ if($plansStmt->rowCount()>0){
         $projStatus=$plan['fldStatus']==NULL ? "":date("M d, Y",strtotime($plan['fldStatus']));
         $usedHours=getUsedHours($projJobID,$empNum,$projStart,$projEnd);
         $hoursRemaining=($projMH-$usedHours)/60;
-
-        array_push($planDetails,"$projName||$projItem||$projJob||$projStart||$projEnd||$hoursRemaining||$projStatus");
+        $planner=getEmpName($plan['fldPlanner']);
+        $plannedDate=date("M d, Y",strtotime($plan['fldDatePlanned']));
+        $plannedModified=date("M d, Y",strtotime($plan['fldDateModified']));;
+        array_push($planDetails,"$projName||$projItem||$projJob||$projStart||$projEnd||$hoursRemaining||$projStatus||$planner||$plannedDate||$plannedModified");
     }
 }
 #endregion
@@ -52,7 +55,18 @@ function getUsedHours($jobID,$employeeNumber,$dateStart,$dateEnd){
     $rawHours=$hoursStmt->fetchColumn();
     $projHours=$rawHours;
     return $projHours;
+}
+function getEmpName($employeeNumber){
+    GLOBAL $connkdt;
+    $ename=NULL;
+    $nameQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum=:employeeNumber";
+    $nameStmt=$connkdt->prepare($nameQ);
+    $nameStmt->execute([":employeeNumber"=>$employeeNumber]);
+    if($nameStmt->rowCount()>0){
+        $ename=$nameStmt->fetchColumn();
     }
+    return $ename;
+}
 #endregion
 echo json_encode($planDetails);
 ?>
