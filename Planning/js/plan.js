@@ -13,6 +13,8 @@ switch (document.location.hostname)
 }
 var empDetails=[];
 var editID = "";
+var deleteID = "";
+var TRow = "";
 
 //#endregion
 checkLogin();
@@ -328,19 +330,29 @@ $(document).on('search','#searchjrdEdit',function(){
 });
 $(document).on('click', '.badge', function(){
     var planID = $(this).closest("tr").attr("plan-id");
+    var getTR = $(this).closest("tr");
     editID=planID;
+    TRow = getTR;
     $('#editStatus').modal('show');
 
 })
 $(document).on('click', '#idEditStatus', function(){
     $('#editStatus').modal('hide');
-    updateStatus();
-    // $('.bdge').html(`<button class="badge done bg-success border-0  w-100">Finished - 12/22/2023</button>`)
+    
+    getPlans();
+
 })
 $(document).on('click', '.editPlanningButton', function(){
     var planID = $(this).closest("tr").attr("plan-id");
     editID=planID;
     getEdeets(planID);
+})
+$(document).on('click', '.deletePlanningButton', function(){
+    var planID = $(this).closest("tr").attr("plan-id");
+    deleteID=planID;
+})
+$(document).on('click', '#confirmDeleteEntry', function(){
+    deletePlannedEntry(deleteID);
 })
 $(document).on('click', '.cancel', function(){
     resetEntry();
@@ -979,7 +991,19 @@ function editEntries(){//add Entries to Database
         });
     }
 }
+function deletePlannedEntry(planid){
 
+    $.post("ajax/deletePlanning.php",
+    {
+        planID:planid
+    },
+        function (data) {
+            $(".cancel3").click();
+            getPlans();
+            
+        }
+    );
+}
 
 
 function resetEntry(){//reset Inputs
@@ -1029,8 +1053,16 @@ function fillPlans(planString){
     var usedHours=planStringArray[9];
     var projStatus=planStringArray[10];
     var statusBadge=`<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
+    var buttons = `
+    <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button>
+    <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" data-bs-target="#deletePlanningEntry"><i class='bx bx-trash-alt w-100 text-white' ></i></button>
+    `
     if(projStatus.length>0){
         statusBadge=`<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
+        buttons = `
+        <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' disabled></i></button>
+    <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" data-bs-target="#deletePlanningEntry"><i class='bx bx-trash-alt w-100 text-white' disabled></i></button>
+        `;
     }
     var addString=`<tr plan-id="${planID}">
     <th scope="row" class="text-center">${projCount}</th>
@@ -1048,7 +1080,7 @@ function fillPlans(planString){
         ${statusBadge}
      </div>
     </td>
-    <td class="text-center"><button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button></td>
+    <td class="text-center">${buttons}</td>
   </tr>`;
     $(`#planningTable`).append(addString);
 }

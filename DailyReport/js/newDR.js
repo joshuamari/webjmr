@@ -1364,6 +1364,7 @@ function getDeets(planID){
         empID:empDetails['empNum']
     },
         function (data) {
+            console.log(data)
             deets=$.parseJSON(data);
             deets.map(fillEditPlan);
         }
@@ -1378,6 +1379,9 @@ function fillEditPlan(editDetails){
     var projEnd=eDeets[4];
     var projMHRemaining=eDeets[5];
     var projStatus=eDeets[6];
+    var planner=eDeets[7];
+    var plannedDate=eDeets[8];
+    var plannedDateMod=eDeets[9];
     var statusBadge=`<span class="badge text-bg-warning fs-5">Ongoing</span>`;
     if(projStatus.length>0){
         statusBadge=`<span class="badge text-bg-success fs-5" title="${projStatus}">Finished</span>`;
@@ -1390,6 +1394,9 @@ function fillEditPlan(editDetails){
     $(`#mhPlan`).val(projMHRemaining);
     $(`#projectPlan`).val(projName);
     $(`#statusPlan`).html(statusBadge);
+    $(`#plannerPlan`).val(planner);
+    $(`#plannerDatePlan`).val(plannedDate);
+    $(`#modifiedPlan`).val(plannedDateMod);
 }
 //#endregion
 
