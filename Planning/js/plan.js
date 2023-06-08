@@ -1060,8 +1060,8 @@ function fillPlans(planString){
     if(projStatus.length>0){
         statusBadge=`<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
         buttons = `
-        <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' disabled></i></button>
-    <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" data-bs-target="#deletePlanningEntry"><i class='bx bx-trash-alt w-100 text-white' disabled></i></button>
+        <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" disabled><i class='bx bx-edit-alt w-100 text-white' disabled></i></button>
+    <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" disabled><i class='bx bx-trash-alt w-100 text-white' disabled></i></button>
         `;
     }
     var addString=`<tr plan-id="${planID}">
