@@ -1342,7 +1342,7 @@ function fillPlans(planString){
     var projStatus=planStringArray[6];
     var statusBadge=`<span class="badge text-bg-warning">Ongoing</span>`;
     if(projStatus.length>0){
-        statusBadge=`<span class="badge text-bg-success" title="${projStatus}">Finished</span>`;
+        statusBadge=`<span class="badge text-bg-success">${projStatus}</span>`;
     }
     var addString=`<tr class="planEntries" plan-id="${planID}">
     <td>${projName}</td>
@@ -1384,7 +1384,7 @@ function fillEditPlan(editDetails){
     var plannedDateMod=eDeets[9];
     var statusBadge=`<span class="badge text-bg-warning fs-5">Ongoing</span>`;
     if(projStatus.length>0){
-        statusBadge=`<span class="badge text-bg-success fs-5" title="${projStatus}">Finished</span>`;
+        statusBadge=`<span class="badge text-bg-success fs-5">${projStatus}</span>`;
     }
     $(`#projectPlan`).val(projName);
     $(`#itemPlan`).val(itemName);

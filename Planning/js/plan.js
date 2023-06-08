@@ -872,7 +872,7 @@ function addEntries(){//add Entries to Database
         mgaKulang.push("SDATE");
     }
     if(!edate){
-        $('#p7').text("Please input end date");
+        $('#p7').text("Please input deadline");
         $('#idEndDate').addClass('border border-danger')
         mgaKulang.push("EDATE");
     }

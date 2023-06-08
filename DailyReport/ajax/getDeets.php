@@ -31,15 +31,15 @@ if($plansStmt->rowCount()>0){
         $projItem=$plan['projItem'];
         $projJob=$plan['projJob'];
         $projJobID=$plan['projJobID'];
-        $projStart=$plan['fldStartDate'];
-        $projEnd=$plan['fldEndDate'];
+        $projStart=date("M d, Y",strtotime($plan['fldStartDate']));
+        $projEnd=date("M d, Y",strtotime($plan['fldEndDate']));
         $projMH=$plan['fldHours'];
         $projStatus=$plan['fldStatus']==NULL ? "":date("M d, Y",strtotime($plan['fldStatus']));
         $usedHours=getUsedHours($projJobID,$empNum,$projStart,$projEnd);
         $hoursRemaining=($projMH-$usedHours)/60;
         $planner=getEmpName($plan['fldPlanner']);
-        $plannedDate=date("M d, Y",strtotime($plan['fldDatePlanned']));
-        $plannedModified=date("M d, Y",strtotime($plan['fldDateModified']));;
+        $plannedDate=date("M d, Y - h:i:sA",strtotime($plan['fldDatePlanned']));
+        $plannedModified=date("M d, Y - h:i:sA",strtotime($plan['fldDateModified']));;
         array_push($planDetails,"$projName||$projItem||$projJob||$projStart||$projEnd||$hoursRemaining||$projStatus||$planner||$plannedDate||$plannedModified");
     }
 }
