@@ -42,7 +42,7 @@ $eList=array();
 #region main
 $mgaEmpStmt='';
 $mgaEmpNgBU="";
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) AND fldDesig<> (CASE WHEN fldGroup<>'ADM' THEN 'DM' ELSE 'KDTP' END)";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) AND fldDesig<>'KDTP'";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
@@ -56,7 +56,7 @@ if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU.=")";
     $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
-$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
+$empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject IN ('$mngProjID','$solProjID') AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){

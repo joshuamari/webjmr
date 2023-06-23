@@ -22,6 +22,9 @@ try {
   $trainProjQ="SELECT fldID FROM projectstable WHERE fldProject='Training'";
   $trainProjStmt=$connwebjmr->query($trainProjQ);
   $trainProjID=$trainProjStmt->fetchColumn();
+  $solProjQ="SELECT fldID FROM projectstable WHERE fldProject='Development, Analysis & IT'";
+  $solProjStmt=$connwebjmr->query($solProjQ);
+  $solProjID=$solProjStmt->fetchColumn();
   $gods=['464','465','487'];
   $sys=array();
   $sysQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,465,487,466)";
