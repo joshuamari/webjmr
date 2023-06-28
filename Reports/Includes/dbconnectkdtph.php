@@ -1,24 +1,19 @@
 <?php 
-$servername = "localhost";
-$username = "root";
-$password = "";
+$config = [
+  'host' => 'localhost',
+  'port' => 3306,
+  'dbname' => 'kdtphdb',
+  'charset' => 'utf8mb4'
+];
+$username = 'root';
+$password = '';
+$dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
-  $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
-  
-  date_default_timezone_set('Asia/Manila');
+  $connkdt = new PDO($dsn, $username, $password,[
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+]);
 } catch(PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }
-if(isset($_COOKIE["userID"]))
-$userHash=$_COOKIE["userID"];
-else
-$userHash='';
-
-
-$kdtPresidentQ="SELECT DISTINCT fldEmployeeNum FROM emp_prof WHERE fldDesig='KDTP' AND fldActive=1";
-$kdtPresidentStmt=$connkdt->query($kdtPresidentQ);
-$kdtPresident=$kdtPresidentStmt->fetchColumn();
-
-$kdtAdmin="121"; //MAAM ARLENE SA NGAYON
 ?>
 

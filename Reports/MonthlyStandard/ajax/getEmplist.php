@@ -1,8 +1,6 @@
 <?php
 #region Require Database Connections
 require_once '../Includes/dbconnectkdtph.php';
-require_once '../Includes/dbconnectwebjmr.php';
-require_once '../Includes/globalFunctions.php';
 #endregion
 
 #region set timezone
@@ -10,40 +8,38 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$getGroups=array();
-$rawGetGroup='';
-if(!empty($_POST['getGroup'])){
-    $rawGetGroup=$_POST['getGroup'];
+$yearMonth = date("Y-m-01");
+if(!empty($_POST['monthSel'])){
+    $yearMonth = $_POST['monthSel'] . '-01';
 }
-$firstDay=date("Y-m-01");
-$ymSel=$firstDay;
-if(!empty($_REQUEST['getYMSel'])){
-    $ymSel=$_REQUEST['getYMSel'];
+// $groupSel = NULL;
+$groupSel = 'SYS';
+if(!empty($_POST['groupSel'])){
+    $groupSel = $_POST['groupSel'];
 }
-$selYearMonth=date("Y-m-01",strtotime($ymSel));
-$eList=array();
+$employeeArray = array();
 #endregion
 
 #region main
-
-//emp#||Name
-$elQ="SELECT fldEmployeeNum,CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) ORDER BY fldEmployeeNum";
-$elStmt=$connkdt->prepare($elQ);
-$elStmt->execute();
-if($elStmt->rowCount()>0){
-    $elArr=$elStmt->fetchAll();
-    foreach($elArr AS $el){
-        $enum = $el['fldEmployeeNum'];
-        $ename = $el['ename'];
-        array_push($eList,"$enum||$ename");
+$empQuery = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldGroup = :groupSel AND (fldResignDate IS NULL OR fldResignDate > :monthSel) AND fldNick<>''";
+$empStmt = $connkdt -> prepare($empQuery);
+$empStmt -> execute([":groupSel" => $groupSel, ":monthSel" => $yearMonth]);
+if($empStmt->rowCount()>0){
+    $empArr = $empStmt->fetchAll();
+    foreach($empArr AS $emps){
+        $output = array();
+        $output+=["empNum"=>$emps['fldEmployeeNum']];
+        $output+=["empName"=>$emps['ename']];
+        array_push($employeeArray,$output);
     }
 }
+
 #endregion
 
 #region function
 
 #endregion
-//$.ajaxSetup({async: false});
-echo json_encode($eList);
-// echo $elQ;
-?>
+
+echo "<pre>";
+echo json_encode($employeeArray);
+echo "</pre>";

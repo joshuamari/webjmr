@@ -1,9 +1,17 @@
 <?php 
-$servername = "localhost";
-$username = "root";
-$password = "";
+$config = [
+  'host' => 'localhost',
+  'port' => 3306,
+  'dbname' => 'kdtphdb',
+  'charset' => 'utf8mb4'
+];
+$username = 'root';
+$password = '';
+$dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
-  $connkdt = new PDO("mysql:host=localhost;dbname=kdtphdb", $username, $password);
+  $connkdt = new PDO($dsn, $username, $password,[
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+]);
   $devs=["464","465","487"];
   $sys=array();
   $sysQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,465,487,466)";
