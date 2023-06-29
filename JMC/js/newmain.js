@@ -685,7 +685,9 @@ function itemRow(itemArrayElement){//lay item table
     draggable="dontMove"
   }
   var nonDefaults=``;
-  if(ifEditable(selectedProject)){
+  var clickable = `hoverItemNext`;
+  var title = `Click to go to Job Request Description`;
+  if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(trID)){
     nonDefaults=`
     <td>
       <div class="form-check form-switch p-0">
@@ -700,10 +702,12 @@ function itemRow(itemArrayElement){//lay item table
   else{
     nonDefaults=`<td></td><td></td>`;
     draggable="dontMove";
+    clickable = ``;
+    title = ``;
   }
 
   var addString=`<tr class=" text-center ${draggable}" id="i_${trID}">
-  <td class="hoverItemNext p-0 position-relative" title="Click to go to Item of Works"><span class="arw"></span>
+  <td class="${clickable} p-0 position-relative" title="${title}"><span class="arw"></span>
   <span class="itemPrio">${parseInt($('#itemTable').children().length) + 1}</span></td>
   <td>${iTitle}</td>
   ${nonDefaults}
