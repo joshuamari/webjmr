@@ -32,7 +32,7 @@ $projectsStmt=$connwebjmr->query($projectsQ);
 $projArr=$projectsStmt->fetchAll();
 if(count($projArr)>0){
     foreach($projArr AS $projs){
-        array_push($projects,$projs['fldProject']."||".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']."||".$projs['fldPriority']);
+        array_push($projects,$projs['fldProject']."||".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']);
     }
 }
 #endregion

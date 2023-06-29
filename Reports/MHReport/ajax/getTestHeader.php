@@ -53,7 +53,7 @@ $thStmt->execute();
             $projID = $ths['projID'];
             $pGroup = $ths['pGroup'];
             $locCode = ($ths['locCode']==0) ? 'P':'J';
-            $projDel = ($ths['projDel']==1) ? '(Deleted)':'';
+            $projDel = ($ths['projDel']!=0) ? '(Deleted)':'';
             if(!in_array("$pGroup||$orderNum||$projName||$locCode||$projID-$locCode",$testHeader)){
                 array_push($testHeader,"$pGroup||$orderNum||$projDel$projName||$locCode||$projID-$locCode||$projDel");
             }

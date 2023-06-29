@@ -47,12 +47,15 @@ if($monthHStmt->rowCount()>0){
         // array_push($montHolidays,$holidate);
     }
 }
-$greenQ="SELECT fldDate FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate HAVING(SUM(fldDuration))>=480";
+$greenQ="SELECT fldDate,fldDuration FROM dailyreport WHERE fldDate>='$startDate' AND fldDate<='$lastDate' AND fldEmployeeNum='$empNum' GROUP BY fldDate";
 $greenStmt=$connwebjmr->query($greenQ);
 $greenArr=$greenStmt->fetchAll();
 foreach($greenArr AS $greens){
     $greenDate=$greens['fldDate'];
-    array_push($greenDates,$greenDate);
+    $greenHours=$greens['fldDuration'];
+    if((isWorkDay(($greenDate) && $greenHours>=480)) || (!isWorkDay($greenDate) && $greenHours>=240)){
+        array_push($greenDates,$greenDate);
+    }
 }
 if($curMonth>=$curFirstDay){
     $lastDate=$curDay;
