@@ -12,8 +12,7 @@ $yearMonth = date("Y-m-01");
 if(!empty($_POST['monthSel'])){
     $yearMonth = $_POST['monthSel'] . '-01';
 }
-// $groupSel = NULL;
-$groupSel = 'SYS';
+$groupSel = NULL;
 if(!empty($_POST['groupSel'])){
     $groupSel = $_POST['groupSel'];
 }
@@ -39,7 +38,4 @@ if($empStmt->rowCount()>0){
 #region function
 
 #endregion
-
-echo "<pre>";
 echo json_encode($employeeArray);
-echo "</pre>";
