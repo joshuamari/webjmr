@@ -34,6 +34,7 @@ var _unifiedQ = [];
 var _grpProj = [];
 var _grpOT = [];
 var _maxDays = 0;
+var _emplist = [];
 //#endregion
 
 $.ajaxSetup({ async: false });
@@ -62,6 +63,7 @@ $(document).ready(function () {
 });
 
 $(document).on("change", "#monthSel", function () {
+  $($('#members-label').nextAll()).remove()
   $.ajaxSetup({ async: false });
   getEmployeeList();
   $.ajaxSetup({ async: true });
@@ -94,34 +96,29 @@ function getGroupList() {
 function getEmployeeList() {
   var selDate = $("#monthSel").val();
   var grpSel = $("#buSel").val();
-  var emplist = [];
+  $($('#members-label').nextAll()).remove();
   $.post("ajax/getEmplist.php",
     {
       monthSel: selDate,
       groupSel: grpSel
     },
     function (data) {
-      // emplist = $.parseJSON(data);
+      _emplist = $.parseJSON(data);
       // members = emplist;
-      // console.log(members)
-      $($('#members-label').nextAll()).empty();
-      $.parseJSON(data).map(fillMembers)
+      _emplist.map(fillMembers)
     }
   );
 }
 //#region table creation
 function createTables(ymVal) {
   $('#mainThead,#mainTbody,#subThead,#subTbody').empty();
-  console.log(_selectedMembers);
   $.post("ajax/getEntries.php",
     {
       monthSel: ymVal,
       empArray: _selectedMembers
     },
     function (data) {
-      // console.log(data)
       var empEntries = $.parseJSON(data);
-      console.log(empEntries)
       _maxDays = (new Date(ymVal.split('-')[0], ymVal.split('-')[1], 0)).getDate();
       createHeader();
       _unifiedQ = empEntries;
@@ -179,31 +176,31 @@ function extractData(entry) {
 };
 
 function getEmpProjects(empDetails) {
-  var uniqueProjects = pGet(empDetails["empNum"], false);
-  var uniqueOT = pGet(empDetails["empNum"], true);
+  var uniqueProjects = pGet(empDetails, false);
+  var uniqueOT = pGet(empDetails, true);
   var addHtml = "";
 
   //Regular Projects
   uniqueProjects.forEach(element => {
-    addHtml += `<tr class="pRow" employee-number="${empDetails["empNum"]}" p-index="${element["pIndex"]}">
+    addHtml += `<tr class="pRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
       <td></td>
       <td>${element["pName"]}</td>
       </tr>`
   });
 
   //Total Hours
-  addHtml += `<tr class="tTot"employee-number="${empDetails["empNum"]}" >
+  addHtml += `<tr class="tTot"employee-number="${empDetails}" >
     <td></td>
     <td>Total Hours</td>
     </tr>
-    <tr class="oTot"employee-number="${empDetails["empNum"]}" >
+    <tr class="oTot"employee-number="${empDetails}" >
     <td></td>
     <td>Overtime</td>
     </tr>`
 
   //OT Projects
   uniqueOT.forEach(element => {
-    addHtml += `<tr class="oRow" employee-number="${empDetails["empNum"]}" p-index="${element["pIndex"]}">
+    addHtml += `<tr class="oRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
       <td></td>
       <td>OT - ${element["pName"]}</td>
       </tr>`
@@ -211,14 +208,16 @@ function getEmpProjects(empDetails) {
 
   //Leaves
   addHtml += `
-    <tr class="lRow" p-index="25" employee-number="${empDetails["empNum"]}"><td></td><td>VL</td></tr>
-    <tr class="lRow" p-index="26" employee-number="${empDetails["empNum"]}"><td></td><td>SL</td></tr>
-    <tr class="lRow" p-index="others" employee-number="${empDetails["empNum"]}"><td></td><td>EL,PL,ML,Others</td></tr>
-    <tr class="lTot" employee-number="${empDetails["empNum"]}"><td></td><td>Leave</td></tr>
+    <tr class="lRow" p-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
+    <tr class="lRow" p-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
+    <tr class="lRow" p-index="others" employee-number="${empDetails}"><td></td><td>EL,PL,ML,Others</td></tr>
+    <tr class="lTot" employee-number="${empDetails}"><td></td><td>Leave</td></tr>
     `
 
-  $('#mainTbody').append(`<tr class="emprow" employee-number="${empDetails["empNum"]}">
-    <td>${empDetails["empName"]}</td>
+    var empName = _emplist.find((employee) => employee.empNum == empDetails)["empName"];
+    console.log(empDetails["empNum"])
+  $('#mainTbody').append(`<tr class="emprow" employee-number="${empDetails}">
+    <td>${empName}</td>
     <td>Project and Job Name</td>
     <td colspan="${_maxDays + 1}"></td>
     </tr>
@@ -450,7 +449,7 @@ function getTotals() {
 
 function fillMembers(memDetails) {
   
-  $('#members-label').append(`
+  $('#members-list').append(`
   <div class="row mt-4">
       <button emp-num="${memDetails.empNum}" class="btn btn-secondary memBtn">${memDetails.empName}</button>
   </div>`);
@@ -465,6 +464,22 @@ $(document).on('click', '.memBtn', function () {
   createTables($('#monthSel').val());
 })
 
-  //#endregion
+//#endregion
+
+$(document).on('click','#selAll',function(){
+  $(this).toggleClass('btn-primary btn-secondary');
+  if($(this).attr('class').includes('btn-primary')){
+    $(this).text('Select All');
+    $('.memBtn').attr('class','btn btn-secondary memBtn')
+  }else{
+    $(this).text('Deselect All');
+    $('.memBtn').attr('class','btn btn-primary memBtn')
+  }
+  _selectedMembers.length = 0;
+  $('.memBtn.btn-primary').each(function () {
+    _selectedMembers.push($(this).attr('emp-num'));
+  })
+  createTables($('#monthSel').val());
+})
 
 //#endregion
