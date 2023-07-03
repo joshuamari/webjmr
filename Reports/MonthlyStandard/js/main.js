@@ -16,6 +16,7 @@ const oLeaves = { "27": "EL", "28": "ML", "29": "PL", "30": "TbL", "31": "LL" };
 const today = new Date();
 $('#monthSel').val(`${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`);
 
+
 //pang distinct. di ko alam kung may function ba na distinct hehe
 const onlyUnique = (value, index, self) => {
   return self.indexOf(value) === index;
@@ -27,7 +28,7 @@ const onlyUnique = (value, index, self) => {
 //   { empNum: "487", empName: "Medrano, Collene Keith" }
 // ];
 
-var members = []; //selection to ng members
+var _selectedMembers = [];
 
 var _unifiedQ = [];
 var _grpProj = [];
@@ -108,14 +109,11 @@ $.post("ajax/getEmplist.php",
   //#region table creation
   function createTables(ymVal) {
     $('#mainThead,#mainTbody,#subThead,#subTbody').empty();
-    var selectedMembers = members.map(member => member.empNum);
-    var selMembers = members; //kunwari may selected na, eto yon, pipili mula sa memberlist
-    // var selectedMembers = [464,465,487]
-    // var selMembers = members.filter(member => selectedMembers.includes(parseInt(member.empNum)));
+    console.log(_selectedMembers);
     $.post("ajax/getEntries.php",
     {
       monthSel : ymVal,
-      empArray : selectedMembers
+      empArray : _selectedMembers
     },
       function (data) {
         // console.log(data)
@@ -125,7 +123,7 @@ $.post("ajax/getEmplist.php",
         createHeader();
         _unifiedQ = empEntries;
         _unifiedQ.map(extractData);
-        selMembers.map(getEmpProjects);
+        _selectedMembers.map(getEmpProjects);
         addGrpData(_grpProj, _grpOT);
         addCells();
         adjustWidth();
@@ -156,6 +154,7 @@ $.post("ajax/getEmplist.php",
   function adjustWidth() {
     $($('#subThead').children()[0]).attr("width", $($('#mainThead').children()[0]).outerWidth());
     $($('#subThead').children()[1]).attr("width", $($('#mainThead').children()[1]).outerWidth());
+    $('#lowerT').css("width", $('#upperT').outerWidth());
   };
 
   function extractData(entry) {
@@ -441,6 +440,19 @@ $.post("ajax/getEmplist.php",
     })
   }
 
+
+  //#endregion
+
+  //#region basa ng members
+
+  $(document).on('click','.memBtn',function(){
+    $(this).toggleClass('btn-primary btn-secondary');
+    _selectedMembers.length=0;
+    $('.memBtn.btn-primary').each(function(){
+      _selectedMembers.push($(this).attr('emp-num'));
+    })
+    createTables($('#monthSel').val());
+  })
 
   //#endregion
 

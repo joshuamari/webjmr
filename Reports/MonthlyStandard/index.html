@@ -31,27 +31,43 @@
   <h1>Monthly Standard (DONE!!!)</h1>
   <input type="month" id="monthSel">
   <select id="buSel">
-    <option>SYS</option>
-    <option>ENV</option>
-    <option>BOI</option>
+      <option>SYS</option>
+      <option>ENV</option>
+      <option>BOI</option>
   </select>
+  <div class="row">
+      <div class="col p-4" style="width: 200px;">
+          <h3>Members</h3>
+          <div class="row mt-4">
+              <button emp-num="464" class="btn btn-secondary memBtn">Coquia, Joshua Mari</button>
+          </div>
+          <div class="row mt-4">
+              <button emp-num="465" class="btn btn-secondary memBtn">Petate, Felix Edwin</button>
+          </div>
+          <div class="row mt-4">
+              <button emp-num="487" class="btn btn-secondary memBtn">Medrano, Collene Keith</button>
+          </div>
+      </div>
+      <div class="col row">
+          <div id="upperT" class="row" style="overflow-x: auto;">
+              <table class="table" id="mainTable">
+                  <thead>
+                      <tr id="mainThead"></tr>
+                  </thead>
+                  <tbody id="mainTbody"></tbody>
+              </table>
+          </div>
+          <div id="lowerT" class="row" style="overflow-x: auto;">
+              <table class="table" id="subTable">
+                  <thead>
+                      <tr id="subThead"></tr>
+                  </thead>
+                  <tbody id="subTbody"></tbody>
+              </table>
+          </div>
+      </div>
+  </div>
 
-  <div>
-    <table class="table" id="mainTable">
-      <thead>
-        <tr id="mainThead"></tr>
-      </thead>
-      <tbody id="mainTbody"></tbody>
-    </table>
-  </div>
-  <div>
-    <table class="table" id="mainTable">
-      <thead>
-        <tr id="subThead"></tr>
-      </thead>
-      <tbody id="subTbody"></tbody>
-    </table>
-  </div>
 
 
 
