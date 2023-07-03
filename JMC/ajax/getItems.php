@@ -26,7 +26,7 @@ $itemsStmt=$connwebjmr->query($itemsQ);
 $itemsArr=$itemsStmt->fetchAll();
 if(count($itemsArr)>0){
     foreach($itemsArr as $itms){
-        array_push($items,$itms['fldItem']."||".$itms['fldID']."||".$itms['fldActive']."||".$itms['fldPriority']);
+        array_push($items,$itms['fldItem']."||".$itms['fldID']."||".$itms['fldActive']);
     }
 }
 #endregion

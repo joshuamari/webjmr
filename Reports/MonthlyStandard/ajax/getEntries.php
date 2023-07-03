@@ -13,10 +13,10 @@ if(!empty($_POST['monthSel'])){
     $yearMonth = $_POST['monthSel'];
 }
 $empStatement = "''";
-$employeeArray = array(464,465,487);
-if(!empty($employeeArray)){
+$employeeArray = array();
+if(!empty($_POST['empArray'])){
     $empStatement = '';
-    // $employeeArray = $_POST['empArray'];
+    $employeeArray = $_POST['empArray'];
     foreach($employeeArray AS $emp){
         $empStatement .= $emp . ",";
     }
@@ -42,7 +42,7 @@ if($entriesStmt -> rowCount()>0){
         $rawMinutes = $entries['eMinutes'];
         $entryHours = $rawMinutes / 60;
         $output += ["hours" => $entryHours];
-        $output += ["OT" => $entries['eMHT']];
+        $output += ["OT" => ($entries['eMHT'] == 1) ? TRUE : FALSE];
         array_push($entriesArray,$output);
 
     }
@@ -52,6 +52,4 @@ if($entriesStmt -> rowCount()>0){
 #region function
 
 #endregion
-echo "<pre>";
 echo json_encode($entriesArray);
-echo "</pre>";

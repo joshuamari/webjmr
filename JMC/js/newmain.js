@@ -415,7 +415,6 @@ function projRow(projArrayElement){//lay project table
   var iOrder =  projArrayElement.split('||')[2] || "";
   var iBU = projArrayElement.split('||')[3] || "";
   var iActive = projArrayElement.split('||')[4] || "";
-  var iPrio = projArrayElement.split('||')[5] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
@@ -677,7 +676,6 @@ function itemRow(itemArrayElement){//lay item table
   var iTitle = itemArrayElement.split('||')[0];
   var trID = itemArrayElement.split('||')[1] || "";
   var iActive = itemArrayElement.split('||')[2] || "";
-  var iPrio = itemArrayElement.split('||')[3] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
