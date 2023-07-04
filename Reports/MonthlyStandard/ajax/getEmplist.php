@@ -20,16 +20,19 @@ $employeeArray = array();
 #endregion
 
 #region main
-$empQuery = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldGroup = :groupSel AND (fldResignDate IS NULL OR fldResignDate > :monthSel) AND fldNick<>''";
+$empQuery = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename,fldDateHired FROM emp_prof WHERE fldGroup = :groupSel AND (fldResignDate IS NULL OR fldResignDate > :monthSel) AND fldNick<>''";
 $empStmt = $connkdt -> prepare($empQuery);
 $empStmt -> execute([":groupSel" => $groupSel, ":monthSel" => $yearMonth]);
 if($empStmt->rowCount()>0){
     $empArr = $empStmt->fetchAll();
     foreach($empArr AS $emps){
         $output = array();
-        $output+=["empNum"=>$emps['fldEmployeeNum']];
-        $output+=["empName"=>$emps['ename']];
-        array_push($employeeArray,$output);
+        if(date("Y-m-01",strtotime($emps['fldDateHired']))<= $yearMonth){
+            $output+=["empNum"=>$emps['fldEmployeeNum']];
+            $output+=["empName"=>$emps['ename']];
+            array_push($employeeArray,$output);
+        }
+        
     }
 }
 
