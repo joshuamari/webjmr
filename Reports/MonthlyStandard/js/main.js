@@ -35,14 +35,15 @@ var _grpProj = [];
 var _grpOT = [];
 var _maxDays = 0;
 var _emplist = [];
+var _empDetails = [];
 //#endregion
 
 $.ajaxSetup({ async: false });
 $.ajax({
   url: "Includes/checkLogin.php", success: function (data) { //ajax to check if user is logged in
-    empDetails = $.parseJSON(data);
+    _empDetails = $.parseJSON(data);
 
-    if (empDetails.length < 1) {
+    if (Object.keys(_empDetails).length<1) {
       window.location.href = rootFolder + '/KDTPortalLogin'; //if result is 0, redirect to log in page
     }
   }
@@ -63,7 +64,7 @@ $(document).ready(function () {
 });
 
 $(document).on("change", "#monthSel", function () {
-  $($('#members-label').nextAll()).remove()
+  // $($('#members-label').nextAll()).remove()
   $.ajaxSetup({ async: false });
   getEmployeeList();
   $.ajaxSetup({ async: true });
@@ -88,7 +89,7 @@ function getGroupList() {
       var grpList = $.parseJSON(response);
       grpList.forEach(grp => {
         $('#buSel').append(`<option>${grp}</option>`)
-        $("#buSel").val(empDetails['empGroup']);
+        $("#buSel").val(_empDetails['empGroup']);
       });
     }
   });
@@ -104,6 +105,7 @@ function getEmployeeList() {
     },
     function (data) {
       _emplist = $.parseJSON(data);
+      console.log(_emplist)
       // members = emplist;
       _emplist.map(fillMembers)
     }
@@ -131,6 +133,7 @@ function createTables(ymVal) {
       getTotals();
     }
   );
+  console.log(_selectedMembers)
 };
 
 function createHeader() {
@@ -215,7 +218,7 @@ function getEmpProjects(empDetails) {
     `
 
     var empName = _emplist.find((employee) => employee.empNum == empDetails)["empName"];
-    console.log(empDetails["empNum"])
+    // console.log(empDetails)
   $('#mainTbody').append(`<tr class="emprow" employee-number="${empDetails}">
     <td>${empName}</td>
     <td>Project and Job Name</td>
@@ -448,10 +451,13 @@ function getTotals() {
 //#region basa ng members
 
 function fillMembers(memDetails) {
-  
+  var selectType = `secondary`;
+  if(_selectedMembers.includes(memDetails.empNum)){
+    selectType = `primary`;
+  }
   $('#members-list').append(`
   <div class="row mt-4">
-      <button emp-num="${memDetails.empNum}" class="btn btn-secondary memBtn">${memDetails.empName}</button>
+      <button emp-num="${memDetails.empNum}" class="btn btn-${selectType} memBtn">${memDetails.empName}</button>
   </div>`);
 }
 
