@@ -42,14 +42,16 @@ $eList=array();
 #region main
 $mgaEmpStmt='';
 $mgaEmpNgBU="";
-$empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) AND fldDesig<>'KDTP'";
+$empNgBUQ="SELECT DISTINCT(fldEmployeeNum),fldDateHired FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) AND fldDesig<>'KDTP'";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
     $mgaEmpNgBU.="(";
     $enbArr=$empNgBUStmt->fetchAll();
     foreach($enbArr AS $enbs){
-        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+        if(date("Y-m-01",strtotime($enbs['fldDateHired']))<= $selYearMonth){
+            $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+        }
     }
     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
     // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
