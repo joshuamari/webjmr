@@ -108,6 +108,8 @@ function getEmployeeList() {
       console.log(_emplist)
       // members = emplist;
       _emplist.map(fillMembers)
+      _selectedMembers = _selectedMembers.filter((item) => _emplist.some((myItem) => myItem.empNum === item)
+);
     }
   );
 }
