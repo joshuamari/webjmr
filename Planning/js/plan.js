@@ -366,7 +366,7 @@ $(document).on('click', '.cancel1', function(){
 //#region FUNCTIONS
 function checkLogin(){//check if user is logged in
     $.ajaxSetup({async: false});
-    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+    $.ajax({url:"Includes/check_login.php", success: function(data){ //ajax to check if user is logged in
       empDetails=$.parseJSON(data);
   
       if(Object.keys(empDetails).length<1){
@@ -378,7 +378,7 @@ function checkLogin(){//check if user is logged in
   }
 function getMyGroups(){//get Group Selection
     $.ajaxSetup({async: false});
-    $.post("ajax/getMyGroups.php",
+    $.post("ajax/get_my_groups.php",
     {
         empNum:empDetails['empNum']
     },
@@ -395,7 +395,7 @@ function getEmployees(){
     var projID=$($('#idProject').find('option:selected')).attr('proj-id')||$($('#idProjectEdit').find('option:selected')).attr('proj-id');
     var emps=[];
     $.ajaxSetup({async: false});
-    $.post("ajax/getEmployees.php",
+    $.post("ajax/get_employees.php",
     {
         projID:projID
     },
@@ -496,7 +496,7 @@ function getProjects(){//get PROJECT Selection
     $('#idProject').html(`<option value='' hidden>Select Project</option>`);
     
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -519,7 +519,7 @@ function getEditProjects(){//get edit PROJECT Selection
     $('#idProjectEdit').html(`<option value='' hidden>Select Project</option>`);
     
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -558,7 +558,7 @@ function getProjSearch(){//get Proj Selection
     var searchProj=$(`#searchproj`).val();
     $('#projOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -580,7 +580,7 @@ function getEditProjSearch(){//get Proj Selection
     var searchProj=$(`#searchprojEdit`).val();
     $('#projOptionsEdit').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -604,7 +604,7 @@ function getItems(iVal){//get Item Selection
     $('#idItem').html(`<option value='' hidden>Select Item of Works</option>`);
     $('#labell').remove();
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -627,7 +627,7 @@ function getEditItems(iVal){//get Item Selection
     $('#itemOptionsEdit').empty();
     $('#idItemEdit').html(`<option value='' hidden>Select Item of Works</option>`);
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -666,7 +666,7 @@ function getItemSearch(iVal){//get Item Selection
     var searchIOW=$(`#searchitem`).val();
     $('#itemOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -687,7 +687,7 @@ function getEditItemSearch(iVal){//get Item Selection
     var searchIOW=$(`#searchitemEdit`).val();
     $('#itemOptionsEdit').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -709,7 +709,7 @@ function getJobs(iVal,xVal){//get Item Selection
     $('#jrdOptions').empty();
     $('#idJRD').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -732,7 +732,7 @@ function getEditJobs(iVal,xVal){//get Item Selection
     $('#jrdOptionsEdit').empty();
     $('#idJRDEdit').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -770,7 +770,7 @@ function getJRDSearch(iVal,xVal){//get Item Selection
     var searchjrd=$(`#searchjrd`).val();
     $('#jrdOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroup').val(),
@@ -792,7 +792,7 @@ function getEditJRDSearch(iVal,xVal){//get Item Selection
     var searchjrd=$(`#searchjrdEdit`).val();
     $('#jrdOptionsEdit').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         // empGroup:empDetails['empGroup'],
         empGroup:$('#idGroupEdit').val(),
@@ -897,7 +897,7 @@ function addEntries(){//add Entries to Database
             
          $.ajax({
             type: "POST",
-            url: "ajax/addPlanningEntries.php",
+            url: "ajax/add_planning_entries.php",
             data: fd,
             contentType: false,
             cache: false,
@@ -978,7 +978,7 @@ function editEntries(){//add Entries to Database
     else{
          $.ajax({
             type: "POST",
-            url: "ajax/editPlanningEntries.php",
+            url: "ajax/edit_planning_entries.php",
             data: fd,
             contentType: false,
             cache: false,
@@ -993,7 +993,7 @@ function editEntries(){//add Entries to Database
 }
 function deletePlannedEntry(planid){
 
-    $.post("ajax/deletePlanning.php",
+    $.post("ajax/delete_planning.php",
     {
         planID:planid
     },
@@ -1022,7 +1022,7 @@ function getPlans(){
     var plans=[];
     $(`#planningTable`).empty()
     var defaultBody=`<tr><td colspan="12" class="text-center">No Entries Found</td></tr>`;
-    $.post("ajax/getPlans.php",
+    $.post("ajax/get_plans.php",
     {
         getPlanner:empDetails['empNum']
     },
@@ -1086,7 +1086,7 @@ function fillPlans(planString){
 }
 function getEdeets(planID){
     var eDeets=[];
-    $.post("ajax/getEdeets.php",
+    $.post("ajax/get_edeets.php",
     {
         planID:planID
     },
@@ -1116,7 +1116,7 @@ function fillEditPlan(editDetails){
     $('#idMHEdit').val(projMH).change();
 }
 function updateStatus(){
-    $.post("ajax/updateStatus.php",
+    $.post("ajax/update_status.php",
     {
         planID:editID
     },
@@ -1138,12 +1138,4 @@ function ifSmallScreen(){//responsive
       $(".menu-two").addClass('d-none');
     }
 }
-
-
-
-
-
-//#endregion
-
-
 //#endregion

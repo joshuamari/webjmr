@@ -65,7 +65,6 @@ $(document).ready(function(){
   let sidebarBtn2 = document.querySelector(".menu-two");
   sidebarBtn.addEventListener("click", () => {
     $(".sidebar").toggleClass("close");
-    // console.log("pinindot")
   });
   sidebarBtn2.addEventListener("click", () => {
     $(".sidebar").addClass("close");
@@ -194,35 +193,8 @@ $(document).on('click','.hoverItemNext',function(){
   checkJRDADD();
   checkJRDAddDiv();
 })
-// $(document).on({
-//   mouseenter: function () {
-//     var dznuts=$(this).parent().prop('id').split('_')[1];
-//     if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
-//       $($(this).find('.itemPrio')).hide();
-//       $($(this).find('.itemIcon')).show();
-//     }
-//   },
-//   mouseleave: function () {
-//     var dznuts=$(this).parent().prop('id').split('_')[1];
-//     if((!defaults.includes(selectedProject) || selectedProject==solProjID || selectedProject==trainingProjID) && !noMoreInputItems.includes(dznuts)){
-//       $($(this).find('.itemPrio')).show();
-//       $($(this).find('.itemIcon')).hide();
-//     }
-//   }
-// }, ".hoverItemNext");
-// $(document).on({
-//   mouseenter: function () {
-//     $($(this).find('.projPrio')).hide();
-//     $($(this).find('.projIcon')).show();
-//   },
-//   mouseleave: function () {
-//     $($(this).find('.projPrio')).show();
-//     $($(this).find('.projIcon')).hide();
-//   }
-// }, ".hoverProjNext");
 $(document).on('change','#myGroup',function(){
   getProjects();
-  // $('.projIcon,.itemIcon').hide();
 });
 $(document).on('click','.checkbox',function(){
   var getTRID=$($(this).parents()[2]).attr('id');//get TR ID
@@ -660,12 +632,6 @@ function getItems(){//get items
 function fillItem(){//set item to lay
   $('#itemTable').empty();
   items.map(itemRow);
-  // if(selectedProjectString == "LEAVE"){
-  //   leaveVal.map(itemRow)
-  // }
-  // if(selectedProjectString == "OTHER"){
-  //   otherVal.map(itemRow)
-  // }
 }
 function itemRow(itemArrayElement){//lay item table
   // 
