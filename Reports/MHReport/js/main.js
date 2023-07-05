@@ -35,16 +35,7 @@ const hiramEntries = ['410||469||5', '410||999||5', '320||469||5', '330||999||5'
 const mngkdt = ['300||M1||130', '310||M1||120', '400||M1||50', '400||M2||10', '300||K1||2.5', '300||B1||2.5', '310||K1||5', '310||B1||5', '400||K1||2.5', '400||B1||2.5', '400||K2||1.5', '400||B2||1.5', '410||K1||5', '410||B1||5', '420||K1||75', '420||B1||75'];
 //#endregion
 
-$.ajaxSetup({async: false});
-$.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
-  empDetails=$.parseJSON(data);
-
-  if(empDetails.length<1){
-    window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page
-  }
-  jmcAccess();
-}});
-$.ajaxSetup({async: true});
+checkLogin();
 
 //#region BINDS
 $(document).ready(function () {
@@ -66,6 +57,18 @@ $(document).on('change','#CO',function(){
 //#endregion
 
 //#region FUNCTIONS
+function checkLogin(){//check if user is logged in
+  $.ajaxSetup({async: false});
+  $.ajax({url:"Includes/check_login.php", success: function(data){ //ajax to check if user is logged in
+    empDetails=$.parseJSON(data);
+
+    if(Object.keys(empDetails).length<1){
+      window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page
+    }
+    jmcAccess();
+  }});
+  $.ajaxSetup({async: true});
+}
 function setDate(){//set default month
   var today = new Date();
 
@@ -74,7 +77,7 @@ function setDate(){//set default month
   $('#monthSel').val(dateString);
 }
 function jmcAccess(){//check if user has access to jmc
-  $.post("ajax/jmcAccess.php",
+  $.post("ajax/jmc_access.php",
   {
     empNum:empDetails['empNum']
   },
@@ -102,7 +105,7 @@ function getTestHeader(){
   var tHeader=[];
   var getYMSel=$(`#monthSel`).val()
 var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getTestHeader.php",
+  $.post("ajax/get_testheader.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -120,7 +123,7 @@ function getEmplist(){
   var eList=[];
   var getYMSel=$(`#monthSel`).val()
   var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getEmplist.php",
+  $.post("ajax/get_emplist.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -138,7 +141,7 @@ function getEntries(){
   var entrs=[];
   var getYMSel=$(`#monthSel`).val()
   var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getEntries.php",
+  $.post("ajax/get_entries.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -156,7 +159,7 @@ function getMgaNahiram(){
   var mgaNhiram=[];
   var getYMSel=$(`#monthSel`).val()
   var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getMgaNahiram.php",
+  $.post("ajax/get_mganahiram.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -174,7 +177,7 @@ function getHiramEntries(){
   var hramEntries=[];
   var getYMSel=$(`#monthSel`).val()
   var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getHiramEntries.php",
+  $.post("ajax/get_hiram_entries.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -192,7 +195,7 @@ function getMngKdt(){
   var mngakdt=[];
   var getYMSel=$(`#monthSel`).val()
   var getHalfSel=$(`#CO`).val()
-  $.post("ajax/getMngKdt.php",
+  $.post("ajax/get_mngkdt.php",
   {
     getYMSel:getYMSel,
     getHalfSel:getHalfSel,
@@ -411,7 +414,7 @@ function totmhpp(iVal){
 function getGroups(){
   $('#buSel').html(`<option value='' selected hidden>Select Group</option>`)
   var grps=[];
-  $.post("ajax/getMyGroups.php",
+  $.post("ajax/get_my_groups.php",
   {
     empNum:empDetails['empNum']
   },
