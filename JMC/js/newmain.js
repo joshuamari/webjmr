@@ -332,7 +332,7 @@ $(document).on('click','.removeAccess',function(){
 //#region FUNCTIONS
 function checkLogin(){//check if user is logged in
   $.ajaxSetup({async: false});
-  $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+  $.ajax({url:"Includes/check_login.php", success: function(data){ //ajax to check if user is logged in
     empDetails=$.parseJSON(data);
 
     if(Object.keys(empDetails).length<1){
@@ -343,7 +343,7 @@ function checkLogin(){//check if user is logged in
   $.ajaxSetup({async: true});
 }
 function jmcAccess(){//check if user has access to jmc
-  $.post("ajax/jmcAccess.php",
+  $.post("ajax/jmc_access.php",
   {
     empNum:empDetails['empNum']
   },
@@ -356,7 +356,7 @@ function jmcAccess(){//check if user has access to jmc
   );
 }
 function getMyGroups(){//get group selection
-  $.post("ajax/getMyGroup.php",
+  $.post("ajax/get_my_group.php",
   {
     empNum:empDetails['empNum'],
   },
@@ -371,7 +371,7 @@ function getMyGroups(){//get group selection
 function getProjects(){//get projects
   $.ajaxSetup({async: false});
   projects=[];
-  $.post("ajax/getProjects.php",
+  $.post("ajax/get_projects.php",
   {
     empGroup:$('#myGroup').val(),
     empPos:empDetails['empPos'],
@@ -390,7 +390,7 @@ function getProjects(){//get projects
               var trID=($(this).attr('id')).split("_")[1];
               page_id_array.push(trID)
             });
-            $.post("ajax/updatePPrio.php",
+            $.post("ajax/update_proj_prio.php",
             {
               page_id_array:page_id_array
             },
@@ -460,7 +460,7 @@ function ifEditable(trID){//check if non default
 }
 function getGOWJob(){//get draw ref for GOW
   gowJobVal=[];
-  $.post("ajax/getGOWJob.php",
+  $.post("ajax/get_gow_job.php",
   {
     empGroup:$('#myGroup').val(),
   },
@@ -472,7 +472,7 @@ function getGOWJob(){//get draw ref for GOW
 function getLeaveJob(){//get draw ref for leave
   var defaultsArray=[];
   $.ajax({
-    url: "ajax/getLeaveJob.php",
+    url: "ajax/get_leave_job.php",
     success: function (data) {
       defaultsArray=$.parseJSON(data);
     },
@@ -483,7 +483,7 @@ function getLeaveJob(){//get draw ref for leave
 function getDefaults(){//get default projects
   var defaultsArray=[];
   $.ajax({
-    url: "ajax/getDefaults.php",
+    url: "ajax/get_defaults.php",
     success: function (data) {
       defaultsArray=$.parseJSON(data);
     },
@@ -494,7 +494,7 @@ function getDefaults(){//get default projects
 function getLeaveItems(){//get items for leave project
   var leaveItemsArray=[];
   $.ajax({
-    url: "ajax/getLeaveItems.php",
+    url: "ajax/get_leave_items.php",
     success: function (data) {
       leaveItemsArray=$.parseJSON(data);
     },
@@ -505,7 +505,7 @@ function getLeaveItems(){//get items for leave project
 function getOtherItems(){//get items for other project
   var otherItemsArray=[];
   $.ajax({
-    url: "ajax/getOtherItems.php",
+    url: "ajax/get_other_items.php",
     success: function (data) {
       otherItemsArray=$.parseJSON(data);
     },
@@ -516,7 +516,7 @@ function getOtherItems(){//get items for other project
 function getOtherJob(){//get draw ref for leave
   var defaultsArray=[];
   $.ajax({
-    url: "ajax/getOtherJob.php",
+    url: "ajax/get_other_job.php",
     success: function (data) {
       defaultsArray=$.parseJSON(data);
     },
@@ -538,7 +538,7 @@ function ifSmallScreen(){
 function changeActive(tableRowID,checkValue){//set active/inactive
   var trType=tableRowID.split("_")[0];
   var trID=tableRowID.split("_")[1];
-  $.post("ajax/changeActive.php",
+  $.post("ajax/change_active.php",
   {
     trType:trType,
     trID:trID,
@@ -565,7 +565,7 @@ function addProject(){//add project to database
   var grp=$('#myGroup').val();
   var orderNum=$('#projOrder').val();
   var buic=$('#projBUIC').val();
-  $.post("ajax/insertProject.php",
+  $.post("ajax/insert_project.php",
   {
     projName:projName,
     grp:grp,
@@ -584,7 +584,7 @@ function addProject(){//add project to database
   );
 }
 function deleteProject(projID){//delete selected project from database
-  $.post("ajax/deleteProject.php",
+  $.post("ajax/delete_project.php",
   {
     trID:projID,
     empID:empDetails['empNum']
@@ -597,7 +597,7 @@ function deleteProject(projID){//delete selected project from database
 }
 function getBUICGroups(){//get buic group selection
   $.ajax({
-    url: "ajax/getAllGroups.php",
+    url: "ajax/get_all_groups.php",
     success: function (response) {
       $('#projBUIC').html(response);
       buicEdit=response.trim();
@@ -609,7 +609,7 @@ function updateProject(projID){//update selected project in database
   var editPName=$('#editPName').val();
   var editPOrder=$('#editPOrder').val();
   var editPBUIC=$('#buicEdit').val();
-  $.post("ajax/updateProject.php",
+  $.post("ajax/update_project.php",
   {
     id:id,
     editPName:editPName,
@@ -624,7 +624,7 @@ function updateProject(projID){//update selected project in database
 function getItems(){//get items
   $.ajaxSetup({async: false});
   items=[];
-  $.post("ajax/getItems.php",
+  $.post("ajax/get_items.php",
   {
     selProj:selectedProject,
     empGroup:$('#myGroup').val(),
@@ -641,7 +641,7 @@ function getItems(){//get items
               var trID=($(this).attr('id')).split("_")[1];
               page_id_array.push(trID)
             });
-            $.post("ajax/updateIPrio.php",
+            $.post("ajax/update_item_prio.php",
             {
               page_id_array:page_id_array
             },
@@ -716,7 +716,7 @@ function itemRow(itemArrayElement){//lay item table
 function addItem(){//add item to database
   var itemName=$('#itemTitle').val();
   var grp=$('#myGroup').val();
-  $.post("ajax/insertItems.php",
+  $.post("ajax/insert_items.php",
   {
     itemName:itemName,
     grp:grp,
@@ -753,7 +753,7 @@ function clearJModal(){//clear draw ref add modal fields
   $('#jrdMh').val('');
 }
 function deleteItem(itemID){//delete selected item in database
-  $.post("ajax/deleteItem.php",
+  $.post("ajax/delete_item.php",
   {
     trID:itemID,
     empID:empDetails['empNum']
@@ -767,7 +767,7 @@ function deleteItem(itemID){//delete selected item in database
 function updateItem(itemID){//update selected item in database
   var val=$('#editIName').val();
   var id=itemID;
-  $.post("ajax/updateItems.php",
+  $.post("ajax/update_items.php",
   {
     val:val,
     id:id,
@@ -779,7 +779,7 @@ function updateItem(itemID){//update selected item in database
 }
 function getJobs(){//get draw refs
   jobs=[];
-  $.post("ajax/getJobs.php",
+  $.post("ajax/get_jobs.php",
   {
     empGroup:$('#myGroup').val(),
     selProj:selectedProject,
@@ -796,7 +796,7 @@ function getJobs(){//get draw refs
             var trID=($(this).attr('id')).split("_")[1];
             page_id_array.push(trID)
           });
-          $.post("ajax/updateJPrio.php",
+          $.post("ajax/update_job_prio.php",
           {
             page_id_array:page_id_array
           },
@@ -891,7 +891,7 @@ function addJob(){//add jrd to database
   var jobKDTDead=$('#jrdKdtDl').val();
   var jobMH=$('#jrdMh').val();
   var grp=$('#myGroup').val();
-  $.post("ajax/insertJob.php",
+  $.post("ajax/insert_job.php",
   {
     jobName:jobName,
     jobSheet:jobSheet,
@@ -918,7 +918,7 @@ function addJob(){//add jrd to database
   );
 }
 function deleteJob(jobID){//delete jrd from database
-  $.post("ajax/deleteJob.php",
+  $.post("ajax/delete_job.php",
   {
     trID:jobID,
     empID:empDetails['empNum']
@@ -1025,7 +1025,7 @@ function updateJob(jobID){//update selected drawing reference in database
   var editJKHIDead=$('#editJKHIDead').val();
   var editJKDTDead=$('#editJKDTDead').val();
   var editJMH=$('#editJMH').val();
-  $.post("ajax/updateJob.php",
+  $.post("ajax/update_job.php",
   {
     id:id,
     editJName:editJName,
@@ -1043,22 +1043,8 @@ function updateJob(jobID){//update selected drawing reference in database
     }
   );
 }
-function checkTestAccess(){//check if has access to testing
-  $.post("ajax/checkTestAccess.php",
-  {
-    empNum:empDetails['empNum']
-  },
-    function (data) {
-      var access=data.trim();
-      if(access=='0'){
-        alert('Access denied')
-        window.location.href = rootFolder + "/KDTPortalLogin";
-      }
-    }
-  );
-}
 function getShareGroups(){//get groups selections in share jmc modal
-  $.post("ajax/getShareGroups.php",
+  $.post("ajax/get_share_groups.php",
   {
     empGroup:empDetails['empGroup']
   },
@@ -1068,7 +1054,7 @@ function getShareGroups(){//get groups selections in share jmc modal
   );
 }
 function getShareEmployees(){//get members of selected group in share jmc modal
-  $.post("ajax/getShareEmployees.php",
+  $.post("ajax/get_share_employees.php",
   {
     projID:shareAccess,
     empGroup:$('#shareGroup').val()
@@ -1079,7 +1065,7 @@ function getShareEmployees(){//get members of selected group in share jmc modal
   );
 }
 function getSharedList(projID){//get members shared with selected project
-  $.post("ajax/getSharedList.php",
+  $.post("ajax/get_shared_list.php",
   {
     projID:projID
   },
@@ -1090,7 +1076,7 @@ function getSharedList(projID){//get members shared with selected project
 }
 function shareProject(){//share project to selected member
   var eid=$($('#shareEmployee').find('option:selected')).attr('e-id');
-  $.post("ajax/shareProject.php",
+  $.post("ajax/share_project.php",
   {
     projID:shareAccess,
     empNum:eid
@@ -1103,7 +1089,7 @@ function shareProject(){//share project to selected member
   );
 }
 function removeShare(employeeNumber){//remove project access from selected member
-  $.post("ajax/removeShare.php",
+  $.post("ajax/remove_share.php",
   {
     projID:shareAccess,
     empNum:employeeNumber
@@ -1131,7 +1117,7 @@ function checkAddShare(){
 function getSolProjID(){//get database id of solution project
     var spID=``;
     $.ajax({
-      url: "ajax/getSolProjID.php",
+      url: "ajax/get_solproj_id.php",
       success: function (data) {
         spID=data.trim();
       },
@@ -1142,7 +1128,7 @@ function getSolProjID(){//get database id of solution project
 function getTrainingProjID(){//get database id of training project
   var trID=``;
   $.ajax({
-    url: "ajax/getTrainingProjID.php",
+    url: "ajax/get_trainingproj_id.php",
     success: function (data) {
       trID=data.trim();
     },
@@ -1153,7 +1139,7 @@ function getTrainingProjID(){//get database id of training project
 function getNoMoreInputItems(){//get ids of no more input items
   var nmiIDs=[];
   $.ajax({
-    url: "ajax/getNoMoreInputItems.php",
+    url: "ajax/get_nomoreinput_items.php",
     success: function (data) {
       nmiIDs=$.parseJSON(data)
     },
@@ -1164,7 +1150,7 @@ function getNoMoreInputItems(){//get ids of no more input items
 function getAllAccess(){
   var allAccessIDs=[];
   $.ajax({
-    url: "ajax/getAllAccess.php",
+    url: "ajax/get_all_access.php",
     success: function (data) {
       allAccessIDs=$.parseJSON(data)
     },
