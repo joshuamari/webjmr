@@ -419,7 +419,7 @@ function getTotals() {
       $(getGrpTots).each(function () {
         totaltime += parseFloat($($(this).children()[x]).text() == "" ? 0 : $($(this).children()[x]).text());
       })
-      totaltime += parseFloat($($(`.goTot[employee-number="${$(this).attr('employee-number')}"]`).children()[x]).text() == "" ? 0 : $($(`.oTot[employee-number="${$(this).attr('employee-number')}"]`).children()[x]).text());
+      totaltime += parseFloat($($(`.goTot`).children()[x]).text() == "" ? 0 : $($(`.goTot`).children()[x]).text());
       $($(this).children()[x]).text(totaltime == 0 ? "" : totaltime);
     }
   })
