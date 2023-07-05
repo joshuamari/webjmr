@@ -37,19 +37,7 @@ var _maxDays = 0;
 var _emplist = [];
 var _empDetails = [];
 //#endregion
-
-$.ajaxSetup({ async: false });
-$.ajax({
-  url: "Includes/checkLogin.php", success: function (data) { //ajax to check if user is logged in
-    _empDetails = $.parseJSON(data);
-
-    if (Object.keys(_empDetails).length<1) {
-      window.location.href = rootFolder + '/KDTPortalLogin'; //if result is 0, redirect to log in page
-    }
-  }
-});
-$.ajaxSetup({ async: true });
-
+checkLogin();
 //#region BINDS
 $(document).ready(function () {
 
@@ -77,14 +65,50 @@ $(document).on("change", "#buSel", function () {
   createTables($('#monthSel').val());
 });
 
+$(document).on('click','#selAll',function(){
+  $(this).toggleClass('btn-primary btn-secondary');
+  if($(this).attr('class').includes('btn-primary')){
+    $(this).text('Select All');
+    $('.memBtn').attr('class','btn btn-secondary memBtn')
+  }else{
+    $(this).text('Deselect All');
+    $('.memBtn').attr('class','btn btn-primary memBtn')
+  }
+  _selectedMembers.length = 0;
+  $('.memBtn.btn-primary').each(function () {
+    _selectedMembers.push($(this).attr('emp-num'));
+  })
+  createTables($('#monthSel').val());
+})
 
+$(document).on('click', '.memBtn', function () {
+  $(this).toggleClass('btn-primary btn-secondary');
+  _selectedMembers.length = 0;
+  $('.memBtn.btn-primary').each(function () {
+    _selectedMembers.push($(this).attr('emp-num'));
+  })
+  createTables($('#monthSel').val());
+})
 //#endregion
 
 //#region FUNCTIONS
+function checkLogin(){
+  $.ajaxSetup({ async: false });
+  $.ajax({
+    url: "Includes/check_login.php", success: function (data) { //ajax to check if user is logged in
+      _empDetails = $.parseJSON(data);
+  
+      if (Object.keys(_empDetails).length<1) {
+        window.location.href = rootFolder + '/KDTPortalLogin'; //if result is 0, redirect to log in page
+      }
+    }
+  });
+  $.ajaxSetup({ async: true });
+}
 function getGroupList() {
   $('#buSel').empty();
   $.ajax({
-    url: "ajax/getGroupList.php",
+    url: "ajax/get_group_list.php",
     success: function (response) {
       var grpList = $.parseJSON(response);
       grpList.forEach(grp => {
@@ -98,7 +122,7 @@ function getEmployeeList() {
   var selDate = $("#monthSel").val();
   var grpSel = $("#buSel").val();
   $($('#members-label').nextAll()).remove();
-  $.post("ajax/getEmplist.php",
+  $.post("ajax/get_emplist.php",
     {
       monthSel: selDate,
       groupSel: grpSel
@@ -116,7 +140,7 @@ function getEmployeeList() {
 //#region table creation
 function createTables(ymVal) {
   $('#mainThead,#mainTbody,#subThead,#subTbody').empty();
-  $.post("ajax/getEntries.php",
+  $.post("ajax/get_entries.php",
     {
       monthSel: ymVal,
       empArray: _selectedMembers
@@ -463,31 +487,8 @@ function fillMembers(memDetails) {
   </div>`);
 }
 
-$(document).on('click', '.memBtn', function () {
-  $(this).toggleClass('btn-primary btn-secondary');
-  _selectedMembers.length = 0;
-  $('.memBtn.btn-primary').each(function () {
-    _selectedMembers.push($(this).attr('emp-num'));
-  })
-  createTables($('#monthSel').val());
-})
 
 //#endregion
 
-$(document).on('click','#selAll',function(){
-  $(this).toggleClass('btn-primary btn-secondary');
-  if($(this).attr('class').includes('btn-primary')){
-    $(this).text('Select All');
-    $('.memBtn').attr('class','btn btn-secondary memBtn')
-  }else{
-    $(this).text('Deselect All');
-    $('.memBtn').attr('class','btn btn-primary memBtn')
-  }
-  _selectedMembers.length = 0;
-  $('.memBtn.btn-primary').each(function () {
-    _selectedMembers.push($(this).attr('emp-num'));
-  })
-  createTables($('#monthSel').val());
-})
 
 //#endregion
