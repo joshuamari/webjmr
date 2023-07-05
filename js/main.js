@@ -25,20 +25,6 @@ $(document).ready(function () {//page Initialize Event
 //#endregion
 
 //#region FUNCTIONS
-// function checkTestAccess(){//check if has access to testing
-//   $.post("ajax/checkTestAccess.php",
-//   {
-//     empNum:empDetails['empNum']
-//   },
-//     function (data) {
-//       var access=data.trim();
-//       if(access=='0'){
-//         alert('Access denied')
-//         window.location.href = rootFolder + "/KDTPortalLogin";
-//       }
-//     }
-//   );
-// }
 function checkLogin(){//check if user is logged in
   $.ajaxSetup({async: false});
     $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
