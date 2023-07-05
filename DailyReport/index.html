@@ -13,20 +13,10 @@
 
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!-- <script
-    src="js/jquery-ui.js"
-    integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c="
-    crossorigin="anonymous"></script> -->
     <!--#region BUSTER CALL  -->
     <script>
-      // $.ajax({url: "ajax/getVersion.php", success: function(result){
-      //     var script = document.createElement("script");
-      //     script.src = "js/dr.js?version="+result;
-      //     $('head').append(script);
-      //     console.log('version: '+result);
-      // }});
       var busterCall = ["js/newDR.js","css/dr.css"];
-      $.post("ajax/getVersion.php", {
+      $.post("ajax/get_version.php", {
           busterCall : busterCall,
           titleName: "Daily Report"
       },

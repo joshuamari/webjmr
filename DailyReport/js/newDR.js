@@ -378,7 +378,7 @@ $(document).on('click','.planEntries', function(){
 
 //#region FUNCTIONS
 function checkLogin(){//check if user is logged in
-    $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check 9 is logged in
+    $.ajax({url:"Includes/check_login.php", success: function(data){ //ajax to check 9 is logged in
         empDetails=$.parseJSON(data);
         if(Object.keys(empDetails).length<1){//if result is 0, redirect to log in page
           window.location.href=rootFolder+'/KDTPortalLogin'; 
@@ -388,7 +388,7 @@ function checkLogin(){//check if user is logged in
 function getDefaults(){//get Default Projects(GOW,Kaizen,etc.)
     var defaultsArray=[];
     $.ajax({
-      url: "ajax/getDefaults.php",
+      url: "ajax/get_defaults.php",
       success: function (data) {
         defaultsArray=$.parseJSON(data);
       },
@@ -398,7 +398,7 @@ function getDefaults(){//get Default Projects(GOW,Kaizen,etc.)
 }
 function initializeDate(){//Initialize Selected Date
     $.ajax({
-        url: "ajax/getDate.php",
+        url: "ajax/get_date.php",
         success: function (response) {
             $('#idDRDate').val(response);
         },async:false
@@ -407,7 +407,7 @@ function initializeDate(){//Initialize Selected Date
 }
 function getMyGroups(){//get Group Selection
     $.ajaxSetup({async: false});
-    $.post("ajax/getMyGroups.php",
+    $.post("ajax/get_my_groups.php",
     {
         empNum:empDetails['empNum']
     },
@@ -419,7 +419,7 @@ function getMyGroups(){//get Group Selection
 }
 function getDispatchLoc(){//get Dispatch Location Selection
     $.ajax({
-        url: "ajax/getDispatchLoc.php",
+        url: "ajax/get_dispatch_loc.php",
         success: function (data) {
             $('#idLocation').html(data)
         }
@@ -430,7 +430,7 @@ function getTOW(projID){//get Types of Work Selection
     $("#idTOW").prop('selectedIndex',0);
     $("#idChecking").prop('selectedIndex',0);
     $("#forChecking").hide();
-    $.post("ajax/getTOW.php",
+    $.post("ajax/get_tow.php",
     {
         projID:projID
     },
@@ -491,7 +491,7 @@ function getEntries(){//get Daily Report Entries
     otCount=0;
     lvCount=0;
     $('#drEntries').empty();
-    $.post("ajax/getEntries.php",
+    $.post("ajax/get_entries.php",
     {
         curDay:$('#idDRDate').val(),
         empNum:empDetails['empNum']
@@ -582,7 +582,7 @@ function getProjects(){//get PROJECT Selection
     $('#idProject').html(`<option value='' hidden>Select Project</option>`);
     
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -609,7 +609,7 @@ function getProjSearch(){//get Item Selection
     var searchProj=$(`#searchproj`).val();
     $('#projOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getProjects.php",
+    $.post("ajax/get_projects.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -630,7 +630,7 @@ function getItems(projID){//get Item Selection
     $('#idItem').html(`<option value='' hidden>Select Item of Works</option>`);
     $('#labell').remove();
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -660,7 +660,7 @@ function getItemSearch(projID){//get Item Selection
     var searchIOW=$(`#searchitem`).val();
     $('#itemOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getItems.php",
+    $.post("ajax/get_items.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -681,7 +681,7 @@ function getJobs(projID,itemID){//get Item Selection
     $('#jrdOptions').empty();
     $('#idJRD').html(`<option value='' hidden>Select Job Request Description</option>`);
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -712,7 +712,7 @@ function getJRDSearch(projID,itemID){//get Item Selection
     var searchjrd=$(`#searchjrd`).val();
     $('#jrdOptions').empty();
     $.ajaxSetup({async: false});
-    $.post("ajax/getJobs.php",
+    $.post("ajax/get_jobs.php",
     {
         empGroup:$('#idGroup').val(),
         empNum:empDetails['empNum'],
@@ -864,7 +864,7 @@ function addEntries(addMode){//add Entries to Database
         // return;
              $.ajax({
                 type: "POST",
-                url: "ajax/addEntries.php",
+                url: "ajax/add_entries.php",
                 data: fd,
                 contentType: false,
                 cache: false,
@@ -884,7 +884,7 @@ function addEntries(addMode){//add Entries to Database
         }
     }
 function deleteEntry(tableRowID){//delete Entries from Database
-    $.post("ajax/deleteEntry.php",
+    $.post("ajax/delete_entry.php",
     {
         trID:tableRowID
     },
@@ -997,7 +997,7 @@ function isWorkDay(location){//check if work day
         selLoc="KDT";
     }
     $.ajaxSetup({async: false});
-    $.post("ajax/checkWorkDay.php",
+    $.post("ajax/check_workday.php",
     {
         selDate:selDate,
         selLoc:selLoc
@@ -1010,7 +1010,7 @@ function isWorkDay(location){//check if work day
     return isWorkDay;
 }
 function getTOWDesc(typesOfWorkID){//get TOW Selection
-    $.post("ajax/getTOWDesc.php",
+    $.post("ajax/get_tow_desc.php",
      {
         towID:typesOfWorkID
      },
@@ -1022,7 +1022,7 @@ function getTOWDesc(typesOfWorkID){//get TOW Selection
 function copyEntries(){//copy entries from selected date
     var getDate = $('#idDRDate').val();
     var copyDate = $('#idCopyDate').val();
-    $.post("ajax/copyEntries.php",
+    $.post("ajax/copy_entries.php",
      {
         empNum:empDetails['empNum'],
         getDate:getDate,
@@ -1044,7 +1044,7 @@ function editEntry(currentObject){//edit selected entry
     var trID = $($(currentObject).parents()[1]).attr('id')
     editID = trID.split("_")[1];
     
-    $.post("ajax/getDataEdit.php", {
+    $.post("ajax/get_data_edit.php", {
         primaryID : editID
     },
         function (data) {
@@ -1080,6 +1080,7 @@ function editEntry(currentObject){//edit selected entry
             }
             $('#trGroup').val(dataEdit[12]);
         }
+        
     );
     isDrawing();
 }
@@ -1087,7 +1088,7 @@ function editEntry(currentObject){//edit selected entry
 function selectEntry(currentObject){//edit selected entry
     var trID = $($(currentObject).parents()[1]).attr('id')
     selectID = trID.split("_")[1];
-    $.post("ajax/getDataEdit.php", {
+    $.post("ajax/get_data_edit.php", {
         primaryID : selectID
     },
         function (data) {
@@ -1144,7 +1145,7 @@ function getCheckers(){//get Checkers Selection
     $.ajaxSetup({async: false});
     var empGrp=$('#idGroup').val();
     var projID=$($('#idProject').find('option:selected')).attr('proj-id')||'';
-    $.post("ajax/getCheckers.php",
+    $.post("ajax/get_checkers.php",
      {
         empGrp:empGrp,
         empNum:empDetails['empNum'],
@@ -1165,24 +1166,10 @@ function cancelEditFunction(){//cancel editables
     $('#idReset').text("Clear");
     resetEntry();
 }
-function checkTestAccess(){//check if has access to testing
-    $.post("ajax/checkTestAccess.php",
-    {
-      empNum:empDetails['empNum']
-    },
-      function (data) {
-        var access=data.trim();
-        if(access=='0'){
-            alert('Access denied');
-          window.location.href = rootFolder + "/KDTPortalLogin";
-        }
-      }
-    );
-}
 function getLeaveID(){//get database id of leave project
     var lvID=``;
     $.ajax({
-      url: "ajax/getLeaveID.php",
+      url: "ajax/get_leave_id.php",
       success: function (data) {
         lvID=data.trim();
       },
@@ -1194,7 +1181,7 @@ function getLeaveID(){//get database id of leave project
 function getOtherID(){//get database id of other project
     var oID=``;
     $.ajax({
-      url: "ajax/getOtherID.php",
+      url: "ajax/get_other_id.php",
       success: function (data) {
         oID=data.trim();
       },
@@ -1205,7 +1192,7 @@ function getOtherID(){//get database id of other project
 function getMngID(){//get database id of management project
     var mngID=``;
     $.ajax({
-      url: "ajax/getMngID.php",
+      url: "ajax/get_mng_id.php",
       success: function (data) {
         mngID=data.trim();
       },
@@ -1216,7 +1203,7 @@ function getMngID(){//get database id of management project
 function getKiaID(){//get database id of kdt internal
     var kiaID=``;
     $.ajax({
-      url: "ajax/getKiaID.php",
+      url: "ajax/get_kia_id.php",
       success: function (data) {
         kiaID=data.trim();
       },
@@ -1227,7 +1214,7 @@ function getKiaID(){//get database id of kdt internal
 function getNoMoreInputItems(){//get ids of no more input
     var nmiIDs=[];
     $.ajax({
-      url: "ajax/getNoMoreInputItems.php",
+      url: "ajax/get_nomoreinput_items.php",
       success: function (data) {
         nmiIDs=$.parseJSON(data)
       },
@@ -1278,14 +1265,14 @@ function trainingGroup(itemID) {//check if item of work is for training for one 
 }
 function getTRGroups(){//get groups for training group selection
 $.ajax({
-    url: "ajax/getGroups.php",
+    url: "ajax/get_groups.php",
     success: function (response) {
         $('#trGroup').html(response)
     },async:false
 });
 }
 function getLabel(itemOfWorkID){//display label of selected item of work
-    $.post("ajax/getLabel.php",
+    $.post("ajax/get_label.php",
     {
         itemID:itemOfWorkID
     },
@@ -1303,7 +1290,7 @@ function getLabel(itemOfWorkID){//display label of selected item of work
 function getOneBUTrainerID(){//get databse id of one bu train itemofworks
     var obutrainID=``;
     $.ajax({
-      url: "ajax/getOneBUTrainerID.php",
+      url: "ajax/get_onebutrainer_id.php",
       success: function (data) {
         obutrainID=data.trim();
       },
@@ -1315,7 +1302,7 @@ function getPlans(){
     var plans=[];
     $(`#plannedItems`).empty()
     var defaultBody=`<tr><td colspan="6" class="text-center">No Entries Found</td></tr>`;
-    $.post("ajax/getPlans.php",
+    $.post("ajax/get_plans.php",
     {
         getEmployee:empDetails['empNum']
     },
@@ -1358,7 +1345,7 @@ function fillPlans(planString){
 }
 function getDeets(planID){
     var deets=[];
-    $.post("ajax/getDeets.php",
+    $.post("ajax/get_deets.php",
     {
         planID:planID,
         empID:empDetails['empNum']
@@ -1606,7 +1593,7 @@ function getDayta(rawDate){
     var projHours=[];
     var mhArr=[0,0,0,0];
     $.ajaxSetup({async: false});
-    $.post("ajax/getDayta.php",
+    $.post("ajax/get_dayta.php",
     {
         getDate:rawDate,
         empNum:empDetails['empNum']
@@ -1622,7 +1609,7 @@ function getDayta(rawDate){
         }
     );
     $.ajaxSetup({async: true});
-    $.post("ajax/getMHDayta.php",
+    $.post("ajax/get_mh_dayta.php",
     {
         getDate:rawDate,
         empNum:empDetails['empNum']
@@ -1655,7 +1642,7 @@ function addColors(currentMonth){
     var holidates=[]
     var allDates=[];
     $.ajaxSetup({async: false});
-    $.post("ajax/getDateColors.php",
+    $.post("ajax/get_date_colors.php",
     {
         curMonth:currentMonth,
         empNum:empDetails['empNum']
