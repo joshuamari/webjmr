@@ -3,8 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-// $output="<option value='' selected hidden>Select Item of Works</option>";
-$output=array();
+$itemsArray=array();
 $projID='';
 if(!empty($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
@@ -78,12 +77,15 @@ $itemStmt=$connwebjmr->prepare($itemQ);
 $itemStmt->execute([":projID"=>$projID,":empGroup"=>$empGroup]);
 $itemArr=$itemStmt->fetchAll();
 foreach($itemArr AS $item){
+    $output = array();
     $itemName=$item['fldItem'];
     $itemID=$item['fldID'];
-    // $output.="<option item-id='$itemID'>$itemName</option>";
-    // $output.="<li item-id='$itemID'>$itemName</li>";
-    array_push($output,"$itemID||$itemName");
+    
+    $output+=["itemID"=>$itemID];
+    $output+=["itemName"=>$itemName];
+
+    array_push($itemsArray,$output);
 }
 #endregion
-echo json_encode($output);
+echo json_encode($itemsArray);
 ?>

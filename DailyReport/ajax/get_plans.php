@@ -23,6 +23,7 @@ $plansStmt->execute([":getEmployee"=>$getEmployee]);
 if($plansStmt->rowCount()>0){
     $planArr=$plansStmt->fetchAll();
     foreach($planArr AS $plan){
+        $output = array();
         $planID=$plan['fldID'];
         $projName=$plan['projName'];
         $projJob=$plan['projJob'];
@@ -34,7 +35,15 @@ if($plansStmt->rowCount()>0){
         if($projStatus!=NULL){
             $projStatus=date("M d, Y",strtotime($projStatus));
         }
-        array_push($planned,"$planID||$projName||$projJob||$projEnd||$projMH||$usedHours||$projStatus");
+        $output += ["planID" => $planID];
+        $output += ["projName" => $projName];
+        $output += ["projJob" => $projJob];
+        $output += ["projEnd" => $projEnd];
+        $output += ["projMH" => $projMH];
+        $output += ["usedHours" => $usedHours];
+        $output += ["projStatus" => $projStatus];
+        array_push($planned, $output);
+        // array_push($planned,"$planID||$projName||$projJob||$projEnd||$projMH||$usedHours||$projStatus");
     }
 }
 #endregion

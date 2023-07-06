@@ -598,9 +598,9 @@ function getProjects(){//get PROJECT Selection
     $.ajaxSetup({async: true}); 
 }
 function fillProj(projArrayElement){
-    var projDeets=projArrayElement.split("||");
-    var addString=`<li proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</li>`;
-    var addStringMain=`<option hidden proj-id='${projDeets[0]}'>${projDeets[1]}${projDeets[2]}</option>`;
+    var projDeets=projArrayElement;
+    var addString=`<li proj-id='${projDeets['projID']}'>${projDeets['projName']}${projDeets['groupAppend']}</li>`;
+    var addStringMain=`<option hidden proj-id='${projDeets['projID']}'>${projDeets['projName']}${projDeets['groupAppend']}</option>`;
     $(`#projOptions`).append(addString);
     $(`#idProject`).append(addStringMain);
 }
@@ -649,9 +649,9 @@ function getItems(projID){//get Item Selection
     $.ajaxSetup({async: true}); 
 }
 function fillItem(itemArrayElement){
-    var itemDeets=itemArrayElement.split("||");
-    var addString=`<li item-id='${itemDeets[0]}'>${itemDeets[1]}</li>`;
-    var addStringMain=`<option hidden item-id='${itemDeets[0]}'>${itemDeets[1]}</option>`;
+    var itemDeets=itemArrayElement;
+    var addString=`<li item-id='${itemDeets['itemID']}'>${itemDeets['itemName']}</li>`;
+    var addStringMain=`<option hidden item-id='${itemDeets['itemID']}'>${itemDeets['itemName']}</option>`;
     $(`#itemOptions`).append(addString);
     $(`#idItem`).append(addStringMain);
 }
@@ -701,9 +701,9 @@ function getJobs(projID,itemID){//get Item Selection
     $.ajaxSetup({async: true}); 
 }
 function fillJobs(jobArrayElement){
-    var jrdDeets=jobArrayElement.split("||");
-    var addString=`<li job-id='${jrdDeets[0]}'>${jrdDeets[1]}</li>`;
-    var addStringMain=`<option hidden job-id='${jrdDeets[0]}'>${jrdDeets[1]}</option>`;
+    var jrdDeets=jobArrayElement;
+    var addString=`<li job-id='${jrdDeets['jobID']}'>${jrdDeets['jobName']}</li>`;
+    var addStringMain=`<option hidden job-id='${jrdDeets['jobID']}'>${jrdDeets['jobName']}</option>`;
     $(`#jrdOptions`).append(addString);
     $(`#idJRD`).append(addStringMain);
 }
@@ -1319,16 +1319,16 @@ function getPlans(){
     );
 }
 function fillPlans(planString){
-    var planStringArray=planString.split("||");
-    var planID=planStringArray[0];
-    var projName=planStringArray[1];
-    var projJob=planStringArray[2];
-    var projEnd=planStringArray[3];
-    var projMH=planStringArray[4];
-    var usedHours=planStringArray[5];
-    var projStatus=planStringArray[6];
+    var planStringArray=planString;
+    var planID=planStringArray["planID"];
+    var projName=planStringArray["projName"];
+    var projJob=planStringArray["projJob"];
+    var projEnd=planStringArray["projEnd"];
+    var projMH=planStringArray["projMH"];
+    var usedHours=planStringArray["usedHours"];
+    var projStatus=planStringArray["projStatus"];
     var statusBadge=`<span class="badge text-bg-warning">Ongoing</span>`;
-    if(projStatus.length>0){
+    if(projStatus){
         statusBadge=`<span class="badge text-bg-success">${projStatus}</span>`;
     }
     var addString=`<tr class="planEntries" plan-id="${planID}">
@@ -1351,24 +1351,23 @@ function getDeets(planID){
         empID:empDetails['empNum']
     },
         function (data) {
-            console.log(data)
             deets=$.parseJSON(data);
             deets.map(fillEditPlan);
         }
     );
 }
 function fillEditPlan(editDetails){
-    var eDeets=editDetails.split("||");
-    var projName=eDeets[0];
-    var itemName=eDeets[1];
-    var jobName=eDeets[2];
-    var projStart=eDeets[3];
-    var projEnd=eDeets[4];
-    var projMHRemaining=eDeets[5];
-    var projStatus=eDeets[6];
-    var planner=eDeets[7];
-    var plannedDate=eDeets[8];
-    var plannedDateMod=eDeets[9];
+    var eDeets=editDetails;
+    var projName=eDeets["projName"];
+    var itemName=eDeets["projItem"];
+    var jobName=eDeets["projJob"];
+    var projStart=eDeets["projStart"];
+    var projEnd=eDeets["projEnd"];
+    var projMHRemaining=eDeets["hoursRemaining"];
+    var projStatus=eDeets["projStatus"];
+    var planner=eDeets["planner"];
+    var plannedDate=eDeets["plannedDate"];
+    var plannedDateMod=eDeets["plannedModified"];
     var statusBadge=`<span class="badge text-bg-warning fs-5">Ongoing</span>`;
     if(projStatus.length>0){
         statusBadge=`<span class="badge text-bg-success fs-5">${projStatus}</span>`;

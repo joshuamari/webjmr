@@ -3,7 +3,7 @@
 require_once "../Includes/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
-$output=array();
+$projectsArray=array();
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
     $empGroup=$_REQUEST['empGroup'];
@@ -51,6 +51,7 @@ if($empGroup!=''){
     $projStmt->execute([":empGroup"=>$empGroup]);
     $projArr=$projStmt->fetchAll();
     foreach($projArr AS $projs){
+        $output = array();
         $groupAppend="";
         $projGroup=$projs['fldGroup'];
         if($projGroup!=$empGroup AND $projGroup!=NULL){
@@ -58,11 +59,13 @@ if($empGroup!=''){
         }
         $projName=$projs['fldProject'];
         $projID=$projs['fldID'];
-        // $output.="<option proj-id='$projID'>$projName$groupAppend</option>";
 
-        array_push($output,"$projID||$projName||$groupAppend");
+        $output+=["projID"=>$projID];
+        $output+=["projName"=>$projName];
+        $output+=["groupAppend"=>$groupAppend];
+        array_push($projectsArray,$output);
     }
 }
 #endregion
-echo json_encode($output);
+echo json_encode($projectsArray);
 ?>

@@ -27,6 +27,7 @@ $plansStmt->execute([":planID"=>$planID]);
 if($plansStmt->rowCount()>0){
     $planArr=$plansStmt->fetchAll();
     foreach($planArr AS $plan){
+        $output = array();
         $projName=$plan['projName'];
         $projItem=$plan['projItem'];
         $projJob=$plan['projJob'];
@@ -39,8 +40,20 @@ if($plansStmt->rowCount()>0){
         $hoursRemaining=($projMH-$usedHours)/60;
         $planner=getEmpName($plan['fldPlanner']);
         $plannedDate=date("M d, Y - h:i:sA",strtotime($plan['fldDatePlanned']));
-        $plannedModified=date("M d, Y - h:i:sA",strtotime($plan['fldDateModified']));;
-        array_push($planDetails,"$projName||$projItem||$projJob||$projStart||$projEnd||$hoursRemaining||$projStatus||$planner||$plannedDate||$plannedModified");
+        $plannedModified=date("M d, Y - h:i:sA",strtotime($plan['fldDateModified']));
+
+        $output += ["projName" => $projName];
+        $output += ["projItem" => $projItem];
+        $output += ["projJob" => $projJob];
+        $output += ["projStart" => $projStart];
+        $output += ["projEnd" => $projEnd];
+        $output += ["hoursRemaining" => $hoursRemaining];
+        $output += ["projStatus" => $projStatus];
+        $output += ["planner" => $planner];
+        $output += ["plannedDate" => $plannedDate];
+        $output += ["plannedModified" => $plannedModified];
+        array_push($planDetails, $output);
+        // array_push($planDetails,"$projName||$projItem||$projJob||$projStart||$projEnd||$hoursRemaining||$projStatus||$planner||$plannedDate||$plannedModified");
     }
 }
 #endregion
