@@ -23,7 +23,7 @@ $mngStatement="";
 if(!in_array($empPos,$managementPositions) && !in_array($empNum,$gods)){
     $mngStatement=" AND fldID<>'$mngProjID'";
 }
-$projects=array();
+$projectsArray=array();
 #endregion
 
 #region Projects Query
@@ -32,9 +32,21 @@ $projectsStmt=$connwebjmr->query($projectsQ);
 $projArr=$projectsStmt->fetchAll();
 if(count($projArr)>0){
     foreach($projArr AS $projs){
-        array_push($projects,$projs['fldProject']."||".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']);
+        $output = array();
+        $projName = $projs['fldProject'];
+        $projID = $projs['fldID'];
+        $projOrder = $projs['fldOrder'];
+        $projBUIC = $projs['fldBUIC'];
+        $projActive = $projs['fldActive'];
+        $output += ["projName" => $projName];
+        $output += ["projID" => $projID];
+        $output += ["projOrder" => $projOrder];
+        $output += ["projBUIC" => $projBUIC];
+        $output += ["projActive" => $projActive];
+        array_push($projectsArray, $output);
+        // array_push($projects,$projs['fldProject']."||".$projs['fldID']."||".$projs['fldOrder']."||".$projs['fldBUIC']."||".$projs['fldActive']);
     }
 }
 #endregion
-echo json_encode($projects);
+echo json_encode($projectsArray);
 ?>

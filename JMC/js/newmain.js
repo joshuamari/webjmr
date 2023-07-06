@@ -382,11 +382,11 @@ function fillProj(){//set items to lay
   // defaults.map(projRow); //pang defaults lang to
 }
 function projRow(projArrayElement){//lay project table
-  var iTitle = projArrayElement.split('||')[0];
-  var trID = projArrayElement.split('||')[1] || "";
-  var iOrder =  projArrayElement.split('||')[2] || "";
-  var iBU = projArrayElement.split('||')[3] || "";
-  var iActive = projArrayElement.split('||')[4] || "";
+  var iTitle = projArrayElement['projName'];
+  var trID = projArrayElement['projID'] || "";
+  var iOrder =  projArrayElement['projOrder'] || "";
+  var iBU = projArrayElement['projBUIC'] || "";
+  var iActive = projArrayElement['projActive'] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
@@ -639,9 +639,9 @@ function itemRow(itemArrayElement){//lay item table
   // IF WALANG JRD PALITAN ANG CURSOR NG $(selector).css("cursor","auto");
   // 
   // 
-  var iTitle = itemArrayElement.split('||')[0];
-  var trID = itemArrayElement.split('||')[1] || "";
-  var iActive = itemArrayElement.split('||')[2] || "";
+  var iTitle = itemArrayElement["itemName"];
+  var trID = itemArrayElement["itemID"] || "";
+  var iActive = itemArrayElement["itemActive"] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){
@@ -781,17 +781,17 @@ function fillJob(){//set draw refs to lay
   getGOWJob();
 }
 function jobRow(jobArrayElement){//lay drawref table
-  var iTitle = jobArrayElement.split('||')[0];
-  var trID = jobArrayElement.split('||')[1] || "";
-  var trNoSheet = jobArrayElement.split('||')[2] || "";
-  var trPaperSize = jobArrayElement.split('||')[3] || "";
-  var trDrawName = jobArrayElement.split('||')[4] || "";
-  var trKHIDate = jobArrayElement.split('||')[5] || "";
-  var trKHIC = jobArrayElement.split('||')[6] || "";
-  var trKHIDeadline = jobArrayElement.split('||')[7] || "";
-  var trKDTDeadline = jobArrayElement.split('||')[8] || "";
-  var trExpMH = jobArrayElement.split('||')[9] || "";
-  var iActive = jobArrayElement.split('||')[10] || "";
+  var iTitle = jobArrayElement["jobName"];
+  var trID = jobArrayElement["jobID"] || "";
+  var trNoSheet = jobArrayElement["jobSheets"] || "";
+  var trPaperSize = jobArrayElement["paperSize"] || "";
+  var trDrawName = jobArrayElement["drawingName"] || "";
+  var trKHIDate = jobArrayElement["khiDate"] || "";
+  var trKHIC = jobArrayElement["khiC"] || "";
+  var trKHIDeadline = jobArrayElement["khiDeadline"] || "";
+  var trKDTDeadline = jobArrayElement["kdtDeadline"] || "";
+  var trExpMH = jobArrayElement["expectedMH"] || "";
+  var iActive = jobArrayElement["jobActive"] || "";
   var draggable="mover";
   var activeStatus="checked";
   if(iActive==0){

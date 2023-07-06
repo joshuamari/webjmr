@@ -11,7 +11,7 @@ $selProj='';
 if(isset($_REQUEST['selProj'])){
     $selProj=$_REQUEST['selProj'];
 }
-$items=array();
+$itemsArray=array();
 // $prioq="SELECT MAX(fldPriority) FROM itemofworkstable WHERE fldActive='1' AND fldGroup='$empGroup' AND fldProject='$selProj'";
 // $priostmt=$connwebjmr->query($prioq);
 // $maxPrio=$priostmt->fetchColumn();
@@ -26,9 +26,17 @@ $itemsStmt=$connwebjmr->query($itemsQ);
 $itemsArr=$itemsStmt->fetchAll();
 if(count($itemsArr)>0){
     foreach($itemsArr as $itms){
-        array_push($items,$itms['fldItem']."||".$itms['fldID']."||".$itms['fldActive']);
+        $output = array();
+        $itemName = $itms['fldItem'];
+        $itemID = $itms['fldID'];
+        $itemActive = $itms['fldActive'];
+        $output += ["itemName" => $itemName];
+        $output += ["itemID" => $itemID];
+        $output += ["itemActive" => $itemActive];
+        array_push($itemsArray, $output);
+        // array_push($items,$itms['fldItem']."||".$itms['fldID']."||".$itms['fldActive']);
     }
 }
 #endregion
-echo json_encode($items);
+echo json_encode($itemsArray);
 ?>
