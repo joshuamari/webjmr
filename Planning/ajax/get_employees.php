@@ -13,6 +13,10 @@ $projID=NULL;
 if(!empty($_POST['projID'])){
     $projID=$_POST['projID'];
 }
+$searchEmp='';
+if(!empty($_POST['searchemp'])){
+    $searchEmp=$_POST['searchemp'];
+}
 $empDeets=array();
 $groupQ="SELECT fldGroup FROM projectstable WHERE fldID=:projID";
 $groupStmt=$connwebjmr->prepare($groupQ);
@@ -36,7 +40,7 @@ if($hiramStmt->rowCount()>0){
 #endregion
 
 #region main
-$empsQ="SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup $mgaHiniram) AND fldActive=1 AND fldNick<>''";
+$empsQ="SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup $mgaHiniram) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%'";             ;
 $empsStmt=$connkdt->prepare($empsQ);
 $empsStmt->execute([":projGroup"=>$projGroup]);
 if($empsStmt->rowCount()>0){
