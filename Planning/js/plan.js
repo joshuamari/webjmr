@@ -419,8 +419,7 @@ $(document).on("click", ".badge", function () {
 });
 $(document).on("click", "#idEditStatus", function () {
   $("#editStatus").modal("hide");
-
-  getPlans();
+  updateStatus();
 });
 $(document).on("click", ".editPlanningButton", function () {
   var planID = $(this).closest("tr").attr("plan-id");
