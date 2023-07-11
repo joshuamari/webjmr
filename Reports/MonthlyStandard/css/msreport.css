@@ -142,11 +142,14 @@ body {
   overflow: auto;
   background-color: #ededed;
 }
-.lower .right h1 {
+.lower .noShow h1 {
   background-color: var(--darkest-blue);
   color: white;
   padding: 10px 20px;
   border-radius: 8px;
+}
+.lower .noShow {
+  background-color: #ededed;
 }
 .memBtn:active {
   background-color: var(--darkest-blue);

@@ -47,7 +47,7 @@ $(document).ready(function () {
 
   $.ajaxSetup({ async: true });
 
-  createTables($("#monthSel").val());
+  // createTables($("#monthSel").val());
 });
 
 $(document).on("change", "#monthSel", function () {
@@ -86,6 +86,7 @@ $(document).on("click", ".memBtn", function () {
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
+
   createTables($("#monthSel").val());
 });
 //#endregion
@@ -143,6 +144,13 @@ function getEmployeeList() {
 }
 //#region table creation
 function createTables(ymVal) {
+  if (_selectedMembers.length < 1) {
+    $(".noShow").removeClass("d-none");
+    $(".lower .right").addClass("d-none");
+    return;
+  }
+  $(".noShow").addClass("d-none");
+  $(".lower .right").removeClass("d-none");
   $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
   $.post(
     "ajax/get_entries.php",
