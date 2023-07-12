@@ -62,7 +62,13 @@ $(document).on("change", "#buSel", function () {
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($("#monthSel").val());
-  $("#selAll").click();
+  console.log(_selectedMembers);
+
+  _selectedMembers.length = 0;
+
+  $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
+  $("#selAll").text("Select All");
+  $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
 });
 
 $(document).on("click", "#selAll", function () {
