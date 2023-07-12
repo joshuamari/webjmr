@@ -1278,18 +1278,23 @@ function fillEditPlan(editDetails) {
   var projEnd = eDeets[6];
   var projMH = eDeets[7];
   $("#idGroupEdit").val(projGroup).change();
+  $("#idGroupEdit").prop('disabled',true);
   $($("#idProjectEdit").find(`option[proj-id=${projID}]`))
     .prop("selected", true)
     .change();
   $($("#idItemEdit").find(`option[item-id=${itemID}]`))
     .prop("selected", true)
     .change();
+  $("#idProjectEdit").prop('disabled',true);
+  $("#idItemEdit").prop('disabled',true);
   $($("#idJRDEdit").find(`option[job-id=${jobID}]`))
     .prop("selected", true)
     .change();
+  $("#idJRDEdit").prop('disabled',true);
   $($("#idEmpEdit").find(`option[emp-id=${empID}]`))
     .prop("selected", true)
     .change();
+  $("#idEmpEdit").prop('disabled',true);
   $("#idStartDateEdit").val(projStart).change();
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
