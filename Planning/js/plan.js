@@ -14,6 +14,7 @@ var empDetails = [];
 var editID = "";
 var deleteID = "";
 var TRow = "";
+var _selectedEmployees = [];
 
 //#endregion
 checkLogin();
@@ -80,6 +81,7 @@ $(document).on("change", "#idGroupEdit", function () {
 
 $(document).on("change", "#idProject", function () {
   //select Project Event
+  removeSelected();
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   $("#idJRD").val(null).change(); //clear Job Request Description
   $("#idItem").val(null).change();
@@ -146,14 +148,14 @@ $(document).on("change", "#idJRDEdit", function () {
 });
 $(document).on("change", "#idEmp option", function () {
   var selected = $("#idEmp").val();
+  var selectedID = $(this).attr(`emp-id`);
   $("#p5").text("");
   $(this).removeClass("border-danger");
   $(".empviewer").append(`
-    <span class='mx-1'>
+    <span class='mx-1' emp-id = '${selectedID}' >
       ${selected}
       <i class="bx bx-x text-light removeEmp"></i>
     </span>`);
-  console.log("hatdog");
   //if nasa .empviewer na sya alisin na sa selection.
 });
 $(document).on("change", "#idEmpEdit", function () {
@@ -167,7 +169,14 @@ $(document).on("change", "#idStartDate", function () {
   dateValidation();
 });
 $(document).on("click", ".removeEmp", function () {
+  var removeID = $($(this).parent()).attr(`emp-id`);
+  var index = _selectedEmployees.indexOf(removeID);
+  if (index !== -1) {
+    _selectedEmployees.splice(index, 1);
+  }
+  console.log(_selectedEmployees)
   $($(this).parent()).remove();
+  getEmployees();
 });
 $(document).on("change", "#idStartDateEdit", function () {
   //select Date Event
@@ -397,6 +406,9 @@ $(document).on("click", "#empOptions li", function () {
   $($("#idEmp").find(`option[emp-id=${empid}]`))
     .prop("selected", true)
     .change();
+    _selectedEmployees.push(empid)
+    $(`#searchemp`).val('').change();
+    getEmployees();
 });
 
 $(document).on("search", "#searchemp", function () {
@@ -476,17 +488,24 @@ function getMyGroups() {
   $.ajaxSetup({ async: true });
 }
 function getEmployees() {
+  $(`#idEmp`).empty();
+  $(`#idEmpEdit`).empty();
+  $(`#empOptions`).empty();
   $(`#idEmp`).html(`<option hidden="">Select Employee</option>`);
   $(`#idEmpEdit`).html(`<option hidden="">Select Employee</option>`);
   var projID =
     $($("#idProject").find("option:selected")).attr("proj-id") ||
     $($("#idProjectEdit").find("option:selected")).attr("proj-id");
   var emps = [];
+  
+  var searchemp = $(`#searchemp`).val();
   $.ajaxSetup({ async: false });
   $.post(
     "ajax/get_employees.php",
     {
       projID: projID,
+      searchemp: searchemp,
+      selectedEmps:_selectedEmployees,
     },
     function (data) {
       emps = $.parseJSON(data);
@@ -518,6 +537,7 @@ function getEmpSearch() {
     {
       projID: projID,
       searchemp: searchemp,
+      selectedEmps:_selectedEmployees,
     },
     function (data) {
       emps = $.parseJSON(data);
@@ -976,7 +996,7 @@ function addEntries() {
   var proj = $($("#idProject").find("option:selected")).attr("proj-id");
   var item = $($("#idItem").find("option:selected")).attr("item-id");
   var jobreq = $($("#idJRD").find("option:selected")).attr("job-id");
-  var emp = $($("#idEmp").find("option:selected")).attr("emp-id");
+  // var emp = $($("#idEmp").find("option:selected")).attr("emp-id");
   var sdate = $("#idStartDate").val();
   var edate = $("#idEndDate").val();
   var mh = $("#idMH").val() * 60;
@@ -1002,7 +1022,7 @@ function addEntries() {
     $("#idJRD").addClass("border border-danger");
     mgaKulang.push("JRD");
   }
-  if (!emp) {
+  if (_selectedEmployees.length == 0) {
     $("#p5").text("Please select employee");
     $("#idEmp").addClass("border border-danger");
     mgaKulang.push("EMP");
@@ -1025,7 +1045,7 @@ function addEntries() {
 
   var fd = new FormData();
   fd.append("getDescription", jobreq);
-  fd.append("getEmp", emp);
+  fd.append("getEmp[]", _selectedEmployees);
   fd.append("getsDate", sdate);
   fd.append("geteDate", edate);
   fd.append("getMH", mh);
@@ -1034,19 +1054,22 @@ function addEntries() {
     console.log(mgaKulang);
     return;
   } else {
-    $.ajax({
-      type: "POST",
-      url: "ajax/add_planning_entries.php",
-      data: fd,
-      contentType: false,
-      cache: false,
-      processData: false,
-      success: function (data) {
+    $.post("ajax/add_planning_entries.php",
+    {
+      getDescription : jobreq,
+      getEmp : _selectedEmployees,
+      getsDate : sdate,
+      geteDate : edate,
+      getMH : mh,
+      empNum : empDetails["empNum"]
+    },
+      function (data) {
+        console.log(data)
         resetEntry();
         getPlans();
         $(".cancel").click();
-      },
-    });
+      }
+    );
   }
 }
 
@@ -1294,5 +1317,10 @@ function ifSmallScreen() {
   } else {
     $(".menu-two").addClass("d-none");
   }
+}
+
+function removeSelected(){
+  $(`.empviewer`).empty();
+  _selectedEmployees = [];
 }
 //#endregion

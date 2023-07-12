@@ -35,12 +35,22 @@ if($hiramStmt->rowCount()>0){
     $mgaHiniram=rtrim($mgaHiniram,",");
     $mgaHiniram.=")";
 }
-
-
+$selectedEmps = array();
+$exceptList = '';
+if(!empty($_POST['selectedEmps'])){
+    $selectedEmps = $_POST['selectedEmps'];
+    
+    $exceptList = 'AND fldEmployeeNum NOT IN (';
+    foreach($selectedEmps AS $emps){
+        $exceptList.="'$emps',";
+    }
+    $exceptList = rtrim($exceptList,",");
+    $exceptList .= ')';
+}
 #endregion
 
 #region main
-$empsQ="SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup $mgaHiniram) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%'";             ;
+$empsQ="SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup $mgaHiniram) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%' $exceptList";             ;
 $empsStmt=$connkdt->prepare($empsQ);
 $empsStmt->execute([":projGroup"=>$projGroup]);
 if($empsStmt->rowCount()>0){

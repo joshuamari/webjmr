@@ -13,7 +13,7 @@ $empNum=NULL;
 if(!empty($_POST['empNum'])){
     $empNum=$_POST['empNum'];
 }
-$getEmp=NULL;
+$getEmp=array();
 if(!empty($_POST['getEmp'])){
     $getEmp=$_POST['getEmp'];
 }
@@ -39,6 +39,10 @@ if(!empty($_POST['getMH'])){
 $insertQ="INSERT INTO planning(fldPlanner, fldDatePlanned, fldEmployeeNum, fldJob, fldStartDate, fldEndDate, fldHours, fldDateModified) 
 VALUES(:empNum,:datePlanned,:getEmp,:getDescription,:getsDate,:geteDate,:getMH,:datePlanned)";
 $insertStmt=$connwebjmr->prepare($insertQ);
-$insertStmt->execute([":empNum"=>$empNum,":datePlanned"=>$datePlanned,":getEmp"=>$getEmp,":getDescription"=>$getDescription,":getsDate"=>$getsDate,":geteDate"=>$geteDate,":getMH"=>$getMH]);
+foreach($getEmp AS $emps){
+    $insertStmt->execute([":empNum"=>$empNum,":datePlanned"=>$datePlanned,":getEmp"=>$emps,":getDescription"=>$getDescription,":getsDate"=>$getsDate,":geteDate"=>$geteDate,":getMH"=>$getMH]);
+    echo $emps."<br>";
+}
+
 #endregion
 ?>
