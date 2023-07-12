@@ -1,67 +1,121 @@
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Monthly Standard Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/msreport.css" />
+    <link rel="stylesheet" href="css/boxicons.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.table2excel.js"></script>
+    <script>
+      var busterCall = [
+        "js/main.js",
+        "css/msreport.css",
+        "css/bootstrap.min.css",
+      ];
+      $.post(
+        "ajax/get_version.php",
+        {
+          busterCall: busterCall,
+          titleName: "Monthly Standard Report",
+        },
+        function (data) {
+          $("head").html(data);
+        }
+      );
+    </script>
+  </head>
 
-<head>
-  <title>Monthly Standard Report</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
-  <link rel="stylesheet" href="css/msreport.css" />
-  <link rel="stylesheet" href="css/boxicons.css" />
-  <script src="js/jquery.js"></script>
-  <script src="js/jquery.inview.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.table2excel.js"></script>
-  <script>
+  <body>
+    <div class="home-content position-relative">
+      <div class="title xPrint">
+        <h1>Monthly Standard Table</h1>
 
-    var busterCall = ["js/main.js", "css/msreport.css"];
-    $.post("ajax/get_version.php", {
-      busterCall: busterCall,
-      titleName: "Monthly Standard Report"
-    },
-      function (data) {
-        $('head').html(data);
-      }
-    );
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="../" class="backbtn">
+            <i class="bx bx-left-arrow-alt fs-5"></i>
+            <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
+          </a>
 
-  </script>
-</head>
-
-<body>
-  <h1>Monthly Standard (DONE!!!)</h1>
-  <input type="month" id="monthSel">
-  <select id="buSel">
-      <option>SYS</option>
-      <option>ENV</option>
-      <option>BOI</option>
-  </select>
-  <div class="row">
-      <div class="col p-4" id="members-list">
-          <h3 id="members-label">Members <button id="selAll" class="btn btn-primary">Select All</button></h3>
-      </div>
-      <div class="col row">
-          <div id="upperT" class="row" style="overflow-x: auto;">
-              <table class="table" id="mainTable">
-                  <thead>
-                      <tr id="mainThead"></tr>
-                  </thead>
-                  <tbody id="mainTbody"></tbody>
-              </table>
+          <div class="right d-flex flex-row pe-2 pe-lg-0">
+            <button
+              id="btnPrint"
+              class="xPrint btn btn-primary"
+              style="background-color: #395dc7"
+            >
+              PRINT
+            </button>
+            <button id="btnExport" class="xPrint btn btn-success">
+              EXPORT
+            </button>
           </div>
-          <div id="lowerT" class="row" style="overflow-x: auto;">
+        </div>
+      </div>
+      <div class="content">
+        <div class="lower position-relative d-flex flex-md-row flex-column">
+          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+            <div class="form-floating col-12 mb-2">
+              <select class="form-select" id="buSel" aria-label="Select BU">
+                <option value="" selected hidden>Select Group</option>
+                <option>ENV</option>
+                <option>Two</option>
+                <option>Three</option>
+              </select>
+              <label for="busSel">Select BU</label>
+            </div>
+            <div class="form-floating col-12 mb-2">
+              <input type="month" id="monthSel" class="form-control" />
+              <label for="monthSel">Select Month</label>
+            </div>
+            <div class="form-floating col-12 mb-2">
+              <select class="form-select" id="CO" aria-label="Select BU">
+                <option value="3">Monthly</option>
+                <option value="1">First Half</option>
+                <!-- <option value="2">Second Half</option> -->
+              </select>
+              <label for="CO" class="">Select Cut-off</label>
+            </div>
+
+            <div class="position-relative">
+              <h2 class="">Members</h2>
+              <div id="members-list"></div>
+              <button id="selAll" class="btn btn-primary w-100 mt-4">
+                Select All
+              </button>
+            </div>
+          </div>
+          <div
+            class="right d-none m-2 px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column"
+          >
+            <div id="upperT" class="position-relative">
+              <table class="table position-relative" id="mainTable">
+                <thead>
+                  <tr id="mainThead" class="sticky-top bg-body"></tr>
+                </thead>
+                <tbody id="mainTbody"></tbody>
+              </table>
+            </div>
+            <div id="lowerT" class="position-relative">
               <table class="table" id="subTable">
-                  <thead>
-                      <tr id="subThead"></tr>
-                  </thead>
-                  <tbody id="subTbody"></tbody>
+                <thead>
+                  <tr id="subThead"></tr>
+                </thead>
+                <tbody id="subTbody"></tbody>
               </table>
+            </div>
           </div>
+          <div
+            class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative"
+          >
+            <h1 class="text-center">Select Employee</h1>
+          </div>
+        </div>
       </div>
-  </div>
-
-
-
-
-</body>
-
+    </div>
+  </body>
 </html>
