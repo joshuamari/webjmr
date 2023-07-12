@@ -23,7 +23,7 @@ if(!empty($_POST['getGroup'])){
 // $getGroups=array("CEM");
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
-$ymSel=$firstDay;
+$ymSel=NULL;
 if(!empty($_REQUEST['getYMSel'])){
     $ymSel=$_REQUEST['getYMSel'];
 }
@@ -33,12 +33,18 @@ $cutOff="1";
 if(isset($_REQUEST['getHalfSel'])){
     $cutOff=$_REQUEST['getHalfSel'];
 }
-if($cutOff=="2"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month'));
-    $firstDay=date("Y-m-16",strtotime($ymSel));
-}
-if($cutOff=="3"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+switch($cutOff){
+    case "3":
+        $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+        break;
+    case "4":
+        $firstDay = date('Y-m-d', strtotime('this week'));
+        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
+        break;
+    case "5":
+        $firstDay = date('Y-m-d', strtotime('last week'));
+        $lastDay = date('Y-m-d', strtotime('last week +6 days'));
+        break;
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $entries=array();
