@@ -520,7 +520,7 @@ function fillEmployee(empDeets) {
   var addStringMain = `<option hidden emp-id='${empDts[0]}'>${empDts[1]}</option>`;
 
   $(`#idEmp`).append(addStringMain);
-
+  $(`#idEmpEdit`).append(addStringMain);
   $(`#empOptions`).append(addString);
 }
 
