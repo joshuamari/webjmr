@@ -62,6 +62,7 @@ $(document).on("change", "#buSel", function () {
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($("#monthSel").val());
+  $("#selAll").click();
 });
 
 $(document).on("click", "#selAll", function () {
