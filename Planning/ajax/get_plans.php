@@ -13,11 +13,57 @@ $getPlanner=NULL;
 if(!empty($_POST['getPlanner'])){
     $getPlanner=$_POST['getPlanner'];
 }
+$searchStatement = '';
+$searchEmpStatement = '';
+$searchEmployee=NULL;
+if(!empty($_POST['searchEmployee'])){
+    $searchEmployee=$_POST['searchEmployee'];
+    $searchEmpStatement = " AND fldName LIKE '%$searchEmployee%'";
+}
+$searchSDate=NULL;
+if(!empty($_POST['searchSDate'])){
+    $searchSDate=$_POST['searchSDate'];
+    $searchStatement .= " AND pl.fldStartDate = '$searchSDate'";
+}
+$filterGroup=NULL;
+if(!empty($_POST['filterGroup'])){
+    $filterGroup=$_POST['filterGroup'];
+    $searchStatement .= " AND pt.fldGroup = '$filterGroup'";
+}
+$filterProject=NULL;
+if(!empty($_POST['filterProject'])){
+    $filterProject=$_POST['filterProject'];
+    $searchStatement .= " AND pt.fldProject = '$filterProject'";
+}
+$filterItem=NULL;
+if(!empty($_POST['filterItem'])){
+    $filterItem=$_POST['filterItem'];
+    $searchStatement .= " AND it.fldItem = '$filterItem'";
+}
+$filterJRD=NULL;
+if(!empty($_POST['filterJRD'])){
+    $filterJRD=$_POST['filterJRD'];
+    $searchStatement .= " AND dr.fldJob = '$filterJRD'";
+}
+$filterStatus=NULL;
+if(!empty($_POST['filterStatus'])){
+    $filterStatus=$_POST['filterStatus'];
+    
+    switch($filterStatus){
+        case "1":
+            $statStmt = "IS NULL";
+            break;
+        case "2":
+            $statStmt = "IS NOT NULL";
+            break;
+    }
+    $searchStatement .= " AND pl.fldStatus $statStmt";
+}
 $planned=array();
 #endregion
 
 #region main
-$plansQ="SELECT pl.*,dr.fldID AS jobID,dr.fldJob AS projJob,pt.fldProject AS projName,it.fldItem AS projItem,pt.fldGroup AS projGroup FROM planning AS pl JOIN drawingreference AS dr ON pl.fldJob=dr.fldID JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN itemofworkstable AS it ON dr.fldItem=it.fldID WHERE pl.fldPlanner=:getPlanner ORDER BY pl.fldStartDate DESC";
+$plansQ="SELECT pl.*,dr.fldID AS jobID,dr.fldJob AS projJob,pt.fldProject AS projName,it.fldItem AS projItem,pt.fldGroup AS projGroup FROM planning AS pl JOIN drawingreference AS dr ON pl.fldJob=dr.fldID JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN itemofworkstable AS it ON dr.fldItem=it.fldID WHERE pl.fldPlanner=:getPlanner $searchStatement ORDER BY pl.fldStartDate DESC";
 $plansStmt=$connwebjmr->prepare($plansQ);
 $plansStmt->execute([":getPlanner"=>$getPlanner]);
 if($plansStmt->rowCount()>0){
@@ -31,6 +77,9 @@ if($plansStmt->rowCount()>0){
         $projJobID=$plan['jobID'];
         $projEmp=$plan['fldEmployeeNum'];
         $projEmpName=getEmpName($projEmp);
+        if(is_null($projEmpName)){
+            continue;
+        }
         $projStart=date("M d, Y",strtotime($plan['fldStartDate']));
         $projEnd=date("M d, Y",strtotime($plan['fldEndDate']));
         $projMH=($plan['fldHours'])/60;
@@ -47,8 +96,9 @@ if($plansStmt->rowCount()>0){
 #region function
 function getEmpName($employeeNumber){
 GLOBAL $connkdt;
+GLOBAL $searchEmpStatement;
 $ename=NULL;
-$nameQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum=:employeeNumber";
+$nameQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum=:employeeNumber $searchEmpStatement";
 $nameStmt=$connkdt->prepare($nameQ);
 $nameStmt->execute([":employeeNumber"=>$employeeNumber]);
 if($nameStmt->rowCount()>0){
