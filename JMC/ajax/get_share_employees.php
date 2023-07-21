@@ -13,20 +13,14 @@ $projID='';
 if(isset($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
 }
-$sharedProjects="AND fldEmployeeNum NOT IN (";
+$sharedProjects="";
 $spQ="SELECT * FROM project_share WHERE fldProject='$projID'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
     $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldEmployeeNum'];
-        $sharedProjects.="'$sp',";
-    }
-    $sharedProjects=rtrim($sharedProjects,',');
-    $sharedProjects.=")";
-}
-else{
-    $sharedProjects="";
+    $arrValues = array_column($spArr, "fldEmployeeNum");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedProjects="AND fldEmployeeNum NOT IN ('" . $implodeString . "')";
 }
 #endregion
 #region MyGroup Query

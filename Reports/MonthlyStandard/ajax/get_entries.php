@@ -12,23 +12,20 @@ $yearMonth = date("Y-04");
 if(!empty($_POST['monthSel'])){
     $yearMonth = $_POST['monthSel'];
 }
-$empStatement = "''";
+$empStatement = "";
 $employeeArray = array();
 if(!empty($_POST['empArray'])){
-    $empStatement = '';
     $employeeArray = $_POST['empArray'];
-    foreach($employeeArray AS $emp){
-        $empStatement .= $emp . ",";
-    }
-    $empStatement = rtrim($empStatement, ",");
+    $implodeString = implode("','",$employeeArray);
+    $selectedEmployees="AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
 }
 $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, dr.fldDuration AS eMinutes, dr.fldMHType AS eMHT FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldEmployeeNum IN ($empStatement) AND dr.fldDate LIKE :yearMonth ";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, dr.fldDuration AS eMinutes, dr.fldMHType AS eMHT FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth :empStatement";
 $entriesStmt = $connwebjmr -> prepare($entriesQuery);
-$entriesStmt -> execute([":yearMonth" => "$yearMonth%"]);
+$entriesStmt -> execute([":yearMonth" => "$yearMonth%",":empStatement" => $empStatement]);
 if($entriesStmt -> rowCount()>0){
     $entriesArr = $entriesStmt -> fetchAll();
     foreach($entriesArr AS $entries){

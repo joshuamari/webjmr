@@ -27,25 +27,17 @@ $hiramQ="SELECT * FROM project_share WHERE fldProject=:projID";
 $hiramStmt=$connwebjmr->prepare($hiramQ);
 $hiramStmt->execute([":projID"=>$projID]);
 if($hiramStmt->rowCount()>0){
-    $mgaHiniram=" OR fldEmployeeNum IN (";
     $hiramArr=$hiramStmt->fetchAll();
-    foreach($hiramArr AS $hiram){
-        $mgaHiniram.=$hiram['fldEmployeeNum'].",";
-    }
-    $mgaHiniram=rtrim($mgaHiniram,",");
-    $mgaHiniram.=")";
+    $arrValues = array_column($hiramArr, "fldEmployeeNum");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedProjects="OR fldEmployeeNum IN ('" . $implodeString . "')";
 }
 $selectedEmps = array();
 $exceptList = '';
 if(!empty($_POST['selectedEmps'])){
     $selectedEmps = $_POST['selectedEmps'];
-    
-    $exceptList = 'AND fldEmployeeNum NOT IN (';
-    foreach($selectedEmps AS $emps){
-        $exceptList.="'$emps',";
-    }
-    $exceptList = rtrim($exceptList,",");
-    $exceptList .= ')';
+    $implodeString = implode("','",array_values($selectedEmps));
+    $exceptList="AND fldEmployeeNum NOT IN ('" . $implodeString . "')";
 }
 #endregion
 

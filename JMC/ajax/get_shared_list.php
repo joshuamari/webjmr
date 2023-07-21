@@ -9,34 +9,16 @@ $projID='';
 if(isset($_REQUEST['projID'])){
     $projID=$_REQUEST['projID'];
 }
-$sharedProjects="AND fldEmployeeNum IN (";
-$spQ="SELECT * FROM project_share WHERE fldProject='$projID'";
-$spStmt=$connwebjmr->query($spQ);
-if($spStmt->rowCount()>0){
-    $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldEmployeeNum'];
-        $sharedProjects.="'$sp',";
-    }
-    $sharedProjects=rtrim($sharedProjects,',');
-    $sharedProjects.=")";
-}
-else{
-    $sharedProjects="";
-}
 #endregion
 #region MyGroup Query
-$sharedProjects="(";
+$sharedProjects="";
 $spQ="SELECT * FROM project_share WHERE fldProject='$projID'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
     $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldEmployeeNum'];
-        $sharedProjects.="'$sp',";
-    }
-    $sharedProjects=rtrim($sharedProjects,',');
-    $sharedProjects.=")";
+    $arrValues = array_column($spArr, "fldEmployeeNum");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedProjects="('" . $implodeString . "')";
     
     $myGroupQ="SELECT CONCAT(fldSurname,', ',fldFirstname) AS empname,fldGroup,fldEmployeeNum FROM emp_prof WHERE fldNick<>'' AND fldActive=1 AND fldEmployeeNum IN $sharedProjects ORDER BY fldEmployeeNum";
     $myGroupStmt=$connkdt->query($myGroupQ);

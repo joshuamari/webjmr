@@ -24,20 +24,14 @@ $mngStatement="";
 if(!in_array($empPos,$managementPositions) && !in_array($empNum,$gods)){
     $mngStatement=" AND fldID<>'$mngProjID'";
 }
-$sharedProjects="OR fldID IN (";
+$sharedProjects="";
 $spQ="SELECT * FROM project_share WHERE fldEmployeeNum='$empNum'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
     $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldProject'];
-        $sharedProjects.="'$sp',";
-    }
-    $sharedProjects=rtrim($sharedProjects,',');
-    $sharedProjects.=")";
-}
-else{
-    $sharedProjects="";
+    $arrValues = array_column($spArr, "fldProject");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedProjects="OR fldID IN ('" . $implodeString . "')";
 }
 $searchProj='';
 if(!empty($_POST['searchProj'])){

@@ -24,17 +24,13 @@ if(!empty($_REQUEST['projID'])){
     }
 }
 $sharedEmp="";
-$spQ="SELECT * FROM project_share WHERE fldProject='$projID'";
+$spQ="SELECT fldEmployeeNum FROM project_share WHERE fldProject='$projID'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
-    $sharedEmp="OR fldEmployeeNum IN (";
     $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldEmployeeNum'];
-        $sharedEmp.="'$sp',";
-    }
-    $sharedEmp=rtrim($sharedEmp,',');
-    $sharedEmp.=")";
+    $arrValues = array_column($spArr, "fldEmployeeNum");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedEmp="OR fldEmployeeNum IN ('" . $implodeString . "')";
 }
 #endregion
 #region Query Members
