@@ -17,15 +17,15 @@ $employeeArray = array();
 if(!empty($_POST['empArray'])){
     $employeeArray = $_POST['empArray'];
     $implodeString = implode("','",$employeeArray);
-    $selectedEmployees="AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
+    $empStatement="AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
 }
 $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, dr.fldDuration AS eMinutes, dr.fldMHType AS eMHT FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth :empStatement";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, dr.fldDuration AS eMinutes, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth $empStatement";
 $entriesStmt = $connwebjmr -> prepare($entriesQuery);
-$entriesStmt -> execute([":yearMonth" => "$yearMonth%",":empStatement" => $empStatement]);
+$entriesStmt -> execute([":yearMonth" => "$yearMonth%"]);
 if($entriesStmt -> rowCount()>0){
     $entriesArr = $entriesStmt -> fetchAll();
     foreach($entriesArr AS $entries){
@@ -40,6 +40,7 @@ if($entriesStmt -> rowCount()>0){
         $entryHours = $rawMinutes / 60;
         $output += ["hours" => $entryHours];
         $output += ["OT" => ($entries['eMHT'] == 1) ? TRUE : FALSE];
+        $output += ["iIndex" => $entries['itemID']];
         array_push($entriesArray,$output);
 
     }

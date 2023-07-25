@@ -30,6 +30,4 @@ $deleteQ="UPDATE itemofworkstable SET fldDelete=:deleteLog,fldPriority=0 WHERE f
 $deleteStmt=$connwebjmr->prepare($deleteQ);
 $deleteStmt->execute([":deleteLog"=>$deleteLog,":trID"=>$trID]);
 #endregion
-
-require_once 'updateprio.php';
 ?>

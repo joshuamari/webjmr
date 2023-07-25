@@ -34,9 +34,5 @@ $deleteItemStmt->execute([":deleteLog"=>$deleteLog,":trID"=>$trID]);
 $deleteQ="UPDATE projectstable SET fldDelete=:deleteLog,fldPriority=0 WHERE fldID=:trID";
 $deleteStmt=$connwebjmr->prepare($deleteQ);
 $deleteStmt->execute([":deleteLog"=>$deleteLog,":trID"=>$trID]);
-
-require_once 'updateprio.php';
-
-
 #endregion
 ?>

@@ -11,7 +11,8 @@ switch (document.location.hostname) {
     break;
 }
 
-const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+// const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
 const today = new Date();
 $("#monthSel").val(
@@ -140,7 +141,7 @@ function getEmployeeList() {
     },
     function (data) {
       _emplist = $.parseJSON(data);
-      console.log(_emplist);
+      // console.log(_emplist);
       // members = emplist;
       _emplist.map(fillMembers);
       _selectedMembers = _selectedMembers.filter((item) =>
@@ -183,7 +184,7 @@ function createTables(ymVal) {
       getTotals();
     }
   );
-  console.log(_selectedMembers);
+  // console.log(_selectedMembers);
 }
 
 function createHeader() {
@@ -267,8 +268,8 @@ function getEmpProjects(empDetails) {
 
   //Leaves
   addHtml += `
-    <tr class="lRow" p-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
-    <tr class="lRow" p-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
+    <tr class="lRow" i-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
+    <tr class="lRow" i-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
     <tr class="lRow" p-index="others" employee-number="${empDetails}"><td></td><td>EL,PL,ML,Others</td></tr>
     <tr class="lTot" employee-number="${empDetails}"><td></td><td>Leave</td></tr>
     `;
@@ -371,7 +372,7 @@ function fillTable(entry) {
       ).children()[parseInt(entry["entryDate"]) + 1]
     ).text(entry["hours"]);
   } else {
-    if (oLeaves.hasOwnProperty(entry["pIndex"])) {
+    if (oLeaves.hasOwnProperty(entry["iIndex"])) {
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`
@@ -380,7 +381,7 @@ function fillTable(entry) {
     }
     $(
       $(
-        `.lRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
+        `.lRow[i-index="${entry["iIndex"]}"][employee-number="${entry["empNum"]}"]`
       ).children()[parseInt(entry["entryDate"]) + 1]
     ).text(entry["hours"]);
   }
