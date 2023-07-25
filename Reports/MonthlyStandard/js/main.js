@@ -63,7 +63,6 @@ $(document).on("change", "#buSel", function () {
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($("#monthSel").val());
-  console.log(_selectedMembers);
 
   _selectedMembers.length = 0;
 
@@ -94,7 +93,17 @@ $(document).on("click", ".memBtn", function () {
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
-
+  var allButtonsSelected = $(".memBtn").length === $(".memBtn.btn-primary").length;
+  var selAllButton = $("#selAll");
+    if (allButtonsSelected) {
+      selAllButton.text("Deselect All");
+      selAllButton.removeClass("btn-primary");
+      selAllButton.addClass("btn-secondary");
+    } else {
+      selAllButton.text("Select All");
+      selAllButton.removeClass("btn-secondary");
+      selAllButton.addClass("btn-primary");
+    }
   createTables($("#monthSel").val());
 });
 //#endregion
