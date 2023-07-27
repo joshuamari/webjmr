@@ -11,19 +11,19 @@ if(!empty($userHash)){
     if($loginStmt->rowCount()>0){
         $userLogin=$loginStmt->fetchColumn();
         $output+=["empNum"=>$userLogin];
+        $empDeetsQ="SELECT * FROM emp_prof WHERE fldEmployeeNum='$userLogin'";
+        $empDeetsStmt=$connkdt->query($empDeetsQ);
+        $empDeetsArr=$empDeetsStmt->fetchAll();
+        foreach($empDeetsArr AS $empdeets){
+            $output+=["empFName"=>$empdeets['fldFirstname']];
+            $output+=["empSName"=>$empdeets['fldSurname']];
+            $output+=["empNName"=>$empdeets['fldNick']];
+            $output+=["empDateHired"=>$empdeets['fldDateHired']];
+            $output+=["empGroup"=>$empdeets['fldGroup']];
+            $output+=["empGender"=>$empdeets['fldGender']];
+            $output+=["empPos"=>$empdeets['fldDesig']];
+        } 
     }
-    $empDeetsQ="SELECT * FROM emp_prof WHERE fldEmployeeNum='$userLogin'";
-    $empDeetsStmt=$connkdt->query($empDeetsQ);
-    $empDeetsArr=$empDeetsStmt->fetchAll();
-    foreach($empDeetsArr AS $empdeets){
-        $output+=["empFName"=>$empdeets['fldFirstname']];
-        $output+=["empSName"=>$empdeets['fldSurname']];
-        $output+=["empNName"=>$empdeets['fldNick']];
-        $output+=["empDateHired"=>$empdeets['fldDateHired']];
-        $output+=["empGroup"=>$empdeets['fldGroup']];
-        $output+=["empGender"=>$empdeets['fldGender']];
-        $output+=["empPos"=>$empdeets['fldDesig']];
-    } 
 }
 echo json_encode($output);
 ?>
