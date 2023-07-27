@@ -665,6 +665,12 @@ $(document).on("click", "#btnExport", function () {
     case "3":
       cOff = "Monthly";
       break;
+    case "4":
+      cOff = "Previous";
+      break;
+    case "5":
+      cOff = "Current";
+      break;
   }
   // $('#mainTable').table2excel({
   //   name: `${$('#grpSel').val()} Summary`,

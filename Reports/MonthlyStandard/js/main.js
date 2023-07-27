@@ -106,6 +106,9 @@ $(document).on("click", ".memBtn", function () {
     }
   createTables($("#monthSel").val());
 });
+$(document).on('click', '#btnExport', function(){
+  exportTable();
+})
 //#endregion
 
 //#region FUNCTIONS
@@ -606,4 +609,61 @@ function fillMembers(memDetails) {
 
 //#endregion
 
+//#region Export
+function printTable() {
+  $(".xPrint").toggle();
+  $(".lower").toggleClass("lower lower_");
+  print();
+  $(".lower_").toggleClass("lower lower_");
+  $(".xPrint").toggle();
+}
+
+function exportTable() {
+  $('#mainTable').append("<tr id='fromHereAdd' class='w3-gray'></tr>",$('#subTable').html());
+
+  // $('#mainTable').table2excel({
+  //   name: `${$('#grpSel').val()} Summary`,
+  //   filename: `${$('#grpSel').val()}_${$('#ymSel').val()} Summary`
+  // })
+  // $($('#fromHereAdd').nextAll()).remove();
+  // $('#fromHereAdd').remove();
+  // var addString = `
+  // <tr class="fx" style="display:none">
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
+  //   "#buSel"  
+  // ).val()}</th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
+  //   "#monthSel"
+  // ).val()}</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">日付</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">確認者</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
+  // </tr>
+  // <tr class="fx"></tr>`;
+
+  // $("thead").prepend(addString);
+  var cOff;
+  $("#mainTable").removeClass("ayos");
+  switch ($("#CO").val()) {
+    case "1":
+      cOff = "First Half";
+      break;
+    case "3":
+      cOff = "Monthly";
+      break;
+  }
+  TableToExcel.convert(document.getElementById("mainTable"), {
+    name: `${$("#monthSel").val()}_${cOff} Monthly_Standard Report.xlsx`,
+    sheet: {
+      name: `${$("#buSel").val()}`,
+    },
+  });
+  $($('#fromHereAdd').nextAll()).remove();
+  $('#fromHereAdd').remove();
+  // $(".fx").remove();
+  // $("#mainTable").addClass("ayos");
+}
+//#endregion
 //#endregion
