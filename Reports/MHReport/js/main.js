@@ -66,6 +66,7 @@ const codeArr = {
   BOI: "61W2723-8900",
   KHI: "61W2102-8900",
   KDT: "61W2102-8900",
+  TEG: "NA"
 };
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
@@ -279,7 +280,7 @@ function getHiramEntries() {
       getGroup: $("#buSel").val(),
     },
     function (data) {
-      // console.log(data)
+      console.log(data)
       hramEntries = $.parseJSON(data);
     },
     (async = false)
@@ -448,7 +449,7 @@ function pHead(projHeader) {
 }
 
 function afterSub(kdtGroup) {
-  const except = ["SYS", "IT", "ANA", "ETCL", "MPM", "MNG", "INT"];
+  const except = ["SYS", "IT", "ANA", "ETCL", "MPM", "MNG", "INT", "TEG"];
 
   if (kdtGroup == "DXT") {
     pHead([
@@ -663,6 +664,12 @@ $(document).on("click", "#btnExport", function () {
       break;
     case "3":
       cOff = "Monthly";
+      break;
+    case "4":
+      cOff = "Previous";
+      break;
+    case "5":
+      cOff = "Current";
       break;
   }
   // $('#mainTable').table2excel({

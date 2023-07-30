@@ -27,12 +27,18 @@ $cutOff="1";
 if(isset($_REQUEST['getHalfSel'])){
     $cutOff=$_REQUEST['getHalfSel'];
 }
-if($cutOff=="2"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month'));
-    $firstDay=date("Y-m-16",strtotime($ymSel));
-}
-if($cutOff=="3"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+switch($cutOff){
+    case "3":
+        $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+        break;
+    case "4":
+        $firstDay = date('Y-m-d', strtotime('last week'));
+        $lastDay = date('Y-m-d', strtotime('last week +6 days'));
+        break;
+    case "5":
+        $firstDay = date('Y-m-d', strtotime('this week'));
+        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
+        break;
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $selYearMonth=date("Y-m-01",strtotime($ymSel));
@@ -45,36 +51,28 @@ $mgaEmpNgBU="";
 $empNgBUQ="SELECT DISTINCT(fldEmployeeNum),fldDateHired FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>('$selYearMonth')) AND fldDesig<>'KDTP'";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
+$arrVal = [];
 if($empNgBUStmt->rowCount()>0){
-    $mgaEmpNgBU.="(";
     $enbArr=$empNgBUStmt->fetchAll();
     foreach($enbArr AS $enbs){
         if(date("Y-m-01",strtotime($enbs['fldDateHired']))<= $selYearMonth){
-            $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+            $arrVal[] = $enbs['fldEmployeeNum'];
         }
     }
-    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
-    $mgaEmpNgBU.=")";
+    $implodeString = implode("','",$arrVal);
+    $mgaEmpNgBU="('" . $implodeString . "')";
     $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
 $empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup'  OR (fldProject IN ('$mngProjID','$solProjID') AND fldGroup='$rawGetGroup')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){
-    if(!empty($mgaEmpNgBU)){
-        $mgaEmpNgBU=rtrim($mgaEmpNgBU,")");
-        $mgaEmpNgBU.=",";
-    }
-    else{
-        $mgaEmpNgBU="(";
-    }
     $empsArr=$empsStmt->fetchAll();
     foreach($empsArr AS $emps){
-        $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
+        $arrVal[] = $emps['fldEmployeeNum'];
     }
-    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    $mgaEmpNgBU.=")";
+    $implodeString = implode("','",$arrVal);
+    $mgaEmpNgBU="('" . $implodeString . "')";
 }
 if(empty($mgaEmpNgBU)){
     $mgaEmpNgBU="('')";

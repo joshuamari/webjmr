@@ -63,5 +63,4 @@ $updateQ="UPDATE `$dbCol` SET fldPriority=:newPrio,fldActive=:isActive WHERE fld
 $updateStmt=$connwebjmr->prepare($updateQ);
 $updateStmt->execute([":newPrio"=>$newPrio,":isActive"=>$isActive,":trID"=>$trID]);
 #endregion
-require_once 'updateprio.php';
 ?>

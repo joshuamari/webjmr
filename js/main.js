@@ -28,6 +28,7 @@ $(document).ready(function () {//page Initialize Event
 function checkLogin(){//check if user is logged in
   $.ajaxSetup({async: false});
     $.ajax({url:"Includes/checkLogin.php", success: function(data){ //ajax to check if user is logged in
+      console.log(data)
       empDetails=$.parseJSON(data);
       if(Object.keys(empDetails).length<1){
         window.location.href=rootFolder+'/KDTPortalLogin'; //if result is 0, redirect to log in page

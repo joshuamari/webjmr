@@ -21,20 +21,14 @@ $empNum='';
 if(!empty($_REQUEST['empNum'])){
     $empNum=$_REQUEST['empNum'];
 }
-$sharedProjects="OR fldProject IN (";
+$sharedProjects="";
 $spQ="SELECT * FROM project_share WHERE fldEmployeeNum='$empNum'";
 $spStmt=$connwebjmr->query($spQ);
 if($spStmt->rowCount()>0){
     $spArr=$spStmt->fetchAll();
-    foreach($spArr AS $sps){
-        $sp=$sps['fldProject'];
-        $sharedProjects.="'$sp',";
-    }
-    $sharedProjects=rtrim($sharedProjects,',');
-    $sharedProjects.=")";
-}
-else{
-    $sharedProjects="";
+    $arrValues = array_column($spArr, "fldProject");
+    $implodeString = implode("','",array_values($arrValues));
+    $sharedProjects="OR fldProject IN ('" . $implodeString . "')";
 }
 $mngStatement='';
 //if projID=mngID

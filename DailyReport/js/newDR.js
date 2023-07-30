@@ -800,7 +800,7 @@ function addEntries(addMode){//add Entries to Database
     }
     if(tow == 3){//If checker    
         if(!checker){
-            $('#p8').text("Please select checker");
+            $('#p8').text("Please select member");
             $('#idChecking').addClass('border border-danger')
             mgaKulang.push("CHECKER");
         }

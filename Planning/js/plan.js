@@ -28,6 +28,7 @@ $(document).ready(function () {
   sequenceEditValidation();
   dateValidation();
   getPlans();
+  getFilters();
 
   //#region sidebarshits
   let arrow = document.querySelectorAll(".arrow");
@@ -451,7 +452,30 @@ $(document).on("click", ".cancel", function () {
 $(document).on("click", ".cancel1", function () {
   resetEditEntry();
 });
-
+$(document).on("keyup", "#searchEmployee", function(){
+  getPlans();
+})
+$(document).on("search", "#searchEmployee", function(){
+  getPlans();
+})
+$(document).on("change", "#searchSDate", function(){
+  getPlans();
+})
+$(document).on("change", "#filterStatus", function(){
+  getPlans();
+})
+$(document).on("change", "#filterGroup", function(){
+  getPlans();
+})
+$(document).on("change", "#filterProject", function(){
+  getPlans();
+})
+$(document).on("change", "#filterItem", function(){
+  getPlans();
+})
+$(document).on("change", "#filterJRD", function(){
+  getPlans();
+})
 //#endregion
 
 //#region FUNCTIONS
@@ -1193,10 +1217,24 @@ function getPlans() {
   var plans = [];
   $(`#planningTable`).empty();
   var defaultBody = `<tr><td colspan="12" class="text-center">No Entries Found</td></tr>`;
+  var searchEmployee = $('#searchEmployee').val();
+  var searchSDate = $('#searchSDate').val();
+  var filterGroup = $('#filterGroup').val();
+  var filterProject = $('#filterProject').val();
+  var filterItem = $('#filterItem').val();
+  var filterJRD = $('#filterJRD').val();
+  var filterStatus = $('#filterStatus').val();
   $.post(
     "ajax/get_plans.php",
     {
       getPlanner: empDetails["empNum"],
+      searchEmployee : searchEmployee,
+      searchSDate : searchSDate,
+      filterGroup : filterGroup,
+      filterProject : filterProject,
+      filterItem : filterItem,
+      filterJRD : filterJRD,
+      filterStatus : filterStatus
     },
     function (data) {
       plans = $.parseJSON(data);
@@ -1327,5 +1365,79 @@ function ifSmallScreen() {
 function removeSelected(){
   $(`.empviewer`).empty();
   _selectedEmployees = [];
+}
+function getFilters(){
+  getGroupFilter();
+  getProjFilter();
+  getItemFilter();
+  getJRDFilter();
+}
+function getGroupFilter(){
+  $('#filterGroup').html(`<option value selected>Group</option>`)
+  var groups = []
+  $.post("ajax/get_group_filter.php",
+  {
+    getPlanner : empDetails['empNum']
+  },
+    function (data) {
+      groups = $.parseJSON(data);
+      groups.map(groupFillter);
+    }
+  );
+}
+function groupFillter(grp){
+  var groupSelection = `<option>${grp}</option>`;
+  $('#filterGroup').append(groupSelection);
+}
+function getProjFilter(){
+  $('#filterProject').html(`<option value selected>Project</option>`)
+  var projs = []
+  $.post("ajax/get_proj_filter.php",
+  {
+    getPlanner : empDetails['empNum']
+  },
+    function (data) {
+      projs = $.parseJSON(data);
+      projs.map(projFillter);
+    }
+  );
+}
+function projFillter(proj){
+  var projSelection = `<option>${proj}</option>`;
+  $('#filterProject').append(projSelection);
+}
+function getItemFilter(){
+  $('#filterItem').html(`<option value selected>Item</option>`)
+  var items = []
+  $.post("ajax/get_item_filter.php",
+  {
+    getPlanner : empDetails['empNum']
+  },
+    function (data) {
+      items = $.parseJSON(data);
+      items.map(itemFillter);
+    }
+  );
+}
+function itemFillter(item){
+  var itemSelection = `<option>${item}</option>`;
+  $('#filterItem').append(itemSelection);
+}
+function getJRDFilter(){
+  $('#filterJRD').html(`<option value selected>JRD</option>`)
+  var jrds = []
+  $.post("ajax/get_jrd_filter.php",
+  {
+    getPlanner : empDetails['empNum']
+  },
+    function (data) {
+      jrds = $.parseJSON(data);
+      jrds.map(jrdFillter);
+    }
+  );
+}
+function jrdFillter(jrd){
+  var jrdSelection = `<option>${jrd}</option>`;
+  $('#filterJRD').append(jrdSelection);
 }
 //#endregion

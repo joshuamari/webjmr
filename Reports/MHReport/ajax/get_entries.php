@@ -13,14 +13,7 @@ date_default_timezone_set('Asia/Manila');
 $getGroups=array();
 if(!empty($_POST['getGroup'])){
     $rawGetGroup=$_POST['getGroup'];
-    // if(in_array($rawGetGroup,$mgaU)){
-    //     $getGroups=$mgaU;
-    // }
-    // else{
-    //     array_push($getGroups,$rawGetGroup);
-    // }
 }
-// $getGroups=array("CEM");
 $firstDay=date("Y-m-01");
 $lastDay=date("Y-m-16");
 $ymSel=NULL;
@@ -38,39 +31,28 @@ switch($cutOff){
         $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
         break;
     case "4":
-        $firstDay = date('Y-m-d', strtotime('this week'));
-        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
-        break;
-    case "5":
         $firstDay = date('Y-m-d', strtotime('last week'));
         $lastDay = date('Y-m-d', strtotime('last week +6 days'));
+        break;
+    case "5":
+        $firstDay = date('Y-m-d', strtotime('this week'));
+        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
         break;
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $entries=array();
-// $mgaGroup="(";
-// foreach($getGroups AS $gps){
-//     $mgaGroup.="'$gps',";
-// }
-// $mgaGroup=rtrim($mgaGroup,',');
-// $mgaGroup.=")";
 #endregion
 
 #region main
-// foreach($getGroups AS $getGroup){
 $proj='';
 $projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup')) $dateCompare";
 $projStmt=$connwebjmr->prepare($projsQ);
 $projStmt->execute();
 if($projStmt->rowCount()>0){
-    $proj.=" AND dr.fldProject IN (";
     $projsArr=$projStmt->fetchAll();
-    foreach($projsArr AS $projs){
-        $projID=$projs['fldProject'];
-        $proj.="'$projID',";
-    }
-    $proj=rtrim($proj,",");
-    $proj.=")";
+    $arrValues = array_column($projsArr, "fldProject");
+    $implodeString = implode("','",array_values($arrValues));
+    $proj="AND dr.fldProject IN ('" . $implodeString . "')";
 }
 //emp#||dbIndex||duration
 $entQ="SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dr.fldLocation,dl.fldCode AS locCode,dr.fldProject FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldEmployeeNum IS NOT NULL $proj) $dateCompare GROUP BY dr.fldProject,dr.fldEmployeeNum,locCode";
@@ -87,7 +69,6 @@ if($entStmt->rowCount()>0){
         if(!in_array("$enum||$projID-$locCode||$thrs",$entries)){
             array_push($entries,"$enum||$projID-$locCode||$thrs");
         }
-        // array_push($entries,"$enum||$projID-$locCode||$thrs");
     }
 }
 // }

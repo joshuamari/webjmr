@@ -699,7 +699,7 @@
             </a>
           </div>
           <ul class="sub-menu">
-            <li><a class="link_name">Daily Report</a></li>
+            <li><a class="link_name" href="../DailyReport/">Daily Report</a></li>
           </ul>
         </li>
         <li>
@@ -710,7 +710,7 @@
             </a>
           </div>
           <ul class="sub-menu">
-            <li><a class="link_name">Job Manhour Category</a></li>
+            <li><a class="link_name" href="../JMC">Job Manhour Category</a></li>
           </ul>
         </li>
         <li>
@@ -721,7 +721,7 @@
             </a>
           </div>
           <ul class="sub-menu">
-            <li><a class="link_name">Reports</a></li>
+            <li><a class="link_name" href="../Reports/">Reports</a></li>
             <!-- <li><a class="link_name" href="../Reports/MHReport/">MH Report</a></li>
               <li><a class="link_name ">Monthly Standard Report</a></li>
               <li><a class="link_name ">Panning Report</a></li> -->
@@ -729,7 +729,7 @@
         </li>
         <li>
           <div class="iocn-link">
-            <a class="row-cols-12 ey" href="../Planning/">
+            <a class="row-cols-12 ey">
               <i class="bx bx-book-bookmark"></i>
               <span class="link_name col-9">Planning</span>
             </a>
@@ -817,7 +817,7 @@
                         class="form-control"
                         aria-label="Search employee"
                         placeholder="Search Employee"
-                        id="searchEmp"
+                        id="searchEmployee"
                       />
                     </div>
                     <div class="form-floating ms-2">
@@ -864,8 +864,9 @@
                               margin: auto;
                             "
                             aria-label="searchGrp"
+                            id="filterGroup"
                           >
-                            <option selected hidden>Group</option>
+                            <option value selected>Group</option>
                             <option value="1">One</option>
                           </select>
                         </th>
@@ -882,8 +883,9 @@
                               margin: auto;
                             "
                             aria-label="search project"
+                            id="filterProject"
                           >
-                            <option selected hidden>Project</option>
+                            <option value selected>Project</option>
                             <option value="1">One</option>
                           </select>
                         </th>
@@ -900,8 +902,9 @@
                               margin: auto;
                             "
                             aria-label="search item"
+                            id="filterItem"
                           >
-                            <option selected hidden>Item of Works</option>
+                            <option value selected>Item of Works</option>
                             <option value="1">One</option>
                           </select>
                         </th>
@@ -918,8 +921,9 @@
                               margin: auto;
                             "
                             aria-label="search jrd"
+                            id="filterJRD"
                           >
-                            <option selected hidden>JRD</option>
+                            <option value selected>JRD</option>
                             <option value="1">One</option>
                           </select>
                         </th>
@@ -941,9 +945,11 @@
                               margin: auto;
                             "
                             aria-label="search status"
+                            id="filterStatus"
                           >
-                            <option selected hidden>Status</option>
-                            <option value="1">One</option>
+                            <option value selected>Status</option>
+                            <option value="1">On-going</option>
+                            <option value="2">Finished</option>
                           </select>
                         </th>
                         <th scope="col" class="text-center">Action</th>
