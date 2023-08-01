@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Planned MH Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/msreport.css" />
+    <link rel="stylesheet" href="css/boxicons.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.table2excel.js"></script>
+    <script>
+        var busterCall = [
+            "js/table.js",
+            "css/bootstrap.min.css",
+        ];
+        $.post(
+            "ajax/get_version.php",
+            {
+                busterCall: busterCall,
+                titleName: "Planned MH Report",
+            },
+            function (data) {
+                $("head").html(data);
+            }
+        );
+    </script>
+</head>
+
+<body>
+    <style>
+        .nr {
+            white-space: nowrap !important;
+        }
+    </style>
+    <h1>dating DMR</h1>
+    <h3>Planned MH Report</h3>
+    <!-- <input type="month" id="monthSel"> -->
+    <input type="week" id="weekSel">
+    <div class="container" style="width:100%;overflow-x:auto" >
+        <table id="main-table" class="table">
+            <thead id="main-thead">
+                <tr id="headrow">
+                    <th class="nr">Job Request Description</th>
+                    <th class="nr">Item of Works (Dwg. No.)</th>
+                    <th class="nr">Drawing / Document Name</th>
+                    <th class="nr">KHI in Charge</th>
+                    <th class="nr" id="name">Name</th>
+                </tr>
+            </thead>
+            <tbody id="main-tbody"></tbody>
+        </table>
+    </div>
+</body>
+
+</html>
