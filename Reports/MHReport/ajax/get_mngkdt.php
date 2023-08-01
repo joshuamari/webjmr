@@ -32,52 +32,23 @@ switch($cutOff){
         $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
         break;
     case "4":
-        $firstDay = date('Y-m-d', strtotime('this week'));
-        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
-        break;
-    case "5":
         $firstDay = date('Y-m-d', strtotime('last week'));
         $lastDay = date('Y-m-d', strtotime('last week +6 days'));
+        break;
+    case "5":
+        $firstDay = date('Y-m-d', strtotime('this week'));
+        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
         break;
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $mngakdt=array();
-$proj="(";
-foreach($defaultProjID AS $dpi){
-    if($dpi!=$leaveID){
-        $proj.="'$dpi',";
-    }
-}
-$proj=rtrim($proj,",");
-$proj.=")";
-
-// $mgaEmp='';
-// $mgaEmpNgBU='';
-// $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>''";
-// $empNgBUStmt=$connkdt->prepare($empNgBUQ);
-// $empNgBUStmt->execute();
-// if($empNgBUStmt->rowCount()>0){
-//     $mgaEmpNgBU.=" OR (fldEmployeeNum IN (";
-//     $enbArr=$empNgBUStmt->fetchAll();
-//     foreach($enbArr AS $enbs){
-//         $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
-//     }
-//     $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-//     $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
-// }
-// $empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') $mgaEmpNgBU OR fldTrGroup='$rawGetGroup'  OR (fldProject='$mngProjID' AND fldGroup='$rawGetGroup')) $dateCompare";
-// $empsStmt=$connwebjmr->prepare($empsQ);
-// $empsStmt->execute();
-// if($empsStmt->rowCount()>0){
-//     $mgaEmp.=" AND fldEmployeeNum IN (";
-//     $empsArr=$empsStmt->fetchAll();
-//     foreach($empsArr AS $emps){
-//         $mgaEmp.="'".$emps['fldEmployeeNum']."',";
-//     }
-//     $mgaEmp=rtrim($mgaEmp,",");
-
-//     $mgaEmp.=")";
-// }
+$projExcept = $defaultProjID;
+$projExcept = array_filter($projExcept, function ($value) {
+    GLOBAL $leaveID;
+    return $value != $leaveID;
+});
+$implodeString = implode("','",$projExcept);
+$proj="('" . $implodeString . "')";
 #endregion
 
 #region main

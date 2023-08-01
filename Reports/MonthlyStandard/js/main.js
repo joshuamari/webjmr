@@ -11,7 +11,8 @@ switch (document.location.hostname) {
     break;
 }
 
-const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+// const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
 const today = new Date();
 $("#monthSel").val(
@@ -62,7 +63,6 @@ $(document).on("change", "#buSel", function () {
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($("#monthSel").val());
-  console.log(_selectedMembers);
 
   _selectedMembers.length = 0;
 
@@ -93,9 +93,22 @@ $(document).on("click", ".memBtn", function () {
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
-
+  var allButtonsSelected = $(".memBtn").length === $(".memBtn.btn-primary").length;
+  var selAllButton = $("#selAll");
+    if (allButtonsSelected) {
+      selAllButton.text("Deselect All");
+      selAllButton.removeClass("btn-primary");
+      selAllButton.addClass("btn-secondary");
+    } else {
+      selAllButton.text("Select All");
+      selAllButton.removeClass("btn-secondary");
+      selAllButton.addClass("btn-primary");
+    }
   createTables($("#monthSel").val());
 });
+$(document).on('click', '#btnExport', function(){
+  exportTable();
+})
 //#endregion
 
 //#region FUNCTIONS
@@ -140,7 +153,7 @@ function getEmployeeList() {
     },
     function (data) {
       _emplist = $.parseJSON(data);
-      console.log(_emplist);
+      // console.log(_emplist);
       // members = emplist;
       _emplist.map(fillMembers);
       _selectedMembers = _selectedMembers.filter((item) =>
@@ -183,7 +196,7 @@ function createTables(ymVal) {
       getTotals();
     }
   );
-  console.log(_selectedMembers);
+  // console.log(_selectedMembers);
 }
 
 function createHeader() {
@@ -267,8 +280,8 @@ function getEmpProjects(empDetails) {
 
   //Leaves
   addHtml += `
-    <tr class="lRow" p-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
-    <tr class="lRow" p-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
+    <tr class="lRow" i-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
+    <tr class="lRow" i-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
     <tr class="lRow" p-index="others" employee-number="${empDetails}"><td></td><td>EL,PL,ML,Others</td></tr>
     <tr class="lTot" employee-number="${empDetails}"><td></td><td>Leave</td></tr>
     `;
@@ -371,7 +384,7 @@ function fillTable(entry) {
       ).children()[parseInt(entry["entryDate"]) + 1]
     ).text(entry["hours"]);
   } else {
-    if (oLeaves.hasOwnProperty(entry["pIndex"])) {
+    if (oLeaves.hasOwnProperty(entry["iIndex"])) {
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`
@@ -380,7 +393,7 @@ function fillTable(entry) {
     }
     $(
       $(
-        `.lRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
+        `.lRow[i-index="${entry["iIndex"]}"][employee-number="${entry["empNum"]}"]`
       ).children()[parseInt(entry["entryDate"]) + 1]
     ).text(entry["hours"]);
   }
@@ -596,4 +609,61 @@ function fillMembers(memDetails) {
 
 //#endregion
 
+//#region Export
+function printTable() {
+  $(".xPrint").toggle();
+  $(".lower").toggleClass("lower lower_");
+  print();
+  $(".lower_").toggleClass("lower lower_");
+  $(".xPrint").toggle();
+}
+
+function exportTable() {
+  $('#mainTable').append("<tr id='fromHereAdd' class='w3-gray'></tr>",$('#subTable').html());
+
+  // $('#mainTable').table2excel({
+  //   name: `${$('#grpSel').val()} Summary`,
+  //   filename: `${$('#grpSel').val()}_${$('#ymSel').val()} Summary`
+  // })
+  // $($('#fromHereAdd').nextAll()).remove();
+  // $('#fromHereAdd').remove();
+  // var addString = `
+  // <tr class="fx" style="display:none">
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
+  //   "#buSel"  
+  // ).val()}</th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
+  //   "#monthSel"
+  // ).val()}</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">日付</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
+  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">確認者</th>
+  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
+  // </tr>
+  // <tr class="fx"></tr>`;
+
+  // $("thead").prepend(addString);
+  var cOff;
+  $("#mainTable").removeClass("ayos");
+  switch ($("#CO").val()) {
+    case "1":
+      cOff = "First Half";
+      break;
+    case "3":
+      cOff = "Monthly";
+      break;
+  }
+  TableToExcel.convert(document.getElementById("mainTable"), {
+    name: `${$("#monthSel").val()}_${cOff} Monthly_Standard Report.xlsx`,
+    sheet: {
+      name: `${$("#buSel").val()}`,
+    },
+  });
+  $($('#fromHereAdd').nextAll()).remove();
+  $('#fromHereAdd').remove();
+  // $(".fx").remove();
+  // $("#mainTable").addClass("ayos");
+}
+//#endregion
 //#endregion

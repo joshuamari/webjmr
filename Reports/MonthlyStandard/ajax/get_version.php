@@ -9,7 +9,9 @@ $headString="<title>$titleName</title>
   <link rel='stylesheet' href='css/boxicons.css' />
   <script src='js/jquery.js'></script>
   <script src='js/bootstrap.min.js'></script>
-  <script src='js/jquery.table2excel.js'></script>";
+  <script src='js/jquery.table2excel.js'></script>
+  <script type='text/javascript' src='js/tableToExcel.js'></script>
+  ";
 $addString = "";
 //ADD TO ULI SA HEADSTRING BAT DI NAGANA
 // <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>

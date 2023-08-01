@@ -195,6 +195,7 @@ $(document).on('click','.hoverItemNext',function(){
 })
 $(document).on('change','#myGroup',function(){
   getProjects();
+  getShareGroups();
 });
 $(document).on('click','.checkbox',function(){
   var getTRID=$($(this).parents()[2]).attr('id');//get TR ID
@@ -1012,7 +1013,8 @@ function updateJob(jobID){//update selected drawing reference in database
 function getShareGroups(){//get groups selections in share jmc modal
   $.post("ajax/get_share_groups.php",
   {
-    empGroup:empDetails['empGroup']
+    // empGroup:empDetails['empGroup'],
+    empGroup:$("#myGroup").val()
   },
     function (data) {
      $('#shareGroup').html(data);

@@ -14,7 +14,7 @@ if(isset($_REQUEST['empNum'])){
 }
 #endregion
 #region Entries Query
-$drQ="SELECT dr.* ,pt.fldProject AS projName,it.fldItem AS itemName,jt.fldJob AS jobName,dl.fldLocation AS locName,pt.fldDelete AS projDel FROM dailyreport AS dr LEFT OUTER JOIN projectstable AS pt ON dr.fldProject=pt.fldID LEFT OUTER JOIN itemofworkstable AS it ON dr.fldItem=it.fldID LEFT OUTER JOIN drawingreference AS jt ON dr.fldJobRequestDescription=jt.fldID LEFT OUTER JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE dr.fldDate='$curDay' AND dr.fldEmployeeNum='$empNum'";
+$drQ="SELECT dr.* ,pt.fldProject AS projName,it.fldItem AS itemName,jt.fldJob AS jobName,dl.fldLocation AS locName,pt.fldDelete AS projDel, tow.fldTOW AS towName FROM dailyreport AS dr LEFT OUTER JOIN projectstable AS pt ON dr.fldProject=pt.fldID LEFT OUTER JOIN itemofworkstable AS it ON dr.fldItem=it.fldID LEFT OUTER JOIN drawingreference AS jt ON dr.fldJobRequestDescription=jt.fldID LEFT OUTER JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID LEFT OUTER JOIN typesofworktable AS tow ON dr.fldTOW = tow.fldID WHERE dr.fldDate='$curDay' AND dr.fldEmployeeNum='$empNum'";
 $drStmt=$connwebjmr->query($drQ);
 $drArr=$drStmt->fetchAll();
 foreach($drArr AS $dr){
@@ -29,7 +29,8 @@ foreach($drArr AS $dr){
     $drMH=$dr['fldMHType'];
     $drRemarks=$dr['fldRemarks'];
     $projDel=$dr['projDel'];
-    $drEntry=$drID."||".$drLoc."||".$drGroup."||".$drProj."||".$drItem."||".$drJob."||".$drHour."||".$drMH."||".$drRemarks."||".$projDel;
+    $towName = empty($dr['towName']) ? "-" : $dr['towName'];
+    $drEntry=$drID."||".$drLoc."||".$drGroup."||".$drProj."||".$drItem."||".$drJob."||".$drHour."||".$drMH."||".$drRemarks."||".$projDel."||".$towName;
     array_push($entries,$drEntry);
 }
 #endregion

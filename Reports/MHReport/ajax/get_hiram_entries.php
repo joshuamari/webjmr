@@ -27,20 +27,23 @@ $cutOff="1";
 if(isset($_REQUEST['getHalfSel'])){
     $cutOff=$_REQUEST['getHalfSel'];
 }
-if($cutOff=="2"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month'));
-    $firstDay=date("Y-m-16",strtotime($ymSel));
-}
-if($cutOff=="3"){
-    $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+switch($cutOff){
+    case "3":
+        $lastDay=date('Y-m-d',strtotime($firstDay.'+ 1 month')); 
+        break;
+    case "4":
+        $firstDay = date('Y-m-d', strtotime('last week'));
+        $lastDay = date('Y-m-d', strtotime('last week +6 days'));
+        break;
+    case "5":
+        $firstDay = date('Y-m-d', strtotime('this week'));
+        $lastDay = date('Y-m-d', strtotime('this week +6 days'));
+        break;
 }
 $dateCompare=" AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $hiramEntries=array();
-$proj=' AND dr.fldProject NOT IN (';
-foreach($defaultProjID AS $dpi){
-        $proj.="'$dpi',";
-}
-$proj=rtrim($proj,",");
+$projExcept = $defaultProjID;
+$proj="";
 $projsQ="SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$rawGetGroup') OR fldTrGroup='$rawGetGroup') $dateCompare";
 $projStmt=$connwebjmr->prepare($projsQ);
 $projStmt->execute();
@@ -48,63 +51,43 @@ if($projStmt->rowCount()>0){
     $projsArr=$projStmt->fetchAll();
     foreach($projsArr AS $projs){
         $projID=$projs['fldProject'];
-        $proj.="'$projID',";
+        $projExcept[] = $projID;
     }
-    $proj=rtrim($proj,",");
 }
-$proj.=")";
+
+$implodeString = implode("','",$projExcept);
+$proj=" AND dr.fldProject NOT IN ('" . $implodeString . "')";
 
 
 #endregion
 
 #region main
-
-// $grpMem="";
-// $grpMemQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup'";
-// $grpMemStmt=$connkdt->prepare($grpMemQ);
-// $grpMemStmt->execute();
-// if($grpMemStmt->rowCount()>0){
-//     $grpMemArr=$grpMemStmt->fetchAll();
-//     $grpMem.=" AND dr.fldEmployeeNum IN(";
-//     foreach($grpMemArr AS $gMem){
-//         $grpMem.="'".$gMem['fldEmployeeNum']."',";
-//     }
-//     $grpMem=rtrim($grpMem,",");
-// }
-// $grpMem.=")";
 $mgaEmpStmt='';
 $mgaEmpNgBU="";
+$arrValue = [];
 $empNgBUQ="SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup='$rawGetGroup' AND fldNick<>'' AND fldActive=1 AND fldDesig<>'DM'";
 $empNgBUStmt=$connkdt->prepare($empNgBUQ);
 $empNgBUStmt->execute();
 if($empNgBUStmt->rowCount()>0){
-    $mgaEmpNgBU.="(";
     $enbArr=$empNgBUStmt->fetchAll();
     foreach($enbArr AS $enbs){
-        $mgaEmpNgBU.="'".$enbs['fldEmployeeNum']."',";
+        $arrValue[] = $enbs['fldEmployeeNum'];
     }
-    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    // $mgaEmpNgBU.=") AND (fldProject <> '$leaveID' AND fldGroup='$rawGetGroup'))";
-    $mgaEmpNgBU.=")";
+    $implodeString = implode("','",$arrValue);
+    $mgaEmpNgBU="('" . $implodeString . "')";
     $mgaEmpStmt="AND fldEmployeeNum NOT IN";
 }
 $empsQ="SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject='$mngProjID' AND fldGroup='$rawGetGroup') $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt=$connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if($empsStmt->rowCount()>0){
-    if(!empty($mgaEmpNgBU)){
-        $mgaEmpNgBU=rtrim($mgaEmpNgBU,")");
-        $mgaEmpNgBU.=",";
-    }
-    else{
-        $mgaEmpNgBU="(";
-    }
     $empsArr=$empsStmt->fetchAll();
     foreach($empsArr AS $emps){
-        $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
+        // $mgaEmpNgBU.="'".$emps['fldEmployeeNum']."',";
+        $arrValue[] = $emps['fldEmployeeNum'];
     }
-    $mgaEmpNgBU=rtrim($mgaEmpNgBU,",");
-    $mgaEmpNgBU.=")";
+    $implodeString = implode("','",$arrValue);
+    $mgaEmpNgBU="('" . $implodeString . "')";
 }
 if(empty($mgaEmpNgBU)){
     $mgaEmpNgBU="('')";
@@ -131,7 +114,5 @@ if($hiramEntStmt->rowCount()>0){
 #region function
 
 #endregion
-//$.ajaxSetup({async: false});
 echo json_encode($hiramEntries);
-// echo $hiramEntQ;
 ?>
