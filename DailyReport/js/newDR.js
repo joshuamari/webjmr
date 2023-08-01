@@ -504,7 +504,7 @@ function getEntries(){//get Daily Report Entries
             entries.map(addRow);
         }
         else{
-            var addString = `<tr ><td colspan='8'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
+            var addString = `<tr ><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
     $('#drEntries').append(addString);
         }
         getMHCount();
