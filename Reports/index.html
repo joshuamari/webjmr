@@ -17,7 +17,7 @@
       var busterCall = ["js/reports.js","css/reports.css"];
       $.post("../ajax/get_version.php", {
           busterCall : busterCall,
-          titleName: "Daily Report"
+          titleName: "Reports"
       },
           function (data) {
           $('head').html(data);
