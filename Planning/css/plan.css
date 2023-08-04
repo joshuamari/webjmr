@@ -405,6 +405,16 @@ footer {
 .modal {
   z-index: 100000;
 }
+
+.table-cont {
+  height: calc(100% - 90px);
+}
+.table-cont table thead {
+  position: sticky;
+  top: 0;
+  vertical-align: middle;
+}
+
 /*loaderrrrr*/
 
 .cs-loader {
