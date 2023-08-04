@@ -452,6 +452,7 @@ function addRow(entriesArrayElement){//map Entries for display
     var hour = parseFloat(entriesArrayElement.split('||')[6]);
     var mht = entriesArrayElement.split('||')[7];
     var rmrks = entriesArrayElement.split('||')[8];
+    var tow = entriesArrayElement.split('||')[10];
     var del = ``;
     if(entriesArrayElement.split('||')[9]==1){
         del=`<strong>(Deleted)</strong>`;
@@ -478,6 +479,7 @@ function addRow(entriesArrayElement){//map Entries for display
     <td>${del}${project}</td>
     <td>${item}</td>
     <td>${desc}</td>
+    <td>${tow}</td>
     <td>${parseFloat(hour/60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
     <td><button class="btn btn-primary action selectBut" id="selectBut" title="Duplicate Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
@@ -502,7 +504,7 @@ function getEntries(){//get Daily Report Entries
             entries.map(addRow);
         }
         else{
-            var addString = `<tr ><td colspan='8'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
+            var addString = `<tr ><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
     $('#drEntries').append(addString);
         }
         getMHCount();
