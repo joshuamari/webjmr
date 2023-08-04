@@ -367,7 +367,8 @@ footer {
   height: calc(100vh - 200px);
 }
 .righty {
-  height: calc(100vh - 200px);
+  height: calc(100vh - 200px) !important;
+  overflow: auto;
 }
 .maindiv .left .page-title {
   font-weight: 600;
