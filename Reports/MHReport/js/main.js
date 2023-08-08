@@ -280,7 +280,7 @@ function getHiramEntries() {
       getGroup: $("#buSel").val(),
     },
     function (data) {
-      console.log(data)
+      // console.log(data)
       hramEntries = $.parseJSON(data);
     },
     (async = false)
@@ -653,34 +653,11 @@ $(document).on("click", "#btnExport", function () {
   <tr class="fx"></tr>`;
 
   $("thead").prepend(addString);
-  var cOff;
-  $("#mainTable").removeClass("ayos");
-  switch ($("#CO").val()) {
-    case "1":
-      cOff = "First Half";
-      break;
-    case "2":
-      cOff = "Second Half";
-      break;
-    case "3":
-      cOff = "Monthly";
-      break;
-    case "4":
-      cOff = "Previous";
-      break;
-    case "5":
-      cOff = "Current";
-      break;
-  }
-  // $('#mainTable').table2excel({
-  //   name: `${$('#grpSel').val()} Summary`,
-  //   filename: `${$('#monthSel').val()}_${$('#buSel').val()}_${cOff} Man-Hour Report`
-  // })
   // $(`#mainTable`).attr('data-cols-width','10,20,30');
+  var periodName = exportName();
+  var xlsName = `${periodName}_${$(`#buSel`).val()} Man-Hour Report.xlsx`;
   TableToExcel.convert(document.getElementById("mainTable"), {
-    name: `${$("#monthSel").val()}_${$(
-      "#buSel"
-    ).val()}_${cOff} Man-Hour Report.xlsx`,
+    name: xlsName,
     sheet: {
       name: `${$("#buSel").val()}`,
     },
@@ -688,5 +665,23 @@ $(document).on("click", "#btnExport", function () {
   $(".fx").remove();
   $("#mainTable").addClass("ayos");
 });
+
+function exportName(){
+  $.ajaxSetup({ async: false });
+  var expName = ``;
+  var ymSel = $("#monthSel").val();
+  var cOff = $("#CO").val();
+  $.post("ajax/get_exportname.php",
+  {
+    ymSel : ymSel,
+    cOff :  cOff,
+  },
+    function (data) {
+      expName = data;
+    }
+  );
+  $.ajaxSetup({ async: true });
+  return expName;
+}
 
 //#endregion
