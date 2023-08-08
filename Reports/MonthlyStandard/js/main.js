@@ -133,22 +133,40 @@ function checkLogin() {
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
+      jmcAccess();
     },
   });
   $.ajaxSetup({ async: true });
 }
+function jmcAccess() {
+  //check if user has access to jmc
+  $.post(
+    "ajax/jmc_access.php",
+    {
+      empNum: _empDetails["empNum"],
+    },
+    function (data) {
+      if (data.trim() == 0) {
+        alert("Access denied");
+        window.location.href = "../";
+      }
+    }
+  );
+}
 function getGroupList() {
   $("#buSel").empty();
-  $.ajax({
-    url: "ajax/get_group_list.php",
-    success: function (response) {
-      var grpList = $.parseJSON(response);
+  $.post("ajax/get_group_list.php",
+  {
+    empNum : _empDetails['empNum'],
+  },
+    function (data) {
+      var grpList = $.parseJSON(data);
       grpList.forEach((grp) => {
         $("#buSel").append(`<option>${grp}</option>`);
         $("#buSel").val(_empDetails["empGroup"]);
       });
-    },
-  });
+    }
+  );
 }
 function getEmployeeList() {
   var selDate = $("#monthSel").val();
