@@ -29,14 +29,12 @@ $.ajaxSetup({ async: true });
 $(document).ready(function () {
   $.getJSON("js/planning.json",
     function (data) {
-      console.log(data)
+      getProjects(data);
     }
   );
 
   const getToday = new Date();
   $('#weekSel').val(getWeekNo(getToday));
-  // $('#monthSel').val(`${getToday.getFullYear()}-${(parseInt(getToday.getMonth()) + 1).toString().padStart(2, '0')}`);
-  // createTable($('#monthSel').val());
   createTable($('#weekSel').val());
 
 });
@@ -84,20 +82,18 @@ Date.prototype.yyyymmdd = function () {
 //       addhtml += `<th>${newDate.yyyymmdd()}</th>`;
 //     }
 //   }
-
 //   $('#name').after(addhtml);
 // }
 
-// Week Val
-function createTable(weekVal) {
-  $($('#name').nextAll()).remove()
+function createTable(weekVal) { //week
+  $($('#status').nextAll()).remove()
   getDates(weekVal).forEach(element => {
     $('#headrow').append(`<th>${element.yyyymmdd()}</th>`)
   });
 }
 
 $(document).on('change', '#weekSel', function () {
-  var week = $(this).val()
+  var week = $(this).val();
   createTable(week);
 });
 
@@ -115,4 +111,55 @@ function getDates(inp) {
   for (let i = 0; i < 7; i++) // do this 7 times, once for every day
     days.push(new Date(year, 0, day - dayOffset + i)); // add a new Date object to the array with an offset of i days relative to the first day of the week
   return days;
+}
+
+function getProjects(planningdata) {
+
+  var uniqueArray = [];
+  var uniquePrjs = [];
+
+  planningdata.forEach(obj => {
+    if (!uniquePrjs.includes(obj.prj)) {
+      uniqueArray.push({
+        "pName": obj.prj,
+        "pNum": obj.pNum
+      });
+      uniquePrjs.push(obj.prj);
+    }
+  });
+
+  displayPJ(uniqueArray);
+  planningdata.map(addPlanning);
+}
+
+function displayPJ(pjArr) {
+  pjArr.forEach(element => {
+    $('#main-tbody').append(`<tr pj-id="${element.pNum}"><td class="bg-warning" colspan="100">${element.pName}</td></tr>`);
+  });
+}
+
+const uVal = (x) => {
+  if (x == undefined) {
+    return "###";
+  } else {
+    return x;
+  }
+}
+
+function addPlanning(entry) {
+  $(`[pj-id="${entry.pNum}"]`).after(`<tr>
+  <td>${uVal(entry.jrd)}</td>
+  <td>${uVal(entry.iow)}</td>
+  <td>${uVal(entry.doc)}</td>
+  <td>${uVal(entry.kic)}</td>
+  <td>${uVal(entry.empName)}</td>
+  <td>${uVal(entry.startDate)}</td>
+  <td>${uVal(entry.endDate)}</td>
+  <td>${uVal(entry.endDate)}</td>
+  <td>${uVal(entry.startDate)}</td>
+  <td>${uVal(entry.plnHours)}</td>
+  <td>${uVal(entry.plnHours)}</td>
+  <td>${uVal(entry.fldStatus)}</td>
+  <td>${uVal(entry.fldStatus)}</td>
+  </tr>`)
 }
