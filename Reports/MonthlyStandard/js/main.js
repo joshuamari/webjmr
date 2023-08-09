@@ -38,6 +38,8 @@ var _grpOT = [];
 var _maxDays = 0;
 var _emplist = [];
 var _empDetails = [];
+var _sundays = [];
+var _saturdays = [];
 //#endregion
 checkLogin();
 //#region BINDS
@@ -109,6 +111,14 @@ $(document).on("click", ".memBtn", function () {
 $(document).on('click', '#btnExport', function(){
   exportTable();
 })
+$(document).on("click", "#btnPrint", function () {
+  $(".xPrint").toggle();
+  $(".lower").toggleClass("lower lower_");
+  print();
+  $(".lower_").toggleClass("lower lower_");
+  $(".xPrint").toggle();
+});
+
 //#endregion
 
 //#region FUNCTIONS
@@ -123,22 +133,40 @@ function checkLogin() {
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
+      jmcAccess();
     },
   });
   $.ajaxSetup({ async: true });
 }
+function jmcAccess() {
+  //check if user has access to jmc
+  $.post(
+    "ajax/jmc_access.php",
+    {
+      empNum: _empDetails["empNum"],
+    },
+    function (data) {
+      if (data.trim() == 0) {
+        alert("Access denied");
+        window.location.href = "../";
+      }
+    }
+  );
+}
 function getGroupList() {
   $("#buSel").empty();
-  $.ajax({
-    url: "ajax/get_group_list.php",
-    success: function (response) {
-      var grpList = $.parseJSON(response);
+  $.post("ajax/get_group_list.php",
+  {
+    empNum : _empDetails['empNum'],
+  },
+    function (data) {
+      var grpList = $.parseJSON(data);
       grpList.forEach((grp) => {
         $("#buSel").append(`<option>${grp}</option>`);
         $("#buSel").val(_empDetails["empGroup"]);
       });
-    },
-  });
+    }
+  );
 }
 function getEmployeeList() {
   var selDate = $("#monthSel").val();
@@ -194,6 +222,8 @@ function createTables(ymVal) {
       adjustWidth();
       _unifiedQ.map(fillTable);
       getTotals();
+      colorYellow();
+      colorWeekends(ymVal.split("-")[0],ymVal.split("-")[1]);
     }
   );
   // console.log(_selectedMembers);
@@ -202,31 +232,24 @@ function createTables(ymVal) {
 function createHeader() {
   var addDates = "";
   for (let x = 1; x <= _maxDays; x++) {
-    addDates += `<th>${x.toString().padStart(2, "0")}</th>`;
+    addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${x.toString().padStart(2, "0")}</th>`;
   }
-  addDates += "<th>TOTAL</th>";
+  addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">TOTAL</th>`;
   $("#mainThead").html(`
-    <th width="15%">Employee Name</th>
-    <th width="15%">Project</th>
+    <th data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Members</th>
+    <th data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project</th>
     ${addDates}
     `);
   $("#subThead").html(`
-    <th></th>
-    <th>Project</th>
+    <th data-f-bold="true" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" id="grpTotTitle">&nbsp;</th>
+    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project</th>
     ${addDates}
     `);
 }
 
 function adjustWidth() {
-  $($("#subThead").children()[0]).attr(
-    "width",
-    $($("#mainThead").children()[0]).outerWidth()
-  );
-  $($("#subThead").children()[1]).attr(
-    "width",
-    $($("#mainThead").children()[1]).outerWidth()
-  );
-  $("#lowerT").css("width", $("#upperT").outerWidth());
+  var memh= $('#mainTable th:first-child').outerWidth()
+  $("#subTable th:first-child").css("min-width", memh);
 }
 
 function extractData(entry) {
@@ -254,46 +277,46 @@ function getEmpProjects(empDetails) {
 
   //Regular Projects
   uniqueProjects.forEach((element) => {
-    addHtml += `<tr class="pRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
-      <td></td>
-      <td>${element["pName"]}</td>
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${element["pName"]}</td>
       </tr>`;
   });
 
   //Total Hours
-  addHtml += `<tr class="tTot"employee-number="${empDetails}" >
-    <td></td>
-    <td>Total Hours</td>
+  addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tTot"employee-number="${empDetails}" >
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Total Hours</td>
     </tr>
-    <tr class="oTot"employee-number="${empDetails}" >
-    <td></td>
-    <td>Overtime</td>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="oTot"employee-number="${empDetails}" >
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Overtime</td>
     </tr>`;
 
   //OT Projects
   uniqueOT.forEach((element) => {
-    addHtml += `<tr class="oRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
-      <td></td>
-      <td>OT - ${element["pName"]}</td>
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="oRow" employee-number="${empDetails}" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">OT - ${element["pName"]}</td>
       </tr>`;
   });
 
   //Leaves
   addHtml += `
-    <tr class="lRow" i-index="25" employee-number="${empDetails}"><td></td><td>VL</td></tr>
-    <tr class="lRow" i-index="26" employee-number="${empDetails}"><td></td><td>SL</td></tr>
-    <tr class="lRow" p-index="others" employee-number="${empDetails}"><td></td><td>EL,PL,ML,Others</td></tr>
-    <tr class="lTot" employee-number="${empDetails}"><td></td><td>Leave</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="lRow" i-index="25" employee-number="${empDetails}"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">VL</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="lRow" i-index="26" employee-number="${empDetails}"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">SL</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="lRow" p-index="others" employee-number="${empDetails}"><td data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">EL,PL,ML,Others</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="lTot" employee-number="${empDetails}"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Leave</td></tr>
     `;
 
   var empName = _emplist.find((employee) => employee.empNum == empDetails)[
     "empName"
   ];
   // console.log(empDetails)
-  $("#mainTbody").append(`<tr class="emprow" employee-number="${empDetails}">
-    <td>${empName}</td>
-    <td>Project and Job Name</td>
-    <td colspan="${_maxDays + 1}"></td>
+  $("#mainTbody").append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${empDetails}">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${empName}</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${_maxDays + 1}"></td>
     </tr>
     ${addHtml}`);
 }
@@ -328,33 +351,33 @@ function pGet(empNum, ifOT) {
 function addGrpData(regular, ot) {
   var addHtml = "";
   regular.forEach((element) => {
-    addHtml += `<tr class="gpRow" p-index="${element["pIndex"]}">
-      <td></td>
-      <td>${element["pName"]}</td>
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="gpRow" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${element["pName"]}</td>
       </tr>`;
   });
 
-  addHtml += `<tr class="gtTot">
-    <td></td>
-    <td>Total Hours</td>
+  addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="gtTot">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Total Hours</td>
     </tr>
-    <tr class="goTot">
-    <td></td>
-    <td>Overtime</td>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="goTot">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Overtime</td>
     </tr>`;
 
   ot.forEach((element) => {
-    addHtml += `<tr class="goRow" p-index="${element["pIndex"]}">
-      <td></td>
-      <td>OT - ${element["pName"]}</td>
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="goRow" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">OT - ${element["pName"]}</td>
       </tr>`;
   });
 
   addHtml += `
-    <tr class="glRow" p-index="25"><td></td><td>VL</td></tr>
-    <tr class="glRow" p-index="26"><td></td><td>SL</td></tr>
-    <tr class="glRow" p-index="others"><td></td><td>EL,PL,ML,Others</td></tr>
-    <tr class="glTot" ><td></td><td>Leave</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" i-index="25"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">VL</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" i-index="26"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">SL</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" p-index="others"><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">EL,PL,ML,Others</td></tr>
+    <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glTot" ><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Leave</td></tr>
     `;
 
   $("#subTbody").append(addHtml);
@@ -363,9 +386,9 @@ function addGrpData(regular, ot) {
 function addCells() {
   var addHtml = "";
   for (let x = 1; x <= _maxDays; x++) {
-    addHtml += `<td dayVal="${x}"></td>`;
+    addHtml += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}"></td>`;
   }
-  addHtml += `<td class="tCell"></td>`;
+  addHtml += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tCell"></td>`;
   $(
     ".pRow,.oRow,.tRow,.lRow,.lTot,.tTot,.lTot,.oTot,.gpRow,.goRow,.goTot,.gtTot,.glRow,.glTot"
   ).append(addHtml);
@@ -425,6 +448,7 @@ function getTotals() {
         );
       });
       $($(this).children()[x]).text(totalOT == 0 ? "" : totalOT);
+      // $($(this).children()[x]).attr('data-fill-color','FFFF00');
     }
   });
 
@@ -456,6 +480,7 @@ function getTotals() {
             ).text()
       );
       $($(this).children()[x]).text(totaltime == 0 ? "" : totaltime);
+      // $($(this).children()[x]).attr('data-fill-color','FFFF00');
     }
   });
 
@@ -474,6 +499,7 @@ function getTotals() {
         );
       });
       $($(this).children()[x]).text(totalLeaves == 0 ? "" : totalLeaves);
+      // $($(this).children()[x]).attr('data-fill-color','FFFF00');
     }
   });
 
@@ -511,8 +537,13 @@ function getTotals() {
   });
 
   $(".glRow").each(function () {
-    var getlRows = $(`.lRow[p-index="${$(this).attr("p-index")}"]`);
-
+    var getlRows = ``;
+    if($(this).attr("i-index")){
+      getlRows = $(`.lRow[i-index="${$(this).attr("i-index")}"]`);
+    }
+    else{
+      getlRows = $(`.lRow[p-index="${$(this).attr("p-index")}"]`);
+    }
     for (let x = 2; x < $(this).children().length - 1; x++) {
       var glTotal = 0;
       $(getlRows).each(function () {
@@ -591,7 +622,73 @@ function getTotals() {
     $(this).text(rightTot);
   });
 }
+function colorYellow(){
+  var myClass = [`tTot`,`oTot`,`lRow`,`lTot`,`gtTot`,`goTot`,`glRow`,`glTot`];
+  myClass.forEach(element => {
+    $(`.${element}`).each(function () {
+      for (let x = 1; x < $(this).children().length; x++) {
+        $($(this).children()[x]).attr('data-fill-color','FFFF00');
+      }
+    });
+  });
+}
 
+function colorWeekends(year,month){
+  _sundays = getSundays(year,month);
+  _saturdays = getSaturdays(year,month);
+  for (let x = 2; x < $(`#mainThead`).children().length; x++) {
+    if(_sundays.includes(x-1)){
+      $($(`#mainThead`).children()[x]).attr('data-fill-color','00ff00');
+    }
+    if(_saturdays.includes(x-1)){
+      $($(`#mainThead`).children()[x]).attr('data-fill-color','ccff99');
+    }
+  }
+  var mySelectors = [`#mainThead`,`#subThead`,`.pRow`,`.gpRow`,`.oRow`,`.goRow`,`.tTot`,`.oTot`,`.lRow`,`.lTot`,`.gtTot`,`.goTot`,`.glRow`,`.glTot`];
+  mySelectors.forEach(element => {
+    $(`${element}`).each(function () {
+      for (let x = 2; x < $(this).children().length; x++) {
+        if(_sundays.includes(x-1)){
+          $($(this).children()[x]).attr('data-fill-color','00ff00');
+        }
+        if(_saturdays.includes(x-1)){
+          $($(this).children()[x]).attr('data-fill-color','ccff99');
+        }
+      }
+    });
+  });
+}
+function getSundays(year,month){
+  var firstDayOfMonth = new Date(year, month - 1, 1);
+  var lastDayOfMonth = new Date(year, month, 0);
+  var sundays = [];
+
+  for (let day = firstDayOfMonth.getDate(); day <= lastDayOfMonth.getDate(); day++) {
+    var currentDate = new Date(year, month - 1, day);
+    var dayOfWeek = currentDate.getDay(); // Sunday (0) to Saturday (6)
+
+    if (dayOfWeek === 0) {
+      sundays.push(day);
+    }
+  }
+  return sundays;
+}
+function getSaturdays(year,month){
+  var firstDayOfMonth = new Date(year, month - 1, 1);
+  var lastDayOfMonth = new Date(year, month, 0);
+  var saturdays = [];
+
+  for (let day = firstDayOfMonth.getDate(); day <= lastDayOfMonth.getDate(); day++) {
+    var currentDate = new Date(year, month - 1, day);
+    var dayOfWeek = currentDate.getDay(); // Sunday (0) to Saturday (6)
+
+    if (dayOfWeek === 6) {
+      saturdays.push(day);
+    }
+  }
+
+  return saturdays;
+}
 //#endregion
 
 //#region basa ng members
@@ -619,33 +716,12 @@ function printTable() {
 }
 
 function exportTable() {
-  $('#mainTable').append("<tr id='fromHereAdd' class='w3-gray'></tr>",$('#subTable').html());
+  var colsP = _maxDays+3;
+  $('#mainTable').append(`<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`,$('#subTable').html());
+  $(`#grpTotTitle`).text(`GROUP's TOTAL`);
 
-  // $('#mainTable').table2excel({
-  //   name: `${$('#grpSel').val()} Summary`,
-  //   filename: `${$('#grpSel').val()}_${$('#ymSel').val()} Summary`
-  // })
-  // $($('#fromHereAdd').nextAll()).remove();
-  // $('#fromHereAdd').remove();
-  // var addString = `
-  // <tr class="fx" style="display:none">
-  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
-  //   "#buSel"  
-  // ).val()}</th>
-  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
-  //   "#monthSel"
-  // ).val()}</th>
-  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">KHI入力、確認欄</th>
-  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">日付</th>
-  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
-  // <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">確認者</th>
-  // <th data-fill-color="C6E0B4" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle"></th>
-  // </tr>
-  // <tr class="fx"></tr>`;
-
-  // $("thead").prepend(addString);
   var cOff;
-  $("#mainTable").removeClass("ayos");
+  // $("#mainTable").removeClass("ayos");
   switch ($("#CO").val()) {
     case "1":
       cOff = "First Half";
@@ -655,13 +731,14 @@ function exportTable() {
       break;
   }
   TableToExcel.convert(document.getElementById("mainTable"), {
-    name: `${$("#monthSel").val()}_${cOff} Monthly_Standard Report.xlsx`,
+    name: `MonthlyStandard_${$("#buSel").val()}_${$("#monthSel").val()}.xlsx`,
     sheet: {
-      name: `${$("#buSel").val()}`,
+      name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
     },
   });
   $($('#fromHereAdd').nextAll()).remove();
   $('#fromHereAdd').remove();
+  $(`#grpTotTitle`).text(``);
   // $(".fx").remove();
   // $("#mainTable").addClass("ayos");
 }

@@ -34,7 +34,7 @@
   <body>
     <div class="home-content position-relative">
       <div class="title xPrint">
-        <h1>Monthly Standard Table</h1>
+        <h1>Monthly Standard Report</h1>
 
         <div class="d-flex justify-content-between align-items-center">
           <a href="../" class="backbtn">
@@ -58,7 +58,7 @@
       </div>
       <div class="content">
         <div class="lower position-relative d-flex flex-md-row flex-column">
-          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 xPrint">
             <div class="form-floating col-12 mb-2">
               <select class="form-select" id="buSel" aria-label="Select BU">
                 <option value="" selected hidden>Select Group</option>
@@ -90,10 +90,10 @@
             </div>
           </div>
           <div
-            class="right d-none m-2 px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column"
+            class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
           >
-            <div id="upperT" class="position-relative">
-              <table class="table position-relative" id="mainTable">
+            <div id="upperT" class="position-relative mt-2">
+              <table class="table position-relative ayos bg-white" id="mainTable">
                 <thead>
                   <tr id="mainThead" class="sticky-top bg-body"></tr>
                 </thead>
@@ -101,7 +101,7 @@
               </table>
             </div>
             <div id="lowerT" class="position-relative">
-              <table class="table" id="subTable">
+              <table class="table ayos bg-white" id="subTable">
                 <thead>
                   <tr id="subThead"></tr>
                 </thead>
