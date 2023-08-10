@@ -192,6 +192,8 @@ function getEmployeeList() {
 }
 //#region table creation
 function createTables(ymVal) {
+  _grpProj = [];
+  _grpOT = [];
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
