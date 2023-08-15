@@ -281,10 +281,11 @@ footer {
 }
 
 .home-section .home-content {
-  background: #eeeded;
+  background-color: #16334f;
   align-items: center;
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .home-section {
@@ -357,7 +358,6 @@ footer {
 }
 
 .cont {
-  overflow-y: hidden;
   height: calc(100vh - 60px);
   justify-content: center;
   background-color: #16334f;
@@ -1402,5 +1402,13 @@ footer {
     font-size: 35px;
     margin: 0px;
     padding: 5px;
+  }
+}
+@media (min-width: 1200px) {
+  .home-section .home-content {
+    overflow: hidden;
+  }
+  .cont {
+    height: calc(100vh - 60px);
   }
 }
