@@ -1,6 +1,7 @@
 <?php
 #region Require Database Connections
 require_once '../Includes/dbconnectwebjmr.php';
+require_once '../Includes/globalFunctions.php';
 #endregion
 
 #region set timezone
@@ -8,6 +9,10 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
+$groupSel = NULL;
+if (!empty($_POST['groupSel'])) {
+    $groupSel = $_POST['groupSel'];
+}
 $yearMonth = date("Y-04");
 if (!empty($_POST['monthSel'])) {
     $yearMonth = $_POST['monthSel'];
@@ -23,7 +28,7 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth $empStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth $empStatement AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel')) GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":yearMonth" => "$yearMonth%"]);
 if ($entriesStmt->rowCount() > 0) {

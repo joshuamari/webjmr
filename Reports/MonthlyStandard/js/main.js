@@ -171,18 +171,17 @@ function getGroupList() {
 function getEmployeeList() {
   var selDate = $("#monthSel").val();
   var grpSel = $("#buSel").val();
-  // $($("#members-label").nextAll()).remove();
+  var cutOff = $(`#CO`).val();
   $("#members-list").empty();
   $.post(
     "ajax/get_emplist.php",
     {
       monthSel: selDate,
       groupSel: grpSel,
+      getHalfSel: cutOff,
     },
     function (data) {
       _emplist = $.parseJSON(data);
-      // console.log(_emplist);
-      // members = emplist;
       _emplist.map(fillMembers);
       _selectedMembers = _selectedMembers.filter((item) =>
         _emplist.some((myItem) => myItem.empNum === item)
@@ -194,6 +193,7 @@ function getEmployeeList() {
 function createTables(ymVal) {
   _grpProj = [];
   _grpOT = [];
+  var groupSel = $(`#buSel`).val();
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
@@ -207,6 +207,7 @@ function createTables(ymVal) {
     {
       monthSel: ymVal,
       empArray: _selectedMembers,
+      groupSel: groupSel,
     },
     function (data) {
       var empEntries = $.parseJSON(data);
@@ -251,7 +252,9 @@ function createHeader() {
 
 function adjustWidth() {
   var memh= $('#mainTable th:first-child').outerWidth()
+  var projh= $('#mainTable th:nth-child(2)').outerWidth()
   $("#subTable th:first-child").css("min-width", memh);
+  $("#subTable th:nth-child(2)").css("min-width", projh);
 }
 
 function extractData(entry) {
@@ -399,15 +402,15 @@ function addCells() {
 
 //#region latag
 
-function fillTable(entry) {
+function fillTable(entry) {//ETOBAGUHIN MO NEXT WEEK
+  var currentHours = 0;
   if (!Leaves.includes(entry["pIndex"])) {
-    $(
-      $(
-        `.${ifOT(entry["OT"])}Row[p-index="${
-          entry["pIndex"]
-        }"][employee-number="${entry["empNum"]}"]`
-      ).children()[parseInt(entry["entryDate"]) + 1]
-    ).text(entry["hours"]);
+    currentHours=parseFloat($($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text()) || 0;
+    currentHours += parseFloat(entry["hours"]);
+    $($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(`${currentHours}`);
+    if(entry["OT"]){
+      $($(`.oRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(entry["hours"]);
+    }
   } else {
     if (oLeaves.hasOwnProperty(entry["iIndex"])) {
       $(
@@ -422,13 +425,6 @@ function fillTable(entry) {
       ).children()[parseInt(entry["entryDate"]) + 1]
     ).text(entry["hours"]);
   }
-}
-
-function ifOT(otStatus) {
-  if (otStatus) {
-    return "o";
-  }
-  return "p";
 }
 
 //totals
@@ -468,19 +464,19 @@ function getTotals() {
             : $($(this).children()[x]).text()
         );
       });
-      totaltime += parseFloat(
-        $(
-          $(
-            `.oTot[employee-number="${$(this).attr("employee-number")}"]`
-          ).children()[x]
-        ).text() == ""
-          ? 0
-          : $(
-              $(
-                `.oTot[employee-number="${$(this).attr("employee-number")}"]`
-              ).children()[x]
-            ).text()
-      );
+      // totaltime += parseFloat( //ETO BAGUHIN MO NEXT WEEK
+      //   $(
+      //     $(
+      //       `.oTot[employee-number="${$(this).attr("employee-number")}"]`
+      //     ).children()[x]
+      //   ).text() == ""
+      //     ? 0
+      //     : $(
+      //         $(
+      //           `.oTot[employee-number="${$(this).attr("employee-number")}"]`
+      //         ).children()[x]
+      //       ).text()
+      // );
       $($(this).children()[x]).text(totaltime == 0 ? "" : totaltime);
       // $($(this).children()[x]).attr('data-fill-color','FFFF00');
     }
@@ -587,11 +583,11 @@ function getTotals() {
             : $($(this).children()[x]).text()
         );
       });
-      totaltime += parseFloat(
-        $($(`.goTot`).children()[x]).text() == ""
-          ? 0
-          : $($(`.goTot`).children()[x]).text()
-      );
+      // totaltime += parseFloat( //ETO BAGUHIN MO NEXT WEEK
+      //   $($(`.goTot`).children()[x]).text() == ""
+      //     ? 0
+      //     : $($(`.goTot`).children()[x]).text()
+      // );
       $($(this).children()[x]).text(totaltime == 0 ? "" : totaltime);
     }
   });
