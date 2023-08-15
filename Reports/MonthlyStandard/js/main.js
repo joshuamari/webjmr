@@ -118,7 +118,9 @@ $(document).on("click", "#btnPrint", function () {
   $(".lower_").toggleClass("lower lower_");
   $(".xPrint").toggle();
 });
-
+$(document).on("change", "#CO", function () {
+  createTables($("#monthSel").val());
+})
 //#endregion
 
 //#region FUNCTIONS
@@ -194,6 +196,7 @@ function createTables(ymVal) {
   _grpProj = [];
   _grpOT = [];
   var groupSel = $(`#buSel`).val();
+  var halfSel = $(`#CO`).val();
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
@@ -208,6 +211,7 @@ function createTables(ymVal) {
       monthSel: ymVal,
       empArray: _selectedMembers,
       groupSel: groupSel,
+      getHalfSel: halfSel,
     },
     function (data) {
       var empEntries = $.parseJSON(data);

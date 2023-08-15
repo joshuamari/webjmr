@@ -24,13 +24,20 @@ if (!empty($_POST['empArray'])) {
     $implodeString = implode("','", $employeeArray);
     $empStatement = "AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
 }
+$cutOff = "1";
+if (isset($_REQUEST['getHalfSel'])) {
+    $cutOff = $_REQUEST['getHalfSel'];
+}
+$firstDay = getFirstday($yearMonth, $cutOff);
+$lastDay = getLastday($yearMonth, $cutOff, $firstDay);
+$dateCompare = "dr.fldDate >= '$firstDay' AND dr.fldDate<'$lastDay'";
 $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE dr.fldDate LIKE :yearMonth $empStatement AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel')) GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel')) GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
-$entriesStmt->execute([":yearMonth" => "$yearMonth%"]);
+$entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $entries) {
