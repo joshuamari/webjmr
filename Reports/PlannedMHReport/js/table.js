@@ -27,17 +27,29 @@ $.ajaxSetup({ async: true });
 
 
 $(document).ready(function () {
-  $.getJSON("js/planning.json",
-    function (data) {
-      getProjects(data);
-    }
-  );
 
   const getToday = new Date();
   $('#weekSel').val(getWeekNo(getToday));
-  createTable($('#weekSel').val());
+
+  queryfunctions();
 
 });
+
+function queryfunctions() {
+
+  $.getJSON("js/planning.json",
+    function (planning) {
+      getProjects(planning);
+      createTable($('#weekSel').val());
+      $.getJSON("js/queries.json",
+        function (dr) {
+          addDr(dr);
+        }
+      );
+    }
+  );
+  
+}
 
 function getWeekNo(currentDate) {
   var startDate = new Date(currentDate.getFullYear(), 0, 1);
@@ -87,14 +99,22 @@ Date.prototype.yyyymmdd = function () {
 
 function createTable(weekVal) { //week
   $($('#status').nextAll()).remove()
+  $($('.oStat').nextAll()).remove()
   getDates(weekVal).forEach(element => {
     $('#headrow').append(`<th>${element.yyyymmdd()}</th>`)
+    $('.job-row').append(`<td day-val="${element.getDate()}"></td>`)
   });
+  $('#headrow').append(`
+  <th>TOTAL(Week ${$('#weekSel').val()})</th>
+  <th>Remaining</th>`);
+  $('.job-row').append(`
+  <td class='jrTot'></td>
+  <td class='rem'></td>
+  `);
 }
 
 $(document).on('change', '#weekSel', function () {
-  var week = $(this).val();
-  createTable(week);
+  queryfunctions();
 });
 
 function getDates(inp) {
@@ -133,6 +153,7 @@ function getProjects(planningdata) {
 }
 
 function displayPJ(pjArr) {
+  $('#main-tbody').empty();
   pjArr.forEach(element => {
     $('#main-tbody').append(`<tr pj-id="${element.pNum}"><td class="bg-warning" colspan="100">${element.pName}</td></tr>`);
   });
@@ -147,7 +168,7 @@ const uVal = (x) => {
 }
 
 function addPlanning(entry) {
-  $(`[pj-id="${entry.pNum}"]`).after(`<tr>
+  $(`[pj-id="${entry.pNum}"]`).after(`<tr class="job-row" emp-num="${entry.empNum}" job-id="${entry.jobNum}">
   <td>${uVal(entry.jrd)}</td>
   <td>${uVal(entry.iow)}</td>
   <td>${uVal(entry.doc)}</td>
@@ -157,9 +178,42 @@ function addPlanning(entry) {
   <td>${uVal(entry.endDate)}</td>
   <td>${uVal(entry.endDate)}</td>
   <td>${uVal(entry.startDate)}</td>
-  <td>${uVal(entry.plnHours)}</td>
-  <td>${uVal(entry.plnHours)}</td>
+  <td class="asm">${uVal(entry.plnHours)}</td>
+  <td class="mhu">${uVal(entry.plnUsed)}</td>
   <td>${uVal(entry.fldStatus)}</td>
-  <td>${uVal(entry.fldStatus)}</td>
+  <td class="oStat">${uVal(entry.fldStatus)}</td>
   </tr>`)
+}
+
+function addDr(dArr) { //pang add ng daily report
+  dArr.forEach(element => {
+    console.log(element.jobNum, element.empNum, (new Date(element.entryDate).getDate()))
+    // console.log($(`[job-id='${element.jobNum}'][emp-num='${element.empNum}']`).children(`[day-val='${(new Date(element.entryDate).getDate())}']`))
+    $($(`[job-id='${element.jobNum}'][emp-num='${element.empNum}']`).children(`[day-val='${(new Date(element.entryDate).getDate())}']`)).text(`${element.hours}`)
+  });
+  
+  totals();
+}
+
+function totals(){
+
+  //weekly total
+  var jrtots = $('.jrTot');
+  $.each(jrtots, function (indexInArray, valueOfElement) { 
+     var getPrev = $(valueOfElement).prevUntil('.oStat');
+     var sum = 0;
+     $.each(getPrev, function (indexInArray, valueOfElement) { 
+       sum += parseFloat($(valueOfElement).text() == "" ? 0 : $(valueOfElement).text())
+     });
+     $(valueOfElement).text(sum);
+  });
+
+  //remaining
+  var rems = $('.rem');
+  $.each(rems, function (indexInArray, valueOfElement) { 
+    $(valueOfElement).text(parseFloat($($(valueOfElement).prevAll('.asm')).text()) - parseFloat($($(valueOfElement).prevAll('.mhu')).text()))
+    if(parseFloat($(valueOfElement).text()) < 0){
+      $(valueOfElement).addClass('bg-danger')
+    }
+  });
 }
