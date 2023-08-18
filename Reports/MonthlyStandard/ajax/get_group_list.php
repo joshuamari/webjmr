@@ -17,7 +17,7 @@ if (isset($_REQUEST['empNum'])) {
 
 #region main
 if (in_array($empNum, $reportAllGroupAccess)) {
-    $grpQuery = "SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL ORDER BY fldBU";
+    $grpQuery = "SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldBU NOT IN ('INT') ORDER BY fldBU";
     $grpStmt = $connkdt->query($grpQuery);
     if ($grpStmt->rowCount() > 0) {
         $grpArr = $grpStmt->fetchAll();
