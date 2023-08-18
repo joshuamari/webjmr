@@ -345,9 +345,9 @@ function pGet(empNum, ifOT) {
     //regular hours
     _unifiedQ.forEach((element) => {
       if (element["empNum"] == empNum && !Leaves.includes(element["pIndex"])) {
-        if (!element["OT"]) {
+        // if (!element["OT"]) {
           returnObject.push(element);
-        }
+        // }
       }
     });
   }
