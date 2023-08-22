@@ -175,7 +175,7 @@ $(document).on("click", ".removeEmp", function () {
   if (index !== -1) {
     _selectedEmployees.splice(index, 1);
   }
-  console.log(_selectedEmployees)
+  console.log(_selectedEmployees);
   $($(this).parent()).remove();
   getEmployees();
 });
@@ -407,9 +407,9 @@ $(document).on("click", "#empOptions li", function () {
   $($("#idEmp").find(`option[emp-id=${empid}]`))
     .prop("selected", true)
     .change();
-    _selectedEmployees.push(empid)
-    $(`#searchemp`).val('').change();
-    getEmployees();
+  _selectedEmployees.push(empid);
+  $(`#searchemp`).val("").change();
+  getEmployees();
 });
 
 $(document).on("search", "#searchemp", function () {
@@ -452,30 +452,30 @@ $(document).on("click", ".cancel", function () {
 $(document).on("click", ".cancel1", function () {
   resetEditEntry();
 });
-$(document).on("keyup", "#searchEmployee", function(){
+$(document).on("keyup", "#searchEmployee", function () {
   getPlans();
-})
-$(document).on("search", "#searchEmployee", function(){
+});
+$(document).on("search", "#searchEmployee", function () {
   getPlans();
-})
-$(document).on("change", "#searchSDate", function(){
+});
+$(document).on("change", "#searchSDate", function () {
   getPlans();
-})
-$(document).on("change", "#filterStatus", function(){
+});
+$(document).on("change", "#filterStatus", function () {
   getPlans();
-})
-$(document).on("change", "#filterGroup", function(){
+});
+$(document).on("change", "#filterGroup", function () {
   getPlans();
-})
-$(document).on("change", "#filterProject", function(){
+});
+$(document).on("change", "#filterProject", function () {
   getPlans();
-})
-$(document).on("change", "#filterItem", function(){
+});
+$(document).on("change", "#filterItem", function () {
   getPlans();
-})
-$(document).on("change", "#filterJRD", function(){
+});
+$(document).on("change", "#filterJRD", function () {
   getPlans();
-})
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -521,7 +521,7 @@ function getEmployees() {
     $($("#idProject").find("option:selected")).attr("proj-id") ||
     $($("#idProjectEdit").find("option:selected")).attr("proj-id");
   var emps = [];
-  
+
   var searchemp = $(`#searchemp`).val();
   $.ajaxSetup({ async: false });
   $.post(
@@ -529,7 +529,7 @@ function getEmployees() {
     {
       projID: projID,
       searchemp: searchemp,
-      selectedEmps:_selectedEmployees,
+      selectedEmps: _selectedEmployees,
     },
     function (data) {
       emps = $.parseJSON(data);
@@ -561,7 +561,7 @@ function getEmpSearch() {
     {
       projID: projID,
       searchemp: searchemp,
-      selectedEmps:_selectedEmployees,
+      selectedEmps: _selectedEmployees,
     },
     function (data) {
       emps = $.parseJSON(data);
@@ -611,7 +611,7 @@ function addRow(iVal) {
     <td>${desc}</td>
     <td>${parseFloat(hour / 60).toFixed(2)}</td>
     <td>${mhtyp[mht]}</td>
-    <td><button class="btn btn-primary action selectBut" id="selectBut" title="Duplicate Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
+    <td class="d-flex"><button class="btn btn-primary action selectBut" id="selectBut" title="Duplicate Items"><i class="text-light  bx bx-duplicate"></i></button><button class="btn btn-warning action edit" title="Edit" edit-entry><i class="fa fa-pencil"></i></button><button class="btn btn-danger action delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
     </td>
     </tr>
     `;
@@ -1078,17 +1078,18 @@ function addEntries() {
     console.log(mgaKulang);
     return;
   } else {
-    $.post("ajax/add_planning_entries.php",
-    {
-      getDescription : jobreq,
-      getEmp : _selectedEmployees,
-      getsDate : sdate,
-      geteDate : edate,
-      getMH : mh,
-      empNum : empDetails["empNum"]
-    },
+    $.post(
+      "ajax/add_planning_entries.php",
+      {
+        getDescription: jobreq,
+        getEmp: _selectedEmployees,
+        getsDate: sdate,
+        geteDate: edate,
+        getMH: mh,
+        empNum: empDetails["empNum"],
+      },
       function (data) {
-        console.log(data)
+        console.log(data);
         resetEntry();
         getPlans();
         $(".cancel").click();
@@ -1217,24 +1218,24 @@ function getPlans() {
   var plans = [];
   $(`#planningTable`).empty();
   var defaultBody = `<tr><td colspan="12" class="text-center">No Entries Found</td></tr>`;
-  var searchEmployee = $('#searchEmployee').val();
-  var searchSDate = $('#searchSDate').val();
-  var filterGroup = $('#filterGroup').val();
-  var filterProject = $('#filterProject').val();
-  var filterItem = $('#filterItem').val();
-  var filterJRD = $('#filterJRD').val();
-  var filterStatus = $('#filterStatus').val();
+  var searchEmployee = $("#searchEmployee").val();
+  var searchSDate = $("#searchSDate").val();
+  var filterGroup = $("#filterGroup").val();
+  var filterProject = $("#filterProject").val();
+  var filterItem = $("#filterItem").val();
+  var filterJRD = $("#filterJRD").val();
+  var filterStatus = $("#filterStatus").val();
   $.post(
     "ajax/get_plans.php",
     {
       getPlanner: empDetails["empNum"],
-      searchEmployee : searchEmployee,
-      searchSDate : searchSDate,
-      filterGroup : filterGroup,
-      filterProject : filterProject,
-      filterItem : filterItem,
-      filterJRD : filterJRD,
-      filterStatus : filterStatus
+      searchEmployee: searchEmployee,
+      searchSDate: searchSDate,
+      filterGroup: filterGroup,
+      filterProject: filterProject,
+      filterItem: filterItem,
+      filterJRD: filterJRD,
+      filterStatus: filterStatus,
     },
     function (data) {
       plans = $.parseJSON(data);
@@ -1288,7 +1289,7 @@ function fillPlans(planString) {
         ${statusBadge}
      </div>
     </td>
-    <td class="text-center">${buttons}</td>
+    <td class="text-center d-flex">${buttons}</td>
   </tr>`;
   $(`#planningTable`).append(addString);
 }
@@ -1316,23 +1317,23 @@ function fillEditPlan(editDetails) {
   var projEnd = eDeets[6];
   var projMH = eDeets[7];
   $("#idGroupEdit").val(projGroup).change();
-  $("#idGroupEdit").prop('disabled',true);
+  $("#idGroupEdit").prop("disabled", true);
   $($("#idProjectEdit").find(`option[proj-id=${projID}]`))
     .prop("selected", true)
     .change();
   $($("#idItemEdit").find(`option[item-id=${itemID}]`))
     .prop("selected", true)
     .change();
-  $("#idProjectEdit").prop('disabled',true);
-  $("#idItemEdit").prop('disabled',true);
+  $("#idProjectEdit").prop("disabled", true);
+  $("#idItemEdit").prop("disabled", true);
   $($("#idJRDEdit").find(`option[job-id=${jobID}]`))
     .prop("selected", true)
     .change();
-  $("#idJRDEdit").prop('disabled',true);
+  $("#idJRDEdit").prop("disabled", true);
   $($("#idEmpEdit").find(`option[emp-id=${empID}]`))
     .prop("selected", true)
     .change();
-  $("#idEmpEdit").prop('disabled',true);
+  $("#idEmpEdit").prop("disabled", true);
   $("#idStartDateEdit").val(projStart).change();
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
@@ -1362,82 +1363,86 @@ function ifSmallScreen() {
   }
 }
 
-function removeSelected(){
+function removeSelected() {
   $(`.empviewer`).empty();
   _selectedEmployees = [];
 }
-function getFilters(){
+function getFilters() {
   getGroupFilter();
   getProjFilter();
   getItemFilter();
   getJRDFilter();
 }
-function getGroupFilter(){
-  $('#filterGroup').html(`<option value selected>Group</option>`)
-  var groups = []
-  $.post("ajax/get_group_filter.php",
-  {
-    getPlanner : empDetails['empNum']
-  },
+function getGroupFilter() {
+  $("#filterGroup").html(`<option value selected>Group</option>`);
+  var groups = [];
+  $.post(
+    "ajax/get_group_filter.php",
+    {
+      getPlanner: empDetails["empNum"],
+    },
     function (data) {
       groups = $.parseJSON(data);
       groups.map(groupFillter);
     }
   );
 }
-function groupFillter(grp){
+function groupFillter(grp) {
   var groupSelection = `<option>${grp}</option>`;
-  $('#filterGroup').append(groupSelection);
+  $("#filterGroup").append(groupSelection);
 }
-function getProjFilter(){
-  $('#filterProject').html(`<option value selected>Project</option>`)
-  var projs = []
-  $.post("ajax/get_proj_filter.php",
-  {
-    getPlanner : empDetails['empNum']
-  },
+function getProjFilter() {
+  $("#filterProject").html(`<option value selected>Project</option>`);
+  var projs = [];
+  $.post(
+    "ajax/get_proj_filter.php",
+    {
+      getPlanner: empDetails["empNum"],
+    },
     function (data) {
       projs = $.parseJSON(data);
       projs.map(projFillter);
     }
   );
 }
-function projFillter(proj){
+function projFillter(proj) {
   var projSelection = `<option>${proj}</option>`;
-  $('#filterProject').append(projSelection);
+  $("#filterProject").append(projSelection);
 }
-function getItemFilter(){
-  $('#filterItem').html(`<option value selected>Item</option>`)
-  var items = []
-  $.post("ajax/get_item_filter.php",
-  {
-    getPlanner : empDetails['empNum']
-  },
+function getItemFilter() {
+  $("#filterItem").html(`<option value selected>Item</option>`);
+  var items = [];
+  $.post(
+    "ajax/get_item_filter.php",
+    {
+      getPlanner: empDetails["empNum"],
+    },
     function (data) {
       items = $.parseJSON(data);
       items.map(itemFillter);
     }
   );
 }
-function itemFillter(item){
+function itemFillter(item) {
   var itemSelection = `<option>${item}</option>`;
-  $('#filterItem').append(itemSelection);
+  $("#filterItem").append(itemSelection);
 }
-function getJRDFilter(){
-  $('#filterJRD').html(`<option value selected>JRD</option>`)
-  var jrds = []
-  $.post("ajax/get_jrd_filter.php",
-  {
-    getPlanner : empDetails['empNum']
-  },
+function getJRDFilter() {
+  $("#filterJRD").html(`<option value selected>JRD</option>`);
+  var jrds = [];
+  $.post(
+    "ajax/get_jrd_filter.php",
+    {
+      getPlanner: empDetails["empNum"],
+    },
     function (data) {
       jrds = $.parseJSON(data);
       jrds.map(jrdFillter);
     }
   );
 }
-function jrdFillter(jrd){
+function jrdFillter(jrd) {
   var jrdSelection = `<option>${jrd}</option>`;
-  $('#filterJRD').append(jrdSelection);
+  $("#filterJRD").append(jrdSelection);
 }
 //#endregion
