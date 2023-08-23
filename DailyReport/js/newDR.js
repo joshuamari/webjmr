@@ -1459,7 +1459,6 @@ function getDeets(planID) {
       empID: empDetails["empNum"],
     },
     function (data) {
-      console.log(data)
       deets = $.parseJSON(data);
       deets.map(fillEditPlan);
     }
