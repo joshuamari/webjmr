@@ -344,3 +344,6 @@ body {
     height: 100%;
   }
 }
+.bx-info-circle:before {
+  content: "\eb21";
+}
