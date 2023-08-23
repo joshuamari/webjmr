@@ -121,6 +121,9 @@ $(document).on("click", "#btnPrint", function () {
 $(document).on("change", "#CO", function () {
   createTables($("#monthSel").val());
 })
+// $(document).on("change", "#checkBoxEme", function () { //eto uuncomment tas papalitan id pag may checkbox na
+//   createTables($("#monthSel").val());
+// })
 //#endregion
 
 //#region FUNCTIONS
@@ -197,6 +200,7 @@ function createTables(ymVal) {
   _grpOT = [];
   var groupSel = $(`#buSel`).val();
   var halfSel = $(`#CO`).val();
+  var getOGP = false; //eto papalitan pag may checkbox na
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
@@ -212,6 +216,7 @@ function createTables(ymVal) {
       empArray: _selectedMembers,
       groupSel: groupSel,
       getHalfSel: halfSel,
+      getOGP: getOGP
     },
     function (data) {
       var empEntries = $.parseJSON(data);

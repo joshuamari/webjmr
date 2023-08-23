@@ -32,10 +32,16 @@ $firstDay = getFirstday($yearMonth, $cutOff);
 $lastDay = getLastday($yearMonth, $cutOff, $firstDay);
 $dateCompare = "dr.fldDate >= '$firstDay' AND dr.fldDate<'$lastDay'";
 $entriesArray = array();
+$ogp = " AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel'))";
+if (!empty($_POST['getOGP'])) {
+    if (filter_var($_POST['getOGP'], FILTER_VALIDATE_BOOLEAN)) {
+        $ogp = '';
+    }
+}
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel')) GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
