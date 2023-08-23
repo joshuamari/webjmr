@@ -142,6 +142,7 @@ $(document).on("change", "#idGroup", function () {
 $(document).on("change", "#idDRDate", function () {
   //select Date Event
   getEntries();
+  getPlans();
   MHValidation();
   sequenceValidation();
 });
@@ -1411,12 +1412,14 @@ function getOneBUTrainerID() {
 }
 function getPlans() {
   var plans = [];
+  var selDate = $("#idDRDate").val();
   $(`#plannedItems`).empty();
   var defaultBody = `<tr><td colspan="6" class="text-center">No Entries Found</td></tr>`;
   $.post(
     "ajax/get_plans.php",
     {
       getEmployee: empDetails["empNum"],
+      selDate: selDate,
     },
     function (data) {
       plans = $.parseJSON(data);
@@ -1432,15 +1435,15 @@ function fillPlans(planString) {
   var planStringArray = planString;
   var planID = planStringArray["planID"];
   var projName = planStringArray["projName"];
+  var projItem = planStringArray["projItem"];
   var projJob = planStringArray["projJob"];
-  var projEnd = planStringArray["projEnd"];
   var projMH = planStringArray["projMH"];
   var usedHours = planStringArray["usedHours"];
 
   var addString = `<tr class="planEntries" plan-id="${planID}">
     <td>${projName}</td>
+    <td>${projItem}</td>
     <td>${projJob}</td>
-    <td>${projEnd}</td>
     <td>${projMH}</td>
     <td>${usedHours}</td>
 
@@ -1456,6 +1459,7 @@ function getDeets(planID) {
       empID: empDetails["empNum"],
     },
     function (data) {
+      console.log(data)
       deets = $.parseJSON(data);
       deets.map(fillEditPlan);
     }
