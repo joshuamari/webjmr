@@ -1249,24 +1249,24 @@ function getPlans() {
 }
 function fillPlans(planString) {
   var projCount = $("#planningTable tr").length + 1;
-  var planStringArray = planString.split("||");
-  var planID = planStringArray[0];
-  var projGroup = planStringArray[1];
-  var projName = planStringArray[2];
-  var projItem = planStringArray[3];
-  var projJob = planStringArray[4];
-  var projEmp = planStringArray[5];
-  var projStart = planStringArray[6];
-  var projEnd = planStringArray[7];
-  var projMH = planStringArray[8];
-  var usedHours = planStringArray[9];
-  var projStatus = planStringArray[10];
+  var planStringArray = planString;
+  var planID = planStringArray['planID'];
+  var projGroup = planStringArray['projGroup'];
+  var projName = planStringArray['projName'];
+  var projItem = planStringArray['projItem'];
+  var projJob = planStringArray['projJob'];
+  var projEmp = planStringArray['projEmpName'];
+  var projStart = planStringArray['projStart'];
+  var projEnd = planStringArray['projEnd'];
+  var projMH = planStringArray['projMH'];
+  var usedHours = planStringArray['usedHours'];
+  var projStatus = planStringArray['projStatus'];
   var statusBadge = `<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
   var buttons = `
     <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button>
     <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" data-bs-target="#deletePlanningEntry"><i class='bx bx-trash-alt w-100 text-white' ></i></button>
     `;
-  if (projStatus.length > 0) {
+  if (projStatus) {
     statusBadge = `<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
     buttons = `
         <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" disabled><i class='bx bx-edit-alt w-100 text-white' disabled></i></button>
