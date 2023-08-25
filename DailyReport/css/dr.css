@@ -465,12 +465,12 @@ footer {
   transition: left 0.3s;
 }
 .left .left-cont .checkbox:checked {
-  background-color: var(--lightblue-color);
+  background-color: var(--main-blue);
 }
 .left .left-cont .checkbox:checked::after {
   left: 75%;
   content: "\2713";
-  background-color: var(--secondary-blue);
+  color: #11101d;
 }
 .left .left-cont .btn-add {
   /* background: var(--main-blue); */

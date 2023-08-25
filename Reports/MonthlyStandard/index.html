@@ -58,7 +58,7 @@
       </div>
       <div class="content">
         <div class="lower position-relative d-flex flex-md-row flex-column">
-          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 xPrint">
+          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
             <div class="form-floating col-12 mb-2">
               <select class="form-select" id="buSel" aria-label="Select BU">
                 <option value="" selected hidden>Select Group</option>
@@ -80,9 +80,27 @@
               </select>
               <label for="CO" class="">Select Cut-off</label>
             </div>
+            <div class="col-12 mb-4">
+              <div class="form-check form-switch p-0 d-flex">
+                <input
+                  type="checkbox"
+                  role="switch"
+                  class="checkbox"
+                  name="checkbox"
+                />
+                <div class="d-flex align-items-center">
+                  <p class="m-0 ps-3">
+                    Exclude OGP<i
+                      class="m-0 bx bx-info-circle ps-1"
+                      title="Exclude Other Group's Project"
+                    ></i>
+                  </p>
+                </div>
+              </div>
+            </div>
 
             <div class="position-relative">
-              <h2 class="">Members</h2>
+              <h4 class="">Members</h4>
               <div id="members-list"></div>
               <button id="selAll" class="btn btn-primary w-100 mt-4">
                 Select All
@@ -93,7 +111,10 @@
             class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
           >
             <div id="upperT" class="position-relative mt-2">
-              <table class="table position-relative ayos bg-white table-hover" id="mainTable">
+              <table
+                class="table position-relative ayos bg-white table-hover"
+                id="mainTable"
+              >
                 <thead>
                   <tr id="mainThead" class="sticky-top bg-body"></tr>
                 </thead>

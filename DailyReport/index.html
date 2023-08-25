@@ -157,7 +157,7 @@
             </div>
             <div class="row mb-3 position-relative">
               <label for="eDatePlan" class="col-4 col-form-label"
-                >Deadline</label
+                >End Date</label
               >
               <div class="col-8">
                 <input
@@ -323,7 +323,7 @@
           </ul>
         </li>
 
-        <li class="d-none">
+        <li class="">
           <div class="iocn-link">
             <a class="row-cols-12" href="../Planning/">
               <i class="bx bx-book-bookmark"></i>
@@ -384,7 +384,7 @@
         </div>
       </div>
       <div class="home-content position-relative p-0 m-0 row" id="home-content">
-        <div class="position-relative cont p-2 m-0 ">
+        <div class="position-relative cont p-2 m-0">
           <div class="maindiv position-relative px-0 py-2 m-0 row">
             <div class="page-title col-12 px-3 pb-3 m-0">
               <h2 class="title ps-2 m-0">Daily Report</h2>
@@ -893,7 +893,7 @@
                   </div>
 
                   <div
-                    class="d-none planned col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 mt-4"
+                    class="planned col-12 p-0 overflow-auto rounded-2 bg-body px-2 pb-2 mt-4"
                     style="
                       height: 315px;
                       max-height: 315px;
@@ -901,7 +901,7 @@
                     "
                   >
                     <div class="header py-3 px-2">
-                      <h3>My Planned Tasks</h3>
+                      <h3>My Planned Tasks Today</h3>
                       <small
                         ><i class="bx bx-info-circle"></i>Please click each row
                         to see more details about the item.</small
@@ -912,11 +912,10 @@
                         <tr>
                           <th>Project</th>
 
+                          <th>Item of Works</th>
                           <th>JRD</th>
-                          <th>Deadline</th>
                           <th>Planned</th>
                           <th>Actual</th>
-                          <th>Finished Date</th>
                         </tr>
                       </thead>
                       <tbody id="plannedItems"></tbody>
