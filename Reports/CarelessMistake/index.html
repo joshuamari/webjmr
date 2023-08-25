@@ -4,7 +4,12 @@
     <title>Careless Mistakes Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/careless.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
@@ -18,7 +23,7 @@
         "ajax/get_version.php",
         {
           busterCall: busterCall,
-          titleName: "MH Report",
+          titleName: "CM Report",
         },
         function (data) {
           $("head").html(data);
@@ -63,57 +68,510 @@
             <label for="busSel">Select BU</label>
           </div>
           <div class="form-floating col-12 mb-2">
-            <input type="date" id="startSel" class="form-control" />
-            <label for="startSel">Select Start Date</label>
-          </div>
-          <div class="form-floating col-12 mb-2">
-            <input type="date" id="endSel" class="form-control" />
-            <label for="endSel">Select End Date</label>
-          </div>
-          <div class="form-floating col-12 mb-4">
-            <select
-              class="form-select"
-              id="projSel"
-              aria-label="Select Project"
-            >
-              <option value="0">ALL</option>
-              <option value="1">Project1</option>
-              <!-- <option value="2">Second Half</option> -->
-            </select>
-            <label for="projSel" class="">Select Project</label>
+            <input type="month" id="startSel" class="form-control" />
+            <label for="startSel">Select Month</label>
           </div>
 
-          <div class="position-relative">
-            <h4 class="">Members</h4>
-            <div class="col-12">
-              <div class="form-check form-switch p-0 d-flex">
-                <input
-                  type="checkbox"
-                  role="switch"
-                  class="checkbox"
-                  name="checkbox"
-                />
-                <div class="d-flex align-items-center">
-                  <p class="m-0 ps-3">
-                    Orig group only
-                    <!-- <i
+          <div class="col-12">
+            <div class="form-check form-switch p-0 d-flex">
+              <input
+                type="checkbox"
+                role="switch"
+                class="checkbox"
+                name="checkbox"
+              />
+              <div class="d-flex align-items-center">
+                <p class="m-0 ps-3">
+                  Orig group only
+                  <!-- <i
                       class="m-0 bx bx-info-circle ps-1"
                       title="Exclude Other Group's Project"
                     ></i> -->
-                  </p>
-                </div>
+                </p>
               </div>
             </div>
-            <div id="members-list"></div>
-            <button id="selAll" class="btn btn-primary w-100 mt-4">
-              Select All
-            </button>
           </div>
         </div>
 
-        <div class="lower">
-          <!-- <table data-cols-width="10,10,10" id="mainTable" class="table table-hover ayos"> -->
-          <table id="mainTable" class="table table-hover ayos"></table>
+        <div class="tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
+          <div class="mainTable overflow-auto">
+            <table id="" class="table table-hover w-100">
+              <thead class="sticky-top">
+                <tr>
+                  <th rowspan="2">BU</th>
+                  <th rowspan="2">Total Hours</th>
+                  <th colspan="2">New</th>
+                  <th colspan="2">Kmod</th>
+                  <th colspan="2">Mkdt</th>
+                  <th colspan="2">Mkhi</th>
+                  <th colspan="2">Chk</th>
+                  <th colspan="2">Cal</th>
+                  <th colspan="2">Doc</th>
+                  <th colspan="2">Other</th>
+                </tr>
+                <tr>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                  <th>Hours</th>
+                  <th>%</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="bu" id="bu1">
+                  <td>BU1</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu1 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu1 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu2">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu2 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu2 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu3">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu3 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu3 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu4">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu4 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu4 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu5">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu5 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu5 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu6">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu6 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu6 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="bu" id="bu7">
+                  <td>BU2</td>
+                  <td>80</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td>20</td>
+                  <td>25%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu7 show">
+                  <td>Employee A</td>
+                  <td>40</td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="collapse bu7 show">
+                  <td>Employee B</td>
+                  <td>40</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr class="total">
+                  <td>TOTAL</td>
+                  <td>160</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td>20</td>
+                  <td>50%</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

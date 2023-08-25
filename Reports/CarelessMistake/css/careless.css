@@ -27,29 +27,6 @@ th {
   vertical-align: middle;
   white-space: nowrap;
 }
-.table.ayos thead tr th {
-  background-color: #fff !important;
-}
-.table.ayos thead tr:nth-child(1) th {
-  position: sticky;
-  top: 0;
-}
-.table.ayos thead tr:nth-child(2) th {
-  position: sticky;
-  top: 42px;
-}
-.table.ayos thead tr:nth-child(3) th {
-  position: sticky;
-  top: 84px;
-}
-.table.ayos thead tr:nth-child(4) th {
-  position: sticky;
-  top: 126px;
-}
-.table.ayos {
-  border-collapse: separate !important;
-  border-spacing: 0px;
-}
 
 body {
   background: #fff;
@@ -140,9 +117,9 @@ body {
 .right button:last-child {
   margin-left: 10px;
 }
-.lower {
+.tablecont {
   overflow: auto;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 120px);
 }
 
 /* checkbox */
@@ -185,6 +162,27 @@ body {
   content: "\2713";
   background-color: #fff;
   color: var(--text-color);
+}
+
+/* table layout */
+table tbody .bu {
+  background-color: var(--yellow-color) !important;
+}
+table tbody .bu td {
+  font-weight: 600;
+}
+td {
+  background-color: transparent !important;
+}
+table tbody .total {
+  background-color: rgb(138, 213, 115);
+}
+table tbody .total td {
+  font-weight: 600;
+}
+.mainTable {
+  width: 100%;
+  height: calc(100vh - 200px);
 }
 
 /*loaderrrrr*/
@@ -287,12 +285,6 @@ body {
 }
 
 @media screen and (max-width: 770px) {
-  .lower {
-    overflow: auto;
-    height: calc(100% - 156px);
-  }
-
-
   .right button {
     width: 100%;
     margin: 10px;
@@ -300,8 +292,4 @@ body {
 }
 
 @media screen and (max-width: 575px) {
-  .lower {
-    overflow: auto;
-    height: calc(100vh - 408px);
-  }
 }
