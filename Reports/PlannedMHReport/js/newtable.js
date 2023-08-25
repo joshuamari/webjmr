@@ -37,11 +37,6 @@ Date.prototype.yyyymmdd = function () {
   ].join('-');
 };
 
-function roundToDecimalPlaces(number, decimalPlaces) {
-  const factor = 10 ** decimalPlaces;
-  return Math.round(number * factor) / factor;
-};
-
 function makeArrayUnique(arr, key) {
   const uniqueValues = new Set();
   return arr.filter(item => {
@@ -325,7 +320,7 @@ function totalLeft() {
   });
 
   $.each($('.pa-percent'), function (index, val) {
-    $(val).text(roundToDecimalPlaces(eval(`${$($(val).next()).text()}/${$($($($(val).parent()).next()).children('.w-tot')).text()}*100`), 2) + "%");
+    $(val).text(Number(eval(`${$($(val).next()).text()}/${$($($($(val).parent()).next()).children('.w-tot')).text()}*100`)).toFixed(2) + "%");
   })
 }
 
