@@ -67,19 +67,18 @@
     <label for="weekSel">Highlight Week:</label>
     <input type="week" name="weekSel" id="weekSel">
     <button id="clearWeek">Clear Week</button>
-    <table id="weekly-report" class="table" style>
+    <table id="weekly-report" class="table" style="display: none;">
       <thead>
         <tr id="weekly-headrow">
-          <th rowspan="2">Employee Name</th>
-          <th>From</th>
-          <th>To</th>
-          <th rowspan="2" id="pa-percent" title="Planning / Actual Percentage">P/A %</th>
-        </tr>
-        <tr>
-          <th id="week-from">#</th>
-          <th id="week-to">#</th>
+          <th>Employee Name</th>
+          <th></th>
+          <th title="Planning / Actual Percentage">P/A %</th>
+          <th id="w-total">TOTAL</th>
         </tr>
       </thead>
+      <tbody id="weekly-body">
+
+      </tbody>
     </table>
   </div>
 </body>
