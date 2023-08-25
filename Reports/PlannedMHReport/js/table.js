@@ -48,7 +48,7 @@ function queryfunctions() {
       );
     }
   );
-  
+
 }
 
 function getWeekNo(currentDate) {
@@ -100,16 +100,18 @@ Date.prototype.yyyymmdd = function () {
 function createTable(weekVal) { //week
   $($('#status').nextAll()).remove()
   $($('.oStat').nextAll()).remove()
+  $('.job-row').after(`<tr class='actual-row'></tr>`)
   getDates(weekVal).forEach(element => {
-    $('#headrow').append(`<th>${element.yyyymmdd()}</th>`)
+    $('#headrow').append(`<th>${element.yyyymmdd()}</th>`);
     $('.job-row').append(`<td day-val="${element.getDate()}"></td>`)
+    $('.actual-row').append(`<td day-val="${element.getDate()}"></td>`)
   });
   $('#headrow').append(`
   <th>TOTAL(Week ${$('#weekSel').val()})</th>
-  <th>Remaining</th>`);
-  $('.job-row').append(`
+  <!-- <th>Remaining</th> -->`);
+  $('.job-row,.actual-row').append(`
   <td class='jrTot'></td>
-  <td class='rem'></td>
+  <! --<td class='rem'></td> -->
   `);
 }
 
@@ -169,19 +171,17 @@ const uVal = (x) => {
 
 function addPlanning(entry) {
   $(`[pj-id="${entry.pNum}"]`).after(`<tr class="job-row" emp-num="${entry.empNum}" job-id="${entry.jobNum}">
-  <td>${uVal(entry.jrd)}</td>
-  <td>${uVal(entry.iow)}</td>
-  <td>${uVal(entry.doc)}</td>
-  <td>${uVal(entry.kic)}</td>
-  <td>${uVal(entry.empName)}</td>
-  <td>${uVal(entry.startDate)}</td>
-  <td>${uVal(entry.endDate)}</td>
-  <td>${uVal(entry.endDate)}</td>
-  <td>${uVal(entry.startDate)}</td>
-  <td class="asm">${uVal(entry.plnHours)}</td>
-  <td class="mhu">${uVal(entry.plnUsed)}</td>
-  <td>${uVal(entry.fldStatus)}</td>
-  <td class="oStat">${uVal(entry.fldStatus)}</td>
+  <td rowspan="2">${uVal(entry.jrd)}</td>
+  <td rowspan="2">${uVal(entry.iow)}</td>
+  <td rowspan="2">${uVal(entry.doc)}</td>
+  <td rowspan="2">${uVal(entry.kic)}</td>
+  <td rowspan="2">${uVal(entry.empName)}</td>
+  <td rowspan="2">${uVal(entry.startDate)}</td>
+  <td rowspan="2">${uVal(entry.endDate)}</td>
+  <td rowspan="2">${uVal(entry.startDate)}</td>
+  <td rowspan="2" class="mhu">${uVal(entry.plnUsed)}</td>
+  <td rowspan="2">${uVal(entry.fldStatus)}</td>
+  <td rowspan="2" class="oStat">${uVal(entry.fldStatus)}</td>
   </tr>`)
 }
 
@@ -189,31 +189,37 @@ function addDr(dArr) { //pang add ng daily report
   dArr.forEach(element => {
     console.log(element.jobNum, element.empNum, (new Date(element.entryDate).getDate()))
     // console.log($(`[job-id='${element.jobNum}'][emp-num='${element.empNum}']`).children(`[day-val='${(new Date(element.entryDate).getDate())}']`))
-    $($(`[job-id='${element.jobNum}'][emp-num='${element.empNum}']`).children(`[day-val='${(new Date(element.entryDate).getDate())}']`)).text(`${element.hours}`)
+    $($($(`[job-id='${element.jobNum}'][emp-num='${element.empNum}']`).next()).children(`[day-val='${(new Date(element.entryDate).getDate())}']`)).text(`${element.hours}`)
   });
-  
+
   totals();
 }
 
-function totals(){
+function totals() {
 
   //weekly total
   var jrtots = $('.jrTot');
-  $.each(jrtots, function (indexInArray, valueOfElement) { 
-     var getPrev = $(valueOfElement).prevUntil('.oStat');
-     var sum = 0;
-     $.each(getPrev, function (indexInArray, valueOfElement) { 
-       sum += parseFloat($(valueOfElement).text() == "" ? 0 : $(valueOfElement).text())
-     });
-     $(valueOfElement).text(sum);
+  $.each(jrtots, function (indexInArray, valueOfElement) {
+    var getPrev = $(valueOfElement).prevUntil('.oStat');
+    var sum = 0;
+    $.each(getPrev, function (indexInArray, valueOfElement) {
+      sum += parseFloat($(valueOfElement).text() == "" ? 0 : $(valueOfElement).text())
+    });
+    $(valueOfElement).text(sum);
   });
 
   //remaining
-  var rems = $('.rem');
-  $.each(rems, function (indexInArray, valueOfElement) { 
-    $(valueOfElement).text(parseFloat($($(valueOfElement).prevAll('.asm')).text()) - parseFloat($($(valueOfElement).prevAll('.mhu')).text()))
-    if(parseFloat($(valueOfElement).text()) < 0){
-      $(valueOfElement).addClass('bg-danger')
-    }
-  });
+  // var rems = $('.rem');
+  // $.each(rems, function (indexInArray, valueOfElement) {
+  //   $(valueOfElement).text(parseFloat($($(valueOfElement).prevAll('.asm')).text()) - parseFloat($($(valueOfElement).prevAll('.mhu')).text()))
+  //   if (parseFloat($(valueOfElement).text()) < 0) {
+  //     $(valueOfElement).addClass('bg-danger')
+  //   }
+  // });
+}
+
+//extract date range from planning query
+
+function isDateInRange(dateToCheck, dateRange) {
+  return dateToCheck >= dateRange.startDate && dateToCheck <= dateRange.endDate;
 }

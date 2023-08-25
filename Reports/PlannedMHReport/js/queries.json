@@ -1,32 +1,392 @@
 [
     {
-        "empNum":"464",
-        "entryDate":"2023-08-14",
-        "hours":"8",
-        "jobNum": "2708"
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-3",
+        "hours": "8"
     },
     {
-        "empNum":"464",
-        "entryDate":"2023-08-15",
-        "hours":"8",
-        "jobNum": "2708"
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-4",
+        "hours": "8"
     },
     {
-        "empNum":"464",
-        "entryDate":"2023-08-16",
-        "hours":"8",
-        "jobNum": "2708"
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-12",
+        "hours": "8"
     },
     {
-        "empNum":"464",
-        "entryDate":"2023-08-17",
-        "hours":"8",
-        "jobNum": "2708"
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-13",
+        "hours": "8"
     },
     {
-        "empNum":"464",
-        "entryDate":"2023-08-18",
-        "hours":"8",
-        "jobNum": "2708"
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-14",
+        "hours": "4"
+    },
+    {
+        "jobNum": "420",
+        "empNum": "464",
+        "entryDate": "2023-08-14",
+        "hours": "4"
+    },
+    {
+        "jobNum": "26",
+        "empNum": "464",
+        "entryDate": "2023-08-17",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-18",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-19",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-20",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-24",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-25",
+        "hours": "4"
+    },
+    {
+        "jobNum": "420",
+        "empNum": "464",
+        "entryDate": "2023-08-25",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-26",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-27",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "464",
+        "entryDate": "2023-08-28",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-3",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-4",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-12",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-13",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-14",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-17",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-18",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-19",
+        "hours": "4"
+    },
+    {
+        "jobNum": "99",
+        "empNum": "487",
+        "entryDate": "2023-08-18",
+        "hours": "4"
+    },
+    {
+        "jobNum": "99",
+        "empNum": "487",
+        "entryDate": "2023-08-19",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-20",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-24",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-25",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-26",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-27",
+        "hours": "8"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "487",
+        "entryDate": "2023-08-28",
+        "hours": "8"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-11",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-12",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-13",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-14",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-18",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-19",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-20",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-24",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-25",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-26",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-27",
+        "hours": "4"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-28",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-3",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-4",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-11",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-12",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-13",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-14",
+        "hours": "4"
+    },
+    {
+        "jobNum": "25",
+        "empNum": "465",
+        "entryDate": "2023-08-18",
+        "hours": "4"
+    },
+    {
+        "jobNum": "31",
+        "empNum": "487",
+        "entryDate": "2023-08-18",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-19",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-20",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-24",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-25",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-26",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-27",
+        "hours": "4"
+    },
+    {
+        "jobNum": "10",
+        "empNum": "465",
+        "entryDate": "2023-08-28",
+        "hours": "4"
+    },
+    {
+        "jobNum": "420",
+        "empNum": "464",
+        "entryDate": "2023-08-13",
+        "hours": "2"
+    },
+    {
+        "jobNum": "420",
+        "empNum": "464",
+        "entryDate": "2023-08-14",
+        "hours": "2"
+    },
+    {
+        "jobNum": "420",
+        "empNum": "464",
+        "entryDate": "2023-08-26",
+        "hours": "2"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-13",
+        "hours": "2"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-15",
+        "hours": "8"
+    },
+    {
+        "jobNum": "69",
+        "empNum": "465",
+        "entryDate": "2023-08-13",
+        "hours": "2"
     }
 ]

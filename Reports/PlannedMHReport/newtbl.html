@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Planned MH Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/msreport.css" />
+  <link rel="stylesheet" href="css/boxicons.css" />
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.inview.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.table2excel.js"></script>
+  <script>
+    var busterCall = [
+      "js/newtable.js",
+      "css/bootstrap.min.css",
+    ];
+    $.post(
+      "ajax/get_version.php",
+      {
+        busterCall: busterCall,
+        titleName: "Planned MH Report",
+      },
+      function (data) {
+        $("head").html(data);
+      }
+    );
+  </script>
+</head>
+
+<body>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid;
+    }
+  </style>
+  <h1>Planned MH Report</h1>
+  <label for="monthSel">Select Month:</label>
+  <input type="month" name="monthSel" id="monthSel">
+
+  <div class="container" style="width:100%;overflow-x:auto">
+    <table id="main-table" class="table">
+      <thead id="main-thead">
+        <tr id="headrow">
+          <th>Job Request Description</th>
+          <th>Item of Works (Dwg. No.)</th>
+          <th>Drawing / Document Name</th>
+          <th>KHI in Charge</th>
+          <th>Name</th>
+          <th>KHI Request Date</th>
+          <th>KDT Deadline</th>
+          <th>Start Date</th>
+          <th>Manhour Used</th>
+          <th id="status">Status</th>
+        </tr>
+      </thead>
+      <tbody id="main-tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="weekly-div" class="container" style="width:100%;overflow-x:auto">
+    <label for="weekSel">Highlight Week:</label>
+    <input type="week" name="weekSel" id="weekSel">
+    <button id="clearWeek">Clear Week</button>
+    <table id="weekly-report" class="table" style>
+      <thead>
+        <tr id="weekly-headrow">
+          <th rowspan="2">Employee Name</th>
+          <th>From</th>
+          <th>To</th>
+          <th rowspan="2" id="pa-percent" title="Planning / Actual Percentage">P/A %</th>
+        </tr>
+        <tr>
+          <th id="week-from">#</th>
+          <th id="week-to">#</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+</body>
+
+</html>
