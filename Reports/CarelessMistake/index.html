@@ -68,8 +68,8 @@
             <label for="busSel">Select BU</label>
           </div>
           <div class="form-floating col-12 mb-2">
-            <input type="month" id="startSel" class="form-control" />
-            <label for="startSel">Select Month</label>
+            <input type="month" id="monthSel" class="form-control" />
+            <label for="monthSel">Select Month</label>
           </div>
 
           <div class="col-12">
@@ -95,7 +95,7 @@
 
         <div class="tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
           <div class="mainTable overflow-auto">
-            <table id="" class="table table-hover w-100">
+            <table id="cmrTable" class="table table-hover w-100">
               <thead class="sticky-top">
                 <tr>
                   <th rowspan="2">BU</th>
@@ -128,8 +128,8 @@
                   <th>%</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr class="bu" id="bu1">
+              <tbody id="cmrBody">
+                 <!-- <tr class="bu" id="bu1">
                   <td>BU1</td>
                   <td>80</td>
                   <td>20</td>
@@ -188,8 +188,8 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                </tr>
-                <tr class="bu" id="bu2">
+                </tr> -->
+                <!--<tr class="bu" id="bu2">
                   <td>BU2</td>
                   <td>80</td>
                   <td>20</td>
@@ -548,26 +548,26 @@
                   <td></td>
                   <td></td>
                   <td></td>
-                </tr>
-                <tr class="total">
+                </tr> -->
+                <tr id="totalRow" class="total ent">
                   <td>TOTAL</td>
-                  <td>160</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td class="towtal"></td>
+                  <td class="hrs" tow="New"></td>
+                  <td class="prc" tow="New"></td>
+                  <td class="hrs" tow="Kmod"></td>
+                  <td class="prc" tow="Kmod"></td>
+                  <td class="hrs" tow="Mkdt"></td>
+                  <td class="prc" tow="Mkdt"></td>
+                  <td class="hrs" tow="Mkhi"></td>
+                  <td class="prc" tow="Mkhi"></td>
+                  <td class="hrs" tow="Chk"></td>
+                  <td class="prc" tow="Chk"></td>
+                  <td class="hrs" tow="Cal"></td>
+                  <td class="prc" tow="Cal"></td>
+                  <td class="hrs" tow="Doc"></td>
+                  <td class="prc" tow="Doc"></td>
+                  <td class="hrs" tow="Other"></td>
+                  <td class="prc" tow="Other"></td>
                 </tr>
               </tbody>
             </table>
