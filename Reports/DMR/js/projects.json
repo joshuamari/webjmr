@@ -1,0 +1,50 @@
+[
+    {
+      "pNum": "69420",
+      "pName": "Project 69420",
+      "empNum": "464",
+      "empName": "Juswa",
+      "jobNum": "10",
+      "jobName": "Job-bowl",
+      "itemName": "item of p1",
+      "dName": "droo",
+      "kic": "edmon-san",
+      "khiRequest": "2023-08-01",
+      "kdtDeadline": "2023-08-30",
+      "startDate": "2023-08-07",
+      "mUsed": "70",
+      "pStatus": "ongoing"
+    },
+    {
+      "pNum": "69420",
+      "pName": "Project 69420",
+      "empNum": "465",
+      "empName": "Fel",
+      "jobNum": "10",
+      "jobName": "Job-bowl 2",
+      "itemName": "item of p1",
+      "dName": "droo",
+      "kic": "edmon-san",
+      "khiRequest": "2023-08-01",
+      "kdtDeadline": "2023-08-30",
+      "startDate": "2023-08-07",
+      "mUsed": "60",
+      "pStatus": "ongoing"
+    },
+    {
+      "pNum": "66666",
+      "pName": "Project 66666",
+      "empNum": "465",
+      "empName": "Fel",
+      "jobNum": "69",
+      "jobName": "Job for p2",
+      "itemName": "item of p2",
+      "dName": "idk",
+      "kic": "jom-san",
+      "khiRequest": "2023-08-01",
+      "kdtDeadline": "2023-08-30",
+      "startDate": "2023-08-07",
+      "mUsed": "80",
+      "pStatus": "ongoing"
+    }
+  ]
