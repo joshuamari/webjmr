@@ -1,7 +1,7 @@
 <?php
 #region Require Database Connections
+require_once '../Includes/dbconnectkdtph.php';
 require_once '../Includes/dbconnectwebjmr.php';
-require_once '../Includes/globalFunctions.php';
 #endregion
 
 #region set timezone
@@ -9,62 +9,85 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$groupSel = NULL;
+$groupSel = 'ENV';
+$groupStatement = "";
 if (!empty($_POST['groupSel'])) {
     $groupSel = $_POST['groupSel'];
 }
-$yearMonth = date("Y-04");
+$yearMonth = date("Y-m");
 if (!empty($_POST['monthSel'])) {
     $yearMonth = $_POST['monthSel'];
 }
-$empStatement = "";
-$employeeArray = array();
-if (!empty($_POST['empArray'])) {
-    $employeeArray = $_POST['empArray'];
-    $implodeString = implode("','", $employeeArray);
-    $empStatement = "AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
+$firstDay = '2023-07-31';
+if (!empty($_POST['firstDay'])) {
+    $firstDay = $_POST['firstDay'];
 }
-$cutOff = "1";
-if (isset($_REQUEST['getHalfSel'])) {
-    $cutOff = $_REQUEST['getHalfSel'];
+$lastDay = '2023-09-03';
+if (!empty($_POST['lastDay'])) {
+    $lastDay = $_POST['lastDay'];
 }
-$firstDay = getFirstday($yearMonth, $cutOff);
-$lastDay = getLastday($yearMonth, $cutOff, $firstDay);
-$dateCompare = "dr.fldDate >= '$firstDay' AND dr.fldDate<'$lastDay'";
+$projSel = NULL;
+if (!empty($_POST['projSel'])) {
+    $projSel = $_POST['projSel'];
+    $projStatement = "AND dr.fldProject ='$projSel'";
+}
+$empSel = array(460, 461);
+if (!empty($_POST['empSel'])) {
+    $empSel = $_POST['empSel'];
+}
 $entriesArray = array();
-$ogp = " AND (pt.fldGroup = '$groupSel' OR (pt.fldGroup IS NULL AND dr.fldGroup = '$groupSel'))";
-if (!empty($_POST['getOGP'])) {
-    if (filter_var($_POST['getOGP'], FILTER_VALIDATE_BOOLEAN)) {
-        $ogp = '';
-    }
-}
+
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
+$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL AND dr.`fldEmployeeNum` IN (461,460) AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
-$entriesStmt->execute();
-if ($entriesStmt->rowCount() > 0) {
-    $entriesArr = $entriesStmt->fetchAll();
-    foreach ($entriesArr as $entries) {
-        $output = array();
-        $output += ["pIndex" => $entries['projID']];
-        $output += ["pName" => $entries['projName']];
-        $output += ["empNum" => $entries['eNum']];
-        $rawDate = $entries['eDate'];
-        $entryDay = date("d", strtotime($rawDate));
-        $output += ["entryDate" => $entryDay];
-        $rawMinutes = $entries['projMinute'];
-        $entryHours = $rawMinutes / 60;
-        $output += ["hours" => $entryHours];
-        $output += ["OT" => ($entries['eMHT'] == 1) ? TRUE : FALSE];
-        $output += ["iIndex" => $entries['itemID']];
-        array_push($entriesArray, $output);
-    }
+$entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
+$entriesArr = $entriesStmt->fetchAll();
+foreach ($entriesArr as $ent) {
+    $projID = $ent['projID'];
+    $projName = $ent['fldProject'];
+    $itemName = $ent['fldItem'];
+    $jobID = $ent['jobID'];
+    $jobName = $ent['fldJob'];
+    $enum = $ent['fldEmployeeNum'];
+    $ename = getName($enum);
+    $entryDate = $ent['fldDate'];
+    $dur = $ent['fldDuration'] / 60;
+    $mhUsed = $ent['mhused'] / 60;
+    $planned = $ent['planned'] == NULL ? "0" : $ent['planned'];
+    $drawName = $ent['fldDrawingName'];
+    $khic = $ent['fldKHIC'];
+    $khiReq = $ent['fldKHIDate'];
+    $khiDead = $ent['fldKHIDeadline'];
+    $kdtDead = $ent['fldKDTDeadline'];
+    $entriesArray[$projName]['pNum'] = $projID;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['jobNum'] = $jobID;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['dName'] = $drawName;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['kic'] = $khic;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['khiRequest'] = $khiReq;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['startDate'] = $khiReq;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['kdtDeadline'] = $kdtDead;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['pStatus'] = "ongoing";
+
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Actual'] = $dur;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Planned'] = $planned;
 }
 #endregion
 
 #region function
-
+function getName($empNum)
+{
+    global $connkdt;
+    $eName = '';
+    $nameQ = "SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum = :empNum";
+    $nameStmt = $connkdt->prepare($nameQ);
+    $nameStmt->execute([":empNum" => $empNum]);
+    $eName = $nameStmt->fetchColumn();
+    return $eName;
+}
 #endregion
-echo json_encode($entriesArray);
+echo "<pre>";
+echo json_encode($entriesArray, JSON_PRETTY_PRINT);
+echo "</pre>";

@@ -1,0 +1,34 @@
+{
+    "Project 1" : {
+        "projectID" : 1,
+        "Items" : {
+            "Item 1" :{
+                "Job 1" : {
+                    "Members" : {
+                        "464" : {
+                            "Dates" : {
+                                "Date 1" : {
+                                    "Plan" : 8,
+                                    "Actual" : 7
+                                },
+                                "Date 2" : {
+                                    "Plan" : 8,
+                                    "Actual" : 8
+                                }
+                            },
+                            "empname" : "Joshua",
+                            "mhused" : 70
+                        }
+                    },
+                    "jobID" : 1,
+                    "dName" : "draw name",
+                    "kic" : "edmon san",
+                    "khireq" : "2023-01-01",
+                    "khidead" : "2023-02-02",
+                    "stardate" : "2023-01-01"
+
+                }
+            }
+        }
+    }
+}
