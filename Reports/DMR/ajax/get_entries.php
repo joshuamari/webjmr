@@ -55,7 +55,7 @@ foreach ($entriesArr as $ent) {
     $entryDate = $ent['fldDate'];
     $dur = $ent['fldDuration'] / 60;
     $mhUsed = $ent['mhused'] / 60;
-    $planned = $ent['planned'] == NULL ? "0" : $ent['planned'];
+    $planned = $ent['planned'] == NULL ? "0" : $ent['planned'] / 60;
     $drawName = $ent['fldDrawingName'];
     $khic = $ent['fldKHIC'];
     $khiReq = $ent['fldKHIDate'];
