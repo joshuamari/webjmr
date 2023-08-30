@@ -46,9 +46,41 @@ $(document).on("change", "#buSel", function () {
 $(document).on("change", ".checkbox", function () {
   getEntries();
 });
+$(document).on("click", "#btnExport", function () {
+  $("#exportModal").modal("show");
+});
+$(document).on("click", "#totAll", function () {
+  $('.prc:contains("%")').each(function () {
+    $(this).html($(this).html().split("%").join(""));
+  });
+  exportTable();
+  $(".prc").append("%");
+  $("#exportModal").modal("hide");
+});
+$(document).on("click", "#totOnly", function () {
+  $(".collapse").attr("data-exclude", "true");
+  $('.prc:contains("%")').each(function () {
+    $(this).html($(this).html().split("%").join(""));
+  });
+  exportTable();
+  $(".prc").append("%");
+
+  $(".collapse").removeAttr("data-exclude");
+  $("#exportModal").modal("hide");
+});
 //#endregion
 
 //#region FUNCTIONS
+function exportTable() {
+  TableToExcel.convert(document.getElementById("cmrTable"), {
+    name: `Careless Mistakes Report_${$("#buSel").val()}_${$(
+      "#monthSel"
+    ).val()}.xlsx`,
+    sheet: {
+      name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
+    },
+  });
+}
 function checkLogin() {
   $.ajaxSetup({ async: false });
   $.ajax({
@@ -140,19 +172,20 @@ function getEntries() {
           et = "et";
         }
         buRowString += `
-        <tr class="bu ent ${et}" id="${groupName}" data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-fill-color="e5eaff">
-        <td>${groupName}</td>
-        <td class ="towtal" data-t="n"></td>
+        <tr class="bu ent ${et}" id="${groupName}" >
+        <td data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff">${groupName}</td>
+        <td class ="towtal" data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n"></td>
         `;
         $.each(_tows, function (_, towName) {
-          buRowString += `<td class='hrs' tow='${towName}'></td><td class='prc' tow='${towName}'></td>`;
+          buRowString += `<td class='hrs' tow='${towName}'
+          data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n"></td><td class='prc' tow='${towName}' data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n" data-num-fmt=".0%"></td>`;
         });
         buRowString += `</tr>`;
         $.each(group, function (columnName, column) {
           buRowString += `
           <tr class="collapse ${groupName} ent ${et}">
-          <td>${columnName}</td>
-          <td class ="towtal"></td>
+          <td data-f-name="Arial" data-f-sz="9" data-a-h="left" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" >${columnName}</td>
+          <td class ="towtal" data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000"  data-t="n" ></td>
           `;
           var propertiesObject = [];
           $.each(column, function (propertyName, propertyValue) {
@@ -163,7 +196,9 @@ function getEntries() {
             if (towName in propertiesObject) {
               towval = propertiesObject[towName];
             }
-            buRowString += `<td class='hrs' tow='${towName}'>${towval}</td><td class='prc' tow='${towName}'>0</td>`;
+            buRowString += `<td class='hrs' tow='${towName}'
+            data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000"  data-t="n">${towval}</td><td class='prc' tow='${towName}'
+            data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n" data-num-fmt="#%">0</td>`;
           });
           buRowString += `</tr>`;
         });

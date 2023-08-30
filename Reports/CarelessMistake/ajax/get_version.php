@@ -9,7 +9,6 @@ $headString="<title>$titleName</title>
   <link rel='stylesheet' href='css/boxicons.css' />
   <script src='js/jquery.js'></script>
   <script src='js/bootstrap.min.js'></script>
-  <script src='js/jquery.table2excel.js'></script>
   <script type='text/javascript' src='js/tableToExcel.js'></script>
   ";
 $addString = "";

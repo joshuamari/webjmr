@@ -16,9 +16,13 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.table2excel.js"></script>
+    <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
-      var busterCall = ["js/careless.js", "css/careless.css"];
+      var busterCall = [
+        "js/careless.js",
+        "css/careless.css",
+        "css/bootstrap.min.css",
+      ];
       $.post(
         "ajax/get_version.php",
         {
@@ -31,6 +35,46 @@
       );
     </script>
   </head>
+
+  <!-- #region modal -->
+  <div
+    class="modal fade"
+    id="exportModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Export to Excel
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body pt-4 pb-5">
+          <h5>Which table type you want to export?</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="totAll">
+            Group total with all members
+          </button>
+          <button type="button" class="btn btn-O" id="totOnly">
+            Group total only
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- #endregion modal-->
 
   <body>
     <div class="home-content position-relative">
@@ -67,9 +111,17 @@
             </select>
             <label for="busSel">Select BU</label>
           </div>
-          <div class="form-floating col-12 mb-2">
+          <!-- <div class="form-floating col-12 mb-2">
             <input type="month" id="monthSel" class="form-control" />
             <label for="monthSel">Select Month</label>
+          </div> -->
+          <div class="form-floating col-12 mb-2">
+            <input type="date" id="startSel" class="form-control" />
+            <label for="startSel">Select Start Date</label>
+          </div>
+          <div class="form-floating col-12 mb-2">
+            <input type="date" id="endSel" class="form-control" />
+            <label for="endSel">Select End Date</label>
           </div>
 
           <div class="col-12">
@@ -98,34 +150,330 @@
             <table id="cmrTable" class="table table-hover w-100">
               <thead class="sticky-top">
                 <tr data-fill-color="b6f9a1" class="heady">
-                  <th rowspan="2">BU</th>
-                  <th rowspan="2">Total Hours</th>
-                  <th colspan="2">New</th>
-                  <th colspan="2">Kmod</th>
-                  <th colspan="2">Mkdt</th>
-                  <th colspan="2">Mkhi</th>
-                  <th colspan="2">Chk</th>
-                  <th colspan="2">Cal</th>
-                  <th colspan="2">Doc</th>
-                  <th colspan="2">Other</th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    BU
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Total Hours
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    New
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Kmod
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Mkdt
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Mkhi
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Chk
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Cal
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Doc
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Other
+                  </th>
                 </tr>
-                <tr data-fill-color="b6f9a1" class="heady">
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
-                  <th>Hours</th>
-                  <th>%</th>
+                <tr class="heady">
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
                 </tr>
               </thead>
               <tbody id="cmrBody">
@@ -190,25 +538,238 @@
                   <td></td>
                 </tr> -->
 
-                <tr id="totalRow" class="total ent" data-f-color="FFFFOOOO">
-                  <td>TOTAL</td>
-                  <td class="towtal"></td>
-                  <td class="hrs" tow="New"></td>
-                  <td class="prc" tow="New"></td>
-                  <td class="hrs" tow="Kmod"></td>
-                  <td class="prc" tow="Kmod"></td>
-                  <td class="hrs" tow="Mkdt"></td>
-                  <td class="prc" tow="Mkdt"></td>
-                  <td class="hrs" tow="Mkhi"></td>
-                  <td class="prc" tow="Mkhi"></td>
-                  <td class="hrs" tow="Chk"></td>
-                  <td class="prc" tow="Chk"></td>
-                  <td class="hrs" tow="Cal"></td>
-                  <td class="prc" tow="Cal"></td>
-                  <td class="hrs" tow="Doc"></td>
-                  <td class="prc" tow="Doc"></td>
-                  <td class="hrs" tow="Other"></td>
-                  <td class="prc" tow="Other"></td>
+                <tr id="totalRow" class="total ent">
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000 "
+                    data-f-color="FF0000"
+                  >
+                    TOTAL
+                  </td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="towtal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="New"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="New"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Kmod"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Kmod"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Mkdt"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Mkdt"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Mkhi"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Mkhi"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Chk"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Chk"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Cal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Cal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Doc"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Doc"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Other"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Other"
+                  ></td>
                 </tr>
               </tbody>
             </table>

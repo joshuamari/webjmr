@@ -68,7 +68,22 @@ body {
   --lightblue-color: #476f95;
   --green-color: #7bae37;
 }
+/* modal */
+.modal-header {
+  background-color: var(--main-blue);
+}
+.modal-header h1 {
+  color: #fff;
+}
+.btn-O {
+  background-color: var(--main-blue) !important;
+  color: #fff !important;
+}
+.btn-O:hover {
+  background-color: var(--lightblue-color) !important;
+}
 
+/* home */
 .home-content {
   width: 100%;
 }

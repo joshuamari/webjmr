@@ -95,7 +95,8 @@ $(document).on("click", ".memBtn", function () {
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
-  var allButtonsSelected = $(".memBtn").length === $(".memBtn.btn-primary").length;
+  var allButtonsSelected =
+    $(".memBtn").length === $(".memBtn.btn-primary").length;
   var selAllButton = $("#selAll");
   if (allButtonsSelected) {
     selAllButton.text("Deselect All");
@@ -108,9 +109,9 @@ $(document).on("click", ".memBtn", function () {
   }
   createTables($("#monthSel").val());
 });
-$(document).on('click', '#btnExport', function () {
+$(document).on("click", "#btnExport", function () {
   exportTable();
-})
+});
 $(document).on("click", "#btnPrint", function () {
   $(".xPrint").toggle();
   $(".lower").toggleClass("lower lower_");
@@ -120,10 +121,11 @@ $(document).on("click", "#btnPrint", function () {
 });
 $(document).on("change", "#CO", function () {
   createTables($("#monthSel").val());
-})
-$(document).on("change", ".checkbox", function () { //eto uuncomment tas papalitan id pag may checkbox na
+});
+$(document).on("change", ".checkbox", function () {
+  //eto uuncomment tas papalitan id pag may checkbox na
   createTables($("#monthSel").val());
-})
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -160,9 +162,10 @@ function jmcAccess() {
 }
 function getGroupList() {
   $("#buSel").empty();
-  $.post("ajax/get_group_list.php",
+  $.post(
+    "ajax/get_group_list.php",
     {
-      empNum: _empDetails['empNum'],
+      empNum: _empDetails["empNum"],
     },
     function (data) {
       var grpList = $.parseJSON(data);
@@ -216,7 +219,7 @@ function createTables(ymVal) {
       empArray: _selectedMembers,
       groupSel: groupSel,
       getHalfSel: halfSel,
-      getOGP: getOGP
+      getOGP: getOGP,
     },
     function (data) {
       var empEntries = $.parseJSON(data);
@@ -244,7 +247,9 @@ function createTables(ymVal) {
 function createHeader() {
   var addDates = "";
   for (let x = 1; x <= _maxDays; x++) {
-    addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${x.toString().padStart(2, "0")}</th>`;
+    addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${x
+      .toString()
+      .padStart(2, "0")}</th>`;
   }
   addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">TOTAL</th>`;
   $("#mainThead").html(`
@@ -260,8 +265,8 @@ function createHeader() {
 }
 
 function adjustWidth() {
-  var memh = $('#mainTable th:first-child').outerWidth()
-  var projh = $('#mainTable th:nth-child(2)').outerWidth()
+  var memh = $("#mainTable th:first-child").outerWidth();
+  var projh = $("#mainTable th:nth-child(2)").outerWidth();
   $("#subTable th:first-child").css("min-width", memh);
   $("#subTable th:nth-child(2)").css("min-width", projh);
 }
@@ -327,10 +332,13 @@ function getEmpProjects(empDetails) {
     "empName"
   ];
   // console.log(empDetails)
-  $("#mainTbody").append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${empDetails}">
+  $("#mainTbody")
+    .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${empDetails}">
     <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${empName}</td>
     <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
-    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${_maxDays + 1}"></td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${
+      _maxDays + 1
+    }"></td>
     </tr>
     ${addHtml}`);
 }
@@ -411,14 +419,30 @@ function addCells() {
 
 //#region latag
 
-function fillTable(entry) {//ETOBAGUHIN MO NEXT WEEK
+function fillTable(entry) {
+  //ETOBAGUHIN MO NEXT WEEK
   var currentHours = 0;
   if (!Leaves.includes(entry["pIndex"])) {
-    currentHours = parseFloat($($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text()) || 0;
+    currentHours =
+      parseFloat(
+        $(
+          $(
+            `.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
+          ).children()[parseInt(entry["entryDate"]) + 1]
+        ).text()
+      ) || 0;
     currentHours += parseFloat(entry["hours"]);
-    $($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(`${currentHours}`);
+    $(
+      $(
+        `.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
+      ).children()[parseInt(entry["entryDate"]) + 1]
+    ).text(`${currentHours}`);
     if (entry["OT"]) {
-      $($(`.oRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(entry["hours"]);
+      $(
+        $(
+          `.oRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
+        ).children()[parseInt(entry["entryDate"]) + 1]
+      ).text(entry["hours"]);
     }
   } else {
     if (oLeaves.hasOwnProperty(entry["iIndex"])) {
@@ -547,8 +571,7 @@ function getTotals() {
     var getlRows = ``;
     if ($(this).attr("i-index")) {
       getlRows = $(`.lRow[i-index="${$(this).attr("i-index")}"]`);
-    }
-    else {
+    } else {
       getlRows = $(`.lRow[p-index="${$(this).attr("p-index")}"]`);
     }
     for (let x = 2; x < $(this).children().length - 1; x++) {
@@ -630,11 +653,22 @@ function getTotals() {
   });
 }
 function colorYellow() {
-  var myClass = [`tTot`, `oTot`, `lRow`, `lTot`, `gtTot`, `goTot`, `glRow`, `glTot`];
-  myClass.forEach(element => {
+  var myClass = [
+    `tTot`,
+    `oTot`,
+    `lRow`,
+    `lTot`,
+    `gtTot`,
+    `goTot`,
+    `glRow`,
+    `glTot`,
+  ];
+  myClass.forEach((element) => {
     $(`.${element}`).each(function () {
       for (let x = 1; x < $(this).children().length; x++) {
-        $($(this).children()[x]).attr('data-fill-color', 'FFFF00').css('background-color','#FFFF00');
+        $($(this).children()[x])
+          .attr("data-fill-color", "FFFF00")
+          .css("background-color", "#FFFF00");
       }
     });
   });
@@ -645,21 +679,40 @@ function colorWeekends(year, month) {
   _saturdays = getSaturdays(year, month);
   for (let x = 2; x < $(`#mainThead`).children().length; x++) {
     if (_sundays.includes(x - 1)) {
-      $($(`#mainThead`).children()[x]).attr('data-fill-color', '00ff00');
+      $($(`#mainThead`).children()[x]).attr("data-fill-color", "00ff00");
     }
     if (_saturdays.includes(x - 1)) {
-      $($(`#mainThead`).children()[x]).attr('data-fill-color', 'ccff99');
+      $($(`#mainThead`).children()[x]).attr("data-fill-color", "ccff99");
     }
   }
-  var mySelectors = [`#mainThead`, `#subThead`, `.pRow`, `.gpRow`, `.oRow`, `.goRow`, `.tTot`, `.oTot`, `.lRow`, `.lTot`, `.gtTot`, `.goTot`, `.glRow`, `.glTot`];
-  mySelectors.forEach(element => {
+  var mySelectors = [
+    `#mainThead`,
+    `#subThead`,
+    `.pRow`,
+    `.gpRow`,
+    `.oRow`,
+    `.goRow`,
+    `.tTot`,
+    `.oTot`,
+    `.lRow`,
+    `.lTot`,
+    `.gtTot`,
+    `.goTot`,
+    `.glRow`,
+    `.glTot`,
+  ];
+  mySelectors.forEach((element) => {
     $(`${element}`).each(function () {
       for (let x = 2; x < $(this).children().length; x++) {
         if (_sundays.includes(x - 1)) {
-          $($(this).children()[x]).attr('data-fill-color', '00ff00').css('background-color','#00ff00');
+          $($(this).children()[x])
+            .attr("data-fill-color", "00ff00")
+            .css("background-color", "#00ff00");
         }
         if (_saturdays.includes(x - 1)) {
-          $($(this).children()[x]).attr('data-fill-color', 'ccff99').css('background-color','#ccff99');
+          $($(this).children()[x])
+            .attr("data-fill-color", "ccff99")
+            .css("background-color", "#ccff99");
         }
       }
     });
@@ -670,7 +723,11 @@ function getSundays(year, month) {
   var lastDayOfMonth = new Date(year, month, 0);
   var sundays = [];
 
-  for (let day = firstDayOfMonth.getDate(); day <= lastDayOfMonth.getDate(); day++) {
+  for (
+    let day = firstDayOfMonth.getDate();
+    day <= lastDayOfMonth.getDate();
+    day++
+  ) {
     var currentDate = new Date(year, month - 1, day);
     var dayOfWeek = currentDate.getDay(); // Sunday (0) to Saturday (6)
 
@@ -685,7 +742,11 @@ function getSaturdays(year, month) {
   var lastDayOfMonth = new Date(year, month, 0);
   var saturdays = [];
 
-  for (let day = firstDayOfMonth.getDate(); day <= lastDayOfMonth.getDate(); day++) {
+  for (
+    let day = firstDayOfMonth.getDate();
+    day <= lastDayOfMonth.getDate();
+    day++
+  ) {
     var currentDate = new Date(year, month - 1, day);
     var dayOfWeek = currentDate.getDay(); // Sunday (0) to Saturday (6)
 
@@ -724,7 +785,10 @@ function printTable() {
 
 function exportTable() {
   var colsP = _maxDays + 3;
-  $('#mainTable').append(`<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`, $('#subTable').html());
+  $("#mainTable").append(
+    `<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`,
+    $("#subTable").html()
+  );
   $(`#grpTotTitle`).text(`GROUP's TOTAL`);
 
   var cOff;
@@ -743,8 +807,8 @@ function exportTable() {
       name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
     },
   });
-  $($('#fromHereAdd').nextAll()).remove();
-  $('#fromHereAdd').remove();
+  $($("#fromHereAdd").nextAll()).remove();
+  $("#fromHereAdd").remove();
   $(`#grpTotTitle`).text(``);
   // $(".fx").remove();
   // $("#mainTable").addClass("ayos");
