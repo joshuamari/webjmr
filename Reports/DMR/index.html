@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Daily Monitoring Report</title>
+    <title>Drawing Monitoring Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
@@ -18,7 +18,7 @@
         "ajax/get_version.php",
         {
           busterCall: busterCall,
-          titleName: "Daily Monitoring Report",
+          titleName: "Drawing Monitoring Report",
         },
         function (data) {
           $("head").html(data);
@@ -30,7 +30,7 @@
   <body>
     <div class="home-content position-relative">
       <div class="title xPrint">
-        <h1>Daily Monitoring Report</h1>
+        <h1>Drawing Monitoring Report</h1>
 
         <div class="d-flex justify-content-between align-items-center">
           <a href="../" class="backbtn">
@@ -52,77 +52,149 @@
           </div>
         </div>
       </div>
-      <div class="bg-dark-subtle d-flex" style="padding: 10px">
-        <div class="form-floating col-12 col-md-4 col-lg-2">
-          <input type="month" id="monthSel" class="form-control" />
-          <label for="monthSel">Select Month</label>
-        </div>
-      </div>
-      <div class="content d-flex flex-column position-relative">
-        <div
-          id="upperT"
-          class="position-relative"
-          style="padding: 20px 20px 0 20px"
-        >
-          <div
-            class="position-relative col-12 mt-2 overflow-auto"
-            style="height: calc(100vh - 534px)"
-          >
-            <table id="main-table" class="table">
-              <thead id="main-thead">
-                <tr id="headrow">
-                  <th>Job Request Description</th>
-                  <th>Item of Works (Dwg. No.)</th>
-                  <th>Drawing / Document Name</th>
-                  <th>KHI in Charge</th>
-                  <th>Name</th>
-                  <th>KHI Request Date</th>
-                  <th>KDT Deadline</th>
-                  <th>Start Date</th>
-                  <th>Manhour Used</th>
-                  <th id="status">Status</th>
-                </tr>
-              </thead>
-              <tbody id="main-tbody"></tbody>
-            </table>
+
+      <div
+        class="position-relative d-flex flex-md-row flex-column"
+        style="height: calc(100vh - 120px)"
+      >
+        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+          <div class="form-floating col-12 mb-2">
+            <select class="form-select" id="buSel" aria-label="Select BU">
+              <option value="" selected hidden>Select Group</option>
+              <option>ENV</option>
+              <option>Two</option>
+              <option>Three</option>
+            </select>
+            <label for="busSel">Select BU</label>
           </div>
-        </div>
-        <div
-          id="lowerT"
-          class="position-relative bg-dark-subtle"
-          style="padding: 20px"
-        >
-          <div class="form-floating col-12 col-md-4 mb-2 d-flex">
-            <input type="week" id="weekSel" class="form-control" />
-            <label for="weekSel">Highlight Week</label>
-            <button id="clearWeek" class="btn btn-primary" style="width: 70%">
-              Clear Week
+          <div class="form-floating col-12 mb-2">
+            <input type="month" id="monthSel" class="form-control" />
+            <label for="monthSel">Select Month</label>
+          </div>
+          <div class="form-floating col-12 mb-4">
+            <select class="form-select" id="CO" aria-label="Select Project">
+              <option value="">All</option>
+              <option value="1">Project1</option>
+              <!-- <option value="2">Second Half</option> -->
+            </select>
+            <label for="CO" class="">Select Project</label>
+          </div>
+          <!-- <div class="col-12 mb-4">
+            <div class="form-check form-switch p-0 d-flex">
+              <input
+                type="checkbox"
+                role="switch"
+                class="checkbox"
+                name="checkbox"
+              />
+              <div class="d-flex align-items-center">
+                <p class="m-0 ps-3">
+                  Exclude OGP<i
+                    class="m-0 bx bx-info-circle ps-1"
+                    title="Exclude Other Group's Project"
+                  ></i>
+                </p>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="position-relative">
+            <h4 class="">Members</h4>
+            <div id="members-list"></div>
+            <button id="selAll" class="btn btn-primary w-100 mt-2">
+              Select All
             </button>
           </div>
+        </div>
+        <div class="content rightt d-flex flex-column position-relative">
           <div
-            id="weekly-div"
-            class=""
-            style="width: 100%; overflow: auto; height: 220px"
+            id="upperT"
+            class="position-relative"
+            style="padding: 20px 20px 0 20px"
           >
-            <table id="weekly-report" class="table" style="display: none">
-              <thead>
-                <tr id="weekly-headrow">
-                  <th>Employee Name</th>
-                  <th></th>
-                  <th title="Planning / Actual Percentage">P/A %</th>
-                  <th id="w-total">TOTAL</th>
-                </tr>
-              </thead>
-              <tbody id="weekly-body"></tbody>
-            </table>
+            <div
+              class="position-relative col-12 mt-2 overflow-auto"
+              style="height: calc(100vh - 446px)"
+            >
+              <table id="main-table" class="table">
+                <thead id="main-thead">
+                  <tr id="headrow">
+                    <th>Job Request Description</th>
+                    <th>Item of Works (Dwg. No.)</th>
+                    <th>Drawing / Document Name</th>
+                    <th>KHI in Charge</th>
+                    <th>Name</th>
+                    <th>KHI Request Date</th>
+                    <th>KDT Deadline</th>
+                    <th>Start Date</th>
+                    <th>Manhour Used</th>
+                    <th id="status">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="main-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div
+            id="lowerT"
+            class="position-relative bg-dark-subtle"
+            style="padding: 20px"
+          >
+            <div class="form-floating col-12 col-md-4 mb-2 d-flex">
+              <input type="week" id="weekSel" class="form-control" />
+              <label for="weekSel">Highlight Week</label>
+              <button id="clearWeek" class="btn btn-primary" style="width: 70%">
+                Clear Week
+              </button>
+            </div>
+            <div
+              id="weekly-div"
+              class=""
+              style="width: 100%; overflow: auto; height: 190px"
+            >
+              <table id="weekly-report" class="table" style="display: none">
+                <thead>
+                  <tr id="weekly-headrow">
+                    <th>Employee Name</th>
+                    <th></th>
+                    <th title="Planning / Actual Percentage">P/A %</th>
+                    <th id="w-total">TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody id="weekly-body"></tbody>
+              </table>
+            </div>
           </div>
         </div>
+        <!-- <div
+            class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
+          >
+            <div id="upperT" class="position-relative mt-2">
+              <table
+                class="table position-relative ayos bg-white table-hover"
+                id="mainTable"
+              >
+                <thead>
+                  <tr id="mainThead" class="sticky-top bg-body"></tr>
+                </thead>
+                <tbody id="mainTbody"></tbody>
+              </table>
+            </div>
+            <div id="lowerT" class="position-relative">
+              <table class="table ayos bg-white table-hover" id="subTable">
+                <thead>
+                  <tr id="subThead"></tr>
+                </thead>
+                <tbody id="subTbody"></tbody>
+              </table>
+            </div>
+          </div> -->
+        <div
+          class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative"
+        >
+          <h1 class="text-center">Select Employee</h1>
+        </div>
       </div>
-      <!-- <div
-        class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative"
-      >
-        <h1 class="text-center">Select Employee</h1>
-      </div> -->
     </div>
   </body>
 </html>

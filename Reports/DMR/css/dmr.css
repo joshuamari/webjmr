@@ -122,7 +122,7 @@ body {
   transition: color 0.5s;
 }
 .home-content .content {
-  height: calc(100vh - 198px);
+  height: calc(100vh - 120px);
 }
 .right button {
   width: 100px;
@@ -142,6 +142,12 @@ body {
 }
 .noShow {
   background-color: #ededed;
+}
+.left {
+  background-color: #d7dae2;
+}
+.rightt {
+  width: calc(100vw - 320px);
 }
 
 #upperT {
