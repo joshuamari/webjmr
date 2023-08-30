@@ -61,10 +61,13 @@ $(document).on("click", "#totOnly", function () {
   $(".collapse").attr("data-exclude", "true");
   $('.prc:contains("%")').each(function () {
     $(this).html($(this).html().split("%").join(""));
+    $(this).html(parseFloat($(this).text()) / 100);
   });
   exportTable();
   $(".prc").append("%");
-
+  $('.prc:contains("%")').each(function () {
+    $(this).html(`${(parseFloat($(this).text()) * 100).toFixed(1)}%`);
+  });
   $(".collapse").removeAttr("data-exclude");
   $("#exportModal").modal("hide");
 });
