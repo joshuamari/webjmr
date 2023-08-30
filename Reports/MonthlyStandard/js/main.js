@@ -97,18 +97,18 @@ $(document).on("click", ".memBtn", function () {
   });
   var allButtonsSelected = $(".memBtn").length === $(".memBtn.btn-primary").length;
   var selAllButton = $("#selAll");
-    if (allButtonsSelected) {
-      selAllButton.text("Deselect All");
-      selAllButton.removeClass("btn-primary");
-      selAllButton.addClass("btn-secondary");
-    } else {
-      selAllButton.text("Select All");
-      selAllButton.removeClass("btn-secondary");
-      selAllButton.addClass("btn-primary");
-    }
+  if (allButtonsSelected) {
+    selAllButton.text("Deselect All");
+    selAllButton.removeClass("btn-primary");
+    selAllButton.addClass("btn-secondary");
+  } else {
+    selAllButton.text("Select All");
+    selAllButton.removeClass("btn-secondary");
+    selAllButton.addClass("btn-primary");
+  }
   createTables($("#monthSel").val());
 });
-$(document).on('click', '#btnExport', function(){
+$(document).on('click', '#btnExport', function () {
   exportTable();
 })
 $(document).on("click", "#btnPrint", function () {
@@ -161,9 +161,9 @@ function jmcAccess() {
 function getGroupList() {
   $("#buSel").empty();
   $.post("ajax/get_group_list.php",
-  {
-    empNum : _empDetails['empNum'],
-  },
+    {
+      empNum: _empDetails['empNum'],
+    },
     function (data) {
       var grpList = $.parseJSON(data);
       grpList.forEach((grp) => {
@@ -235,7 +235,7 @@ function createTables(ymVal) {
       _unifiedQ.map(fillTable);
       getTotals();
       colorYellow();
-      colorWeekends(ymVal.split("-")[0],ymVal.split("-")[1]);
+      colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
     }
   );
   // console.log(_selectedMembers);
@@ -260,8 +260,8 @@ function createHeader() {
 }
 
 function adjustWidth() {
-  var memh= $('#mainTable th:first-child').outerWidth()
-  var projh= $('#mainTable th:nth-child(2)').outerWidth()
+  var memh = $('#mainTable th:first-child').outerWidth()
+  var projh = $('#mainTable th:nth-child(2)').outerWidth()
   $("#subTable th:first-child").css("min-width", memh);
   $("#subTable th:nth-child(2)").css("min-width", projh);
 }
@@ -351,7 +351,7 @@ function pGet(empNum, ifOT) {
     _unifiedQ.forEach((element) => {
       if (element["empNum"] == empNum && !Leaves.includes(element["pIndex"])) {
         // if (!element["OT"]) {
-          returnObject.push(element);
+        returnObject.push(element);
         // }
       }
     });
@@ -414,10 +414,10 @@ function addCells() {
 function fillTable(entry) {//ETOBAGUHIN MO NEXT WEEK
   var currentHours = 0;
   if (!Leaves.includes(entry["pIndex"])) {
-    currentHours=parseFloat($($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text()) || 0;
+    currentHours = parseFloat($($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text()) || 0;
     currentHours += parseFloat(entry["hours"]);
     $($(`.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(`${currentHours}`);
-    if(entry["OT"]){
+    if (entry["OT"]) {
       $($(`.oRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`).children()[parseInt(entry["entryDate"]) + 1]).text(entry["hours"]);
     }
   } else {
@@ -545,10 +545,10 @@ function getTotals() {
 
   $(".glRow").each(function () {
     var getlRows = ``;
-    if($(this).attr("i-index")){
+    if ($(this).attr("i-index")) {
       getlRows = $(`.lRow[i-index="${$(this).attr("i-index")}"]`);
     }
-    else{
+    else {
       getlRows = $(`.lRow[p-index="${$(this).attr("p-index")}"]`);
     }
     for (let x = 2; x < $(this).children().length - 1; x++) {
@@ -629,43 +629,43 @@ function getTotals() {
     $(this).text(rightTot);
   });
 }
-function colorYellow(){
-  var myClass = [`tTot`,`oTot`,`lRow`,`lTot`,`gtTot`,`goTot`,`glRow`,`glTot`];
+function colorYellow() {
+  var myClass = [`tTot`, `oTot`, `lRow`, `lTot`, `gtTot`, `goTot`, `glRow`, `glTot`];
   myClass.forEach(element => {
     $(`.${element}`).each(function () {
       for (let x = 1; x < $(this).children().length; x++) {
-        $($(this).children()[x]).attr('data-fill-color','FFFF00');
+        $($(this).children()[x]).attr('data-fill-color', 'FFFF00').css('background-color','#FFFF00');
       }
     });
   });
 }
 
-function colorWeekends(year,month){
-  _sundays = getSundays(year,month);
-  _saturdays = getSaturdays(year,month);
+function colorWeekends(year, month) {
+  _sundays = getSundays(year, month);
+  _saturdays = getSaturdays(year, month);
   for (let x = 2; x < $(`#mainThead`).children().length; x++) {
-    if(_sundays.includes(x-1)){
-      $($(`#mainThead`).children()[x]).attr('data-fill-color','00ff00');
+    if (_sundays.includes(x - 1)) {
+      $($(`#mainThead`).children()[x]).attr('data-fill-color', '00ff00');
     }
-    if(_saturdays.includes(x-1)){
-      $($(`#mainThead`).children()[x]).attr('data-fill-color','ccff99');
+    if (_saturdays.includes(x - 1)) {
+      $($(`#mainThead`).children()[x]).attr('data-fill-color', 'ccff99');
     }
   }
-  var mySelectors = [`#mainThead`,`#subThead`,`.pRow`,`.gpRow`,`.oRow`,`.goRow`,`.tTot`,`.oTot`,`.lRow`,`.lTot`,`.gtTot`,`.goTot`,`.glRow`,`.glTot`];
+  var mySelectors = [`#mainThead`, `#subThead`, `.pRow`, `.gpRow`, `.oRow`, `.goRow`, `.tTot`, `.oTot`, `.lRow`, `.lTot`, `.gtTot`, `.goTot`, `.glRow`, `.glTot`];
   mySelectors.forEach(element => {
     $(`${element}`).each(function () {
       for (let x = 2; x < $(this).children().length; x++) {
-        if(_sundays.includes(x-1)){
-          $($(this).children()[x]).attr('data-fill-color','00ff00');
+        if (_sundays.includes(x - 1)) {
+          $($(this).children()[x]).attr('data-fill-color', '00ff00').css('background-color','#00ff00');
         }
-        if(_saturdays.includes(x-1)){
-          $($(this).children()[x]).attr('data-fill-color','ccff99');
+        if (_saturdays.includes(x - 1)) {
+          $($(this).children()[x]).attr('data-fill-color', 'ccff99').css('background-color','#ccff99');
         }
       }
     });
   });
 }
-function getSundays(year,month){
+function getSundays(year, month) {
   var firstDayOfMonth = new Date(year, month - 1, 1);
   var lastDayOfMonth = new Date(year, month, 0);
   var sundays = [];
@@ -680,7 +680,7 @@ function getSundays(year,month){
   }
   return sundays;
 }
-function getSaturdays(year,month){
+function getSaturdays(year, month) {
   var firstDayOfMonth = new Date(year, month - 1, 1);
   var lastDayOfMonth = new Date(year, month, 0);
   var saturdays = [];
@@ -723,8 +723,8 @@ function printTable() {
 }
 
 function exportTable() {
-  var colsP = _maxDays+3;
-  $('#mainTable').append(`<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`,$('#subTable').html());
+  var colsP = _maxDays + 3;
+  $('#mainTable').append(`<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`, $('#subTable').html());
   $(`#grpTotTitle`).text(`GROUP's TOTAL`);
 
   var cOff;
