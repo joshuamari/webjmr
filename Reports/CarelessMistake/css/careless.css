@@ -165,8 +165,12 @@ body {
 }
 
 /* table layout */
+table thead th {
+  background-color: #bbffbc !important;
+}
 table tbody .bu {
-  background-color: var(--yellow-color) !important;
+  cursor: pointer;
+  background-color: #e5eaff !important;
 }
 table tbody .bu td {
   font-weight: 600;
@@ -175,10 +179,15 @@ td {
   background-color: transparent !important;
 }
 table tbody .total {
-  background-color: rgb(138, 213, 115);
+  /* background-color: rgb(224, 188, 99); */
+}
+table tbody .total td {
+  color: var(--red-color);
 }
 table tbody .total td {
   font-weight: 600;
+}
+table tbody .collapse {
 }
 .mainTable {
   width: 100%;

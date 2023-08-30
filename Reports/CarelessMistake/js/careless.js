@@ -107,7 +107,7 @@ function getEntries() {
   var $table = $("#cmrTable");
   if ($table.length) {
     // Select and remove all rows except the last one
-    $table.find("tr:not(:first):not(#totalRow)").remove();
+    $table.find("tr:not(.heady):not(#totalRow)").remove();
   }
 
   var buSelected = $("#buSel").val();
@@ -140,9 +140,9 @@ function getEntries() {
           et = "et";
         }
         buRowString += `
-        <tr class="bu ent ${et}" id="${groupName}">
+        <tr class="bu ent ${et}" id="${groupName}" data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-fill-color="e5eaff">
         <td>${groupName}</td>
-        <td class ="towtal"></td>
+        <td class ="towtal" data-t="n"></td>
         `;
         $.each(_tows, function (_, towName) {
           buRowString += `<td class='hrs' tow='${towName}'></td><td class='prc' tow='${towName}'></td>`;
