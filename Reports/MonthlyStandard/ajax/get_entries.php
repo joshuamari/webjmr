@@ -41,7 +41,7 @@ if (!empty($_POST['getOGP'])) {
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
