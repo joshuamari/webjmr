@@ -14,10 +14,6 @@ $groupStatement = "";
 if (!empty($_POST['groupSel'])) {
     $groupSel = $_POST['groupSel'];
 }
-$yearMonth = date("Y-m");
-if (!empty($_POST['monthSel'])) {
-    $yearMonth = $_POST['monthSel'];
-}
 $firstDay = '2023-07-31';
 if (!empty($_POST['firstDay'])) {
     $firstDay = $_POST['firstDay'];
