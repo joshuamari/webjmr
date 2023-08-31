@@ -86,7 +86,7 @@
             <i class="bx bx-left-arrow-alt fs-5"></i>
             <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
           </a>
-          <div class="right pe-2 pe-lg-0">
+          <div class="right pe-2 pe-lg-0 d-flex">
             <button
               id="btnPrint"
               class="xPrint btn btn-primary"
@@ -100,8 +100,8 @@
           </div>
         </div>
       </div>
-      <div class="content">
-        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+      <div class="content flex-column flex-md-row">
+        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 h-auto h-md-100">
           <div class="form-floating col-12 mb-2">
             <select class="form-select" id="buSel" aria-label="Select BU">
               <option value="" selected hidden>Select Group</option>
@@ -119,10 +119,12 @@
             <input type="date" id="startSel" class="form-control" />
             <label for="startSel">Select Start Date</label>
           </div>
+          <div class="form-floating col-12 mb-2" id="error_message"></div>
           <div class="form-floating col-12 mb-2">
             <input type="date" id="endSel" class="form-control" />
             <label for="endSel">Select End Date</label>
           </div>
+          <div class="form-floating col-12 mb-2" id="error_message2"></div>
 
           <div class="col-12">
             <div class="form-check form-switch p-0 d-flex">
@@ -145,7 +147,7 @@
           </div>
         </div>
 
-        <div class="tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
+        <div class="d-none tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
           <div class="mainTable overflow-auto">
             <table id="cmrTable" class="table table-hover w-100">
               <thead class="sticky-top">
@@ -774,6 +776,11 @@
               </tbody>
             </table>
           </div>
+        </div>
+        <div
+          class="noShow d-flex justify-content-center col-md-9 col-lg-10 col-12 align-items-center h-100"
+        >
+          <div class="p-4 rounded-4">Please select date range</div>
         </div>
       </div>
     </div>

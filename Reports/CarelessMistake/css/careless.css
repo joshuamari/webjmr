@@ -137,6 +137,12 @@ body {
   height: calc(100vh - 120px);
 }
 
+.noShow div {
+  background-color: #16334f;
+  color: #fff;
+  font-size: 30px;
+}
+
 /* checkbox */
 .checkbox {
   -webkit-appearance: none;
@@ -308,10 +314,16 @@ table tbody .collapse {
   animation: lol 1.5s 500ms infinite ease-in-out;
 }
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 768px) {
   .right button {
     width: 100%;
     margin: 10px;
+  }
+  .noShow div {
+    font-size: 25px;
+  }
+  .home-content .title h1 {
+    font-size: 30px;
   }
 }
 
