@@ -22,17 +22,30 @@ $("#monthSel").val(
 );
 //#region BINDS
 $(document).ready(function () {
+  var start = $("#startSel").val();
   $.ajaxSetup({ async: false });
   getGroupList();
-  getEntries();
+
   $.ajaxSetup({ async: true });
+  if (!start) {
+    $("#endSel").attr("disabled", "disabled");
+  }
 });
 $(document).on("click", ".bu", function () {
   getID = $(this).attr("id");
   $(`.${getID}.collapse`).toggleClass("show");
 });
-$(document).on("change", "#monthSel", function () {
+$(document).on("change", "#startSel", function () {
+  $("#endSel").removeAttr("disabled");
+
+  $("#endSel").attr("min", $("#startSel").val()); // Set min date for end date
+
+  $("#endSel").val("");
+});
+$(document).on("change", "#endSel", function () {
   getEntries();
+  $(".noShow").addClass("d-none");
+  $(".tablecont").removeClass("d-none");
 });
 $(document).on("change", "#buSel", function () {
   var buSel = $(this).val();
@@ -52,9 +65,13 @@ $(document).on("click", "#btnExport", function () {
 $(document).on("click", "#totAll", function () {
   $('.prc:contains("%")').each(function () {
     $(this).html($(this).html().split("%").join(""));
+    $(this).html(parseFloat($(this).text()) / 100);
   });
   exportTable();
   $(".prc").append("%");
+  $('.prc:contains("%")').each(function () {
+    $(this).html(`${(parseFloat($(this).text()) * 100).toFixed(1)}%`);
+  });
   $("#exportModal").modal("hide");
 });
 $(document).on("click", "#totOnly", function () {
@@ -155,16 +172,19 @@ function getEntries() {
       })
       .get();
   }
-  var monthSel = $("#monthSel").val();
+  var startSel = $("#startSel").val();
+  var endSel = $("#endSel").val();
   var ogpSel = $(`.checkbox`).is(":checked");
   $.post(
     "ajax/get_entries.php",
     {
       groupSel: groupSel,
-      monthSel: monthSel,
+      startSel: startSel,
+      endSel: endSel,
       ogpSel: ogpSel,
     },
     function (data) {
+      console.log(data);
       _entries = $.parseJSON(data);
       var upperString = "";
       var lowerString = "";
@@ -181,7 +201,7 @@ function getEntries() {
         `;
         $.each(_tows, function (_, towName) {
           buRowString += `<td class='hrs' tow='${towName}'
-          data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n"></td><td class='prc' tow='${towName}' data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n" data-num-fmt=".0%"></td>`;
+          data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n"></td><td class='prc' tow='${towName}' data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-fill-color="e5eaff" data-t="n" data-num-fmt="0.0%"></td>`;
         });
         buRowString += `</tr>`;
         $.each(group, function (columnName, column) {
@@ -201,7 +221,7 @@ function getEntries() {
             }
             buRowString += `<td class='hrs' tow='${towName}'
             data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000"  data-t="n">${towval}</td><td class='prc' tow='${towName}'
-            data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n" data-num-fmt="#%">0</td>`;
+            data-f-name="Arial" data-f-sz="9" data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n" data-num-fmt="0.0%">0</td>`;
           });
           buRowString += `</tr>`;
         });
