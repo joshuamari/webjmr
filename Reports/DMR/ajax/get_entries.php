@@ -55,12 +55,14 @@ foreach ($entriesArr as $ent) {
     $entryDate = $ent['fldDate'];
     $dur = $ent['fldDuration'] / 60;
     $mhUsed = $ent['mhused'] / 60;
-    $planned = $ent['planned'] == NULL ? "0" : $ent['planned'] / 60;
+    $planned = $ent['planned'] == NULL ? 0 : $ent['planned'] / 60;
     $drawName = $ent['fldDrawingName'];
     $khic = $ent['fldKHIC'];
     $khiReq = $ent['fldKHIDate'];
     $khiDead = $ent['fldKHIDeadline'];
     $kdtDead = $ent['fldKDTDeadline'];
+    $planDeets = getPlanDeets($jobID, $enum, $firstDay, $lastDay);
+
     $entriesArray[$projName]['pNum'] = $projID;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['jobNum'] = $jobID;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['dName'] = $drawName;
@@ -73,6 +75,17 @@ foreach ($entriesArr as $ent) {
 
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Actual'] = $dur;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Planned'] = $planned;
+
+    foreach ($planDeets as $pds) {
+        $planDates = $pds['Dates'];
+        $planHrs = $pds['planned'];
+        foreach ($planDates as $pd) {
+            if (!array_key_exists($pd, $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"])) {
+                $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$pd]['Actual'] = 0;
+                $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$pd]['Planned'] = $planHrs;
+            }
+        }
+    }
 }
 #endregion
 
@@ -86,6 +99,29 @@ function getName($empNum)
     $nameStmt->execute([":empNum" => $empNum]);
     $eName = $nameStmt->fetchColumn();
     return $eName;
+}
+function getPlanDeets($jNum, $eNum, $fDate, $lDate)
+{
+    global $connwebjmr;
+    $planDeets = array();
+    $planQuery = "SELECT * FROM planning WHERE fldJob = :jNum AND fldEmployeeNum = :eNum AND fldStartDate <= :lDate AND fldEndDate >= :fDate";
+    $planStmt = $connwebjmr->prepare($planQuery);
+    $planStmt->execute([":jNum" => $jNum, ":eNum" => $eNum, ":fDate" => $fDate, ":lDate" => $lDate]);
+    $planArr = $planStmt->fetchAll();
+    foreach ($planArr as $pl) {
+        $planDates = array();
+        $curDate = strtotime($pl['fldStartDate']);
+        $endDate = strtotime($pl['fldEndDate']);
+        $planned = $pl['fldHours'] / 60;
+        $planID = $pl['fldID'];
+        $planDeets[$planID]['planned'] = $planned;
+        while ($curDate <= $endDate) {
+            $planDates[] = date("Y-m-d", $curDate);
+            $curDate = strtotime('+1 day', $curDate);
+        }
+        $planDeets[$planID]['Dates'] = $planDates;
+    }
+    return $planDeets;
 }
 #endregion
 echo "<pre>";
