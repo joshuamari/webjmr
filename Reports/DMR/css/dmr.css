@@ -154,6 +154,24 @@ body {
   height: 100%;
   width: 100%;
 }
+#lowerT {
+  background-color: var(--darkest-blue);
+}
+
+/* member selection */
+.memcont {
+  height: calc(100vh - 400px);
+  overflow: hidden;
+}
+#members-list {
+  height: 100%;
+  overflow: auto;
+}
+.selected {
+  background-color: var(--main-blue) !important;
+  color: #fff !important;
+  border: none;
+}
 
 /*loaderrrrr*/
 
@@ -323,6 +341,9 @@ body {
   }
   body {
     overflow: auto;
+  }
+  .memcont {
+    height: 100%;
   }
 }
 
