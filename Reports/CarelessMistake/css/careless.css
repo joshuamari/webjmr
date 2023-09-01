@@ -214,6 +214,12 @@ table tbody .collapse {
   width: 100%;
   height: calc(100vh - 200px);
 }
+.heady th {
+  text-align: center;
+}
+tbody .collapse td:first-child {
+  text-align: left !important;
+}
 
 /*loaderrrrr*/
 

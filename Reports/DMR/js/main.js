@@ -49,8 +49,10 @@ $(document).on("click", "#clearWeek", function () {
 });
 
 $(document).on("change", "#monthSel", function () {
+  $.ajaxSetup({ async: false });
   getEmployeeList();
   getScope();
+  $.ajaxSetup({ async: true });
   queryfunctions();
 });
 
@@ -165,7 +167,7 @@ function getProjects() {
       groupSel: buSel,
     },
     function (data) {
-      console.log(data);
+      // console.log(data);
       var projList = $.parseJSON(data);
       if (projList.length > 1) {
         $("#projSel").html(`<option value=''>All</option>`);
@@ -191,7 +193,7 @@ function getEntries() {
       lastDay: _dateScope["lastDay"],
       empSel: _selectedMembers,
     },
-    function (data) {}
+    function (data) { }
   );
 }
 function getScope() {
@@ -210,22 +212,59 @@ function getScope() {
 function queryfunctions() {
   $("#main-tbody").empty();
 
-  //projects
-  $.getJSON("js/projects.json", function (data) {
-    latagProjects(data);
-    data.map(latagPDetails);
-    createTable();
-  });
+  //unified Q
+  $.getJSON("js/dmr.json",
+    function (data) {
+      var uniqueP = [];
+      var pDetails = [];
+      var dailyEntries = [];
+      $.each(data, function (pName, pVal) {
+        //uniqueProjects
+        const newEntry = {
+          pNum: pVal.pNum,
+          pName: pName
+        }
+        uniqueP.push(newEntry)
+        //latagPDetails
+        $.each(pVal.Items, function (itemIndex, iVal) {
+          newEntry.itemName = itemIndex;
+          $.each(iVal, function (jobName, jobDetails) {
+            newEntry.jobName = jobName;
+            newEntry.jobNum = jobDetails.jobNum;
+            newEntry.dName = jobDetails.dName;
+            newEntry.kic = jobDetails.kic;
+            newEntry.khiRequest = jobDetails.khiRequest;
+            newEntry.startDate = jobDetails.startDate;
+            newEntry.kdtDeadline = jobDetails.kdtDeadline;
+            newEntry.mUsed = jobDetails.mUsed;
+            newEntry.pStatus = jobDetails.pStatus;
+            $.each(jobDetails.Members, function (empNum, dates) {
+              newEntry.empNum = empNum;
+              newEntry.empName = $(`.memBtn[emp-num="${empNum}"]`).text();
+              pDetails.push(newEntry);
+              $.each(dates.Dates, function (date, datas) {
+                dailyEntries.push({
+                  empNum: empNum,
+                  jobNum: jobDetails.jobNum,
+                  entryDate: date,
+                  plan: datas.Planned,
+                  actual: datas.Actual
+                })
+              });
+            });
+          });
+        });
+      });
+      //projects
+      uniqueP = makeArrayUnique(uniqueP, "pNum");
+      latagProjects(uniqueP);
+      pDetails.map(latagPDetails);
+      createTable();
+      //planning & DR
+      dailyEntries.map(latagPlanning);
+    }
+  );
 
-  //planning
-  $.getJSON("js/planning.json", function (data) {
-    data.map(latagPlanning);
-  });
-
-  //DR
-  $.getJSON("js/queries.json", function (data) {
-    data.map(latagActual);
-  });
 }
 //#endregion
 //#region table sa taas
@@ -247,45 +286,13 @@ function latagDays() {
     addCells += `<td date-val="${startDate.yyyymmdd()}"></td>`;
     startDate.setDate(startDate.getDate() + 1);
   }
-  // //day1 not monday
-  // if (fd.getDay() > 1) {
-  //   for (let x = fd.getDay() - 2; x >= 0; x--) {
-  //     var newDate = new Date(fd.getFullYear(), fd.getMonth(), -Math.abs(x));
-  //     console.log(fd.getMonth());
-  //     addHeader += `<th date-val="${newDate.yyyymmdd()}">${newDate.yyyymmdd()}</th>`;
-  //     addCells += `<td date-val="${newDate.yyyymmdd()}"></td>`;
-  //   }
-  // }
-  // if (fd.getDay() == 0) {
-  //   for (let x = 6; x >= 1; x--) {
-  //     var newDate = new Date(fd.getFullYear(), fd.getMonth(), -Math.abs(x));
-  //     addHeader += `<th date-val="${newDate.yyyymmdd()}">${newDate.yyyymmdd()}</th>`;
-  //     addCells += `<td date-val="${newDate.yyyymmdd()}"></td>`;
-  //   }
-  // }
-  // //latag whole month
-  // for (let x = 1; x <= ld.getDate(); x++) {
-  //   var newDate = new Date(fd.getFullYear(), fd.getMonth(), x);
-  //   addHeader += `<th date-val="${newDate.yyyymmdd()}">${newDate.yyyymmdd()}</th>`;
-  //   addCells += `<td date-val="${newDate.yyyymmdd()}"></td>`;
-  // }
-  // //lastday not sunday
-  // if (ld.getDay() != 0) {
-  //   var diff = 6 - ld.getDay();
-  //   for (let x = 1; x <= diff + 1; x++) {
-  //     var newDate = new Date(ld.getFullYear(), ld.getMonth(), ld.getDate() + x);
-  //     addHeader += `<th date-val="${newDate.yyyymmdd()}">${newDate.yyyymmdd()}</th>`;
-  //     addCells += `<td date-val="${newDate.yyyymmdd()}"></td>`;
-  //   }
-  // }
   $("#status").after(addHeader);
   $(".plan-row, .actual-row").append(addCells);
 }
 
 function latagProjects(data) {
-  const filteredData = makeArrayUnique(data, "pNum");
 
-  filteredData.forEach((element) => {
+  data.forEach((element) => {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${element.pNum}">
     <td colspan="100">${element.pName}</td>
@@ -317,15 +324,12 @@ function latagPlanning(data) {
     $(`.plan-row[job-num="${data.jobNum}"][emp-num="${data.empNum}"]`).children(
       `[date-val="${data.entryDate}"]`
     )
-  ).text(data.hours);
-}
-
-function latagActual(data) {
+  ).text(data.plan);
   $(
     $(
       `.actual-row[job-num="${data.jobNum}"][emp-num="${data.empNum}"]`
     ).children(`[date-val="${data.entryDate}"]`)
-  ).text(data.hours);
+  ).text(data.actual);
 }
 
 function weekendcolor() {
