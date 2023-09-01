@@ -220,7 +220,7 @@ function getProjects() {
 }
 function getEntries() {
   var groupSel = $("#buSel").val();
-  var projSel = $("#projSel").val();
+  var projSel = $($("#projSel").find("option:selected")).attr("proj-id");
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $("#mainContent").addClass("d-none");
