@@ -193,7 +193,7 @@ function getEntries() {
       lastDay: _dateScope["lastDay"],
       empSel: _selectedMembers,
     },
-    function (data) { }
+    function (data) {}
   );
 }
 function getScope() {
@@ -213,58 +213,55 @@ function queryfunctions() {
   $("#main-tbody").empty();
 
   //unified Q
-  $.getJSON("js/dmr.json",
-    function (data) {
-      var uniqueP = [];
-      var pDetails = [];
-      var dailyEntries = [];
-      $.each(data, function (pName, pVal) {
-        //uniqueProjects
-        const newEntry = {
-          pNum: pVal.pNum,
-          pName: pName
-        }
-        uniqueP.push(newEntry)
-        //latagPDetails
-        $.each(pVal.Items, function (itemIndex, iVal) {
-          newEntry.itemName = itemIndex;
-          $.each(iVal, function (jobName, jobDetails) {
-            newEntry.jobName = jobName;
-            newEntry.jobNum = jobDetails.jobNum;
-            newEntry.dName = jobDetails.dName;
-            newEntry.kic = jobDetails.kic;
-            newEntry.khiRequest = jobDetails.khiRequest;
-            newEntry.startDate = jobDetails.startDate;
-            newEntry.kdtDeadline = jobDetails.kdtDeadline;
-            newEntry.mUsed = jobDetails.mUsed;
-            newEntry.pStatus = jobDetails.pStatus;
-            $.each(jobDetails.Members, function (empNum, dates) {
-              newEntry.empNum = empNum;
-              newEntry.empName = $(`.memBtn[emp-num="${empNum}"]`).text();
-              pDetails.push(newEntry);
-              $.each(dates.Dates, function (date, datas) {
-                dailyEntries.push({
-                  empNum: empNum,
-                  jobNum: jobDetails.jobNum,
-                  entryDate: date,
-                  plan: datas.Planned,
-                  actual: datas.Actual
-                })
+  $.getJSON("js/dmr.json", function (data) {
+    var uniqueP = [];
+    var pDetails = [];
+    var dailyEntries = [];
+    $.each(data, function (pName, pVal) {
+      //uniqueProjects
+      const newEntry = {
+        pNum: pVal.pNum,
+        pName: pName,
+      };
+      uniqueP.push(newEntry);
+      //latagPDetails
+      $.each(pVal.Items, function (itemIndex, iVal) {
+        newEntry.itemName = itemIndex;
+        $.each(iVal, function (jobName, jobDetails) {
+          newEntry.jobName = jobName;
+          newEntry.jobNum = jobDetails.jobNum;
+          newEntry.dName = jobDetails.dName;
+          newEntry.kic = jobDetails.kic;
+          newEntry.khiRequest = jobDetails.khiRequest;
+          newEntry.startDate = jobDetails.startDate;
+          newEntry.kdtDeadline = jobDetails.kdtDeadline;
+          newEntry.mUsed = jobDetails.mUsed;
+          newEntry.pStatus = jobDetails.pStatus;
+          $.each(jobDetails.Members, function (empNum, deets) {
+            newEntry.empNum = empNum;
+            newEntry.empName = deets.name;
+            pDetails.push(newEntry);
+            $.each(deets.Dates, function (date, datas) {
+              dailyEntries.push({
+                empNum: empNum,
+                jobNum: jobDetails.jobNum,
+                entryDate: date,
+                plan: datas.Planned,
+                actual: datas.Actual,
               });
             });
           });
         });
       });
-      //projects
-      uniqueP = makeArrayUnique(uniqueP, "pNum");
-      latagProjects(uniqueP);
-      pDetails.map(latagPDetails);
-      createTable();
-      //planning & DR
-      dailyEntries.map(latagPlanning);
-    }
-  );
-
+    });
+    //projects
+    uniqueP = makeArrayUnique(uniqueP, "pNum");
+    latagProjects(uniqueP);
+    pDetails.map(latagPDetails);
+    createTable();
+    //planning & DR
+    dailyEntries.map(latagPlanning);
+  });
 }
 //#endregion
 //#region table sa taas
@@ -291,7 +288,6 @@ function latagDays() {
 }
 
 function latagProjects(data) {
-
   data.forEach((element) => {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${element.pNum}">
