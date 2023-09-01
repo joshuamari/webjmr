@@ -9,16 +9,16 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$groupSel = 'ENV';
+$groupSel = NULL;
 $groupStatement = "";
 if (!empty($_POST['groupSel'])) {
     $groupSel = $_POST['groupSel'];
 }
-$firstDay = '2023-07-31';
+$firstDay = '';
 if (!empty($_POST['firstDay'])) {
     $firstDay = $_POST['firstDay'];
 }
-$lastDay = '2023-09-03';
+$lastDay = '';
 if (!empty($_POST['lastDay'])) {
     $lastDay = $_POST['lastDay'];
 }
@@ -27,7 +27,7 @@ if (!empty($_POST['projSel'])) {
     $projSel = $_POST['projSel'];
     $projStatement = "AND dr.fldProject ='$projSel'";
 }
-$empSel = array(460, 461);
+$empSel = array();
 if (!empty($_POST['empSel'])) {
     $empSel = $_POST['empSel'];
 }
@@ -36,7 +36,7 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL AND dr.`fldEmployeeNum` IN (461,460) AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY dr.fldEmployeeNum,dr.fldDate";
+$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN (461,460) AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
 $entriesArr = $entriesStmt->fetchAll();
