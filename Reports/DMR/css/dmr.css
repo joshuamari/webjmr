@@ -154,6 +154,9 @@ body {
   height: 100%;
   width: 100%;
 }
+#lowerT {
+  background-color: var(--darkest-blue);
+}
 
 /* member selection */
 .memcont {
