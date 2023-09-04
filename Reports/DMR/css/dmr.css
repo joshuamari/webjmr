@@ -164,7 +164,7 @@ body {
   overflow: hidden;
 }
 #members-list {
-  max-height: 85%;
+  max-height: 82%;
   overflow: auto;
 }
 .selected {
