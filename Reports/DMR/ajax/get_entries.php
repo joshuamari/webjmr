@@ -23,6 +23,7 @@ if (!empty($_POST['lastDay'])) {
     $lastDay = $_POST['lastDay'];
 }
 $projSel = NULL;
+$projStatement = "";
 if (!empty($_POST['projSel'])) {
     $projSel = $_POST['projSel'];
     $projStatement = "AND dr.fldProject ='$projSel'";
@@ -30,13 +31,15 @@ if (!empty($_POST['projSel'])) {
 $empSel = array();
 if (!empty($_POST['empSel'])) {
     $empSel = $_POST['empSel'];
+    $implodeString = implode("','", $empSel);
+    $mgaEmp = "('" . $implodeString . "')";
 }
 $entriesArray = array();
 
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN (461,460) AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY dr.fldEmployeeNum,dr.fldDate";
+$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
 $entriesArr = $entriesStmt->fetchAll();
@@ -68,7 +71,7 @@ foreach ($entriesArr as $ent) {
     $entriesArray[$projName]['Items'][$itemName][$jobName]['kdtDeadline'] = $kdtDead;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['pStatus'] = "ongoing";
-
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["name"] = $ename;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Actual'] = $dur;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Planned'] = $planned;
 
@@ -120,6 +123,4 @@ function getPlanDeets($jNum, $eNum, $fDate, $lDate)
     return $planDeets;
 }
 #endregion
-echo "<pre>";
 echo json_encode($entriesArray, JSON_PRETTY_PRINT);
-echo "</pre>";

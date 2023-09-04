@@ -40,7 +40,7 @@ $(document).ready(function () {
   getEmployeeList();
   getProjects();
   $.ajaxSetup({ async: true });
-  queryfunctions();
+  // getEntries();
 });
 $(document).on("click", "#clearWeek", function () {
   clearWeek();
@@ -53,7 +53,7 @@ $(document).on("change", "#monthSel", function () {
   getEmployeeList();
   getScope();
   $.ajaxSetup({ async: true });
-  queryfunctions();
+  getEntries();
 });
 
 $(document).on("change", "#weekSel", function () {
@@ -63,8 +63,47 @@ $(document).on("change", "#weekSel", function () {
 $(document).on("change", "#buSel", function () {
   getEmployeeList();
   getProjects();
-});
+  _selectedMembers.length = 0;
 
+  $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
+  $("#selAll").text("Select All");
+  $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
+});
+$(document).on("click", "#selAll", function () {
+  $(this).toggleClass("btn-primary btn-secondary");
+  if ($(this).attr("class").includes("btn-primary")) {
+    $(this).text("Select All");
+    $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
+  } else {
+    $(this).text("Deselect All");
+    $(".memBtn").attr("class", "w-100 btn btn-primary memBtn");
+  }
+  _selectedMembers.length = 0;
+  $(".memBtn.btn-primary").each(function () {
+    _selectedMembers.push($(this).attr("emp-num"));
+  });
+  getEntries();
+});
+$(document).on("click", ".memBtn", function () {
+  $(this).toggleClass("btn-primary btn-secondary");
+  _selectedMembers.length = 0;
+  $(".memBtn.btn-primary").each(function () {
+    _selectedMembers.push($(this).attr("emp-num"));
+  });
+  var allButtonsSelected =
+    $(".memBtn").length === $(".memBtn.btn-primary").length;
+  var selAllButton = $("#selAll");
+  if (allButtonsSelected) {
+    selAllButton.text("Deselect All");
+    selAllButton.removeClass("btn-primary");
+    selAllButton.addClass("btn-secondary");
+  } else {
+    selAllButton.text("Select All");
+    selAllButton.removeClass("btn-secondary");
+    selAllButton.addClass("btn-primary");
+  }
+  getEntries();
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -167,7 +206,6 @@ function getProjects() {
       groupSel: buSel,
     },
     function (data) {
-      // console.log(data);
       var projList = $.parseJSON(data);
       if (projList.length > 1) {
         $("#projSel").html(`<option value=''>All</option>`);
@@ -182,8 +220,15 @@ function getProjects() {
 }
 function getEntries() {
   var groupSel = $("#buSel").val();
-  var projSel = $("#projSel").val();
-  return;
+  var projSel = $($("#projSel").find("option:selected")).attr("proj-id");
+  if (_selectedMembers.length < 1) {
+    $(".noShow").removeClass("d-none");
+    $("#mainContent").addClass("d-none");
+    return;
+  }
+  $(".noShow").addClass("d-none");
+  $("#mainContent").removeClass("d-none");
+  $("#main-tbody").empty();
   $.post(
     "ajax/get_entries.php",
     {
@@ -193,7 +238,56 @@ function getEntries() {
       lastDay: _dateScope["lastDay"],
       empSel: _selectedMembers,
     },
-    function (data) { }
+    function (data) {
+      console.log(data);
+      var uniqueP = [];
+      var pDetails = [];
+      var dailyEntries = [];
+      $.each($.parseJSON(data), function (pName, pVal) {
+        //uniqueProjects
+        const newEntry = {
+          pNum: pVal.pNum,
+          pName: pName,
+        };
+        uniqueP.push(newEntry);
+        //latagPDetails
+        $.each(pVal.Items, function (itemIndex, iVal) {
+          newEntry.itemName = itemIndex;
+          $.each(iVal, function (jobName, jobDetails) {
+            newEntry.jobName = jobName;
+            newEntry.jobNum = jobDetails.jobNum;
+            newEntry.dName = jobDetails.dName;
+            newEntry.kic = jobDetails.kic;
+            newEntry.khiRequest = jobDetails.khiRequest;
+            newEntry.startDate = jobDetails.startDate;
+            newEntry.kdtDeadline = jobDetails.kdtDeadline;
+            newEntry.mUsed = jobDetails.mUsed;
+            newEntry.pStatus = jobDetails.pStatus;
+            $.each(jobDetails.Members, function (empNum, deets) {
+              newEntry.empNum = empNum;
+              newEntry.empName = deets.name;
+              pDetails.push(newEntry);
+              $.each(deets.Dates, function (date, datas) {
+                dailyEntries.push({
+                  empNum: empNum,
+                  jobNum: jobDetails.jobNum,
+                  entryDate: date,
+                  plan: datas.Planned,
+                  actual: datas.Actual,
+                });
+              });
+            });
+          });
+        });
+      });
+      //projects
+      uniqueP = makeArrayUnique(uniqueP, "pNum");
+      latagProjects(uniqueP);
+      pDetails.map(latagPDetails);
+      createTable();
+      //planning & DR
+      dailyEntries.map(latagPlanning);
+    }
   );
 }
 function getScope() {
@@ -210,61 +304,65 @@ function getScope() {
 }
 //#region mga query
 function queryfunctions() {
+  if (_selectedMembers.length < 1) {
+    $(".noShow").removeClass("d-none");
+    $("#mainContent").addClass("d-none");
+    return;
+  }
+  $(".noShow").addClass("d-none");
+  $("#mainContent").removeClass("d-none");
   $("#main-tbody").empty();
 
   //unified Q
-  $.getJSON("js/dmr.json",
-    function (data) {
-      var uniqueP = [];
-      var pDetails = [];
-      var dailyEntries = [];
-      $.each(data, function (pName, pVal) {
-        //uniqueProjects
-        const newEntry = {
-          pNum: pVal.pNum,
-          pName: pName
-        }
-        uniqueP.push(newEntry)
-        //latagPDetails
-        $.each(pVal.Items, function (itemIndex, iVal) {
-          newEntry.itemName = itemIndex;
-          $.each(iVal, function (jobName, jobDetails) {
-            newEntry.jobName = jobName;
-            newEntry.jobNum = jobDetails.jobNum;
-            newEntry.dName = jobDetails.dName;
-            newEntry.kic = jobDetails.kic;
-            newEntry.khiRequest = jobDetails.khiRequest;
-            newEntry.startDate = jobDetails.startDate;
-            newEntry.kdtDeadline = jobDetails.kdtDeadline;
-            newEntry.mUsed = jobDetails.mUsed;
-            newEntry.pStatus = jobDetails.pStatus;
-            $.each(jobDetails.Members, function (empNum, dates) {
-              newEntry.empNum = empNum;
-              newEntry.empName = $(`.memBtn[emp-num="${empNum}"]`).text();
-              pDetails.push(newEntry);
-              $.each(dates.Dates, function (date, datas) {
-                dailyEntries.push({
-                  empNum: empNum,
-                  jobNum: jobDetails.jobNum,
-                  entryDate: date,
-                  plan: datas.Planned,
-                  actual: datas.Actual
-                })
+  $.getJSON("js/dmr.json", function (data) {
+    var uniqueP = [];
+    var pDetails = [];
+    var dailyEntries = [];
+    $.each(data, function (pName, pVal) {
+      //uniqueProjects
+      const newEntry = {
+        pNum: pVal.pNum,
+        pName: pName,
+      };
+      uniqueP.push(newEntry);
+      //latagPDetails
+      $.each(pVal.Items, function (itemIndex, iVal) {
+        newEntry.itemName = itemIndex;
+        $.each(iVal, function (jobName, jobDetails) {
+          newEntry.jobName = jobName;
+          newEntry.jobNum = jobDetails.jobNum;
+          newEntry.dName = jobDetails.dName;
+          newEntry.kic = jobDetails.kic;
+          newEntry.khiRequest = jobDetails.khiRequest;
+          newEntry.startDate = jobDetails.startDate;
+          newEntry.kdtDeadline = jobDetails.kdtDeadline;
+          newEntry.mUsed = jobDetails.mUsed;
+          newEntry.pStatus = jobDetails.pStatus;
+          $.each(jobDetails.Members, function (empNum, deets) {
+            newEntry.empNum = empNum;
+            newEntry.empName = deets.name;
+            pDetails.push(newEntry);
+            $.each(deets.Dates, function (date, datas) {
+              dailyEntries.push({
+                empNum: empNum,
+                jobNum: jobDetails.jobNum,
+                entryDate: date,
+                plan: datas.Planned,
+                actual: datas.Actual,
               });
             });
           });
         });
       });
-      //projects
-      uniqueP = makeArrayUnique(uniqueP, "pNum");
-      latagProjects(uniqueP);
-      pDetails.map(latagPDetails);
-      createTable();
-      //planning & DR
-      dailyEntries.map(latagPlanning);
-    }
-  );
-
+    });
+    //projects
+    uniqueP = makeArrayUnique(uniqueP, "pNum");
+    latagProjects(uniqueP);
+    pDetails.map(latagPDetails);
+    createTable();
+    //planning & DR
+    dailyEntries.map(latagPlanning);
+  });
 }
 //#endregion
 //#region table sa taas
@@ -291,7 +389,6 @@ function latagDays() {
 }
 
 function latagProjects(data) {
-
   data.forEach((element) => {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${element.pNum}">
