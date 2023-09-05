@@ -239,7 +239,24 @@ function getEntries() {
       empSel: _selectedMembers,
     },
     function (data) {
-      console.log(data);
+      const query = $.parseJSON(data);
+      console.log(query)
+      latagProjects(query);
+      updateTr();
+      // latagPlanning
+
+    });
+  return;
+  $.post(
+    "ajax/get_entries.php",
+    {
+      groupSel: groupSel,
+      projSel: projSel,
+      firstDay: _dateScope["firstDay"],
+      lastDay: _dateScope["lastDay"],
+      empSel: _selectedMembers,
+    },
+    function (data) {
       var uniqueP = [];
       var pDetails = [];
       var dailyEntries = [];
@@ -267,6 +284,7 @@ function getEntries() {
               newEntry.empNum = empNum;
               newEntry.empName = deets.name;
               pDetails.push(newEntry);
+              console.log(newEntry)
               $.each(deets.Dates, function (date, datas) {
                 dailyEntries.push({
                   empNum: empNum,
@@ -283,6 +301,7 @@ function getEntries() {
       //projects
       uniqueP = makeArrayUnique(uniqueP, "pNum");
       latagProjects(uniqueP);
+      console.log(pDetails)
       pDetails.map(latagPDetails);
       createTable();
       //planning & DR
@@ -371,6 +390,17 @@ function createTable() {
   weekendcolor();
 }
 
+function updateTr(){
+  var pRow = $('.plan-row');
+  $.each(pRow, function (i, v) { 
+     var aRow = $(v).next();
+     $(v).attr('job-num',$($(v).children('.jname')).attr('job-num'));
+     $(v).attr('emp-num',$($(v).children('.ename')).attr('e-id'));
+     $(aRow).attr('job-num',$($(v).children('.jname')).attr('job-num'));
+     $(aRow).attr('emp-num',$($(v).children('.ename')).attr('e-id'));
+  });
+}
+
 function latagDays() {
   $($("#status").nextAll()).remove();
   var addHeader = "";
@@ -389,6 +419,26 @@ function latagDays() {
 }
 
 function latagProjects(data) {
+
+  $.each(data, function (pName, det) {
+    $("#main-tbody").append(`
+    <tr class="project-row bg-warning" proj-num="${det.pNum}">
+    <td colspan="100">${pName}</td>
+    </tr>
+    `);
+    $.each(det.Items, function (itemName, iDet) {
+
+      latagPDetails(iDet, itemName).forEach(element => {
+        $('#main-tbody').append(`<tr class="plan-row" job-num emp-num>
+        ${element}
+        </tr>
+        <tr class="actual-row" job-num emp-num>
+        </tr>`)
+      });
+    });
+  });
+  createTable();
+  return;
   data.forEach((element) => {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${element.pNum}">
@@ -398,7 +448,27 @@ function latagProjects(data) {
   });
 }
 
-function latagPDetails(data) {
+function latagPDetails(data, itemName) {
+  const newArr = []
+  // console.log(data)
+  $.each(data, function (jobName, jDet) {
+    $.each(jDet.Members, function (empID, eDet) {
+    newArr.push(`<td rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
+    <td rowspan="2">${itemName}</td>
+    <td rowspan="2">${jDet.dName}</td>
+    <td rowspan="2">${jDet.kic}</td>
+    <td rowspan="2" class="ename" e-id="${empID}">${eDet.name}</td>
+    <td rowspan="2">${jDet.khiRequest}</td>
+    <td rowspan="2">${jDet.kdtDeadline}</td>
+    <td rowspan="2">${jDet.startDate}</td>
+    <td rowspan="2">${jDet.mUsed}</td>
+    <td rowspan="2" class="status">${jDet.pStatus}</td>`)
+    });
+  });
+  return newArr;
+  $.each(data, function (itemName, det) {
+    console.log(itemName, det);
+  });
   $(`.project-row[proj-num="${data.pNum}"]`).after(`
 <tr class="plan-row" job-num="${data.jobNum}" emp-num="${data.empNum}">
 <td rowspan="2">${data.jobName}</td>
@@ -537,7 +607,6 @@ function highlightweek(wVal) {
 }
 
 function totalpa(empNum, date, pa) {
-  console.log(empNum, date, pa);
   var arr = $(`.${pa}[emp-num="${empNum}"]`).children(`[date-val="${date}"]`);
   var totalArr = [];
 
