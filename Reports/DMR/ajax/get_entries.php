@@ -69,9 +69,10 @@ foreach ($entriesArr as $ent) {
     $entriesArray[$projName]['Items'][$itemName][$jobName]['khiRequest'] = $khiReq;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['startDate'] = $khiReq;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['kdtDeadline'] = $kdtDead;
-    $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
-    $entriesArray[$projName]['Items'][$itemName][$jobName]['pStatus'] = "ongoing";
+    // $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]['pStatus'] = "ongoing";
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["name"] = $ename;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["mUsed"] = $mhUsed;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Actual'] = $dur;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Planned'] = $planned;
 

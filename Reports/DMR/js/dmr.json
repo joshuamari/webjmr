@@ -1,20 +1,144 @@
+
 {
+    "Aizu": {
+        "pNum": 97,
+        "Items": {
+            "6311052-52ED-1-R0": {
+                "D-52_EGR Duct": {
+                    "jobNum": 2728,
+                    "dName": "Assembly and Detail Drawing of EGR Duct",
+                    "kic": "Koizumi",
+                    "khiRequest": "2023-05-12",
+                    "startDate": "2023-05-12",
+                    "kdtDeadline": "2023-05-16",
+                    "Members": {
+                        "461": {
+                            "pStatus": "ongoing",
+                            "name": "Bayquen, Hannah Millace",
+                            "mUsed": 45,
+                            "Dates": {
+                                "2023-08-02": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": 4,
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": 1,
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Kenou-kennan": {
+        "pNum": 98,
+        "Items": {
+            "6311054-51AD-1-R0": {
+                "D-51_Air Duct": {
+                    "jobNum": 5442,
+                    "dName": "Assembly and Detail Drawing of Ar Duct",
+                    "kic": "Nakajima",
+                    "khiRequest": "2023-04-28",
+                    "startDate": "2023-04-28",
+                    "kdtDeadline": "2023-10-01",
+                    "Members": {
+                        "460": {
+                            "pStatus": "ongoing",
+                            "name": "Berongoy, Eurjhon",
+                            "mUsed": 14,
+                            "Dates": {
+                                "2023-08-04": {
+                                    "Actual": 4,
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": 3,
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": 2,
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "6311054-71A4-1-R0": {
+                "D-71_Scaffold_Chemical Tank": {
+                    "jobNum": 6971,
+                    "dName": "Assembly and Detail Drawing of Scaffold Around Chemical Tank",
+                    "kic": "Hamaguchi",
+                    "khiRequest": "2023-06-09",
+                    "startDate": "2023-06-09",
+                    "kdtDeadline": "2023-08-18",
+                    "Members": {
+                        "461": {
+                            "pStatus": "ongoing",
+                            "name": "Bayquen, Hannah Millace",
+                            "mUsed": 38,
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": 2,
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": 4,
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": 8,
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "Komuradai": {
-        "pNum": "96",
+        "pNum": 96,
         "Items": {
             "6311051-73-1-R0": {
                 "D-73_Auxiliary equipmet -1": {
-                    "jobNum": "2715",
+                    "jobNum": 2715,
                     "dName": "Assembly and Detail Drawing of Auxiliary equipment",
                     "kic": "Maruyama San",
                     "khiRequest": "2023-02-09",
                     "startDate": "2023-02-09",
                     "kdtDeadline": "2023-02-22",
-                    "mUsed": 13,
-                    "pStatus": "ongoing",
                     "Members": {
                         "460": {
+                            "pStatus": "ongoing",
                             "name": "Berongoy, Eurjhon",
+                            "mUsed": 13,
                             "Dates": {
                                 "2023-07-31": {
                                     "Actual": 8,
@@ -31,17 +155,17 @@
             },
             "6311051-24CH-1-R0": {
                 "D-24_Charging Hopper": {
-                    "jobNum": "2708",
+                    "jobNum": 2708,
                     "dName": "Assembly and Detail Drawing",
                     "kic": "Ogura San",
                     "khiRequest": "2023-02-16",
                     "startDate": "2023-02-16",
                     "kdtDeadline": "2023-02-24",
-                    "mUsed": 16,
-                    "pStatus": "ongoing",
                     "Members": {
                         "461": {
+                            "pStatus": "ongoing",
                             "name": "Bayquen, Hannah Millace",
+                            "mUsed": 16,
                             "Dates": {
                                 "2023-08-14": {
                                     "Actual": 8,
@@ -91,28 +215,28 @@
         }
     },
     "Takarazuka": {
-        "pNum": "232",
+        "pNum": 232,
         "Items": {
             "6311055-22-1-R0": {
                 "D-22_Refuse Pit Door": {
-                    "jobNum": "7986",
+                    "jobNum": 7986,
                     "dName": "Assembly and Detail Drawing",
                     "kic": "Sakai San",
                     "khiRequest": "2023-07-18",
                     "startDate": "2023-07-18",
                     "kdtDeadline": "2023-08-21",
-                    "mUsed": 39,
-                    "pStatus": "ongoing",
                     "Members": {
                         "460": {
+                            "pStatus": "ongoing",
                             "name": "Berongoy, Eurjhon",
+                            "mUsed": 39,
                             "Dates": {
                                 "2023-08-01": {
                                     "Actual": 1,
                                     "Planned": 0
                                 },
                                 "2023-08-02": {
-                                    "Actual": 1,
+                                    "Actual": 3,
                                     "Planned": 0
                                 },
                                 "2023-08-03": {
@@ -129,129 +253,6 @@
                                 },
                                 "2023-08-09": {
                                     "Actual": 6,
-                                    "Planned": 0
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "Kenou-kennan": {
-        "pNum": "98",
-        "Items": {
-            "6311054-51AD-1-R0": {
-                "D-51_Air Duct": {
-                    "jobNum": "5442",
-                    "dName": "Assembly and Detail Drawing of Ar Duct",
-                    "kic": "Nakajima",
-                    "khiRequest": "2023-04-28",
-                    "startDate": "2023-04-28",
-                    "kdtDeadline": "2023-10-01",
-                    "mUsed": 14,
-                    "pStatus": "ongoing",
-                    "Members": {
-                        "460": {
-                            "name": "Berongoy, Eurjhon",
-                            "Dates": {
-                                "2023-08-04": {
-                                    "Actual": 4,
-                                    "Planned": 0
-                                },
-                                "2023-08-07": {
-                                    "Actual": 5,
-                                    "Planned": 0
-                                },
-                                "2023-08-09": {
-                                    "Actual": 2,
-                                    "Planned": 0
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "6311054-71A4-1-R0": {
-                "D-71_Scaffold_Chemical Tank": {
-                    "jobNum": "6971",
-                    "dName": "Assembly and Detail Drawing of Scaffold Around Chemical Tank",
-                    "kic": "Hamaguchi",
-                    "khiRequest": "2023-06-09",
-                    "startDate": "2023-06-09",
-                    "kdtDeadline": "2023-08-18",
-                    "mUsed": 38,
-                    "pStatus": "ongoing",
-                    "Members": {
-                        "461": {
-                            "name": "Bayquen, Hannah Millace",
-                            "Dates": {
-                                "2023-07-31": {
-                                    "Actual": 2,
-                                    "Planned": 0
-                                },
-                                "2023-08-01": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-04": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-07": {
-                                    "Actual": 4,
-                                    "Planned": 0
-                                },
-                                "2023-08-11": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "Aizu": {
-        "pNum": "97",
-        "Items": {
-            "6311052-52ED-1-R0": {
-                "D-52_EGR Duct": {
-                    "jobNum": "2728",
-                    "dName": "Assembly and Detail Drawing of EGR Duct",
-                    "kic": "Koizumi",
-                    "khiRequest": "2023-05-12",
-                    "startDate": "2023-05-12",
-                    "kdtDeadline": "2023-05-16",
-                    "mUsed": 45,
-                    "pStatus": "ongoing",
-                    "Members": {
-                        "461": {
-                            "name": "Bayquen, Hannah Millace",
-                            "Dates": {
-                                "2023-08-02": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-03": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-07": {
-                                    "Actual": 4,
-                                    "Planned": 0
-                                },
-                                "2023-08-08": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-09": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-10": {
-                                    "Actual": 8,
                                     "Planned": 0
                                 }
                             }
