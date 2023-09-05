@@ -276,7 +276,7 @@ function updateTr() {
 }
 
 function latagDays() {
-  $($("#status").nextAll()).remove();
+  $($("#poa").nextAll()).remove();
   var addHeader = "";
   var addCells = "";
   var startString = _dateScope["firstDay"];
@@ -288,7 +288,7 @@ function latagDays() {
     addCells += `<td date-val="${startDate.yyyymmdd()}"></td>`;
     startDate.setDate(startDate.getDate() + 1);
   }
-  $("#status").after(addHeader);
+  $("#poa").after(addHeader);
   $(".plan-row, .actual-row").append(addCells);
 }
 
@@ -304,7 +304,7 @@ function latagProjects(data) {
         $("#main-tbody").append(`<tr class="plan-row" job-num emp-num>
         ${element}
         </tr>
-        <tr class="actual-row" job-num emp-num>
+        <tr class="actual-row" job-num emp-num><td>Actual</td>
         </tr>`);
       });
     });
@@ -325,7 +325,8 @@ function latagPDetails(data, itemName) {
     <td rowspan="2">${jDet.kdtDeadline}</td>
     <td rowspan="2">${jDet.startDate}</td>
     <td rowspan="2">${eDet.mUsed}</td>
-    <td rowspan="2" class="status">${eDet.pStatus}</td>`);
+    <td rowspan="2" class="status">${eDet.pStatus}</td>
+    <td>Planned</td>`);
     });
   });
   return newArr;
@@ -355,7 +356,7 @@ function latagPlanning(data) {
 }
 
 function weekendcolor() {
-  $.each($("#status").nextAll(), function (indexInArray, valueOfElement) {
+  $.each($("#poa").nextAll(), function (indexInArray, valueOfElement) {
     var newDate = new Date($(valueOfElement).text());
     if (newDate.getDay() == 0 || newDate.getDay() == 6) {
       $(`[date-val="${newDate.yyyymmdd()}"]`).addClass("bg-secondary");
