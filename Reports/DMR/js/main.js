@@ -243,7 +243,8 @@ function getEntries() {
       latagProjects(query);
       updateTr();
       latagPlanning(query);
-    });
+    }
+  );
 }
 function getScope() {
   var monthSel = $("#monthSel").val();
@@ -264,13 +265,13 @@ function createTable() {
 }
 
 function updateTr() {
-  var pRow = $('.plan-row');
+  var pRow = $(".plan-row");
   $.each(pRow, function (i, v) {
     var aRow = $(v).next();
-    $(v).attr('job-num', $($(v).children('.jname')).attr('job-num'));
-    $(v).attr('emp-num', $($(v).children('.ename')).attr('e-id'));
-    $(aRow).attr('job-num', $($(v).children('.jname')).attr('job-num'));
-    $(aRow).attr('emp-num', $($(v).children('.ename')).attr('e-id'));
+    $(v).attr("job-num", $($(v).children(".jname")).attr("job-num"));
+    $(v).attr("emp-num", $($(v).children(".ename")).attr("e-id"));
+    $(aRow).attr("job-num", $($(v).children(".jname")).attr("job-num"));
+    $(aRow).attr("emp-num", $($(v).children(".ename")).attr("e-id"));
   });
 }
 
@@ -292,7 +293,6 @@ function latagDays() {
 }
 
 function latagProjects(data) {
-
   $.each(data, function (pName, det) {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${det.pNum}">
@@ -300,13 +300,12 @@ function latagProjects(data) {
     </tr>
     `);
     $.each(det.Items, function (itemName, iDet) {
-
-      latagPDetails(iDet, itemName).forEach(element => {
-        $('#main-tbody').append(`<tr class="plan-row" job-num emp-num>
+      latagPDetails(iDet, itemName).forEach((element) => {
+        $("#main-tbody").append(`<tr class="plan-row" job-num emp-num>
         ${element}
         </tr>
         <tr class="actual-row" job-num emp-num>
-        </tr>`)
+        </tr>`);
       });
     });
   });
@@ -314,7 +313,7 @@ function latagProjects(data) {
 }
 
 function latagPDetails(data, itemName) {
-  const newArr = []
+  const newArr = [];
   $.each(data, function (jobName, jDet) {
     $.each(jDet.Members, function (empID, eDet) {
       newArr.push(`<td rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
@@ -326,7 +325,7 @@ function latagPDetails(data, itemName) {
     <td rowspan="2">${jDet.kdtDeadline}</td>
     <td rowspan="2">${jDet.startDate}</td>
     <td rowspan="2">${eDet.mUsed}</td>
-    <td rowspan="2" class="status">${eDet.pStatus}</td>`)
+    <td rowspan="2" class="status">${eDet.pStatus}</td>`);
     });
   });
   return newArr;
@@ -339,15 +338,14 @@ function latagPlanning(data) {
         $.each(jDets.Members, function (empId, eDets) {
           $.each(eDets.Dates, function (date, hours) {
             $(
-              $(`.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`).children(
-                `[date-val="${date}"]`
-              )
+              $(
+                `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
+              ).children(`[date-val="${date}"]`)
             ).text(hours.Planned);
             $(
               $(
-                `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`).children(
-                  `[date-val="${date}"]`
-                )
+                `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
+              ).children(`[date-val="${date}"]`)
             ).text(hours.Actual);
           });
         });
