@@ -112,20 +112,20 @@ function checkLogin() {
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
-      jmcAccess();
+      cmrAccess();
     },
   });
   $.ajaxSetup({ async: true });
 }
-function jmcAccess() {
-  //check if user has access to jmc
+function cmrAccess() {
   $.post(
-    "ajax/jmc_access.php",
+    "ajax/cmr_access.php",
     {
       empNum: _empDetails["empNum"],
     },
     function (data) {
-      if (data.trim() == 0) {
+      var access = $.parseJSON(data);
+      if (!access) {
         alert("Access denied");
         window.location.href = "../";
       }

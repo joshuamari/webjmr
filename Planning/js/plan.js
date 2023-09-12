@@ -491,10 +491,26 @@ function checkLogin() {
       if (Object.keys(empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
-      //   jmcAccess();
+      planAccess();
     },
   });
   $.ajaxSetup({ async: true });
+}
+function planAccess() {
+  $.post(
+    "ajax/plan_access.php",
+    {
+      empNum: empDetails["empNum"],
+    },
+    function (data) {
+      console.log(data);
+      var access = $.parseJSON(data);
+      if (!access) {
+        alert("Access denied");
+        window.location.href = "../DailyReport";
+      }
+    }
+  );
 }
 function getMyGroups() {
   //get Group Selection
@@ -1250,17 +1266,17 @@ function getPlans() {
 function fillPlans(planString) {
   var projCount = $("#planningTable tr").length + 1;
   var planStringArray = planString;
-  var planID = planStringArray['planID'];
-  var projGroup = planStringArray['projGroup'];
-  var projName = planStringArray['projName'];
-  var projItem = planStringArray['projItem'];
-  var projJob = planStringArray['projJob'];
-  var projEmp = planStringArray['projEmpName'];
-  var projStart = planStringArray['projStart'];
-  var projEnd = planStringArray['projEnd'];
-  var projMH = planStringArray['projMH'];
-  var usedHours = planStringArray['usedHours'];
-  var projStatus = planStringArray['projStatus'];
+  var planID = planStringArray["planID"];
+  var projGroup = planStringArray["projGroup"];
+  var projName = planStringArray["projName"];
+  var projItem = planStringArray["projItem"];
+  var projJob = planStringArray["projJob"];
+  var projEmp = planStringArray["projEmpName"];
+  var projStart = planStringArray["projStart"];
+  var projEnd = planStringArray["projEnd"];
+  var projMH = planStringArray["projMH"];
+  var usedHours = planStringArray["usedHours"];
+  var projStatus = planStringArray["projStatus"];
   var statusBadge = `<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
   var buttons = `
     <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button>
