@@ -92,14 +92,22 @@ $(document).on("click", "#totOnly", function () {
 
 //#region FUNCTIONS
 function exportTable() {
+  var sDate = formatDate($("#startSel").val());
+  var eDate = formatDate($("#endSel").val());
+  var buSel = $("#buSel").val() === "" ? "All" : $("#buSel").val();
   TableToExcel.convert(document.getElementById("cmrTable"), {
-    name: `Careless Mistakes Report_${$("#buSel").val()}_${$(
-      "#monthSel"
-    ).val()}.xlsx`,
+    name: `Careless Mistakes Report_${buSel}_${sDate}-${eDate}.xlsx`,
     sheet: {
-      name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
+      name: `${buSel}_${$("#monthSel").val()}`,
     },
   });
+}
+function formatDate(inputDate) {
+  var date = new Date(inputDate);
+  var year = date.getFullYear().toString();
+  var month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+  var day = date.getDate().toString().padStart(2, "0");
+  return year + month + day;
 }
 function checkLogin() {
   $.ajaxSetup({ async: false });
@@ -184,7 +192,6 @@ function getEntries() {
       ogpSel: ogpSel,
     },
     function (data) {
-      console.log(data);
       _entries = $.parseJSON(data);
       var upperString = "";
       var lowerString = "";

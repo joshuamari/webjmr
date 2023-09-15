@@ -39,6 +39,7 @@ $(document).ready(function () {
   sequenceValidation();
   initCalendar();
   getPlans();
+  planAccess();
   //#region sidebarshits
   let arrow = document.querySelectorAll(".arrow");
 
@@ -1491,6 +1492,32 @@ function fillEditPlan(editDetails) {
   $(`#plannerPlan`).val(planner);
   $(`#plannerDatePlan`).val(plannedDate);
   $(`#modifiedPlan`).val(plannedDateMod);
+}
+function planAccess() {
+  $.post(
+    "ajax/plan_access.php",
+    {
+      empNum: empDetails["empNum"],
+    },
+    function (data) {
+      var addString = "";
+      var access = $.parseJSON(data);
+      if (access) {
+        addString += `<li>
+        <div class="iocn-link">
+          <a class="row-cols-12" href="../Planning/">
+            <i class="bx bx-book-bookmark"></i>
+            <span class="link_name col-9">Planning</span>
+          </a>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="../Planning/">Planning</a></li>
+        </ul>
+      </li>`;
+        $("#navigationLinks").append(addString);
+      }
+    }
+  );
 }
 //#endregion
 
