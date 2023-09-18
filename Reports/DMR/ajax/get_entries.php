@@ -52,8 +52,10 @@ foreach ($entriesArr as $ent) {
     $enum = $ent['fldEmployeeNum'];
     $ename = getName($enum);
     $entryDate = $ent['fldDate'];
-    $dur = $ent['duration'] / 60;
-    $mhUsed = $ent['mhused'] / 60;
+    $rawDur = $ent['duration'] / 60;
+    $dur = $rawDur == (int)$rawDur ? sprintf("%.0f", $rawDur) : sprintf("%.1f", $rawDur);
+    $rawMHUsed = $ent['mhused'] / 60;
+    $mhUsed = $rawMHUsed == (int)$rawMHUsed ? sprintf("%.0f", $rawMHUsed) : sprintf("%.1f", $rawMHUsed);
     $planned = $ent['planned'] == NULL ? 0 : $ent['planned'] / 60;
     $drawName = $ent['fldDrawingName'];
     $khic = $ent['fldKHIC'];
