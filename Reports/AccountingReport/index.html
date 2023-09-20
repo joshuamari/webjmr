@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Careless Mistakes Report</title>
+    <title>Accounting Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <link
@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-    <link rel="stylesheet" href="css/careless.css" />
+    <link rel="stylesheet" href="css/accounting.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
@@ -19,15 +19,15 @@
     <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
       var busterCall = [
-        "js/careless.js",
-        "css/careless.css",
+        "js/accounting.js",
+        "css/accounting.css",
         "css/bootstrap.min.css",
       ];
       $.post(
         "ajax/get_version.php",
         {
           busterCall: busterCall,
-          titleName: "CM Report",
+          titleName: "Accounting Report",
         },
         function (data) {
           $("head").html(data);
@@ -37,49 +37,13 @@
   </head>
 
   <!-- #region modal -->
-  <div
-    class="modal fade"
-    id="exportModal"
-    data-bs-backdrop="static"
-    data-bs-keyboard="false"
-    tabindex="-1"
-    aria-labelledby="staticBackdropLabel"
-    aria-hidden="true"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">
-            Export to Excel
-          </h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body pt-4 pb-5">
-          <h5>Which table type you want to export?</h5>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="totAll">
-            Group total with all members
-          </button>
-          <button type="button" class="btn btn-O" id="totOnly">
-            Group total only
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- #endregion modal-->
 
   <body>
     <div class="home-content position-relative">
       <div class="title xPrint">
-        <h1>Careless Mistakes Report</h1>
+        <h1>Accounting Report</h1>
 
         <div class="d-flex justify-content-between align-items-center">
           <a href="../" class="backbtn">
@@ -100,54 +64,38 @@
           </div>
         </div>
       </div>
-      <div class="content flex-column flex-md-row">
-        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 h-auto h-md-100">
-          <div class="form-floating col-12 mb-2">
-            <select class="form-select" id="buSel" aria-label="Select BU">
-              <option value="" selected hidden>Select Group</option>
-              <option>ENV</option>
-              <option>Two</option>
-              <option>Three</option>
+      <div class="content d-flex flex-column">
+        <div
+          class="left col-12 p-3 px-lg-3 d-flex flex-column flex-sm-row gap-sm-2 gap-0"
+        >
+          <div class="form-floating col-12 col-lg-2 col-md-3 col-sm-4 mb-2">
+            <select
+              class="form-select"
+              id="selLoc"
+              aria-label="Select Location"
+            >
+              <option>KDT</option>
+              <option>Overseas</option>
+              <option>WFH</option>
             </select>
-            <label for="busSel">Select BU</label>
+            <label for="selLoc">Select Location</label>
           </div>
-          <!-- <div class="form-floating col-12 mb-2">
+
+          <div class="form-floating col-12 col-lg-2 col-md-3 col-sm-4 mb-2">
             <input type="month" id="monthSel" class="form-control" />
             <label for="monthSel">Select Month</label>
-          </div> -->
-          <div class="form-floating col-12 mb-2">
-            <input type="date" id="startSel" class="form-control" />
-            <label for="startSel">Select Start Date</label>
           </div>
-          <div class="form-floating col-12 mb-2" id="error_message"></div>
-          <div class="form-floating col-12 mb-2">
-            <input type="date" id="endSel" class="form-control" />
-            <label for="endSel">Select End Date</label>
-          </div>
-          <div class="form-floating col-12 mb-2" id="error_message2"></div>
 
-          <div class="col-12">
-            <div class="form-check form-switch p-0 d-flex">
-              <input
-                type="checkbox"
-                role="switch"
-                class="checkbox"
-                name="checkbox"
-              />
-              <div class="d-flex align-items-center">
-                <p class="m-0 ps-3">
-                  Orig group only
-                  <!-- <i
-                      class="m-0 bx bx-info-circle ps-1"
-                      title="Exclude Other Group's Project"
-                    ></i> -->
-                </p>
-              </div>
-            </div>
+          <div class="form-floating col-12 col-lg-2 col-md-3 col-sm-4 mb-2">
+            <select class="form-select" id="co" aria-label="Select Cut-off">
+              <option>First half</option>
+              <option>Second Half</option>
+            </select>
+            <label for="co">Select Cut-off</label>
           </div>
         </div>
 
-        <div class="d-none tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
+        <div class="tablecont col-12 p-3">
           <div class="mainTable overflow-auto">
             <table id="cmrTable" class="table table-hover w-100">
               <thead class="sticky-top">
@@ -777,11 +725,11 @@
             </table>
           </div>
         </div>
-        <div
-          class="noShow d-flex justify-content-center col-md-9 col-lg-10 col-12 align-items-center h-100"
+        <!-- <div
+          class="d-none noShow d-flex justify-content-center col-12 align-items-center h-100"
         >
           <div class="p-4 rounded-4">Please select date range</div>
-        </div>
+        </div> -->
       </div>
     </div>
   </body>
