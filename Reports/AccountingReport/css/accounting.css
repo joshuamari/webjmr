@@ -1,0 +1,187 @@
+/* Google Fonts Import Link */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+html {
+  height: fit-content;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+}
+td,
+th {
+  border: 0.5px solid #777 !important;
+  color: #333;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+body {
+  background: #fff;
+  height: 100vh;
+  width: 100%;
+}
+
+.st-color {
+  background: #7fb5eb !important;
+}
+.mhpp-color {
+  background: var(--yellow-color) !important;
+}
+/* #multiplier td:last-of-type,
+#xd td:last-of-type{
+  background:var(--yellow-color) !important;
+} */
+.content::-webkit-scrollbar {
+  width: 10px;
+}
+.content::-webkit-scrollbar-track {
+  background: #ebebeb;
+}
+.content::-webkit-scrollbar-thumb {
+  background: #6383a1;
+  border-radius: 25px;
+}
+
+:root {
+  --main-blue: #3980c7;
+  --secondary-blue: #395dc7;
+  --tertiary-blue: #39a4c7;
+  --darkest-blue: #16334f;
+
+  --red-color: #ff6b6b;
+  --yellow-color: #feca57;
+  --text-color: #555;
+  --header-color: #444;
+  --lightblue-color: #476f95;
+  --green-color: #7bae37;
+}
+/* modal */
+.modal-header {
+  background-color: var(--main-blue);
+}
+.modal-header h1 {
+  color: #fff;
+}
+.btn-O {
+  background-color: var(--main-blue) !important;
+  color: #fff !important;
+}
+.btn-O:hover {
+  background-color: var(--lightblue-color) !important;
+}
+
+/* home */
+.home-content {
+  width: 100%;
+}
+.home-content .title {
+  height: 120px;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--darkest-blue);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.home-content .title h1 {
+  font-size: 45px;
+  font-weight: 600;
+}
+.home-content .title .backbtn {
+  display: inline-flex;
+  text-decoration: none;
+  color: #ddd;
+  margin-right: auto;
+}
+.home-content .title a:hover i,
+.home-content .title a:hover h5 {
+  color: #fc9842;
+  transition: color 0.5s;
+}
+.home-content .content {
+  height: calc(100vh - 120px);
+  display: flex;
+}
+
+.left {
+  position: relative;
+  background-color: #ebebeb;
+}
+
+.right button {
+  width: 100px;
+}
+.right button:first-child {
+  margin-right: 10px;
+}
+.right button:last-child {
+  margin-left: 10px;
+}
+.tablecont {
+  overflow: auto;
+  height: calc(100% - 98px);
+}
+
+/* table layout */
+.mainTable {
+  height: 100%;
+}
+table thead th {
+  background-color: #bbffbc !important;
+}
+table tbody .bu {
+  cursor: pointer;
+  background-color: #e5eaff !important;
+}
+table tbody .bu td {
+  font-weight: 600;
+}
+td {
+  background-color: transparent !important;
+}
+table tbody .total {
+  /* background-color: rgb(224, 188, 99); */
+}
+table tbody .total td {
+  color: var(--red-color);
+}
+table tbody .total td {
+  font-weight: 600;
+}
+table tbody .collapse {
+}
+
+.heady th {
+  text-align: center;
+}
+tbody .collapse td:first-child {
+  text-align: left !important;
+}
+
+@media screen and (max-width: 768px) {
+  .right button {
+    width: 100%;
+    margin: 10px;
+  }
+
+  .home-content .title h1 {
+    font-size: 30px;
+  }
+}
+
+@media screen and (max-width: 575px) {
+}
