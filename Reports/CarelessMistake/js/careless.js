@@ -92,14 +92,51 @@ $(document).on("click", "#totOnly", function () {
 
 //#region FUNCTIONS
 function exportTable() {
+  if (checkSummaryAccess()) {
+    copyPasta();
+  }
+  var sDate = formatDate($("#startSel").val());
+  var eDate = formatDate($("#endSel").val());
+  var buSel = $("#buSel").val() === "" ? "All" : $("#buSel").val();
   TableToExcel.convert(document.getElementById("cmrTable"), {
-    name: `Careless Mistakes Report_${$("#buSel").val()}_${$(
-      "#monthSel"
-    ).val()}.xlsx`,
+    name: `Careless Mistakes Report_${buSel}_${sDate}-${eDate}.xlsx`,
     sheet: {
-      name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
+      name: `${buSel}_${sDate}-${eDate}`,
     },
   });
+  $(".removeLater").remove();
+}
+function copyPasta() {
+  const requiredFields = ["New", "Kmod", "Mkdt", "Mkhi", "Chk"];
+  var hrTable = ``;
+  requiredFields.forEach((element) => {
+    var nHr = $(`#totalRow td.hrs[tow='${element}']`).text();
+    hrTable += `<tr class='removeLater'><td data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${element}</td><td data-f-name="Arial" data-f-sz="10"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n">${nHr}</td></tr>`;
+  });
+  $("#cmrBody").append(`${hrTable}`);
+}
+function checkSummaryAccess() {
+  $.ajaxSetup({ async: false });
+  var access = false;
+  $.post(
+    "ajax/summary_access.php",
+    {
+      empNum: _empDetails["empNum"],
+    },
+    function (data) {
+      access = $.parseJSON(data);
+      return access;
+    }
+  );
+  $.ajaxSetup({ async: true });
+  return access;
+}
+function formatDate(inputDate) {
+  var date = new Date(inputDate);
+  var year = date.getFullYear().toString();
+  var month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+  var day = date.getDate().toString().padStart(2, "0");
+  return year + month + day;
 }
 function checkLogin() {
   $.ajaxSetup({ async: false });
@@ -112,20 +149,20 @@ function checkLogin() {
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
-      jmcAccess();
+      cmrAccess();
     },
   });
   $.ajaxSetup({ async: true });
 }
-function jmcAccess() {
-  //check if user has access to jmc
+function cmrAccess() {
   $.post(
-    "ajax/jmc_access.php",
+    "ajax/cmr_access.php",
     {
       empNum: _empDetails["empNum"],
     },
     function (data) {
-      if (data.trim() == 0) {
+      var access = $.parseJSON(data);
+      if (!access) {
         alert("Access denied");
         window.location.href = "../";
       }
@@ -184,7 +221,6 @@ function getEntries() {
       ogpSel: ogpSel,
     },
     function (data) {
-      console.log(data);
       _entries = $.parseJSON(data);
       var upperString = "";
       var lowerString = "";

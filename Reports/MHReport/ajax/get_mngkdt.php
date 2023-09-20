@@ -38,7 +38,7 @@ $proj = "('" . $implodeString . "')";
 
 #region main
 //emp#||dbIndex||duration(7,8,9,11,13,22,23,24)//('7','8','9','11','13','22','23','24')ito yung mga5050
-$mngkdtQ = "SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND (dr.fldGroup='$rawGetGroup' OR dr.fldTrGroup='$rawGetGroup')) $dateCompare GROUP BY locCode,CASE WHEN (dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') AND fldItem NOT IN('7','8','9','11','13','22','23','24')) THEN dr.fldProject END,dr.fldEmployeeNum";
+$mngkdtQ = "SELECT SUM(fldDuration) AS totalHrs,dr.fldEmployeeNum,pt.fldOrder,dl.fldCode AS locCode,dr.fldProject,dr.fldItem FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN dispatch_locations AS dl ON dr.fldLocation=dl.fldID WHERE (dr.fldProject IN $proj AND (dr.fldGroup='$rawGetGroup' OR dr.fldTrGroup='$rawGetGroup')) $dateCompare GROUP BY locCode,CASE WHEN (dr.fldGroup NOT IN('SYS','ANA','IT','ETCL','MPM') AND fldItem NOT IN('7','8','9','11','13','22','23','24')) THEN dr.fldProject END,dr.fldEmployeeNum ORDER BY dr.fldEmployeeNum";
 $mngkdtStmt = $connwebjmr->prepare($mngkdtQ);
 $mngkdtStmt->execute();
 if ($mngkdtStmt->rowCount() > 0) {

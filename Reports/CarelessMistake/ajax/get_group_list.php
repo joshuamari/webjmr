@@ -16,7 +16,7 @@ if (isset($_REQUEST['empNum'])) {
 #endregion
 
 #region main
-if (in_array($empNum, $reportAllGroupAccess)) {
+if (isAllGroups()) {
     $grpQuery = "SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldBU NOT IN ('SHI','INT','SYS','TEG','ADM','ACT','MNG','DXT') ORDER BY fldBU";
     $grpStmt = $connkdt->query($grpQuery);
     if ($grpStmt->rowCount() > 0) {
@@ -46,7 +46,20 @@ if (in_array($empNum, $reportAllGroupAccess)) {
 #endregion
 
 #region function
-
+function isAllGroups()
+{
+    global $connkdt;
+    global $empNum;
+    $pID = 24; //CMR all groups MODULE PERMISSION ID kdtphdb>>>>p_permissions
+    $accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
+    $accessStmt = $connkdt->prepare($accessQ);
+    $accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);
+    $ac = $accessStmt->fetchColumn();
+    if ($ac) {
+        return TRUE;
+    }
+    return FALSE;
+}
 #endregion
 
 echo json_encode($output);

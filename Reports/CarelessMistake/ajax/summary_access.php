@@ -12,17 +12,12 @@ $empNum = NULL;
 if (!empty($_POST['empNum'])) {
     $empNum = $_POST['empNum'];
 }
-$pID = 1; //JMC MODULE PERMISSION ID kdtphdb>>>>p_permissions
+$pID = 23; //sumamry access MODULE PERMISSION ID kdtphdb>>>>p_permissions
 $access = FALSE;
 #endregion
 
 #region main query
-#region lumang access control
-// $accessQ="SELECT fldJMCImport FROM kdtoptions WHERE fldEmployeeNumber='$empNum'";
-// $accessStmt=$connkdt->query($accessQ);
-// $access=$accessStmt->fetchColumn();
-#endregion
-$accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
+$accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID";
 $accessStmt = $connkdt->prepare($accessQ);
 $accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);
 $ac = $accessStmt->fetchColumn();

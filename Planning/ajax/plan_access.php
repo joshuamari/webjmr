@@ -12,7 +12,7 @@ $empNum = NULL;
 if (!empty($_POST['empNum'])) {
     $empNum = $_POST['empNum'];
 }
-$pID = 1; //JMC MODULE PERMISSION ID kdtphdb>>>>p_permissions
+$pID = 5; //PLANNING UI MODULE PERMISSION ID kdtphdb>>>>p_permissions
 $access = FALSE;
 #endregion
 

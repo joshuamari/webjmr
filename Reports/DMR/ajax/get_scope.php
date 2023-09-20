@@ -22,15 +22,13 @@ $scopeArray = array();
 
 #region main
 if ($firstDayOfWeek !== 1) {
-    $daysToSubtract = ($firstDayOfWeek + 5) % 7;
-    $lastMondayTimestamp = strtotime("-$daysToSubtract days", $rawFirstDay);
+    $lastMondayTimestamp = strtotime("last monday", $rawFirstDay);
     $lastMonday = date('Y-m-d', $lastMondayTimestamp);
 }
 
 
 if ($lastDayOfWeek !== 7) {
-    $daysToAdd = 7 - $lastDayOfWeek;
-    $nextSundayTimestamp = strtotime("+$daysToAdd days", $rawLastDay);
+    $nextSundayTimestamp = strtotime("next sunday", $rawLastDay);
     $nextSunday = date('Y-m-d', $nextSundayTimestamp);
 }
 

@@ -66,7 +66,7 @@ const codeArr = {
   BOI: "61W2723-8900",
   KHI: "61W2102-8900",
   KDT: "61W2102-8900",
-  TEG: "NA"
+  TEG: "NA",
 };
 
 //grp||proj Code||Proj Name||Location(P/J)||dbIndex
@@ -144,7 +144,7 @@ function checkLogin() {
       if (Object.keys(empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
-      jmcAccess();
+      mhAccess();
     },
   });
   $.ajaxSetup({ async: true });
@@ -157,15 +157,15 @@ function setDate() {
   var dateString = `${today.getFullYear()}-${rawMonth.padStart(2, "0")}`;
   $("#monthSel").val(dateString);
 }
-function jmcAccess() {
-  //check if user has access to jmc
+function mhAccess() {
   $.post(
-    "ajax/jmc_access.php",
+    "ajax/mh_access.php",
     {
       empNum: empDetails["empNum"],
     },
     function (data) {
-      if (data.trim() == 0) {
+      var access = $.parseJSON(data);
+      if (!access) {
         alert("Access denied");
         window.location.href = "../";
       }
@@ -666,16 +666,17 @@ $(document).on("click", "#btnExport", function () {
   $("#mainTable").addClass("ayos");
 });
 
-function exportName(){
+function exportName() {
   $.ajaxSetup({ async: false });
   var expName = ``;
   var ymSel = $("#monthSel").val();
   var cOff = $("#CO").val();
-  $.post("ajax/get_exportname.php",
-  {
-    ymSel : ymSel,
-    cOff :  cOff,
-  },
+  $.post(
+    "ajax/get_exportname.php",
+    {
+      ymSel: ymSel,
+      cOff: cOff,
+    },
     function (data) {
       expName = data;
     }

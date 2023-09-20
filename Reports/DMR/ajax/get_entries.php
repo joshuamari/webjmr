@@ -39,7 +39,7 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,dr.fldDuration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel ORDER BY pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
+$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel GROUP BY dr.fldEmployeeNum,dr.fldJobRequestDescription,dr.fldDate ORDER BY pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
 $entriesArr = $entriesStmt->fetchAll();
@@ -52,8 +52,10 @@ foreach ($entriesArr as $ent) {
     $enum = $ent['fldEmployeeNum'];
     $ename = getName($enum);
     $entryDate = $ent['fldDate'];
-    $dur = $ent['fldDuration'] / 60;
-    $mhUsed = $ent['mhused'] / 60;
+    $rawDur = $ent['duration'] / 60;
+    $dur = $rawDur == (int)$rawDur ? sprintf("%.0f", $rawDur) : sprintf("%.1f", $rawDur);
+    $rawMHUsed = $ent['mhused'] / 60;
+    $mhUsed = $rawMHUsed == (int)$rawMHUsed ? sprintf("%.0f", $rawMHUsed) : sprintf("%.1f", $rawMHUsed);
     $planned = $ent['planned'] == NULL ? 0 : $ent['planned'] / 60;
     $drawName = $ent['fldDrawingName'];
     $khic = $ent['fldKHIC'];
@@ -69,9 +71,10 @@ foreach ($entriesArr as $ent) {
     $entriesArray[$projName]['Items'][$itemName][$jobName]['khiRequest'] = $khiReq;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['startDate'] = $khiReq;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['kdtDeadline'] = $kdtDead;
-    $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
-    $entriesArray[$projName]['Items'][$itemName][$jobName]['pStatus'] = "ongoing";
+    // $entriesArray[$projName]['Items'][$itemName][$jobName]['mUsed'] = $mhUsed;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]['pStatus'] = "ongoing";
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["name"] = $ename;
+    $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["mUsed"] = $mhUsed;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Actual'] = $dur;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['Members'][$enum]["Dates"][$entryDate]['Planned'] = $planned;
 
