@@ -104,6 +104,9 @@ $(document).on("click", ".memBtn", function () {
   }
   getEntries();
 });
+$(document).on("change", "#projSel", function () {
+  getEntries();
+});
 //#endregion
 
 //#region FUNCTIONS

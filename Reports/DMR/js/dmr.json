@@ -1,44 +1,52 @@
-
 {
-    "Aizu": {
-        "pNum": 97,
+    "(KDT) Chem Training": {
+        "pNum": 149,
+        "Direct": true,
         "Items": {
-            "6311052-52ED-1-R0": {
-                "D-52_EGR Duct": {
-                    "jobNum": 2728,
-                    "dName": "Assembly and Detail Drawing of EGR Duct",
-                    "kic": "Koizumi",
-                    "khiRequest": "2023-05-12",
-                    "startDate": "2023-05-12",
-                    "kdtDeadline": "2023-05-16",
+            "SPPID Training": {
+                "Training": {
+                    "jobNum": 4592,
+                    "dName": "SPPID Training",
+                    "kic": "Watanabe",
+                    "khiRequest": "2022-12-05",
+                    "startDate": "2022-12-05",
+                    "kdtDeadline": "2023-09-29",
                     "Members": {
-                        "461": {
+                        "344": {
                             "pStatus": "ongoing",
-                            "name": "Bayquen, Hannah Millace",
-                            "mUsed": 45,
+                            "name": "Patron, Edilaine Marose",
+                            "mUsed": "24",
                             "Dates": {
-                                "2023-08-02": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-03": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
                                 "2023-08-07": {
-                                    "Actual": 4,
+                                    "Actual": "3",
                                     "Planned": 0
                                 },
                                 "2023-08-08": {
-                                    "Actual": 1,
+                                    "Actual": "4",
                                     "Planned": 0
                                 },
                                 "2023-08-09": {
-                                    "Actual": 8,
+                                    "Actual": "2",
                                     "Planned": 0
                                 },
                                 "2023-08-10": {
-                                    "Actual": 8,
+                                    "Actual": "1",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "2",
                                     "Planned": 0
                                 }
                             }
@@ -48,104 +56,208 @@
             }
         }
     },
-    "Kenou-kennan": {
-        "pNum": 98,
+    "(KHI) Chem Training": {
+        "pNum": 148,
+        "Direct": true,
         "Items": {
-            "6311054-51AD-1-R0": {
-                "D-51_Air Duct": {
-                    "jobNum": 5442,
-                    "dName": "Assembly and Detail Drawing of Ar Duct",
-                    "kic": "Nakajima",
-                    "khiRequest": "2023-04-28",
-                    "startDate": "2023-04-28",
-                    "kdtDeadline": "2023-10-01",
+            "Procurement Training": {
+                "Training": {
+                    "jobNum": 4590,
+                    "dName": "Procurement Training",
+                    "kic": "Yamada",
+                    "khiRequest": "2022-01-03",
+                    "startDate": "2022-01-03",
+                    "kdtDeadline": "2023-12-22",
                     "Members": {
-                        "460": {
+                        "261": {
                             "pStatus": "ongoing",
-                            "name": "Berongoy, Eurjhon",
-                            "mUsed": 14,
+                            "name": "Villamor, Amor",
+                            "mUsed": "39",
                             "Dates": {
-                                "2023-08-04": {
-                                    "Actual": 4,
+                                "2023-08-11": {
+                                    "Actual": "6",
                                     "Planned": 0
                                 },
-                                "2023-08-07": {
-                                    "Actual": 3,
+                                "2023-08-14": {
+                                    "Actual": "1",
                                     "Planned": 0
                                 },
-                                "2023-08-09": {
-                                    "Actual": 2,
+                                "2023-08-22": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "4",
                                     "Planned": 0
                                 }
                             }
-                        }
-                    }
-                }
-            },
-            "6311054-71A4-1-R0": {
-                "D-71_Scaffold_Chemical Tank": {
-                    "jobNum": 6971,
-                    "dName": "Assembly and Detail Drawing of Scaffold Around Chemical Tank",
-                    "kic": "Hamaguchi",
-                    "khiRequest": "2023-06-09",
-                    "startDate": "2023-06-09",
-                    "kdtDeadline": "2023-08-18",
-                    "Members": {
-                        "461": {
+                        },
+                        "281": {
                             "pStatus": "ongoing",
-                            "name": "Bayquen, Hannah Millace",
-                            "mUsed": 38,
+                            "name": "Cura, Leonard Ryan",
+                            "mUsed": "88",
                             "Dates": {
-                                "2023-07-31": {
-                                    "Actual": 2,
+                                "2023-08-09": {
+                                    "Actual": "6",
                                     "Planned": 0
                                 },
-                                "2023-08-01": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-04": {
-                                    "Actual": 8,
-                                    "Planned": 0
-                                },
-                                "2023-08-07": {
-                                    "Actual": 4,
+                                "2023-08-10": {
+                                    "Actual": "6",
                                     "Planned": 0
                                 },
                                 "2023-08-11": {
-                                    "Actual": 8,
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "4",
                                     "Planned": 0
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    },
-    "Komuradai": {
-        "pNum": 96,
-        "Items": {
-            "6311051-73-1-R0": {
-                "D-73_Auxiliary equipmet -1": {
-                    "jobNum": 2715,
-                    "dName": "Assembly and Detail Drawing of Auxiliary equipment",
-                    "kic": "Maruyama San",
-                    "khiRequest": "2023-02-09",
-                    "startDate": "2023-02-09",
-                    "kdtDeadline": "2023-02-22",
-                    "Members": {
-                        "460": {
+                        },
+                        "291": {
                             "pStatus": "ongoing",
-                            "name": "Berongoy, Eurjhon",
-                            "mUsed": 13,
+                            "name": "Llosala, Rowel",
+                            "mUsed": "65",
                             "Dates": {
                                 "2023-07-31": {
-                                    "Actual": 8,
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "2",
                                     "Planned": 0
                                 },
                                 "2023-08-02": {
-                                    "Actual": 5,
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "3",
                                     "Planned": 0
                                 }
                             }
@@ -153,59 +265,209 @@
                     }
                 }
             },
-            "6311051-24CH-1-R0": {
-                "D-24_Charging Hopper": {
-                    "jobNum": 2708,
-                    "dName": "Assembly and Detail Drawing",
-                    "kic": "Ogura San",
-                    "khiRequest": "2023-02-16",
-                    "startDate": "2023-02-16",
-                    "kdtDeadline": "2023-02-24",
+            "P&ID Training": {
+                "Training": {
+                    "jobNum": 4589,
+                    "dName": "P&ID Training",
+                    "kic": "Watanabe",
+                    "khiRequest": "2022-05-11",
+                    "startDate": "2022-05-11",
+                    "kdtDeadline": "2023-12-22",
                     "Members": {
-                        "461": {
+                        "261": {
                             "pStatus": "ongoing",
-                            "name": "Bayquen, Hannah Millace",
-                            "mUsed": 16,
+                            "name": "Villamor, Amor",
+                            "mUsed": "32",
                             "Dates": {
-                                "2023-08-14": {
-                                    "Actual": 8,
-                                    "Planned": 4
-                                },
-                                "2023-08-15": {
-                                    "Actual": 0,
-                                    "Planned": 4
-                                },
-                                "2023-08-16": {
-                                    "Actual": 0,
-                                    "Planned": 4
-                                },
-                                "2023-08-17": {
-                                    "Actual": 0,
-                                    "Planned": 4
-                                },
-                                "2023-08-18": {
-                                    "Actual": 0,
-                                    "Planned": 4
-                                },
-                                "2023-08-21": {
-                                    "Actual": 8,
-                                    "Planned": 4
-                                },
                                 "2023-08-22": {
-                                    "Actual": 0,
-                                    "Planned": 4
+                                    "Actual": "4",
+                                    "Planned": 0
                                 },
                                 "2023-08-23": {
-                                    "Actual": 0,
-                                    "Planned": 4
+                                    "Actual": "4",
+                                    "Planned": 0
                                 },
                                 "2023-08-24": {
-                                    "Actual": 0,
-                                    "Planned": 4
+                                    "Actual": "4",
+                                    "Planned": 0
                                 },
                                 "2023-08-25": {
-                                    "Actual": 0,
-                                    "Planned": 4
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "71",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "104",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "7",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "4",
+                                    "Planned": 0
                                 }
                             }
                         }
@@ -214,45 +476,1060 @@
             }
         }
     },
-    "Takarazuka": {
-        "pNum": 232,
+    "AMMONIA & UREA PLANTS IN MARY": {
+        "pNum": 255,
+        "Direct": true,
         "Items": {
-            "6311055-22-1-R0": {
-                "D-22_Refuse Pit Door": {
-                    "jobNum": 7986,
-                    "dName": "Assembly and Detail Drawing",
-                    "kic": "Sakai San",
-                    "khiRequest": "2023-07-18",
-                    "startDate": "2023-07-18",
-                    "kdtDeadline": "2023-08-21",
+            "AMMONIA & UREA PLANTS IN MARY - Specification Checklist Preparation_P01": {
+                "Preparation New": {
+                    "jobNum": 7415,
+                    "dName": "Specification Checklist - AMMONIA & UREA PLANTS IN MARY",
+                    "kic": "Hamanaka",
+                    "khiRequest": "2023-07-10",
+                    "startDate": "2023-07-10",
+                    "kdtDeadline": "2023-08-31",
                     "Members": {
-                        "460": {
+                        "261": {
                             "pStatus": "ongoing",
-                            "name": "Berongoy, Eurjhon",
-                            "mUsed": 39,
+                            "name": "Villamor, Amor",
+                            "mUsed": "64",
                             "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
                                 "2023-08-01": {
-                                    "Actual": 1,
+                                    "Actual": "8",
                                     "Planned": 0
                                 },
                                 "2023-08-02": {
-                                    "Actual": 3,
+                                    "Actual": "8",
                                     "Planned": 0
                                 },
                                 "2023-08-03": {
-                                    "Actual": 8,
+                                    "Actual": "1",
                                     "Planned": 0
                                 },
-                                "2023-08-04": {
-                                    "Actual": 4,
+                                "2023-08-07": {
+                                    "Actual": "3",
                                     "Planned": 0
                                 },
                                 "2023-08-08": {
-                                    "Actual": 8,
+                                    "Actual": "8",
                                     "Planned": 0
                                 },
                                 "2023-08-09": {
-                                    "Actual": 6,
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "GTG Maintenance Parts Supply": {
+        "pNum": 324,
+        "Direct": true,
+        "Items": {
+            "GTG Maintenance Parts Supply - 3D Model Preparation_P01": {
+                "Preparation": {
+                    "jobNum": 9244,
+                    "dName": "3D Model - GTG Maintenance Parts Supply",
+                    "kic": "Mizuno",
+                    "khiRequest": "2023-08-31",
+                    "startDate": "2023-08-31",
+                    "kdtDeadline": "2023-09-01",
+                    "Members": {
+                        "281": {
+                            "pStatus": "ongoing",
+                            "name": "Cura, Leonard Ryan",
+                            "mUsed": "2",
+                            "Dates": {
+                                "2023-09-01": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "3",
+                            "Dates": {
+                                "2023-09-01": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "H2 FGSS": {
+        "pNum": 25,
+        "Direct": true,
+        "Items": {
+            "H2 FGSS Loading Data_P01": {
+                "Preparation New": {
+                    "jobNum": 8498,
+                    "dName": "Loading Data H2 FGSS",
+                    "kic": "S. Watanabe",
+                    "khiRequest": "2023-07-28",
+                    "startDate": "2023-07-28",
+                    "kdtDeadline": "2023-08-01",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "4",
+                            "Dates": {
+                                "2023-08-01": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "6",
+                            "Dates": {
+                                "2023-08-01": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Hekinan FGD": {
+        "pNum": 276,
+        "Direct": true,
+        "Items": {
+            "Hekinan FGD - P&ID Preparation_P01": {
+                "Preparation New": {
+                    "jobNum": 7405,
+                    "dName": "P&ID - Hekinan FGD",
+                    "kic": "Tachibana",
+                    "khiRequest": "2023-07-07",
+                    "startDate": "2023-07-07",
+                    "kdtDeadline": "2023-07-31",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "4",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "2",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Kanden H2 Supply Chain": {
+        "pNum": 263,
+        "Direct": true,
+        "Items": {
+            "Kanden H2 Supply Chain - PFD/UFD Modification_M04": {
+                "Modification": {
+                    "jobNum": 9176,
+                    "dName": "PFD/UFD - Kanden H2 Supply Chain",
+                    "kic": "Kamimura",
+                    "khiRequest": "2023-08-30",
+                    "startDate": "2023-08-30",
+                    "kdtDeadline": "2023-08-31",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "1",
+                            "Dates": {
+                                "2023-08-30": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "2",
+                            "Dates": {
+                                "2023-08-30": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "KES Kawasaki Engineering Std.": {
+        "pNum": 28,
+        "Direct": true,
+        "Items": {
+            "KES PFD Preparation_P01": {
+                "Preparation New": {
+                    "jobNum": 8499,
+                    "dName": "KES PFD",
+                    "kic": "Yamanaka",
+                    "khiRequest": "2023-08-02",
+                    "startDate": "2023-08-02",
+                    "kdtDeadline": "2023-08-16",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "2",
+                            "Dates": {
+                                "2023-08-08": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "29",
+                            "Dates": {
+                                "2023-08-02": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Liquified Hydrogen Supply Chain": {
+        "pNum": 27,
+        "Direct": true,
+        "Items": {
+            "Liquified Hydrogen Supply Chain - P&ID Modification_M24": {
+                "Modification": {
+                    "jobNum": 8517,
+                    "dName": "P&ID - Commercialization Demonstration of Liquified Hydrogen Supply Chain",
+                    "kic": "Ohara",
+                    "khiRequest": "2023-08-03",
+                    "startDate": "2023-08-03",
+                    "kdtDeadline": "2023-08-08",
+                    "Members": {
+                        "261": {
+                            "pStatus": "ongoing",
+                            "name": "Villamor, Amor",
+                            "mUsed": "20",
+                            "Dates": {
+                                "2023-08-03": {
+                                    "Actual": "7",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "5",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Liquified Hydrogen Supply Chain - P&ID Modification_M25": {
+                "Modification": {
+                    "jobNum": 9002,
+                    "dName": "P&ID - Commercialization Demonstration of Liquified Hydrogen Supply Chain",
+                    "kic": "Ohara",
+                    "khiRequest": "2023-08-10",
+                    "startDate": "2023-08-10",
+                    "kdtDeadline": "2023-08-20",
+                    "Members": {
+                        "261": {
+                            "pStatus": "ongoing",
+                            "name": "Villamor, Amor",
+                            "mUsed": "29",
+                            "Dates": {
+                                "2023-08-14": {
+                                    "Actual": "7",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "5",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "5",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Liquified Hydrogen Supply Chain - Layout Preparation_P01": {
+                "Preparation New": {
+                    "jobNum": 8878,
+                    "dName": "Layout - Commercialization Demonstration of Liquified Hydrogen Supply Chain",
+                    "kic": "Wada",
+                    "khiRequest": "2023-08-10",
+                    "startDate": "2023-08-10",
+                    "kdtDeadline": "2023-08-21",
+                    "Members": {
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "28",
+                            "Dates": {
+                                "2023-08-11": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "SPPID Macro": {
+        "pNum": 21,
+        "Direct": true,
+        "Items": {
+            "SPPID Macro Preparation_P01": {
+                "Preparation": {
+                    "jobNum": 7247,
+                    "dName": "SPPID Macro Preparation",
+                    "kic": "Watanabe",
+                    "khiRequest": "2023-07-03",
+                    "startDate": "2023-07-03",
+                    "kdtDeadline": "2023-09-29",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "24",
+                            "Dates": {
+                                "2023-08-18": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "344": {
+                            "pStatus": "ongoing",
+                            "name": "Patron, Edilaine Marose",
+                            "mUsed": "36",
+                            "Dates": {
+                                "2023-08-18": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "498": {
+                            "pStatus": "ongoing",
+                            "name": "Cerdan Jr., Tagumpay",
+                            "mUsed": "27",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "5",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "3",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "SPPID Work": {
+        "pNum": 50,
+        "Direct": true,
+        "Items": {
+            "SPPID Work - GTG P&ID Restoration Preparation_P01": {
+                "Preparation New": {
+                    "jobNum": 2149,
+                    "dName": "GTG P&ID Restoration SPPID Work",
+                    "kic": "Watanabe",
+                    "khiRequest": "2023-04-03",
+                    "startDate": "2023-04-03",
+                    "kdtDeadline": "2023-09-30",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "12",
+                            "Dates": {
+                                "2023-08-31": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "344": {
+                            "pStatus": "ongoing",
+                            "name": "Patron, Edilaine Marose",
+                            "mUsed": "124",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "5",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "7",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "6",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Stanwell": {
+        "pNum": 323,
+        "Direct": true,
+        "Items": {
+            "Stanwell - P&ID Preparation_P01": {
+                "Preparation": {
+                    "jobNum": 9175,
+                    "dName": "P&ID - Stanwell",
+                    "kic": "Yamanaka",
+                    "khiRequest": "2023-08-30",
+                    "startDate": "2023-08-30",
+                    "kdtDeadline": "2023-09-08",
+                    "Members": {
+                        "291": {
+                            "pStatus": "ongoing",
+                            "name": "Llosala, Rowel",
+                            "mUsed": "1",
+                            "Dates": {
+                                "2023-08-30": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "486": {
+                            "pStatus": "ongoing",
+                            "name": "Maximo, Carl Rey",
+                            "mUsed": "3",
+                            "Dates": {
+                                "2023-08-30": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Management": {
+        "pNum": 1,
+        "Direct": false,
+        "Items": {
+            "Department Management (DM)": {
+                "Department Management": {
+                    "jobNum": 3,
+                    "dName": "",
+                    "kic": "",
+                    "khiRequest": "0000-00-00",
+                    "startDate": "0000-00-00",
+                    "kdtDeadline": "0000-00-00",
+                    "Members": {
+                        "25": {
+                            "pStatus": "ongoing",
+                            "name": "Derigay, Oliver",
+                            "mUsed": "160",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "1",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "2.5",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Group Management (SSV)": {
+                "Group Management": {
+                    "jobNum": 5,
+                    "dName": "",
+                    "kic": "",
+                    "khiRequest": "0000-00-00",
+                    "startDate": "0000-00-00",
+                    "kdtDeadline": "0000-00-00",
+                    "Members": {
+                        "281": {
+                            "pStatus": "ongoing",
+                            "name": "Cura, Leonard Ryan",
+                            "mUsed": "30",
+                            "Dates": {
+                                "2023-08-09": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "2",
+                                    "Planned": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "Training": {
+        "pNum": 3,
+        "Direct": false,
+        "Items": {
+            "Training for New Employee (3 Months)": {
+                "Orientation": {
+                    "jobNum": 22,
+                    "dName": "",
+                    "kic": "",
+                    "khiRequest": "0000-00-00",
+                    "startDate": "0000-00-00",
+                    "kdtDeadline": "0000-00-00",
+                    "Members": {
+                        "504": {
+                            "pStatus": "ongoing",
+                            "name": "Cayabyab, Shield",
+                            "mUsed": "180",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "4",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                }
+                            }
+                        },
+                        "506": {
+                            "pStatus": "ongoing",
+                            "name": "Adona, Julius Ian",
+                            "mUsed": "184",
+                            "Dates": {
+                                "2023-07-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-01": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-02": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-03": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-04": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-07": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-08": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-09": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-10": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-11": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-14": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-15": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-16": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-17": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-18": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-22": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-23": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-24": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-25": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-29": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-30": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-08-31": {
+                                    "Actual": "8",
+                                    "Planned": 0
+                                },
+                                "2023-09-01": {
+                                    "Actual": "8",
                                     "Planned": 0
                                 }
                             }
