@@ -44,8 +44,6 @@ $(document).ready(function () {
 });
 $(document).on("click", "#clearWeek", function () {
   clearWeek();
-  $("[date-val]").removeClass("bg-warning");
-  $("#weekly-report").hide();
 });
 
 $(document).on("change", "#monthSel", function () {
@@ -243,6 +241,7 @@ function getEntries() {
       latagProjects(query);
       updateTr();
       latagPlanning(query);
+      gawaBaba();
     }
   );
 }
@@ -261,7 +260,7 @@ function getScope() {
 //#region table sa taas
 function createTable() {
   latagDays();
-  weekendcolor();
+  // weekendcolor();
 }
 
 function updateTr() {
@@ -284,19 +283,26 @@ function latagDays() {
   var startDate = new Date(startString);
   var endDate = new Date(endString);
   while (startDate <= endDate) {
-    addHeader += `<th date-val="${startDate.yyyymmdd()}">${startDate.yyyymmdd()}</th>`;
-    addCells += `<td date-val="${startDate.yyyymmdd()}"></td>`;
+    addHeader += `<th date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
+    addCells += `<td date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ></td>`;
     startDate.setDate(startDate.getDate() + 1);
   }
   $("#poa").after(addHeader);
   $(".plan-row, .actual-row").append(addCells);
 }
 
+function ifMonday(date) {
+  const newDate = new Date(date);
+  if (newDate.getDay() == 1) {
+    return "isMonday";
+  }
+}
+
 function latagProjects(data) {
   $.each(data, function (pName, det) {
     $("#main-tbody").append(`
     <tr class="project-row bg-warning" proj-num="${det.pNum}">
-    <td colspan="100">${pName}</td>
+    <th colspan="100">${pName}</th>
     </tr>
     `);
     $.each(det.Items, function (itemName, iDet) {
@@ -355,13 +361,12 @@ function latagPlanning(data) {
   });
 }
 
-function weekendcolor() {
-  $.each($("#poa").nextAll(), function (indexInArray, valueOfElement) {
-    var newDate = new Date($(valueOfElement).text());
-    if (newDate.getDay() == 0 || newDate.getDay() == 6) {
-      $(`[date-val="${newDate.yyyymmdd()}"]`).addClass("bg-secondary");
-    }
-  });
+function weekendcolor(date) {
+  var newDate = new Date(date);
+  if (newDate.getDay() == 0 || newDate.getDay() == 6) {
+    return ` class="bg-secondary"`;
+  }
+  return "";
 }
 
 //#endregion
@@ -397,6 +402,9 @@ function getWeekNo(currentDate) {
 
 function clearWeek() {
   $("#weekSel").val(0);
+  $("[date-val]").removeClass("bg-warning");
+  $("#weekly-report").hide();
+  $("#weekly-group-summary").hide();
 }
 
 function highlightweek(wVal) {
@@ -496,5 +504,33 @@ function totalLeft() {
 }
 
 //#endregion
+
+//#endregion
+
+
+//#region  new update
+
+//pang gawa ng baba
+function gawaBaba() {
+  $('#weekly-group-summary').show();
+  $($('.c1-label').nextAll()).remove()
+  $('#tr-group-2').empty();
+  $.each($('[isMonday]'), function (indexInArray, valueOfElement) {
+    $('#tr-group-1').append(`
+      <th colspan="3">${$(valueOfElement).text()}</th>
+      `);
+    $('#tr-group-2').append(`
+      <th>JMR</th>
+      <th>入力工数(A) グループ</th>
+      <th>実績工数(B) A/B(%)</th>
+      `);
+    $('#data-plan, #data-actual').append(`
+      <td week-index="${indexInArray}" col-ref="a"></td>
+      <td week-index="${indexInArray}" col-ref="b"></td>
+      <td week-index="${indexInArray}" col-ref="c"></td>
+      `);
+  });
+
+}
 
 //#endregion

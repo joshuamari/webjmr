@@ -1,89 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Drawing Monitoring Report</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-    <link rel="stylesheet" href="css/dmr.css" />
-    <link rel="stylesheet" href="css/boxicons.css" />
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery.inview.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.table2excel.js"></script>
-    <script>
-      var busterCall = ["js/main.js", "css/dmr.css", "css/bootstrap.min.css"];
-      $.post(
-        "ajax/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Drawing Monitoring Report",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
-  </head>
 
-  <body>
-    <div class="home-content position-relative">
-      <div class="title xPrint">
-        <h1>Drawing Monitoring Report</h1>
+<head>
+  <title>Drawing Monitoring Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/dmr.css" />
+  <link rel="stylesheet" href="css/boxicons.css" />
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.inview.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.table2excel.js"></script>
+  <script>
+    var busterCall = ["js/main.js", "css/dmr.css", "css/bootstrap.min.css"];
+    $.post(
+      "ajax/get_version.php",
+      {
+        busterCall: busterCall,
+        titleName: "Drawing Monitoring Report",
+      },
+      function (data) {
+        $("head").html(data);
+      }
+    );
+  </script>
+</head>
 
-        <div class="d-flex justify-content-between align-items-center">
-          <a href="../" class="backbtn">
-            <i class="bx bx-left-arrow-alt fs-5"></i>
-            <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
-          </a>
+<body>
+  <div class="home-content position-relative">
+    <div class="title xPrint">
+      <h1>Drawing Monitoring Report</h1>
 
-          <div class="right d-flex flex-row pe-2 pe-lg-0">
-            <button
-              id="btnPrint"
-              class="xPrint btn btn-primary"
-              style="background-color: #395dc7"
-            >
-              PRINT
-            </button>
-            <button id="btnExport" class="xPrint btn btn-success">
-              EXPORT
-            </button>
-          </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="../" class="backbtn">
+          <i class="bx bx-left-arrow-alt fs-5"></i>
+          <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
+        </a>
+
+        <div class="right d-flex flex-row pe-2 pe-lg-0">
+          <button id="btnPrint" class="xPrint btn btn-primary" style="background-color: #395dc7">
+            PRINT
+          </button>
+          <button id="btnExport" class="xPrint btn btn-success">
+            EXPORT
+          </button>
         </div>
       </div>
+    </div>
 
-      <div
-        class="position-relative d-flex flex-md-row flex-column"
-        style="height: calc(100vh - 120px)"
-      >
-        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
-          <div class="form-floating col-12 mb-2">
-            <select class="form-select" id="buSel" aria-label="Select BU">
-              <option value="" selected hidden>Select Group</option>
-              <option>ENV</option>
-              <option>Two</option>
-              <option>Three</option>
-            </select>
-            <label for="busSel">Select BU</label>
-          </div>
-          <div class="form-floating col-12 mb-2">
-            <input type="month" id="monthSel" class="form-control" />
-            <label for="monthSel">Select Month</label>
-          </div>
-          <div class="form-floating col-12 mb-4">
-            <select
-              class="form-select"
-              id="projSel"
-              aria-label="Select Project"
-            >
-              <option value="">All</option>
-              <option value="1">Project1</option>
-              <!-- <option value="2">Second Half</option> -->
-            </select>
-            <label for="projSel" class="">Select Project</label>
-          </div>
-          <!-- <div class="col-12 mb-4">
+    <div class="position-relative d-flex flex-md-row flex-column" style="height: calc(100vh - 120px)">
+      <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+        <div class="form-floating col-12 mb-2">
+          <select class="form-select" id="buSel" aria-label="Select BU">
+            <option value="" selected hidden>Select Group</option>
+            <option>ENV</option>
+            <option>Two</option>
+            <option>Three</option>
+          </select>
+          <label for="busSel">Select BU</label>
+        </div>
+        <div class="form-floating col-12 mb-2">
+          <input type="month" id="monthSel" class="form-control" />
+          <label for="monthSel">Select Month</label>
+        </div>
+        <div class="form-floating col-12 mb-4">
+          <select class="form-select" id="projSel" aria-label="Select Project">
+            <option value="">All</option>
+            <option value="1">Project1</option>
+            <!-- <option value="2">Second Half</option> -->
+          </select>
+          <label for="projSel" class="">Select Project</label>
+        </div>
+        <!-- <div class="col-12 mb-4">
             <div class="form-check form-switch p-0 d-flex">
               <input
                 type="checkbox"
@@ -102,72 +92,86 @@
             </div>
           </div> -->
 
-          <div class="position-relative memcont">
-            <h4 class="">Members</h4>
-            <div id="members-list"></div>
-            <button id="selAll" class="btn btn-primary w-100 mt-3">
-              Select All
-            </button>
+        <div class="position-relative memcont">
+          <h4 class="">Members</h4>
+          <div id="members-list"></div>
+          <button id="selAll" class="btn btn-primary w-100 mt-3">
+            Select All
+          </button>
+        </div>
+      </div>
+      <div id="mainContent" class="content rightt d-flex flex-column position-relative d-none">
+        <div id="upperT" class="position-relative" style="padding: 20px 20px 0 20px">
+          <div class="position-relative col-12 mt-2 overflow-auto" style="height: calc(100vh - 446px)">
+            <table id="main-table" class="table">
+              <thead id="main-thead">
+                <tr id="headrow">
+                  <th>Job Request Description</th>
+                  <th>Item of Works (Dwg. No.)</th>
+                  <th>Drawing / Document Name</th>
+                  <th>KHI in Charge</th>
+                  <th>Name</th>
+                  <th>KHI Request Date</th>
+                  <th>KDT Deadline</th>
+                  <th>Start Date</th>
+                  <th>Manhour Used</th>
+                  <th id="status">Status</th>
+                  <th id="poa"></th>
+                </tr>
+              </thead>
+              <tbody id="main-tbody"></tbody>
+            </table>
           </div>
         </div>
-        <div id="mainContent" class="content rightt d-flex flex-column position-relative d-none">
-          <div
-            id="upperT"
-            class="position-relative"
-            style="padding: 20px 20px 0 20px"
-          >
-            <div
-              class="position-relative col-12 mt-2 overflow-auto"
-              style="height: calc(100vh - 446px)"
-            >
-              <table id="main-table" class="table">
-                <thead id="main-thead">
-                  <tr id="headrow">
-                    <th>Job Request Description</th>
-                    <th>Item of Works (Dwg. No.)</th>
-                    <th>Drawing / Document Name</th>
-                    <th>KHI in Charge</th>
-                    <th>Name</th>
-                    <th>KHI Request Date</th>
-                    <th>KDT Deadline</th>
-                    <th>Start Date</th>
-                    <th>Manhour Used</th>
-                    <th id="status">Status</th>
-                    <th id="poa"></th>
-                  </tr>
-                </thead>
-                <tbody id="main-tbody"></tbody>
-              </table>
-            </div>
+        <div id="lowerT" class="position-relative" style="padding: 20px">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary">Group</button>
+            <button type="button" class="btn btn-secondary">Members</button>
           </div>
-          <div id="lowerT" class="position-relative" style="padding: 20px">
-            <div class="form-floating col-12 col-md-4 mb-2 d-flex">
+          <div style="display: none;">
+            <div id="cleardiv" class="form-floating col-12 col-md-4 mb-2 d-flex">
               <input type="week" id="weekSel" class="form-control" />
               <label for="weekSel">Highlight Week</label>
               <button id="clearWeek" class="btn btn-primary" style="width: 70%">
                 Clear Week
               </button>
             </div>
-            <div
-              id="weekly-div"
-              class=""
-              style="width: 100%; overflow: auto; height: 190px"
-            >
-              <table id="weekly-report" class="table" style="display: none">
-                <thead>
-                  <tr id="weekly-headrow">
-                    <th>Employee Name</th>
-                    <th></th>
-                    <th title="Planning / Actual Percentage">P/A %</th>
-                    <th id="w-total">TOTAL</th>
-                  </tr>
-                </thead>
-                <tbody id="weekly-body"></tbody>
-              </table>
-            </div>
+
+          </div>
+          <div id="weekly-div" class="" style="width: 100%; overflow: auto; height: 190px;">
+            <table id="weekly-report" class="table" style="display: none">
+              <thead>
+                <tr id="weekly-headrow">
+                  <th>Employee Name</th>
+                  <th></th>
+                  <th title="Planning / Actual Percentage">P/A %</th>
+                  <th id="w-total">TOTAL</th>
+                </tr>
+              </thead>
+              <tbody id="weekly-body"></tbody>
+            </table>
+            <table id="weekly-group-summary" class="table" style="display:none;">
+              <thead>
+                <tr id="tr-group-1">
+                  <th rowspan="2" class="c1-label">予実</th>
+                </tr>
+                <tr id="tr-group-2">
+
+                </tr>
+              </thead>
+              <tbody id="weekly-body">
+                <tr id="data-plan">
+                  <th class="c1-label">予定</th>
+                </tr>
+                <tr id="data-actual">
+                  <th class="c1-label">実際</th>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-        <!-- <div
+      </div>
+      <!-- <div
             class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
           >
             <div id="upperT" class="position-relative mt-2">
@@ -190,12 +194,11 @@
               </table>
             </div>
           </div> -->
-        <div
-          class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative"
-        >
-          <h1 class="text-center">Select Employee</h1>
-        </div>
+      <div class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative">
+        <h1 class="text-center">Select Employee</h1>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
