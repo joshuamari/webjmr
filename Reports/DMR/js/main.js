@@ -310,10 +310,10 @@ function latagProjects(data) {
     `);
     $.each(det.Items, function (itemName, iDet) {
       latagPDetails(iDet, itemName).forEach((element) => {
-        $("#main-tbody").append(`<tr class="plan-row" job-num emp-num>
+        $("#main-tbody").append(`<tr class="plan-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}>
         ${element}
         </tr>
-        <tr class="actual-row" job-num emp-num><td>Actual</td>
+        <tr class="actual-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}><td>Actual</td>
         </tr>`);
       });
     });
@@ -513,14 +513,34 @@ function totalLeft() {
 
 //#region  new update
 
+//option sa baba
+
+$(document).on('click', '.repSel', function () {
+  switch ($(this).attr('id')) {
+    case "GroupRep":
+      $('#wb-div, #weekly-report').hide();
+      $('#weekly-group-summary').show();
+      break;
+    case "MemberRep":
+      $('#wb-div').show();
+      $('#weekly-group-summary').hide();
+      if ($('#weekSel').val() != "") {
+        $('#weekly-report').show();
+      }
+      break;
+  }
+})
+
+
 //pang gawa ng baba
+
 function gawaBaba() {
   $('#weekly-group-summary').show();
   $($('.c1-label').nextAll()).remove()
   $('#tr-group-2').empty();
   $.each($('[isMonday]'), function (indexInArray, valueOfElement) {
     $('#tr-group-1').append(`
-      <th colspan="3">${$(valueOfElement).text()}</th>
+      <th colspan="3" class="week-start">${$(valueOfElement).text()}</th>
       `);
     $('#tr-group-2').append(`
       <th>JMR</th>
@@ -532,6 +552,48 @@ function gawaBaba() {
       <td week-index="${indexInArray}" col-ref="b"></td>
       <td week-index="${indexInArray}" col-ref="c"></td>
       `);
+  });
+
+  //total inputs
+  $.each($('.week-start'), function (weekIndex, monday) {
+    var planVal = 0;
+    var actualVal = 0;
+    var indirectVal = 0;
+    for (let x = 0; x <= 6; x++) {
+      const newDate = new Date($(monday).text());
+      newDate.setDate(newDate.getDate() + x);
+      $.each($('.plan-row[direct]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
+        planVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
+      });
+      $.each($('.actual-row[direct]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
+        actualVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
+      });
+      $.each($('[indirect]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
+        indirectVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
+      });
+    }
+    var bVal = parseFloat(actualVal) + parseFloat(indirectVal);
+
+    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="a"]`)).text(planVal);
+    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="b"]`)).text(bVal);
+    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="c"]`)).text(
+      Number(
+        eval(
+          `${planVal}/${bVal}*100`
+        )
+      ).toFixed(2) + "%"
+    );
+
+    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="a"]`)).text(actualVal);
+    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="b"]`)).text(bVal);
+    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="c"]`)).text(
+      Number(
+        eval(
+          `${actualVal}/${bVal}*100`
+        )
+      ).toFixed(2) + "%"
+    );
+
   });
 
 }
