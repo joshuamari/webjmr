@@ -267,6 +267,7 @@ function createTable() {
 }
 
 function updateTr() {
+  $('.pName').attr('colspan',$('#headrow').children().length);
   var pRow = $(".plan-row");
   $.each(pRow, function (i, v) {
     var aRow = $(v).next();
@@ -286,8 +287,8 @@ function latagDays() {
   var startDate = new Date(startString);
   var endDate = new Date(endString);
   while (startDate <= endDate) {
-    addHeader += `<th date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
-    addCells += `<td date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ></td>`;
+    addHeader += `<th data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" data-f-bold="true" date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
+    addCells += `<td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ></td>`;
     startDate.setDate(startDate.getDate() + 1);
   }
   $("#poa").after(addHeader);
@@ -304,16 +305,16 @@ function ifMonday(date) {
 function latagProjects(data) {
   $.each(data, function (pName, det) {
     $("#main-tbody").append(`
-    <tr class="project-row bg-warning" proj-num="${det.pNum}">
-    <th colspan="100">${pName}</th>
+    <tr data-height="20" class="project-row bg-warning" proj-num="${det.pNum}">
+    <th data-f-name="ＭＳ Ｐゴシック" data-fill-color="ffff99" data-b-a-s="thin" data-b-t-s="double" data-f-bold="true" class="pName" colspan="">${pName}</th>
     </tr>
     `);
     $.each(det.Items, function (itemName, iDet) {
       latagPDetails(iDet, itemName).forEach((element) => {
-        $("#main-tbody").append(`<tr class="plan-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}>
+        $("#main-tbody").append(`<tr data-height="20" class="plan-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}>
         ${element}
         </tr>
-        <tr class="actual-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}><td>Actual</td>
+        <tr data-height="20" class="actual-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}><td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
         </tr>`);
       });
     });
@@ -325,17 +326,17 @@ function latagPDetails(data, itemName) {
   const newArr = [];
   $.each(data, function (jobName, jDet) {
     $.each(jDet.Members, function (empID, eDet) {
-      newArr.push(`<td rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
-    <td rowspan="2">${itemName}</td>
-    <td rowspan="2">${jDet.dName}</td>
-    <td rowspan="2">${jDet.kic}</td>
-    <td rowspan="2" class="ename" e-id="${empID}">${eDet.name}</td>
-    <td rowspan="2">${jDet.khiRequest}</td>
-    <td rowspan="2">${jDet.kdtDeadline}</td>
-    <td rowspan="2">${jDet.startDate}</td>
-    <td rowspan="2">${eDet.mUsed}</td>
-    <td rowspan="2" class="status">${eDet.pStatus}</td>
-    <td>Planned</td>`);
+      newArr.push(`<td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${itemName}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.dName}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.kic}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="ename" e-id="${empID}" style="background-color: #ffccff;" data-fill-color="ffccff">${eDet.name}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.khiRequest}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.kdtDeadline}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.startDate}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${eDet.mUsed}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="status">${eDet.pStatus}</td>
+    <td data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ccff99" data-fill-color="ccff99">Planned</td>`);
     });
   });
   return newArr;
@@ -351,12 +352,12 @@ function latagPlanning(data) {
               $(
                 `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Planned);
+            ).text(hours.Planned).css('background-color','#ccff99').attr('data-fill-color','ccff99');
             $(
               $(
                 `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Actual);
+            ).text(hours.Actual).css('background-color','#ffccff').attr('data-fill-color','ffccff');
           });
         });
       });
@@ -367,7 +368,7 @@ function latagPlanning(data) {
 function weekendcolor(date) {
   var newDate = new Date(date);
   if (newDate.getDay() == 0 || newDate.getDay() == 6) {
-    return ` class="bg-secondary"`;
+    return ` class="bg-secondary" data-fill-color="d9d9d9"`;
   }
   return "";
 }
@@ -425,15 +426,15 @@ function highlightweek(wVal) {
 
   empArr.forEach((element) => {
     $("#weekly-body").append(`
-    <tr class="wp-row" get-from="plan-row" emp-num="${element.empNum}">
-    <td rowspan="2">${element.empName}</td>
-    <td>Plan</td>
-    <td rowspan="2" class="pa-percent"></td>
-    <td class="w-tot"></td>
+    <tr data-height="20" class="wp-row" get-from="plan-row" emp-num="${element.empNum}">
+    <td data-f-name="ＭＳ Ｐゴシック" rowspan="2">${element.empName}</td>
+    <td data-f-name="ＭＳ Ｐゴシック">Plan</td>
+    <td data-f-name="ＭＳ Ｐゴシック" rowspan="2" class="pa-percent"></td>
+    <td data-f-name="ＭＳ Ｐゴシック" class="w-tot"></td>
     </tr>
-    <tr class="wa-row" get-from="actual-row" emp-num="${element.empNum}">
-    <td>Actual</td>
-    <td class="w-tot"></td></tr>
+    <tr data-height="20" class="wa-row" get-from="actual-row" emp-num="${element.empNum}">
+    <td data-f-name="ＭＳ Ｐゴシック">Actual</td>
+    <td data-f-name="ＭＳ Ｐゴシック" class="w-tot"></td></tr>
     `);
   });
 
@@ -450,13 +451,13 @@ function highlightweek(wVal) {
     $(`[date-val="${currentDate.yyyymmdd()}"]`).addClass("bg-warning");
     daysInWeek.push(currentDate);
     $("#weekly-headrow").append(
-      `<th w-date-val="${currentDate.yyyymmdd()}">${currentDate.yyyymmdd()}</th>`
+      `<th data-f-name="ＭＳ Ｐゴシック" w-date-val="${currentDate.yyyymmdd()}">${currentDate.yyyymmdd()}</th>`
     );
     $(".wp-row").append(
-      `<td class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
+      `<td data-f-name="ＭＳ Ｐゴシック" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
     );
     $(".wa-row").append(
-      `<td class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
+      `<td data-f-name="ＭＳ Ｐゴシック" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
     );
   }
 
@@ -544,17 +545,17 @@ function gawaBaba() {
   $('#tr-group-2').empty();
   $.each($('[isMonday]'), function (indexInArray, valueOfElement) {
     $('#tr-group-1').append(`
-      <th colspan="3" class="week-start">${$(valueOfElement).text()}</th>
+      <th data-f-name="ＭＳ Ｐゴシック" colspan="3" class="week-start">${$(valueOfElement).text()}</th>
       `);
     $('#tr-group-2').append(`
-      <th>JMR</th>
-      <th>入力工数(A) グループ</th>
-      <th>実績工数(B) A/B(%)</th>
+      <th data-f-name="ＭＳ Ｐゴシック">JMR</th>
+      <th data-f-name="ＭＳ Ｐゴシック">入力工数(A) グループ</th>
+      <th data-f-name="ＭＳ Ｐゴシック">実績工数(B) A/B(%)</th>
       `);
     $('#data-plan, #data-actual').append(`
-      <td week-index="${indexInArray}" col-ref="a"></td>
-      <td week-index="${indexInArray}" col-ref="b"></td>
-      <td week-index="${indexInArray}" col-ref="c"></td>
+      <td data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="a"></td>
+      <td data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="b"></td>
+      <td data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="c"></td>
       `);
   });
 
@@ -601,5 +602,15 @@ function gawaBaba() {
   });
 
 }
+
+//export
+$(document).on('click','#btnExport',function(){
+  TableToExcel.convert(document.getElementById("main-table"), {
+    name: `Drawing Monitoring Report - ${$('#buSel').val()}_${$('#monthSel').val()}.xlsx`,
+    sheet: {
+      name: $('#buSel').val()
+    }
+  });
+});
 
 //#endregion
