@@ -24,7 +24,7 @@ $projArray = array();
 #endregion
 
 #region main
-$projQuery = "SELECT * FROM projectstable WHERE fldGroup = :groupSel AND fldDelete=0 ORDER BY fldProject";
+$projQuery = "SELECT * FROM projectstable WHERE (fldGroup = :groupSel OR fldID IN (1,2,3,4,5)) AND fldDelete=0 ORDER BY CASE WHEN fldDirect = 0 THEN 0 ELSE 1 END,CASE WHEN fldDirect = 0 THEN fldID ELSE fldProject END";
 $projStmt = $connwebjmr->prepare($projQuery);
 $projStmt->execute([":groupSel" => $groupSel]);
 $projArr = $projStmt->fetchAll();

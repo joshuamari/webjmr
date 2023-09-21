@@ -39,11 +39,12 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE pt.fldGroup IS NOT NULL $projStatement AND dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay AND pt.fldGroup = :groupSel GROUP BY dr.fldEmployeeNum,dr.fldJobRequestDescription,dr.fldDate ORDER BY pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
+$entriesQuery = "SELECT pt.fldDirect,pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay $projStatement AND ((pt.fldGroup IS NULL AND dr.fldGroup=:groupSel) OR (pt.fldGroup = :groupSel))GROUP BY dr.fldEmployeeNum,dr.fldJobRequestDescription,dr.fldDate ORDER BY pt.fldDirect DESC,pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
 $entriesArr = $entriesStmt->fetchAll();
 foreach ($entriesArr as $ent) {
+    $projDirect = $ent['fldDirect'] == 0 ? FALSE : TRUE;
     $projID = $ent['projID'];
     $projName = $ent['fldProject'];
     $itemName = $ent['fldItem'];
@@ -65,6 +66,7 @@ foreach ($entriesArr as $ent) {
     $planDeets = getPlanDeets($jobID, $enum, $firstDay, $lastDay);
 
     $entriesArray[$projName]['pNum'] = $projID;
+    $entriesArray[$projName]['Direct'] = $projDirect;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['jobNum'] = $jobID;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['dName'] = $drawName;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['kic'] = $khic;

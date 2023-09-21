@@ -79,7 +79,7 @@ function isWorkDay($selDate){
     if(date('N', strtotime($selDate)) >= 6){
         $isWorkday=FALSE;
     }
-    $workDayQ="SELECT fldHolidayType FROM kdtholiday WHERE fldDate=:selDate";
+    $workDayQ="SELECT fldHolidayType FROM kdtholiday WHERE fldDate=:selDate AND fldLocation='KDT'";
     $workDayStmt=$connkdt->prepare($workDayQ);
     $workDayStmt->execute([":selDate"=>$selDate]);
     $workDayType=$workDayStmt->fetchColumn();
@@ -96,4 +96,3 @@ function isWorkDay($selDate){
 #endregion
 //$.ajaxSetup({async: false});
 echo json_encode($allDates);
-?>

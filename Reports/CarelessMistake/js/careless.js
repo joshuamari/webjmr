@@ -92,15 +92,44 @@ $(document).on("click", "#totOnly", function () {
 
 //#region FUNCTIONS
 function exportTable() {
+  if (checkSummaryAccess()) {
+    copyPasta();
+  }
   var sDate = formatDate($("#startSel").val());
   var eDate = formatDate($("#endSel").val());
   var buSel = $("#buSel").val() === "" ? "All" : $("#buSel").val();
   TableToExcel.convert(document.getElementById("cmrTable"), {
     name: `Careless Mistakes Report_${buSel}_${sDate}-${eDate}.xlsx`,
     sheet: {
-      name: `${buSel}_${$("#monthSel").val()}`,
+      name: `${buSel}_${sDate}-${eDate}`,
     },
   });
+  $(".removeLater").remove();
+}
+function copyPasta() {
+  const requiredFields = ["New", "Kmod", "Mkdt", "Mkhi", "Chk"];
+  var hrTable = ``;
+  requiredFields.forEach((element) => {
+    var nHr = $(`#totalRow td.hrs[tow='${element}']`).text();
+    hrTable += `<tr class='removeLater'><td data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${element}</td><td data-f-name="Arial" data-f-sz="10"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n">${nHr}</td></tr>`;
+  });
+  $("#cmrBody").append(`${hrTable}`);
+}
+function checkSummaryAccess() {
+  $.ajaxSetup({ async: false });
+  var access = false;
+  $.post(
+    "ajax/summary_access.php",
+    {
+      empNum: _empDetails["empNum"],
+    },
+    function (data) {
+      access = $.parseJSON(data);
+      return access;
+    }
+  );
+  $.ajaxSetup({ async: true });
+  return access;
 }
 function formatDate(inputDate) {
   var date = new Date(inputDate);
