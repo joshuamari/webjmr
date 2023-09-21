@@ -474,7 +474,7 @@ function highlightweek(wVal) {
 }
 
 function totalpa(empNum, date, pa) {
-  var arr = $(`.${pa}[emp-num="${empNum}"]`).children(`[date-val="${date}"]`);
+  var arr = $(`.${pa}[emp-num="${empNum}"][direct]`).children(`[date-val="${date}"]`);
   var totalArr = [];
 
   $.each(arr, function (index, val) {
@@ -494,15 +494,19 @@ function totalLeft() {
   });
 
   $.each($(".pa-percent"), function (index, val) {
-    $(val).text(
-      Number(
-        eval(
-          `${$($(val).next()).text()}/${$(
-            $($($(val).parent()).next()).children(".w-tot")
-          ).text()}*100`
-        )
-      ).toFixed(2) + "%"
-    );
+    var tVal = 
+    Number(
+      eval(
+        `${$($(val).next()).text()}/${$(
+          $($($(val).parent()).next()).children(".w-tot")
+        ).text()}*100`
+      )
+    ).toFixed(2);
+
+    $(val).text(tVal + "%");
+    if($(val).text() == "NaN%"){
+      $(val).text("0.00%")
+    }
   });
 }
 
