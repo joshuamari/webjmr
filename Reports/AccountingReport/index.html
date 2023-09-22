@@ -97,7 +97,7 @@
 
         <div class="tablecont col-12 p-3">
           <div class="mainTable overflow-auto">
-            <table id="cmrTable" class="table table-hover w-100">
+            <table id="acctTable" class="table table-hover w-100">
               <thead class="sticky-top">
                 <tr data-fill-color="b6f9a1" class="heady">
                   <th
@@ -111,7 +111,72 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    BU
+                    Employee No.
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Employee Name
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Regular Hours
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Total Overtime
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Paid Leave
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Unpaid Leave
                   </th>
                   <th
                     rowspan="2"
@@ -127,7 +192,7 @@
                     Total Hours
                   </th>
                   <th
-                    colspan="2"
+                    rowspan="2"
                     data-f-name="Arial"
                     data-f-sz="9"
                     data-f-bold="true"
@@ -137,7 +202,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    New
+                    Regular Overtime (1.30)
                   </th>
                   <th
                     colspan="2"
@@ -150,7 +215,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Kmod
+                    Rest-day OT
                   </th>
                   <th
                     colspan="2"
@@ -163,7 +228,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Mkdt
+                    Legal Holiday
                   </th>
                   <th
                     colspan="2"
@@ -176,7 +241,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Mkhi
+                    RDOT & Legal Holiday
                   </th>
                   <th
                     colspan="2"
@@ -189,7 +254,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Chk
+                    Special Holiday
                   </th>
                   <th
                     colspan="2"
@@ -202,33 +267,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Cal
-                  </th>
-                  <th
-                    colspan="2"
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    Doc
-                  </th>
-                  <th
-                    colspan="2"
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    Other
+                    RDOT & Special Holiday
                   </th>
                 </tr>
                 <tr class="heady">
@@ -242,7 +281,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Hours
+                    First 8 Hours (1.30)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -254,7 +293,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    %
+                    Beyond 8 Hours (1.70)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -266,7 +305,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Hours
+                    First 8 Hours (2.00)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -278,7 +317,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    %
+                    Beyond 8 Hours (2.60)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -290,7 +329,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Hours
+                    First 8 Hours (2.60)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -302,7 +341,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    %
+                    Beyond 8 Hours (3.30)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -314,7 +353,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Hours
+                    First 8 Hours (1.40)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -326,7 +365,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    %
+                    Beyond 8 Hours (1.70)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -338,7 +377,7 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    Hours
+                    First 8 Hours (1.50)
                   </th>
                   <th
                     data-f-name="Arial"
@@ -350,377 +389,11 @@
                     data-b-a-c="000000"
                     data-fill-color="bbffbc"
                   >
-                    %
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    Hours
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    %
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    Hours
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    %
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    Hours
-                  </th>
-                  <th
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-fill-color="bbffbc"
-                  >
-                    %
+                    Beyond 8 Hours (1.80)
                   </th>
                 </tr>
               </thead>
-              <tbody id="cmrBody">
-                <!-- <tr class="bu" id="bu1">
-                  <td>BU1</td>
-                  <td>80</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr class="collapse bu1 show">
-                  <td>Employee A</td>
-                  <td>40</td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr class="collapse bu1 show">
-                  <td>Employee B</td>
-                  <td>40</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr> -->
-
-                <tr id="totalRow" class="total ent">
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000 "
-                    data-f-color="FF0000"
-                  >
-                    TOTAL
-                  </td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="towtal"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="New"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="New"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Kmod"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Kmod"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Mkdt"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Mkdt"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Mkhi"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Mkhi"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Chk"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Chk"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Cal"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Cal"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Doc"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Doc"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="hrs"
-                    tow="Other"
-                  ></td>
-                  <td
-                    data-f-name="Arial"
-                    data-f-sz="9"
-                    data-f-bold="true"
-                    data-a-h="center"
-                    data-a-v="middle"
-                    data-b-a-s="thin"
-                    data-b-a-c="000000"
-                    data-f-color="FF0000"
-                    class="prc"
-                    data-t="n"
-                    data-num-fmt="0.0%"
-                    tow="Other"
-                  ></td>
-                </tr>
+              <tbody id="acctBody">
               </tbody>
             </table>
           </div>

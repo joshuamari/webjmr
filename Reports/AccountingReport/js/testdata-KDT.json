@@ -1,0 +1,382 @@
+{
+    "1": {
+        "empName": "Ashley Williams",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 0,
+            "rdOT": 8,
+            "rdOT_excess": 3,
+            "legal": 4,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 4,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "2": {
+        "empName": "David Jones",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 2,
+            "rdOT": 8,
+            "rdOT_excess": 3,
+            "legal": 4,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 4,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "3": {
+        "empName": "Emily Brown",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 10,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "4": {
+        "empName": "Michael Smith",
+        "hours": {
+            "regular_hours": 72,
+            "regular_OT": 3,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 8,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 8
+        }
+    },
+    "5": {
+        "empName": "John Doe",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 0,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "6": {
+        "empName": "Jane Doe",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 6,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "7": {
+        "empName": "Peter Johnson",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 10,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "8": {
+        "empName": "Susan Carter",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 18,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 8,
+            "unpaid_leave": 0
+        }
+    },
+    "9": {
+        "empName": "William Taylor",
+        "hours": {
+            "regular_hours": 72,
+            "regular_OT": 22,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 16,
+            "unpaid_leave": 0
+        }
+    },
+    "10": {
+        "empName": "Jessica Anderson",
+        "hours": {
+            "regular_hours": 72,
+            "regular_OT": 14,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 16,
+            "unpaid_leave": 0
+        }
+    },
+    "11": {
+        "empName": "Benjamin Walker",
+        "hours": {
+            "regular_hours": 72,
+            "regular_OT": 29,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 8,
+            "special_excess": 2,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 16,
+            "unpaid_leave": 0
+        }
+    },
+    "12": {
+        "empName": "Olivia Miller",
+        "hours": {
+            "regular_hours": 72,
+            "regular_OT": 35,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 8,
+            "legal_excess": 2,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 8,
+            "special_excess": 2,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 16,
+            "unpaid_leave": 0
+        }
+    },
+    "13": {
+        "empName": "Alexander Green",
+        "hours": {
+            "regular_hours": 80,
+            "regular_OT": 8,
+            "rdOT": 0,
+            "rdOT_excess": 8,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 8,
+            "rdOT_special_excess": 2,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "14": {
+        "empName": "Sarah Connor",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 18,
+            "rdOT": 4,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 8,
+            "rdOT_special_excess": 2,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "15": {
+        "empName": "Christopher Evans",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 4,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 8,
+            "rdOT_special_excess": 2,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "16": {
+        "empName": "Isabella Rodriguez",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 9,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 8,
+            "rdOT_special_excess": 2,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "17": {
+        "empName": "Daniel Hernandez",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 4,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "18": {
+        "empName": "Hannah Thomas",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 9,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 8,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "19": {
+        "empName": "Nicholas Parker",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 7,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    },
+    "20": {
+        "empName": "Rachel Garcia",
+        "hours": {
+            "regular_hours": 88,
+            "regular_OT": 0,
+            "rdOT": 0,
+            "rdOT_excess": 0,
+            "legal": 0,
+            "legal_excess": 0,
+            "rdOT_legal": 0,
+            "rdOT_legal_excess": 0,
+            "special": 0,
+            "special_excess": 0,
+            "rdOT_special": 0,
+            "rdOT_special_excess": 0,
+            "paid_leave": 0,
+            "unpaid_leave": 0
+        }
+    }
+}

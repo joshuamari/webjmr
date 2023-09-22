@@ -23,6 +23,9 @@ $(document).ready(function () {
   getGroupList();
 
   $.ajaxSetup({ async: true });
+
+  //start
+  queries();
 });
 
 $(document).on("click", "#btnExport", function () {
@@ -76,6 +79,59 @@ function getGroupList() {
         if (grp == _empDetails["empGroup"]) {
           $("#buSel").val(_empDetails["empGroup"]);
         }
+      });
+    }
+  );
+}
+
+//#endregion
+
+//#region for queries
+
+function queries() {
+  $.getJSON("js/testdata-KDT.json",
+    function (data) {
+      $.each(data, function (empNum, empDets) {
+
+        const totalOT =
+          empDets.hours.regular_OT +
+          empDets.hours.rdOT +
+          empDets.hours.rdOT_excess +
+          empDets.hours.legal +
+          empDets.hours.legal_excess +
+          empDets.hours.legal +
+          empDets.hours.rdOT_legal_excess +
+          empDets.hours.special +
+          empDets.hours.special_excess +
+          empDets.hours.rdOT_special +
+          empDets.hours.rdOT_special_excess;
+
+        const totalHours = totalOT +
+          empDets.hours.regular_hours +
+          empDets.hours.paid_leave +
+          empDets.hours.unpaid_leave;
+
+        $('#acctBody').append(`
+        <tr class="emp_row" emp_num="${empNum}">
+        <td>${empNum}</td>
+        <td>${empDets.empName}</td>
+        <td>${empDets.hours.regular_hours}</td>
+        <td class="ot_total">${totalOT}</td>
+        <td>${empDets.hours.paid_leave}</td>
+        <td>${empDets.hours.unpaid_leave}</td>
+        <td>${totalHours}</td>
+        <td>${empDets.hours.regular_OT}</td>
+        <td>${empDets.hours.rdOT}</td>
+        <td>${empDets.hours.rdOT_excess}</td>
+        <td>${empDets.hours.legal}</td>
+        <td>${empDets.hours.legal_excess}</td>
+        <td>${empDets.hours.legal}</td>
+        <td>${empDets.hours.rdOT_legal_excess}</td>
+        <td>${empDets.hours.special}</td>
+        <td>${empDets.hours.special_excess}</td>
+        <td>${empDets.hours.rdOT_special}</td>
+        <td>${empDets.hours.rdOT_special_excess}</td>
+        </tr>`);
       });
     }
   );
