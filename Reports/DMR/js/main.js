@@ -267,7 +267,7 @@ function createTable() {
 }
 
 function updateTr() {
-  $('.pName').attr('colspan',$('#headrow').children().length);
+  $('.pName').attr('colspan', $('#headrow').children().length);
   var pRow = $(".plan-row");
   $.each(pRow, function (i, v) {
     var aRow = $(v).next();
@@ -352,12 +352,12 @@ function latagPlanning(data) {
               $(
                 `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Planned).css('background-color','#ccff99').attr('data-fill-color','ccff99');
+            ).text(hours.Planned).css('background-color', '#ccff99').attr('data-fill-color', 'ccff99');
             $(
               $(
                 `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Actual).css('background-color','#ffccff').attr('data-fill-color','ffccff');
+            ).text(hours.Actual).css('background-color', '#ffccff').attr('data-fill-color', 'ffccff');
           });
         });
       });
@@ -495,17 +495,17 @@ function totalLeft() {
   });
 
   $.each($(".pa-percent"), function (index, val) {
-    var tVal = 
-    Number(
-      eval(
-        `${$($(val).next()).text()}/${$(
-          $($($(val).parent()).next()).children(".w-tot")
-        ).text()}*100`
-      )
-    ).toFixed(2);
+    var tVal =
+      Number(
+        eval(
+          `${$($(val).next()).text()}/${$(
+            $($($(val).parent()).next()).children(".w-tot")
+          ).text()}*100`
+        )
+      ).toFixed(2);
 
     $(val).text(tVal + "%");
-    if($(val).text() == "NaN%"){
+    if ($(val).text() == "NaN%") {
       $(val).text("0.00%")
     }
   });
@@ -603,7 +603,7 @@ function gawaBaba() {
 }
 
 //export
-$(document).on('click','#btnExport',function(){
+$(document).on('click', '#btnExport', function () {
   $('#main-table').append(`<tbody id="xLater-1">
   <tr>
   <td data-a-h="center"  colspan="${$('#headrow').children().length}"></td>
