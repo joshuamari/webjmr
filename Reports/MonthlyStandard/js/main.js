@@ -113,11 +113,7 @@ $(document).on("click", "#btnExport", function () {
   exportTable();
 });
 $(document).on("click", "#btnPrint", function () {
-  $(".xPrint").toggle();
-  $(".lower").toggleClass("lower lower_");
-  print();
-  $(".lower_").toggleClass("lower lower_");
-  $(".xPrint").toggle();
+  printTable();
 });
 $(document).on("change", "#CO", function () {
   createTables($("#monthSel").val());
