@@ -62,6 +62,9 @@ $(document).on("change", ".checkbox", function () {
 $(document).on("click", "#btnExport", function () {
   $("#exportModal").modal("show");
 });
+$(document).on("click", "#btnPrint", function () {
+  printTable();
+});
 $(document).on("click", "#totAll", function () {
   $('.prc:contains("%")').each(function () {
     $(this).html($(this).html().split("%").join(""));
@@ -114,6 +117,13 @@ function copyPasta() {
     hrTable += `<tr class='removeLater'><td data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${element}</td><td data-f-name="Arial" data-f-sz="10"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000" data-t="n">${nHr}</td></tr>`;
   });
   $("#cmrBody").append(`${hrTable}`);
+}
+function printTable() {
+  $(".xPrint").toggle();
+  $(".lower").toggleClass("lower lower_");
+  print();
+  $(".lower_").toggleClass("lower lower_");
+  $(".xPrint").toggle();
 }
 function checkSummaryAccess() {
   $.ajaxSetup({ async: false });
