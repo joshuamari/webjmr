@@ -53,6 +53,10 @@ $(document).on("change", "#monthSel", function () {
   $.ajaxSetup({ async: true });
   getEntries();
 });
+$(document).on("click", ".repSel", function () {
+  $(".repSel").removeClass("active");
+  $(this).addClass("active");
+});
 
 $(document).on("change", "#weekSel", function () {
   $("#weekly-report").show();
@@ -104,6 +108,9 @@ $(document).on("click", ".memBtn", function () {
 });
 $(document).on("change", "#projSel", function () {
   getEntries();
+});
+$(document).on("click", ".filterToggle", function () {
+  $(".left").toggleClass("toggle");
 });
 //#endregion
 
@@ -267,7 +274,7 @@ function createTable() {
 }
 
 function updateTr() {
-  $('.pName').attr('colspan', $('#headrow').children().length);
+  $(".pName").attr("colspan", $("#headrow").children().length);
   var pRow = $(".plan-row");
   $.each(pRow, function (i, v) {
     var aRow = $(v).next();
@@ -287,8 +294,12 @@ function latagDays() {
   var startDate = new Date(startString);
   var endDate = new Date(endString);
   while (startDate <= endDate) {
-    addHeader += `<th data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" data-f-bold="true" date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
-    addCells += `<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" date-val="${startDate.yyyymmdd()}" ${weekendcolor(startDate.yyyymmdd())} ></td>`;
+    addHeader += `<th data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" data-f-bold="true" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
+      startDate.yyyymmdd()
+    )} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
+    addCells += `<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
+      startDate.yyyymmdd()
+    )} ></td>`;
     startDate.setDate(startDate.getDate() + 1);
   }
   $("#poa").after(addHeader);
@@ -311,10 +322,15 @@ function latagProjects(data) {
     `);
     $.each(det.Items, function (itemName, iDet) {
       latagPDetails(iDet, itemName).forEach((element) => {
-        $("#main-tbody").append(`<tr data-height="20" class="plan-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}>
+        $("#main-tbody")
+          .append(`<tr data-height="20" class="plan-row" job-num emp-num ${
+          det.Direct ? "direct" : "indirect"
+        }>
         ${element}
         </tr>
-        <tr data-height="20" class="actual-row" job-num emp-num ${det.Direct ? "direct" : "indirect"}><td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
+        <tr data-height="20" class="actual-row" job-num emp-num ${
+          det.Direct ? "direct" : "indirect"
+        }><td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
         </tr>`);
       });
     });
@@ -352,12 +368,18 @@ function latagPlanning(data) {
               $(
                 `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Planned).css('background-color', '#ccff99').attr('data-fill-color', 'ccff99');
+            )
+              .text(hours.Planned)
+              .css("background-color", "#ccff99")
+              .attr("data-fill-color", "ccff99");
             $(
               $(
                 `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
               ).children(`[date-val="${date}"]`)
-            ).text(hours.Actual).css('background-color', '#ffccff').attr('data-fill-color', 'ffccff');
+            )
+              .text(hours.Actual)
+              .css("background-color", "#ffccff")
+              .attr("data-fill-color", "ffccff");
           });
         });
       });
@@ -475,7 +497,9 @@ function highlightweek(wVal) {
 }
 
 function totalpa(empNum, date, pa) {
-  var arr = $(`.${pa}[emp-num="${empNum}"][direct]`).children(`[date-val="${date}"]`);
+  var arr = $(`.${pa}[emp-num="${empNum}"][direct]`).children(
+    `[date-val="${date}"]`
+  );
   var totalArr = [];
 
   $.each(arr, function (index, val) {
@@ -495,18 +519,17 @@ function totalLeft() {
   });
 
   $.each($(".pa-percent"), function (index, val) {
-    var tVal =
-      Number(
-        eval(
-          `${$($(val).next()).text()}/${$(
-            $($($(val).parent()).next()).children(".w-tot")
-          ).text()}*100`
-        )
-      ).toFixed(2);
+    var tVal = Number(
+      eval(
+        `${$($(val).next()).text()}/${$(
+          $($($(val).parent()).next()).children(".w-tot")
+        ).text()}*100`
+      )
+    ).toFixed(2);
 
     $(val).text(tVal + "%");
     if ($(val).text() == "NaN%") {
-      $(val).text("0.00%")
+      $(val).text("0.00%");
     }
   });
 }
@@ -515,44 +538,44 @@ function totalLeft() {
 
 //#endregion
 
-
 //#region  new update
 
 //option sa baba
 
-$(document).on('click', '.repSel', function () {
-  switch ($(this).attr('id')) {
+$(document).on("click", ".repSel", function () {
+  switch ($(this).attr("id")) {
     case "GroupRep":
-      $('#wb-div, #weekly-report').hide();
-      $('#weekly-group-summary').show();
+      $("#wb-div, #weekly-report").hide();
+      $("#weekly-group-summary").show();
       break;
     case "MemberRep":
-      $('#wb-div').show();
-      $('#weekly-group-summary').hide();
-      if ($('#weekSel').val() != "") {
-        $('#weekly-report').show();
+      $("#wb-div").show();
+      $("#weekly-group-summary").hide();
+      if ($("#weekSel").val() != "") {
+        $("#weekly-report").show();
       }
       break;
   }
-})
-
+});
 
 //pang gawa ng baba
 
 function gawaBaba() {
-  $('#weekly-group-summary').show();
-  $($('.c1-label').nextAll()).remove()
-  $('#tr-group-2').empty();
-  $.each($('[isMonday]'), function (indexInArray, valueOfElement) {
-    $('#tr-group-1').append(`
-      <th data-b-a-s="thin" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック" colspan="3" class="week-start">${$(valueOfElement).text()}</th>
+  $("#weekly-group-summary").show();
+  $($(".c1-label").nextAll()).remove();
+  $("#tr-group-2").empty();
+  $.each($("[isMonday]"), function (indexInArray, valueOfElement) {
+    $("#tr-group-1").append(`
+      <th data-b-a-s="thin" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック" colspan="3" class="week-start">${$(
+        valueOfElement
+      ).text()}</th>
       `);
-    $('#tr-group-2').append(`
+    $("#tr-group-2").append(`
       <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">JMR</th>
       <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">入力工数(A) グループ</th>
       <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">実績工数(B) A/B(%)</th>
       `);
-    $('#data-plan, #data-actual').append(`
+    $("#data-plan, #data-actual").append(`
       <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="a"></td>
       <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="b"></td>
       <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="c"></td>
@@ -560,75 +583,89 @@ function gawaBaba() {
   });
 
   //total inputs
-  $.each($('.week-start'), function (weekIndex, monday) {
+  $.each($(".week-start"), function (weekIndex, monday) {
     var planVal = 0;
     var actualVal = 0;
     var indirectVal = 0;
     for (let x = 0; x <= 6; x++) {
       const newDate = new Date($(monday).text());
       newDate.setDate(newDate.getDate() + x);
-      $.each($('.plan-row[direct]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
-        planVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
-      });
-      $.each($('.actual-row[direct]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
-        actualVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
-      });
-      $.each($('[indirect]').children(`[date-val="${newDate.yyyymmdd()}"]`), function (indexInArray, dayVal) {
-        indirectVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text())
-      });
+      $.each(
+        $(".plan-row[direct]").children(`[date-val="${newDate.yyyymmdd()}"]`),
+        function (indexInArray, dayVal) {
+          planVal += parseFloat($(dayVal).text() == "" ? 0 : $(dayVal).text());
+        }
+      );
+      $.each(
+        $(".actual-row[direct]").children(`[date-val="${newDate.yyyymmdd()}"]`),
+        function (indexInArray, dayVal) {
+          actualVal += parseFloat(
+            $(dayVal).text() == "" ? 0 : $(dayVal).text()
+          );
+        }
+      );
+      $.each(
+        $("[indirect]").children(`[date-val="${newDate.yyyymmdd()}"]`),
+        function (indexInArray, dayVal) {
+          indirectVal += parseFloat(
+            $(dayVal).text() == "" ? 0 : $(dayVal).text()
+          );
+        }
+      );
     }
     var bVal = parseFloat(actualVal) + parseFloat(indirectVal);
 
-    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="a"]`)).text(planVal);
-    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="b"]`)).text(bVal);
-    $($('#data-plan').children(`[week-index="${weekIndex}"][col-ref="c"]`)).text(
-      Number(
-        eval(
-          `${planVal}/${bVal}*100`
-        )
-      ).toFixed(2) + "%"
-    );
+    $(
+      $("#data-plan").children(`[week-index="${weekIndex}"][col-ref="a"]`)
+    ).text(planVal);
+    $(
+      $("#data-plan").children(`[week-index="${weekIndex}"][col-ref="b"]`)
+    ).text(bVal);
+    $(
+      $("#data-plan").children(`[week-index="${weekIndex}"][col-ref="c"]`)
+    ).text(Number(eval(`${planVal}/${bVal}*100`)).toFixed(2) + "%");
 
-    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="a"]`)).text(actualVal);
-    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="b"]`)).text(bVal);
-    $($('#data-actual').children(`[week-index="${weekIndex}"][col-ref="c"]`)).text(
-      Number(
-        eval(
-          `${actualVal}/${bVal}*100`
-        )
-      ).toFixed(2) + "%"
-    );
+    $(
+      $("#data-actual").children(`[week-index="${weekIndex}"][col-ref="a"]`)
+    ).text(actualVal);
+    $(
+      $("#data-actual").children(`[week-index="${weekIndex}"][col-ref="b"]`)
+    ).text(bVal);
+    $(
+      $("#data-actual").children(`[week-index="${weekIndex}"][col-ref="c"]`)
+    ).text(Number(eval(`${actualVal}/${bVal}*100`)).toFixed(2) + "%");
   });
-
 }
 
 //export
-$(document).on('click', '#btnExport', function () {
-  $('#main-table').append(`<tbody id="xLater-1">
+$(document).on("click", "#btnExport", function () {
+  $("#main-table").append(`<tbody id="xLater-1">
   <tr>
-  <td data-a-h="center"  colspan="${$('#headrow').children().length}"></td>
+  <td data-a-h="center"  colspan="${$("#headrow").children().length}"></td>
   </tr>
   <tr>
   <td data-a-h="center"  colspan="10" rowspan="4"></td>
-  ${$('#tr-group-1').html()}
+  ${$("#tr-group-1").html()}
   </tr>
   <tr>
-  ${$('#tr-group-2').html()}
+  ${$("#tr-group-2").html()}
   </tr>
   <tr>
-  ${$('#data-plan').html()}
+  ${$("#data-plan").html()}
   </tr>
   <tr>
-  ${$('#data-actual').html()}
+  ${$("#data-actual").html()}
   </tr>
-  </tbody>`)
+  </tbody>`);
   TableToExcel.convert(document.getElementById("main-table"), {
-    name: `Drawing Monitoring Report - ${$('#buSel').val()}_${$('#monthSel').val()}.xlsx`,
+    name: `Drawing Monitoring Report - ${$("#buSel").val()}_${$(
+      "#monthSel"
+    ).val()}.xlsx`,
     sheet: {
-      name: $('#buSel').val()
-    }
+      name: $("#buSel").val(),
+    },
   });
-  $('#xLater-1').remove();
+  $("#xLater-1").remove();
 });
 
 //#endregion

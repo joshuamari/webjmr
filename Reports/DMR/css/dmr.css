@@ -57,6 +57,16 @@ body {
   width: 100%;
   overflow: hidden;
 }
+body::-webkit-scrollbar {
+  width: 10px;
+}
+body::-webkit-scrollbar-track {
+  background: #ebebeb;
+}
+body::-webkit-scrollbar-thumb {
+  background: #6383a1;
+  border-radius: 25px;
+}
 
 .st-color {
   background: #7fb5eb !important;
@@ -67,16 +77,6 @@ body {
 #multiplier td:last-of-type,
 #xd td:last-of-type {
   background: var(--yellow-color) !important;
-}
-.content::-webkit-scrollbar {
-  width: 10px;
-}
-.content::-webkit-scrollbar-track {
-  background: #ebebeb;
-}
-.content::-webkit-scrollbar-thumb {
-  background: #6383a1;
-  border-radius: 25px;
 }
 
 :root {
@@ -92,7 +92,13 @@ body {
   --lightblue-color: #476f95;
   --green-color: #7bae37;
 }
+.filterToggle {
+  display: none;
+}
 
+.home-content > div:nth-child(2) {
+  height: calc(100vh - 120px);
+}
 .home-content {
   width: 100%;
 }
@@ -121,8 +127,10 @@ body {
   color: #fc9842;
   transition: color 0.5s;
 }
-.home-content .content {
-  height: calc(100vh - 120px);
+.home-content .rightt {
+  width: calc(100% - 320px);
+  height: 100%;
+  overflow: auto;
 }
 .right button {
   width: 100px;
@@ -142,16 +150,31 @@ body {
 }
 .noShow {
   background-color: #ededed;
+  width: calc(100% - 320px);
 }
 .left {
   background-color: #d7dae2;
+  width: 320px;
 }
-.rightt {
-  width: calc(100vw - 320px);
+.btn-primary {
+  background-color: var(--darkest-blue) !important;
+  border: none;
 }
-
-#upperT {
-  height: 100%;
+.xPrint {
+  background-color: var(--main-blue) !important;
+  color: #fff !important;
+}
+.xPrint:hover {
+  background-color: #476f95 !important;
+}
+#upperT > div {
+  max-height: 750px;
+  height: fit-content;
+  width: 100%;
+}
+#lowerT > .weekly-div {
+  max-height: 750px;
+  min-height: 250px;
   width: 100%;
 }
 #lowerT {
@@ -245,6 +268,13 @@ body {
   background-color: #fff;
   color: var(--text-color);
 }
+.repSel {
+  cursor: pointer;
+}
+.repSel.active {
+  color: #fc9842 !important;
+  border-bottom: 2px solid #fc9842;
+}
 
 @keyframes lol {
   0% {
@@ -314,7 +344,22 @@ body {
   animation: lol 1.5s 500ms infinite ease-in-out;
 }
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 900px) {
+  .home-content > div:nth-child(2) {
+    flex-direction: column;
+
+    overflow-y: auto;
+  }
+
+  .left {
+    width: 100%;
+    transition: all 0.5s;
+  }
+  .noShow,
+  .rightt {
+    width: 100% !important;
+    overflow: hidden;
+  }
   .upper {
     display: flex;
     flex-direction: column;
@@ -343,7 +388,30 @@ body {
     overflow: auto;
   }
   .memcont {
-    height: 100%;
+    height: 450px;
+  }
+  #mainContent {
+    width: 100%;
+  }
+  .filterToggle {
+    display: flex;
+  }
+  .filterToggle > div {
+    top: -10px;
+  }
+  .filterToggle > div > i {
+    background-color: #d7dae2;
+    border-radius: 50%;
+    color: var(--darkest-blue);
+  }
+  .left.toggle > div:not(:last-child) {
+    display: none;
+  }
+  .left.toggle .filterToggle i {
+    transform: rotate(180deg);
+  }
+  .left .filterToggle i {
+    transition: transform 0.5s;
   }
 }
 

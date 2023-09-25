@@ -1,204 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <title>Drawing Monitoring Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/dmr.css" />
+    <link rel="stylesheet" href="css/boxicons.css" />
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.table2excel.js"></script>
+    <script>
+      var busterCall = ["js/main.js", "css/dmr.css", "css/bootstrap.min.css"];
+      $.post(
+        "ajax/get_version.php",
+        {
+          busterCall: busterCall,
+          titleName: "Drawing Monitoring Report",
+        },
+        function (data) {
+          $("head").html(data);
+        }
+      );
+    </script>
+  </head>
 
-<head>
-  <title>Drawing Monitoring Report</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-  <link rel="stylesheet" href="css/dmr.css" />
-  <link rel="stylesheet" href="css/boxicons.css" />
-  <script src="js/jquery.js"></script>
-  <script src="js/jquery.inview.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.table2excel.js"></script>
-  <script>
-    var busterCall = ["js/main.js", "css/dmr.css", "css/bootstrap.min.css"];
-    $.post(
-      "ajax/get_version.php",
-      {
-        busterCall: busterCall,
-        titleName: "Drawing Monitoring Report",
-      },
-      function (data) {
-        $("head").html(data);
-      }
-    );
-  </script>
-</head>
+  <body>
+    <div class="home-content position-relative">
+      <div class="title">
+        <h1>Drawing Monitoring Report</h1>
 
-<body>
-  <div class="home-content position-relative">
-    <div class="title xPrint">
-      <h1>Drawing Monitoring Report</h1>
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="../" class="backbtn">
+            <i class="bx bx-left-arrow-alt fs-5"></i>
+            <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
+          </a>
 
-      <div class="d-flex justify-content-between align-items-center">
-        <a href="../" class="backbtn">
-          <i class="bx bx-left-arrow-alt fs-5"></i>
-          <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
-        </a>
-
-        <div class="right d-flex flex-row pe-2 pe-lg-0">
-          <button id="btnPrint" class="xPrint btn btn-primary" style="background-color: #395dc7">
-            PRINT
-          </button>
-          <button id="btnExport" class="xPrint btn btn-success">
-            EXPORT
-          </button>
+          <div class="right d-flex flex-row pe-2 pe-lg-0">
+            <button
+              id="btnPrint"
+              class="xPrint btn"
+              style="background-color: #395dc7"
+            >
+              PRINT
+            </button>
+            <button id="btnExport" class="btn btn-success">EXPORT</button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="position-relative d-flex flex-md-row flex-column" style="height: calc(100vh - 120px)">
-      <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
-        <div class="form-floating col-12 mb-2">
-          <select class="form-select" id="buSel" aria-label="Select BU">
-            <option value="" selected hidden>Select Group</option>
-            <option>ENV</option>
-            <option>Two</option>
-            <option>Three</option>
-          </select>
-          <label for="busSel">Select BU</label>
+      <div
+        class="position-relative d-flex"
+       
+      >
+        <div class="left p-3 px-lg-4">
+          <div class="form-floating col-12 mb-2">
+            <select class="form-select" id="buSel" aria-label="Select BU">
+              <option value="" selected hidden>Select Group</option>
+              <option>ENV</option>
+              <option>Two</option>
+              <option>Three</option>
+            </select>
+            <label for="busSel">Select BU</label>
+          </div>
+          <div class="form-floating col-12 mb-2">
+            <input type="month" id="monthSel" class="form-control" />
+            <label for="monthSel">Select Month</label>
+          </div>
+          <div class="form-floating col-12 mb-4">
+            <select
+              class="form-select"
+              id="projSel"
+              aria-label="Select Project"
+            >
+              <option value="">All</option>
+              <option value="1">Project1</option>
+              <!-- <option value="2">Second Half</option> -->
+            </select>
+            <label for="projSel" class="">Select Project</label>
+          </div>
+
+          <div class="position-relative memcont">
+            <h4 class="">Members</h4>
+            <div id="members-list"></div>
+            <button id="selAll" class="btn btn-primary w-100 mt-3">
+              Select All
+            </button>
+          </div>
+          <div class="filterToggle position-relative justify-content-center align-items-center" title="hide selections">
+            <div class="position-absolute" style="z-index: 10; cursor: pointer;">
+              <i class='bx bx-chevron-up-circle fs-1 p-2' ></i>
+            </div>
+          </div>
         </div>
-        <div class="form-floating col-12 mb-2">
-          <input type="month" id="monthSel" class="form-control" />
-          <label for="monthSel">Select Month</label>
-        </div>
-        <div class="form-floating col-12 mb-4">
-          <select class="form-select" id="projSel" aria-label="Select Project">
-            <option value="">All</option>
-            <option value="1">Project1</option>
-            <!-- <option value="2">Second Half</option> -->
-          </select>
-          <label for="projSel" class="">Select Project</label>
-        </div>
-        <!-- <div class="col-12 mb-4">
-            <div class="form-check form-switch p-0 d-flex">
-              <input
-                type="checkbox"
-                role="switch"
-                class="checkbox"
-                name="checkbox"
-              />
-              <div class="d-flex align-items-center">
-                <p class="m-0 ps-3">
-                  Exclude OGP<i
-                    class="m-0 bx bx-info-circle ps-1"
-                    title="Exclude Other Group's Project"
-                  ></i>
-                </p>
+        <div
+          id="mainContent"
+          class="rightt d-flex flex-column position-relative d-none"
+        >
+          <div id="upperT" class="position-relative p-3 px-lg-4">
+            <div class="position-relative col-12 mt-2 overflow-auto">
+              <table
+                id="main-table"
+                class="table"
+                data-cols-width="20,25,40,15,20,10,10,10,10,10,10"
+              >
+                <thead id="main-thead">
+                  <tr data-height="20" id="headrow">
+                    <th data-b-a-s="thin" data-f-bold="true">
+                      Job Request Description
+                    </th>
+                    <th data-b-a-s="thin" data-f-bold="true">
+                      Item of Works (Dwg. No.)
+                    </th>
+                    <th data-b-a-s="thin" data-f-bold="true">
+                      Drawing / Document Name
+                    </th>
+                    <th data-b-a-s="thin" data-f-bold="true">KHI in Charge</th>
+                    <th data-b-a-s="thin" data-f-bold="true">Name</th>
+                    <th data-b-a-s="thin" data-f-bold="true">
+                      KHI Request Date
+                    </th>
+                    <th data-b-a-s="thin" data-f-bold="true">KDT Deadline</th>
+                    <th data-b-a-s="thin" data-f-bold="true">Start Date</th>
+                    <th data-b-a-s="thin" data-f-bold="true">Manhour Used</th>
+                    <th data-b-a-s="thin" data-f-bold="true" id="status">
+                      Status
+                    </th>
+                    <th data-b-a-s="thin" id="poa"></th>
+                  </tr>
+                </thead>
+                <tbody id="main-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div id="lowerT" class="position-relative" style="padding: 20px">
+            <div class="d-flex gap-3 mb-3" >
+              <span  id="GroupRep" class="repSel text-white p-2 active">
+                Group
+              </span>
+              <span id="MemberRep" class="repSel text-white p-2">
+                Members
+              </spa>
+            </div>
+            <div id="wb-div" style="display: none">
+              <div
+                id="cleardiv"
+                class="form-floating col-12 col-md-4 mb-2 d-flex"
+              >
+                <input type="week" id="weekSel" class="form-control" />
+                <label for="weekSel">Highlight Week</label>
+                <button
+                  id="clearWeek"
+                  class="btn "
+                  style="width: 70%; background-color: #3980c7; color: #fff;"
+                >
+                  Clear Week
+                </button>
               </div>
             </div>
-          </div> -->
-
-        <div class="position-relative memcont">
-          <h4 class="">Members</h4>
-          <div id="members-list"></div>
-          <button id="selAll" class="btn btn-primary w-100 mt-3">
-            Select All
-          </button>
-        </div>
-      </div>
-      <div id="mainContent" class="content rightt d-flex flex-column position-relative d-none">
-        <div id="upperT" class="position-relative" style="padding: 20px 20px 0 20px">
-          <div class="position-relative col-12 mt-2 overflow-auto" style="height: calc(100vh - 446px)">
-            <table id="main-table" class="table" data-cols-width="20,25,40,15,20,10,10,10,10,10,10">
-              <thead id="main-thead">
-                <tr data-height="20" id="headrow">
-                  <th data-b-a-s="thin" data-f-bold="true">Job Request Description</th>
-                  <th data-b-a-s="thin" data-f-bold="true">Item of Works (Dwg. No.)</th>
-                  <th data-b-a-s="thin" data-f-bold="true">Drawing / Document Name</th>
-                  <th data-b-a-s="thin" data-f-bold="true">KHI in Charge</th>
-                  <th data-b-a-s="thin" data-f-bold="true">Name</th>
-                  <th data-b-a-s="thin" data-f-bold="true">KHI Request Date</th>
-                  <th data-b-a-s="thin" data-f-bold="true">KDT Deadline</th>
-                  <th data-b-a-s="thin" data-f-bold="true">Start Date</th>
-                  <th data-b-a-s="thin" data-f-bold="true">Manhour Used</th>
-                  <th data-b-a-s="thin" data-f-bold="true" id="status">Status</th>
-                  <th data-b-a-s="thin" id="poa"></th>
-                </tr>
-              </thead>
-              <tbody id="main-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-        <div id="lowerT" class="position-relative" style="padding: 20px">
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" id="GroupRep" class="repSel btn btn-secondary">Group</button>
-            <button type="button" id="MemberRep" class="repSel btn btn-secondary">Members</button>
-          </div>
-          <div id="wb-div" style="display: none;">
-            <div id="cleardiv" class="form-floating col-12 col-md-4 mb-2 d-flex">
-              <input type="week" id="weekSel" class="form-control" />
-              <label for="weekSel">Highlight Week</label>
-              <button id="clearWeek" class="btn btn-primary" style="width: 70%">
-                Clear Week
-              </button>
-            </div>
-
-          </div>
-          <div id="weekly-div" class="" style="width: 100%; overflow: auto; height: 190px;">
-            <table id="weekly-report" class="table" style="display: none">
-              <thead>
-                <tr id="weekly-headrow">
-                  <th data-b-a-s="thin" data-f-bold="true">Employee Name</th>
-                  <th data-b-a-s="thin" data-f-bold="true"></th>
-                  <th data-b-a-s="thin" data-f-bold="true" title="Planning / Actual Percentage">P/A %</th>
-                  <th data-b-a-s="thin" data-f-bold="true" id="w-total">TOTAL</th>
-                </tr>
-              </thead>
-              <tbody id="weekly-body"></tbody>
-            </table>
-            <table id="weekly-group-summary" class="table" style="display:none;">
-              <thead>
-                <tr id="tr-group-1">
-                  <th data-b-a-s="thin" data-f-bold="true" rowspan="2" class="c1-label">予実</th>
-                </tr>
-                <tr id="tr-group-2">
-
-                </tr>
-              </thead>
-              <tbody id="weekly-body">
-                <tr id="data-plan">
-                  <th data-b-a-s="thin" data-f-bold="true" class="c1-label">予定</th>
-                </tr>
-                <tr id="data-actual">
-                  <th data-b-a-s="thin" data-f-bold="true" class="c1-label">実際</th>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <!-- <div
-            class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
-          >
-            <div id="upperT" class="position-relative mt-2">
+            <div
+              id="weekly-div"
+              class="weekly-div"
+              style="width: 100%; overflow: auto"
+            >
+              <table id="weekly-report" class="table" style="display: none">
+                <thead>
+                  <tr id="weekly-headrow">
+                    <th data-b-a-s="thin" data-f-bold="true">Employee Name</th>
+                    <th data-b-a-s="thin" data-f-bold="true"></th>
+                    <th
+                      data-b-a-s="thin"
+                      data-f-bold="true"
+                      title="Planning / Actual Percentage"
+                    >
+                      P/A %
+                    </th>
+                    <th data-b-a-s="thin" data-f-bold="true" id="w-total">
+                      TOTAL
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="weekly-body"></tbody>
+              </table>
               <table
-                class="table position-relative ayos bg-white table-hover"
-                id="mainTable"
+                id="weekly-group-summary"
+                class="table"
+                style="display: none"
               >
                 <thead>
-                  <tr id="mainThead" class="sticky-top bg-body"></tr>
+                  <tr id="tr-group-1">
+                    <th
+                      data-b-a-s="thin"
+                      data-f-bold="true"
+                      rowspan="2"
+                      class="c1-label"
+                    >
+                      予実
+                    </th>
+                  </tr>
+                  <tr id="tr-group-2"></tr>
                 </thead>
-                <tbody id="mainTbody"></tbody>
+                <tbody id="weekly-body">
+                  <tr id="data-plan">
+                    <th data-b-a-s="thin" data-f-bold="true" class="c1-label">
+                      予定
+                    </th>
+                  </tr>
+                  <tr id="data-actual">
+                    <th data-b-a-s="thin" data-f-bold="true" class="c1-label">
+                      実際
+                    </th>
+                  </tr>
+                </tbody>
               </table>
             </div>
-            <div id="lowerT" class="position-relative">
-              <table class="table ayos bg-white table-hover" id="subTable">
-                <thead>
-                  <tr id="subThead"></tr>
-                </thead>
-                <tbody id="subTbody"></tbody>
-              </table>
-            </div>
-          </div> -->
-      <div class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative">
-        <h1 class="text-center">Select Employee</h1>
+          </div>
+        </div>
+
+        <div
+          class="noShow p-2 h-100 d-flex justify-content-center align-items-center position-relative"
+   
+        >
+          <h1 class="text-center">Select Employee</h1>
+        </div>
       </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
