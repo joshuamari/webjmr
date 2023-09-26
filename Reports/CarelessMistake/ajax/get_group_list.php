@@ -1,6 +1,7 @@
 <?php
 #region Require Database Connections
 require_once '../Includes/dbconnectkdtph.php';
+require_once '../Includes/dbconnectwebjmr.php';
 #endregion
 
 #region set timezone
@@ -13,11 +14,13 @@ $empNum = '';
 if (isset($_REQUEST['empNum'])) {
     $empNum = $_REQUEST['empNum'];
 }
+$implodeString = implode("','", array_values($excludeGroups));
+$egStmt = " AND fldBU NOT IN ('" . $implodeString . "')";
 #endregion
 
 #region main
 if (isAllGroups()) {
-    $grpQuery = "SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldBU NOT IN ('SHI','INT','SYS','TEG','ADM','ACT','MNG','DXT') ORDER BY fldBU";
+    $grpQuery = "SELECT fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL $egStmt ORDER BY fldBU";
     $grpStmt = $connkdt->query($grpQuery);
     if ($grpStmt->rowCount() > 0) {
         $grpArr = $grpStmt->fetchAll();
@@ -34,7 +37,9 @@ if (isAllGroups()) {
         if ($myGroups['fldGroups'] != '') {
             $groupsArr = explode("/", $myGroups['fldGroups']);
             foreach ($groupsArr as $grps) {
-                array_push($output, $grps);
+                if (!in_array($grps, $excludeGroups)) {
+                    array_push($output, $grps);
+                }
             }
         } else {
             $grp = $myGroups['fldGroup'];

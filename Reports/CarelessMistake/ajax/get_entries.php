@@ -35,7 +35,7 @@ if (!empty($_POST['ogpSel'])) {
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldGroup,dr.fldEmployeeNum,SUM(dr.fldDuration) AS totalHrs,tw.fldCode FROM `dailyreport` AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN typesofworktable AS tw ON dr.fldTOW=tw.fldID WHERE dr.fld2D3D IS NOT NULL $groupStatement AND dr.fldDate BETWEEN :startSel AND :endSel $ogp GROUP BY dr.fldGroup,dr.fldEmployeeNum,dr.fldTOW ORDER BY CASE WHEN pt.fldGroup = 'ANA' THEN 3 WHEN pt.fldGroup = 'MPM' THEN 2 WHEN pt.fldGroup = 'ETCL' THEN 1 ELSE 0 END, pt.fldGroup, dr.fldEmployeeNum";
+$entriesQuery = "SELECT pt.fldGroup,dr.fldEmployeeNum,SUM(dr.fldDuration) AS totalHrs, CASE WHEN tw.fldCode IN ('Trng','Mtng') THEN 'Other' ELSE tw.fldCode END AS tows FROM `dailyreport` AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID JOIN typesofworktable AS tw ON dr.fldTOW=tw.fldID WHERE dr.fld2D3D IS NOT NULL $groupStatement AND dr.fldDate BETWEEN :startSel AND :endSel $ogp GROUP BY pt.fldGroup,dr.fldEmployeeNum,tows ORDER BY CASE WHEN pt.fldGroup = 'ANA' THEN 3 WHEN pt.fldGroup = 'MPM' THEN 2 WHEN pt.fldGroup = 'ETCL' THEN 1 ELSE 0 END, pt.fldGroup, dr.fldEmployeeNum";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":startSel" => $startSel, ":endSel" => $endSel]);
 $entriesArr = $entriesStmt->fetchAll();
@@ -44,7 +44,7 @@ foreach ($entriesArr as $ent) {
     $group = $ent['fldGroup'];
     $emp = getName($ent['fldEmployeeNum']);
     $hrs = $ent['totalHrs'] / 60;
-    $tow = in_array($ent['fldCode'], $otherTow) ? "Other" : $ent['fldCode'];
+    $tow = $ent['tows'];
     $entriesArray[$group][$emp][$tow] = $hrs;
 }
 #endregion

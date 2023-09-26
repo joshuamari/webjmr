@@ -25,4 +25,3 @@ if(!empty($userHash)){
     }
 }
 echo json_encode($output);
-?>
