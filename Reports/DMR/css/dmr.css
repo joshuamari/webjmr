@@ -135,12 +135,6 @@ body::-webkit-scrollbar-thumb {
 .right button {
   width: 100px;
 }
-.right button:first-child {
-  margin-right: 10px;
-}
-.right button:last-child {
-  margin-left: 10px;
-}
 
 .noShow h1 {
   background-color: var(--darkest-blue);
@@ -183,7 +177,7 @@ body::-webkit-scrollbar-thumb {
 
 /* member selection */
 .memcont {
-  height: calc(100vh - 380px);
+  height: calc(100vh - 420px);
   overflow: hidden;
 }
 #members-list {
@@ -371,7 +365,6 @@ body::-webkit-scrollbar-thumb {
   }
   .right button {
     width: 100%;
-    margin: 10px;
   }
   .home-content {
     height: 100%;
@@ -382,13 +375,13 @@ body::-webkit-scrollbar-thumb {
 
   #members-list {
     overflow: auto;
-    max-height: calc(100vh - 740px);
+    max-height: calc(100vh - 640px);
   }
   body {
     overflow: auto;
   }
   .memcont {
-    height: 450px;
+    height: 480px;
   }
   #mainContent {
     width: 100%;
