@@ -252,6 +252,10 @@ function getEntries() {
       updateTr();
       latagPlanning(query);
       gawaBaba();
+      setBaba($('.repSel.active').attr('id'))
+      if($("#weekSel").val() != ""){
+        validateWeekRange($("#monthSel").val());
+      }
     }
   );
 }
@@ -543,7 +547,11 @@ function totalLeft() {
 //option sa baba
 
 $(document).on("click", ".repSel", function () {
-  switch ($(this).attr("id")) {
+  setBaba($(this).attr("id"));
+});
+
+function setBaba(rVal){
+  switch (rVal) {
     case "GroupRep":
       $("#wb-div, #weekly-report").hide();
       $("#weekly-group-summary").show();
@@ -556,7 +564,8 @@ $(document).on("click", ".repSel", function () {
       }
       break;
   }
-});
+
+}
 
 //pang gawa ng baba
 
