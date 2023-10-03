@@ -52,6 +52,11 @@ $(document).on("change", "#monthSel", function () {
   getScope();
   $.ajaxSetup({ async: true });
   getEntries();
+  _selectedMembers.length = 0;
+
+  $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
+  $("#selAll").text("Select All");
+  $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
 });
 $(document).on("click", ".repSel", function () {
   $(".repSel").removeClass("active");
@@ -126,20 +131,20 @@ function checkLogin() {
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
-      jmcAccess();
+      dmrAccess();
     },
   });
   $.ajaxSetup({ async: true });
 }
-function jmcAccess() {
-  //check if user has access to jmc
+function dmrAccess() {
   $.post(
-    "ajax/jmc_access.php",
+    "ajax/dmr_access.php",
     {
       empNum: _empDetails["empNum"],
     },
     function (data) {
-      if (data.trim() == 0) {
+      var access = $.parseJSON(data);
+      if (!access) {
         alert("Access denied");
         window.location.href = "../";
       }
@@ -252,8 +257,8 @@ function getEntries() {
       updateTr();
       latagPlanning(query);
       gawaBaba();
-      setBaba($('.repSel.active').attr('id'))
-      if($("#weekSel").val() != ""){
+      setBaba($(".repSel.active").attr("id"));
+      if ($("#weekSel").val() != "") {
         validateWeekRange($("#monthSel").val());
       }
     }
@@ -550,7 +555,7 @@ $(document).on("click", ".repSel", function () {
   setBaba($(this).attr("id"));
 });
 
-function setBaba(rVal){
+function setBaba(rVal) {
   switch (rVal) {
     case "GroupRep":
       $("#wb-div, #weekly-report").hide();
@@ -564,7 +569,6 @@ function setBaba(rVal){
       }
       break;
   }
-
 }
 
 //pang gawa ng baba
