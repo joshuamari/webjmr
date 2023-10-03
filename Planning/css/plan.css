@@ -326,12 +326,8 @@ footer {
   font-size: 26px;
   font-weight: 600;
 }
-
-.page-title .webname {
-  font-size: 90px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 2px;
+.maindiv .top {
+  justify-content: space-between;
 }
 .page-title .title {
   font-size: 55px;
@@ -354,7 +350,10 @@ footer {
 .cont .maindiv {
   width: 100%;
 }
-
+.gotoDMR a:hover i,
+.gotoDMR a:hover span {
+  color: rgba(252, 152, 66, 1) !important;
+}
 .cont {
   /* para hiwalay yung overflow ng cont div */
   overflow-y: auto;
@@ -369,7 +368,7 @@ footer {
 }
 
 .top-right {
-  height: 100%;
+  height: calc(100vh - 230px);
 }
 
 .edit {
