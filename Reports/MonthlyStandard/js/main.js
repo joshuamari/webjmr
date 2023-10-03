@@ -242,7 +242,6 @@ function createTables(ymVal) {
       location: location,
     },
     function (data) {
-      console.log(data);
       var empEntries = $.parseJSON(data);
       _maxDays = new Date(
         ymVal.split("-")[0],
@@ -805,6 +804,7 @@ function printTable() {
 }
 
 function exportTable() {
+  var locVal = $($(`#locSel`).find("option:selected")).text();
   var colsP = _maxDays + 3;
   $("#mainTable").append(
     `<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`,
@@ -823,7 +823,9 @@ function exportTable() {
       break;
   }
   TableToExcel.convert(document.getElementById("mainTable"), {
-    name: `MonthlyStandard_${$("#buSel").val()}_${$("#monthSel").val()}.xlsx`,
+    name: `MonthlyStandard_${$("#buSel").val()}_${$(
+      "#monthSel"
+    ).val()}_${locVal}.xlsx`,
     sheet: {
       name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
     },
