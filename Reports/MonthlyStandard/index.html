@@ -58,7 +58,19 @@
       </div>
       <div class="content">
         <div class="lower position-relative d-flex flex-md-row flex-column">
-          <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4">
+          <div class="left p-3 shadow-lg">
+            <div class="form-floating col-12 mb-2">
+              <select
+                class="form-select"
+                id="locSel"
+                aria-label="Select Location"
+              >
+                <option>KDT</option>
+                <option>Kobe</option>
+                <option>WFH</option>
+              </select>
+              <label for="busSel">Select Location</label>
+            </div>
             <div class="form-floating col-12 mb-2">
               <select class="form-select" id="buSel" aria-label="Select BU">
                 <option value="" selected hidden>Select Group</option>
@@ -99,17 +111,28 @@
               </div>
             </div>
 
-            <div class="position-relative">
+            <div class="position-relative mb-3 mb-lg-0">
               <h4 class="">Members</h4>
               <div id="members-list"></div>
               <button id="selAll" class="btn btn-primary w-100 mt-4">
                 Select All
               </button>
             </div>
+            <div
+              class="col-12 position-relative d-flex justify-content-center align-items-center"
+            >
+              <div
+                class="position-absolute justify-content-center align-items-center tog"
+                title="Hide selections"
+              >
+                <i
+                  class="bx bx-chevron-up position-relative fs-1 fw-semibold"
+                  style="color: var(--main-blue)"
+                ></i>
+              </div>
+            </div>
           </div>
-          <div
-            class="right d-none px-lg-4 col-md-9 col-lg-10 d-flex col-12 flex-column lower"
-          >
+          <div class="right d-none d-flex flex-column lower">
             <div id="upperT" class="position-relative mt-2">
               <table
                 class="table position-relative ayos bg-white table-hover table-striped"
@@ -122,7 +145,10 @@
               </table>
             </div>
             <div id="lowerT" class="position-relative">
-              <table class="table ayos bg-white table-hover table-striped" id="subTable">
+              <table
+                class="table ayos bg-white table-hover table-striped"
+                id="subTable"
+              >
                 <thead>
                   <tr id="subThead"></tr>
                 </thead>
@@ -131,7 +157,7 @@
             </div>
           </div>
           <div
-            class="noShow p-2 w-100 h-100 d-flex justify-content-center align-items-center position-relative"
+            class="noShow p-2 h-100 d-flex justify-content-center align-items-center position-relative"
           >
             <h1 class="text-center">Select Employee</h1>
           </div>

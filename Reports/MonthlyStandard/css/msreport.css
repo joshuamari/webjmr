@@ -123,7 +123,6 @@ body {
 }
 .home-content .content {
   height: calc(100% - 120px);
-  padding: 0px 10px;
 }
 .right button {
   width: 100px;
@@ -137,10 +136,15 @@ body {
 .lower {
   height: calc(100vh - 120px);
 }
+.content .lower .left {
+  width: 300px;
+}
 
 .lower .right {
   overflow: auto;
   background-color: #ededed;
+  width: calc(100% - 300px);
+  padding: 0 20px;
 }
 .lower .noShow h1 {
   background-color: var(--darkest-blue);
@@ -150,13 +154,17 @@ body {
 }
 .lower .noShow {
   background-color: #ededed;
+  width: calc(100% - 300px);
 }
 .memBtn:active {
   background-color: var(--darkest-blue);
 }
 #members-list {
   overflow: auto;
-  max-height: calc(100vh - 540px);
+  max-height: calc(100vh - 600px);
+}
+.tog {
+  display: none;
 }
 /*loaderrrrr*/
 
@@ -299,7 +307,7 @@ body {
   animation: lol 1.5s 500ms infinite ease-in-out;
 }
 
-@media screen and (max-width: 770px) {
+@media screen and (max-width: 900px) {
   .lower {
     overflow: auto;
     height: 100%;
@@ -326,8 +334,22 @@ body {
   .home-content .title h1 {
     font-size: 25px;
   }
+  .content .lower .left {
+    position: absolute;
+    width: 100%;
+    z-index: 10000;
+    background-color: #fff;
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
   .lower .right {
+    padding: 0;
+    margin-top: 20px;
+  }
+  .lower .right,
+  .lower .noShow {
     height: 100%;
+    width: 100%;
   }
   #members-list {
     overflow: auto;
@@ -335,6 +357,27 @@ body {
   }
   body {
     overflow: auto;
+  }
+  .tog {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    top: -10px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.5s ease;
+  }
+  .left.hide .tog {
+    transform: rotate(180deg);
+    top: -18px;
+  }
+  .left.hide > div:not(:last-of-type) {
+    display: none;
+  }
+  .left.hide {
+    padding: 10px !important;
+    opacity: 0;
   }
 }
 

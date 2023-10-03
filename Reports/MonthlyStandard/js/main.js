@@ -122,6 +122,9 @@ $(document).on("change", ".checkbox", function () {
   //eto uuncomment tas papalitan id pag may checkbox na
   createTables($("#monthSel").val());
 });
+$(document).on("click", ".tog", function () {
+  $(".left").toggleClass("hide");
+});
 //#endregion
 
 //#region FUNCTIONS
