@@ -47,7 +47,7 @@ $(document).ready(function () {
   $.ajaxSetup({ async: false });
   getGroupList();
   getEmployeeList();
-
+  getLocations();
   $.ajaxSetup({ async: true });
 
   // createTables($("#monthSel").val());
@@ -125,6 +125,9 @@ $(document).on("change", ".checkbox", function () {
 $(document).on("click", ".tog", function () {
   $(".left").toggleClass("hide");
 });
+$(document).on("change", "#locSel", function () {
+  createTables($("#monthSel").val());
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -196,6 +199,22 @@ function getEmployeeList() {
     }
   );
 }
+function getLocations() {
+  $("#locSel").html(`<option loc-id=0>KDT/WFH</option>`);
+  var addString = ``;
+  $.ajax({
+    url: "ajax/get_locations.php",
+    success: function (data) {
+      var locs = $.parseJSON(data);
+      const locIDs = Object.keys(locs);
+      locIDs.forEach((locID) => {
+        const locName = locs[locID];
+        addString += `<option loc-id=${locID}>${locName}</option>`;
+      });
+    },
+  });
+  $("#locSel").append(addString);
+}
 //#region table creation
 function createTables(ymVal) {
   _grpProj = [];
@@ -203,6 +222,7 @@ function createTables(ymVal) {
   var groupSel = $(`#buSel`).val();
   var halfSel = $(`#CO`).val();
   var getOGP = $(`.checkbox`).is(":checked"); //eto papalitan pag may checkbox na
+  var location = $($(`#locSel`).find("option:selected")).attr("loc-id");
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
@@ -219,8 +239,10 @@ function createTables(ymVal) {
       groupSel: groupSel,
       getHalfSel: halfSel,
       getOGP: getOGP,
+      location: location,
     },
     function (data) {
+      console.log(data);
       var empEntries = $.parseJSON(data);
       _maxDays = new Date(
         ymVal.split("-")[0],
