@@ -503,7 +503,6 @@ function planAccess() {
       empNum: empDetails["empNum"],
     },
     function (data) {
-      console.log(data);
       var access = $.parseJSON(data);
       if (!access) {
         alert("Access denied");
