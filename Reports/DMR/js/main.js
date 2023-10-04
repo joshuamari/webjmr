@@ -261,6 +261,15 @@ function getEntries() {
       if ($("#weekSel").val() != "") {
         validateWeekRange($("#monthSel").val());
       }
+      $.each($('td'), function (indexInArray, valueOfElement) {
+
+        if($(valueOfElement).text() == 'null'){
+     
+         $(valueOfElement).text('');
+     
+        }
+     
+     });
     }
   );
 }
