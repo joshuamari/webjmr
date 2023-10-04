@@ -2,8 +2,8 @@
 require_once 'dbconnectkdtph.php'; //database connection
 $output=array();
 $userHash='';
-if(isset($_COOKIE["userID"])){
-    $userHash=$_COOKIE["userID"];
+if(isset($_COOKIE['userID'])){
+    $userHash=$_COOKIE['userID'];
 }
 if(!empty($userHash)){
     $loginQ="SELECT fldEmployeeNum FROM kdtlogin WHERE fldUserHash='$userHash'";
@@ -15,14 +15,13 @@ if(!empty($userHash)){
         $empDeetsStmt=$connkdt->query($empDeetsQ);
         $empDeetsArr=$empDeetsStmt->fetchAll();
         foreach($empDeetsArr AS $empdeets){
+            $output+=["empGroup"=>$empdeets['fldGroup']];
             $output+=["empFName"=>$empdeets['fldFirstname']];
             $output+=["empSName"=>$empdeets['fldSurname']];
             $output+=["empNName"=>$empdeets['fldNick']];
             $output+=["empDateHired"=>$empdeets['fldDateHired']];
-            $output+=["empGroup"=>$empdeets['fldGroup']];
-            $output+=["empGender"=>$empdeets['fldGender']];
             $output+=["empPos"=>$empdeets['fldDesig']];
-        } 
+        }
     }
 }
 echo json_encode($output);

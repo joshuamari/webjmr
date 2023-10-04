@@ -16,7 +16,7 @@
     <script>
       var busterCall = ["js/reports.js", "css/reports.css"];
       $.post(
-        "../ajax/get_version.php",
+        "ajax/get_version.php",
         {
           busterCall: busterCall,
           titleName: "Reports",
@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <ul class="nav-links m-0">
+      <ul class="nav-links m-0" id="navigationLinks">
         <li>
           <div class="iocn-link">
             <a class="row-cols-12" href="../DailyReport">
@@ -120,19 +120,6 @@
             <li><a class="link_name">Reports</a></li>
           </ul>
         </li>
-
-        <li class="d-none">
-          <div class="iocn-link">
-            <a class="row-cols-12" href="../Planning/">
-              <i class="bx bx-book-bookmark"></i>
-              <span class="link_name col-9">Planning</span>
-            </a>
-          </div>
-          <ul class="sub-menu">
-            <li><a class="link_name" href="../Planning/">Planning</a></li>
-          </ul>
-        </li>
-
         <!-- <li class="mt-auto">
               <div class="iocn-link">
                   <a class="row-cols-12 ey">
