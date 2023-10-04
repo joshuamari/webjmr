@@ -40,6 +40,7 @@ $(document).ready(function () {
   getMyGroups();
   getBUICGroups();
   getShareGroups();
+  planAccess();
 
   //#region sidebar shits
   let arrow = document.querySelectorAll(".arrow");
@@ -354,6 +355,32 @@ function jmcAccess() {
       if (!access) {
         alert("Access denied");
         window.location.href = "../DailyReport";
+      }
+    }
+  );
+}
+function planAccess() {
+  $.post(
+    "ajax/plan_access.php",
+    {
+      empNum: empDetails["empNum"],
+    },
+    function (data) {
+      var addString = "";
+      var access = $.parseJSON(data);
+      if (access) {
+        addString += `<li>
+        <div class="iocn-link">
+          <a class="row-cols-12" href="../Planning/">
+            <i class="bx bx-book-bookmark"></i>
+            <span class="link_name col-9">Planning</span>
+          </a>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="../Planning/">Planning</a></li>
+        </ul>
+      </li>`;
+        $("#navigationLinks").append(addString);
       }
     }
   );
