@@ -175,7 +175,6 @@ $(document).on("click", ".removeEmp", function () {
   if (index !== -1) {
     _selectedEmployees.splice(index, 1);
   }
-  console.log(_selectedEmployees);
   $($(this).parent()).remove();
   getEmployees();
 });
@@ -580,7 +579,6 @@ function getEmpSearch() {
     },
     function (data) {
       emps = $.parseJSON(data);
-      console.log(emps);
       emps.map(fillEmployee);
     }
   );
@@ -1104,7 +1102,6 @@ function addEntries() {
         empNum: empDetails["empNum"],
       },
       function (data) {
-        console.log(data);
         resetEntry();
         getPlans();
         $(".cancel").click();
