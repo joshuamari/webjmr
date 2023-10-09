@@ -311,10 +311,10 @@ function latagDays() {
   var startDate = new Date(startString);
   var endDate = new Date(endString);
   while (startDate <= endDate) {
-    addHeader += `<th data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" data-f-bold="true" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
+    addHeader += `<th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-f-bold="true" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
       startDate.yyyymmdd()
     )} ${ifMonday(startDate.yyyymmdd())}>${startDate.yyyymmdd()}</th>`;
-    addCells += `<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
+    addCells += `<td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" date-val="${startDate.yyyymmdd()}" ${weekendcolor(
       startDate.yyyymmdd()
     )} ></td>`;
     startDate.setDate(startDate.getDate() + 1);
@@ -334,7 +334,7 @@ function latagProjects(data) {
   $.each(data, function (pName, det) {
     $("#main-tbody").append(`
     <tr data-height="20" class="project-row bg-warning" proj-num="${det.pNum}">
-    <th data-f-name="ＭＳ Ｐゴシック" data-fill-color="ffff99" data-b-a-s="thin" data-b-t-s="double" data-f-bold="true" class="pName" colspan="">${pName}</th>
+    <th data-f-name="Arial" data-f-sz="9" data-fill-color="ffff99" data-b-a-s="thin" data-b-t-s="double" data-f-bold="true" class="pName" colspan="">${pName}</th>
     </tr>
     `);
     $.each(det.Items, function (itemName, iDet) {
@@ -347,7 +347,7 @@ function latagProjects(data) {
         </tr>
         <tr data-height="20" class="actual-row" job-num emp-num ${
           det.Direct ? "direct" : "indirect"
-        }><td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
+        }><td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
         </tr>`);
       });
     });
@@ -359,17 +359,17 @@ function latagPDetails(data, itemName) {
   const newArr = [];
   $.each(data, function (jobName, jDet) {
     $.each(jDet.Members, function (empID, eDet) {
-      newArr.push(`<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${itemName}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.dName}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.kic}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="ename" e-id="${empID}" style="background-color: #ffccff;" data-fill-color="ffccff">${eDet.name}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.khiRequest}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.kdtDeadline}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${jDet.startDate}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2">${eDet.mUsed}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" rowspan="2" class="status">${eDet.pStatus}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" data-b-a-s="thin" style="background-color: #ccff99" data-fill-color="ccff99">Planned</td>`);
+      newArr.push(`<td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2" class="jname" job-num="${jDet.jobNum}">${jobName}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${itemName}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${jDet.dName}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${jDet.kic}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2" class="ename" e-id="${empID}" style="background-color: #ffccff;" data-fill-color="ffccff">${eDet.name}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${jDet.khiRequest}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${jDet.kdtDeadline}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${jDet.startDate}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2">${eDet.mUsed}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" rowspan="2" class="status">${eDet.pStatus}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ccff99" data-fill-color="ccff99">Planned</td>`);
     });
   });
   return newArr;
@@ -466,14 +466,14 @@ function highlightweek(wVal) {
   empArr.forEach((element) => {
     $("#weekly-body").append(`
     <tr data-height="20" class="wp-row" get-from="plan-row" emp-num="${element.empNum}">
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" rowspan="2">${element.empName}</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック">Plan</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" rowspan="2" class="pa-percent"></td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" class="w-tot"></td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" rowspan="2">${element.empName}</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9">Plan</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" rowspan="2" class="pa-percent"></td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" class="w-tot"></td>
     </tr>
     <tr data-height="20" class="wa-row" get-from="actual-row" emp-num="${element.empNum}">
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック">Actual</td>
-    <td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" class="w-tot"></td></tr>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9">Actual</td>
+    <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" class="w-tot"></td></tr>
     `);
   });
 
@@ -490,13 +490,13 @@ function highlightweek(wVal) {
     $(`[date-val="${currentDate.yyyymmdd()}"]`).addClass("bg-warning");
     daysInWeek.push(currentDate);
     $("#weekly-headrow").append(
-      `<th data-f-name="ＭＳ Ｐゴシック" w-date-val="${currentDate.yyyymmdd()}">${currentDate.yyyymmdd()}</th>`
+      `<th data-f-name="Arial" data-f-sz="9" w-date-val="${currentDate.yyyymmdd()}">${currentDate.yyyymmdd()}</th>`
     );
     $(".wp-row").append(
-      `<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
+      `<td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
     );
     $(".wa-row").append(
-      `<td data-a-h="center"  data-f-name="ＭＳ Ｐゴシック" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
+      `<td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" class="pa-details" w-date-val="${currentDate.yyyymmdd()}"></td>`
     );
   }
 
@@ -587,19 +587,19 @@ function gawaBaba() {
   $("#tr-group-2").empty();
   $.each($("[isMonday]"), function (indexInArray, valueOfElement) {
     $("#tr-group-1").append(`
-      <th data-b-a-s="thin" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック" colspan="3" class="week-start">${$(
+      <th data-b-a-s="thin" data-f-bold="true" data-f-name="Arial" data-f-sz="9" colspan="3" class="week-start">${$(
         valueOfElement
       ).text()}</th>
       `);
     $("#tr-group-2").append(`
-      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">JMR</th>
-      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">入力工数(A) グループ</th>
-      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="ＭＳ Ｐゴシック">実績工数(B) A/B(%)</th>
+      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="Arial">JMR</th>
+      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="Arial">入力工数(A) グループ</th>
+      <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="Arial">実績工数(B) A/B(%)</th>
       `);
     $("#data-plan, #data-actual").append(`
-      <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="a"></td>
-      <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="b"></td>
-      <td data-a-h="center"  data-b-a-s="thin" data-f-name="ＭＳ Ｐゴシック" week-index="${indexInArray}" col-ref="c"></td>
+      <td data-a-h="center" data-a-v="middle"  data-b-a-s="thin" data-f-name="Arial" data-f-sz="9" week-index="${indexInArray}" col-ref="a"></td>
+      <td data-a-h="center" data-a-v="middle"  data-b-a-s="thin" data-f-name="Arial" data-f-sz="9" week-index="${indexInArray}" col-ref="b"></td>
+      <td data-a-h="center" data-a-v="middle"  data-b-a-s="thin" data-f-name="Arial" data-f-sz="9" week-index="${indexInArray}" col-ref="c"></td>
       `);
   });
 
@@ -662,10 +662,12 @@ function gawaBaba() {
 $(document).on("click", "#btnExport", function () {
   $("#main-table").append(`<tbody id="xLater-1">
   <tr>
-  <td data-a-h="center"  colspan="${$("#headrow").children().length}"></td>
+  <td data-a-h="center" data-a-v="middle"  colspan="${
+    $("#headrow").children().length
+  }"></td>
   </tr>
   <tr>
-  <td data-a-h="center"  colspan="10" rowspan="4"></td>
+  <td data-a-h="center" data-a-v="middle"  colspan="10" rowspan="4"></td>
   ${$("#tr-group-1").html()}
   </tr>
   <tr>
