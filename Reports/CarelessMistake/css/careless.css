@@ -224,6 +224,10 @@ tbody .collapse td:first-child {
   background-color: var(--darkest-blue) !important;
   color: #fff !important;
 }
+.buSelection {
+  max-height: 350px;
+  overflow: auto;
+}
 
 /*loaderrrrr*/
 
