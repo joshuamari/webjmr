@@ -138,3 +138,12 @@ function queries() {
 }
 
 //#endregion
+
+$(document).on('change','#selLoc',function(){
+  console.log($(this).val())
+  if($(this).val() == "Overseas"){
+    $('#loc-head').show();
+  }else{
+    $('#loc-head').hide();
+  }
+});

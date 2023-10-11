@@ -175,7 +175,6 @@ $(document).on("click", ".removeEmp", function () {
   if (index !== -1) {
     _selectedEmployees.splice(index, 1);
   }
-  console.log(_selectedEmployees);
   $($(this).parent()).remove();
   getEmployees();
 });
@@ -503,7 +502,6 @@ function planAccess() {
       empNum: empDetails["empNum"],
     },
     function (data) {
-      console.log(data);
       var access = $.parseJSON(data);
       if (!access) {
         alert("Access denied");
@@ -581,7 +579,6 @@ function getEmpSearch() {
     },
     function (data) {
       emps = $.parseJSON(data);
-      console.log(emps);
       emps.map(fillEmployee);
     }
   );
@@ -1105,7 +1102,6 @@ function addEntries() {
         empNum: empDetails["empNum"],
       },
       function (data) {
-        console.log(data);
         resetEntry();
         getPlans();
         $(".cancel").click();
@@ -1284,10 +1280,6 @@ function fillPlans(planString) {
     `;
   if (projStatus) {
     statusBadge = `<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
-    buttons = `
-        <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" disabled><i class='bx bx-edit-alt w-100 text-white' disabled></i></button>
-    <button class="btn btn-danger delBut deletePlanningButton" title="delete" data-bs-toggle="modal" disabled><i class='bx bx-trash-alt w-100 text-white' disabled></i></button>
-        `;
   }
   var addString = `<tr plan-id="${planID}">
     <th scope="row" class="text-center">${projCount}</th>

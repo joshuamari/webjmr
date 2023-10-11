@@ -47,7 +47,7 @@ $(document).ready(function () {
   $.ajaxSetup({ async: false });
   getGroupList();
   getEmployeeList();
-
+  getLocations();
   $.ajaxSetup({ async: true });
 
   // createTables($("#monthSel").val());
@@ -59,6 +59,11 @@ $(document).on("change", "#monthSel", function () {
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($(this).val());
+  _selectedMembers.length = 0;
+
+  $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
+  $("#selAll").text("Select All");
+  $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
 });
 $(document).on("change", "#buSel", function () {
   $.ajaxSetup({ async: false });
@@ -124,6 +129,9 @@ $(document).on("change", ".checkbox", function () {
 });
 $(document).on("click", ".tog", function () {
   $(".left").toggleClass("hide");
+});
+$(document).on("change", "#locSel", function () {
+  createTables($("#monthSel").val());
 });
 //#endregion
 
@@ -196,6 +204,22 @@ function getEmployeeList() {
     }
   );
 }
+function getLocations() {
+  $("#locSel").html(`<option loc-id=0>KDT/WFH</option>`);
+  var addString = ``;
+  $.ajax({
+    url: "ajax/get_locations.php",
+    success: function (data) {
+      var locs = $.parseJSON(data);
+      const locIDs = Object.keys(locs);
+      locIDs.forEach((locID) => {
+        const locName = locs[locID];
+        addString += `<option loc-id=${locID}>${locName}</option>`;
+      });
+    },
+  });
+  $("#locSel").append(addString);
+}
 //#region table creation
 function createTables(ymVal) {
   _grpProj = [];
@@ -203,6 +227,7 @@ function createTables(ymVal) {
   var groupSel = $(`#buSel`).val();
   var halfSel = $(`#CO`).val();
   var getOGP = $(`.checkbox`).is(":checked"); //eto papalitan pag may checkbox na
+  var location = $($(`#locSel`).find("option:selected")).attr("loc-id");
   if (_selectedMembers.length < 1) {
     $(".noShow").removeClass("d-none");
     $(".lower .right").addClass("d-none");
@@ -219,6 +244,7 @@ function createTables(ymVal) {
       groupSel: groupSel,
       getHalfSel: halfSel,
       getOGP: getOGP,
+      location: location,
     },
     function (data) {
       var empEntries = $.parseJSON(data);
@@ -783,6 +809,7 @@ function printTable() {
 }
 
 function exportTable() {
+  var locVal = $($(`#locSel`).find("option:selected")).text();
   var colsP = _maxDays + 3;
   $("#mainTable").append(
     `<tr id='fromHereAdd' class='w3-gray'><td colspan="${colsP}" data-fill-color="808080" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td></tr>`,
@@ -801,7 +828,9 @@ function exportTable() {
       break;
   }
   TableToExcel.convert(document.getElementById("mainTable"), {
-    name: `MonthlyStandard_${$("#buSel").val()}_${$("#monthSel").val()}.xlsx`,
+    name: `MonthlyStandard_${$("#buSel").val()}_${$(
+      "#monthSel"
+    ).val()}_${locVal}.xlsx`,
     sheet: {
       name: `${$("#buSel").val()}_${$("#monthSel").val()}`,
     },

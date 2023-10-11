@@ -28,6 +28,13 @@ $cutOff = "1";
 if (isset($_REQUEST['getHalfSel'])) {
     $cutOff = $_REQUEST['getHalfSel'];
 }
+$location = NULL;
+$locStatement = " AND fldLocation IN (1,2)"; //KDT/WFH
+if (!empty($_POST['location'])) {
+    $location = $_POST['location'];
+    $locStatement = " AND fldLocation = '$location'";
+}
+
 $firstDay = getFirstday($yearMonth, $cutOff);
 $lastDay = getLastday($yearMonth, $cutOff, $firstDay);
 $dateCompare = "dr.fldDate >= '$firstDay' AND dr.fldDate<'$lastDay'";
@@ -41,7 +48,7 @@ if (!empty($_POST['getOGP'])) {
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp $locStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
