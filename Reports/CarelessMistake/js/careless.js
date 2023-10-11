@@ -15,6 +15,7 @@ var _entries = [];
 var _tows = ["New", "Kmod", "Mkdt", "Mkhi", "Chk", "Cal", "Doc", "Other"];
 var _exceptTow = ["ETCL", "MPM", "ANA"];
 const today = new Date();
+var selectedGroups = [];
 //#endregion
 checkLogin();
 $("#monthSel").val(
@@ -30,6 +31,7 @@ $(document).ready(function () {
   if (!start) {
     $("#endSel").attr("disabled", "disabled");
   }
+  $(".buSelection button, .selAll").attr("disabled", true);
 });
 $(document).on("click", ".bu", function () {
   getID = $(this).attr("id");
@@ -41,19 +43,51 @@ $(document).on("change", "#startSel", function () {
   $("#endSel").attr("min", $("#startSel").val()); // Set min date for end date
 
   $("#endSel").val("");
+  selectedGroups.length = 0;
+  $(".buSelection button").removeClass("bus");
+  $(".selAll").text("Select All").addClass("bus");
+  $(".buSelection button, .selAll").attr("disabled", true);
+  checkSelectedGroup();
 });
 $(document).on("change", "#endSel", function () {
-  getEntries();
-  $(".noShow").addClass("d-none");
-  $(".tablecont").removeClass("d-none");
+  $(".buSelection button, .selAll").attr("disabled", false);
 });
-$(document).on("change", "#buSel", function () {
-  var buSel = $(this).val();
-  if (buSel) {
+
+$(document).on("click", ".buSelection button", function () {
+  var buttons = $(".buSelection button").length;
+  $(this).toggleClass("bus");
+  selectedGroups.length = 0;
+  $(".buSelection button.bus").each(function () {
+    selectedGroups.push($(this).attr("grp-id"));
+  });
+  if (selectedGroups.length == 1) {
     $("#totalRow").addClass("d-none");
   } else {
     $("#totalRow").removeClass("d-none");
   }
+  if (buttons === selectedGroups.length) {
+    $(".selAll").removeClass("bus").text("Deselect All");
+  } else {
+    $(".selAll").addClass("bus").text("Select All");
+  }
+  checkSelectedGroup();
+  getEntries();
+});
+$(document).on("click", ".selAll", function () {
+  $(this).toggleClass("bus");
+  if ($(this).attr("class").includes("bus")) {
+    $(this).text("Select All");
+    $(".buSelection button").attr("class", "btn btn-secondary");
+  } else {
+    $(this).text("Deselect All");
+    $(".buSelection button").attr("class", "btn btn-secondary bus");
+  }
+
+  selectedGroups.length = 0;
+  $(".buSelection button.bus").each(function () {
+    selectedGroups.push($(this).attr("grp-id"));
+  });
+  checkSelectedGroup();
   getEntries();
 });
 $(document).on("change", ".checkbox", function () {
@@ -94,6 +128,15 @@ $(document).on("click", "#totOnly", function () {
 //#endregion
 
 //#region FUNCTIONS
+function checkSelectedGroup() {
+  if (selectedGroups.length == 0) {
+    $(".noShow").removeClass("d-none");
+    $(".tablecont").addClass("d-none");
+  } else {
+    $(".noShow").addClass("d-none");
+    $(".tablecont").removeClass("d-none");
+  }
+}
 function exportTable() {
   if (checkSummaryAccess()) {
     copyPasta();

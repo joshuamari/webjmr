@@ -103,19 +103,6 @@
       <div class="content flex-column flex-md-row">
         <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 h-auto h-md-100">
           <div class="form-floating col-12 mb-2">
-            <select class="form-select" id="buSel" aria-label="Select BU">
-              <option value="" selected hidden>Select Group</option>
-              <option>ENV</option>
-              <option>Two</option>
-              <option>Three</option>
-            </select>
-            <label for="busSel">Select BU</label>
-          </div>
-          <!-- <div class="form-floating col-12 mb-2">
-            <input type="month" id="monthSel" class="form-control" />
-            <label for="monthSel">Select Month</label>
-          </div> -->
-          <div class="form-floating col-12 mb-2">
             <input type="date" id="startSel" class="form-control" />
             <label for="startSel">Select Start Date</label>
           </div>
@@ -125,8 +112,7 @@
             <label for="endSel">Select End Date</label>
           </div>
           <div class="form-floating col-12 mb-2" id="error_message2"></div>
-
-          <div class="col-12">
+          <div class="col-12 mt-2">
             <div class="form-check form-switch p-0 d-flex">
               <input
                 type="checkbox"
@@ -135,15 +121,19 @@
                 name="checkbox"
               />
               <div class="d-flex align-items-center">
-                <p class="m-0 ps-3">
-                  Orig group only
-                  <!-- <i
-                      class="m-0 bx bx-info-circle ps-1"
-                      title="Exclude Other Group's Project"
-                    ></i> -->
-                </p>
+                <p class="m-0 ps-3">Orig group only</p>
               </div>
             </div>
+          </div>
+          <div class="col-12 d-flex flex-column">
+            <h4 class="mb-1 mt-2">Select BU</h4>
+            <div class="buSelection w-100 mb-4 d-flex flex-column gap-1">
+              <button class="btn btn-secondary">SYS</button>
+              <button class="btn btn-secondary">ana</button>
+              <button class="btn btn-secondary">it</button>
+            </div>
+
+            <button class="btn btn-secondary bus selAll">Select All</button>
           </div>
         </div>
 

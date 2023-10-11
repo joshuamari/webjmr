@@ -220,6 +220,10 @@ table tbody .collapse {
 tbody .collapse td:first-child {
   text-align: left !important;
 }
+.bus {
+  background-color: var(--darkest-blue) !important;
+  color: #fff !important;
+}
 
 /*loaderrrrr*/
 
