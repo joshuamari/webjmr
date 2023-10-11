@@ -143,11 +143,10 @@ function exportTable() {
   }
   var sDate = formatDate($("#startSel").val());
   var eDate = formatDate($("#endSel").val());
-  var buSel = $("#buSel").val() === "" ? "All" : $("#buSel").val();
   TableToExcel.convert(document.getElementById("cmrTable"), {
-    name: `Careless Mistakes Report_${buSel}_${sDate}-${eDate}.xlsx`,
+    name: `Careless Mistakes Report_${sDate}-${eDate}.xlsx`,
     sheet: {
-      name: `${buSel}_${sDate}-${eDate}`,
+      name: `${sDate}-${eDate}`,
     },
   });
   $(".removeLater").remove();
@@ -231,16 +230,10 @@ function getGroupList() {
     },
     function (data) {
       var grpList = $.parseJSON(data);
-      if (grpList.length > 1) {
-        $("#buSel").html(`<option value=''>All</option>`);
-      } else {
-        $("#totalRow").addClass("d-none");
-      }
       grpList.forEach((grp) => {
-        $("#buSel").append(`<option>${grp}</option>`);
-        if (grp == _empDetails["empGroup"]) {
-          $("#buSel").val(_empDetails["empGroup"]);
-        }
+        $("#buSel").append(
+          `<button class="btn btn-secondary" grp-id='${grp}'>${grp}</button>`
+        );
       });
     }
   );
@@ -251,24 +244,13 @@ function getEntries() {
     // Select and remove all rows except the last one
     $table.find("tr:not(.heady):not(#totalRow)").remove();
   }
-
-  var buSelected = $("#buSel").val();
-  var groupSel = [buSelected];
-  if (!buSelected) {
-    groupSel = $("#buSel")
-      .find("option:not(:first-child)")
-      .map(function () {
-        return $(this).text();
-      })
-      .get();
-  }
   var startSel = $("#startSel").val();
   var endSel = $("#endSel").val();
   var ogpSel = $(`.checkbox`).is(":checked");
   $.post(
     "ajax/get_entries.php",
     {
-      groupSel: groupSel,
+      groupSel: selectedGroups,
       startSel: startSel,
       endSel: endSel,
       ogpSel: ogpSel,
