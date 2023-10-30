@@ -475,6 +475,9 @@ $(document).on("change", "#filterItem", function () {
 $(document).on("change", "#filterJRD", function () {
   getPlans();
 });
+$(document).on("click", ".addEntry-btn", function () {
+  $("#plannedBy").html(empDetails["empFName"] + " " + empDetails["empSName"]);
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -1273,6 +1276,7 @@ function fillPlans(planString) {
   var projMH = planStringArray["projMH"];
   var usedHours = planStringArray["usedHours"];
   var projStatus = planStringArray["projStatus"];
+  var plannerID = planStringArray["planner"];
   var statusBadge = `<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
   var buttons = `
     <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button>
@@ -1281,7 +1285,7 @@ function fillPlans(planString) {
   if (projStatus) {
     statusBadge = `<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
   }
-  var addString = `<tr plan-id="${planID}">
+  var addString = `<tr plan-id="${planID}" planner="${plannerID}">
     <th scope="row" class="text-center">${projCount}</th>
     <td class="text-center">${projGroup}</td>
     <td class="text-center">${projName}</td>
@@ -1324,6 +1328,7 @@ function fillEditPlan(editDetails) {
   var projStart = eDeets[5];
   var projEnd = eDeets[6];
   var projMH = eDeets[7];
+  var planner = eDeets[8];
   $("#idGroupEdit").val(projGroup).change();
   $("#idGroupEdit").prop("disabled", true);
   $($("#idProjectEdit").find(`option[proj-id=${projID}]`))
@@ -1345,6 +1350,7 @@ function fillEditPlan(editDetails) {
   $("#idStartDateEdit").val(projStart).change();
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
+  $("#editPlannedBy").html(planner);
 }
 function updateStatus() {
   $.post(

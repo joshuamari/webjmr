@@ -240,7 +240,22 @@
               </div>
 
               <div class="col-12 my-2 datepicker">
-                <label for="idStartDate" class="form-label">Start Date</label>
+                <div class="d-flex justify-content-between">
+                  <label for="idStartDate" class="form-label"
+                    >Start Date
+                  </label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="flexCheckDefault"
+                    />
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Exclude weekend/holidays
+                    </label>
+                  </div>
+                </div>
                 <input
                   type="date"
                   class="form-control"
@@ -284,6 +299,13 @@
                   id="p8"
                   role="alert"
                 ></span>
+              </div>
+
+              <div class="col-12 my-2">
+                <label for="plannedBy"> Planned by </label>
+                <span class="form-control-plaintext" id="plannedBy"
+                  >Collene KEith</span
+                >
               </div>
             </div>
           </div>
@@ -509,6 +531,13 @@
                   id="e8"
                   role="alert"
                 ></span>
+              </div>
+
+              <div class="col-12 my-2">
+                <label for="editPlannedBy"> Planned by </label>
+                <span class="form-control-plaintext" id="editPlannedBy">
+                  Joshua Coquia
+                </span>
               </div>
             </div>
           </div>
