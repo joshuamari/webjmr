@@ -1231,6 +1231,7 @@ function resetEditEntry() {
 }
 function getPlans() {
   var plans = [];
+
   $(`#planningTable`).empty();
   var defaultBody = `<tr><td colspan="12" class="text-center">No Entries Found</td></tr>`;
   var searchEmployee = $("#searchEmployee").val();
@@ -1263,6 +1264,8 @@ function getPlans() {
   );
 }
 function fillPlans(planString) {
+  var eid = empDetails["empNum"];
+
   var projCount = $("#planningTable tr").length + 1;
   var planStringArray = planString;
   var planID = planStringArray["planID"];
@@ -1304,6 +1307,15 @@ function fillPlans(planString) {
     <td class="text-center d-flex">${buttons}</td>
   </tr>`;
   $(`#planningTable`).append(addString);
+
+  $("#planningTable tr").each(function () {
+    var buttons = $(this).find("button");
+    var planner = $(this).attr("planner");
+    console.log(planner);
+    if (planner !== eid) {
+      buttons.prop("disabled", true);
+    }
+  });
 }
 function getEdeets(planID) {
   var eDeets = [];
