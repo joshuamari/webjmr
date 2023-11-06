@@ -187,6 +187,8 @@ $(document).on("change", "#idEndDate", function () {
   //select Date Event
   $("#p7").text("");
   $(this).removeClass("border-danger");
+  $(".grpbtn").prop("disabled", false);
+  $("#singleInput").click();
 });
 $(document).on("change", "#idEndDateEdit", function () {
   //select Date Event
@@ -477,10 +479,122 @@ $(document).on("change", "#filterJRD", function () {
 });
 $(document).on("click", ".addEntry-btn", function () {
   $("#plannedBy").html(empDetails["empFName"] + " " + empDetails["empSName"]);
+  $("#singleInput").click();
+});
+$(document).on("click", "#singleInput", function () {
+  $(".single").removeClass("d-none");
+  $(".mult").addClass("d-none");
+  $(".totVal").text("");
+  $(".tot").addClass("d-none");
+});
+$(document).on("click", "#multipleInput", function () {
+  $(".single").addClass("d-none");
+  $(".mult").removeClass("d-none");
+  $(".tot").removeClass("d-none");
+  $("#idMH").val("");
+  createTH();
+});
+$(document).on("change", "#excludeDays", function () {
+  if ($(this).is(":checked")) {
+    $(".weekend").find("input").attr("disabled", true).val("");
+  } else {
+    $(".weekend").find("input").attr("disabled", false);
+  }
+});
+$(document).on("change", "#inputRow input", function () {
+  $(".error").addClass("d-none");
+});
+$(document).on("input", "#inputRow input", function () {
+  var total = 0;
+  $(this)
+    .closest("table")
+    .find("input")
+    .each(function () {
+      var value = parseFloat($(this).val()) || 0; // Convert input value to a number, default to 0 if not a valid number
+      total += value; // Add the value to the total
+    });
+
+  $(".totVal").text(total);
 });
 //#endregion
-
+L;
 //#region FUNCTIONS
+function createTH() {
+  var startDate = new Date($("#idStartDate").val());
+  var endDate = new Date($("#idEndDate").val());
+  var startYear = startDate.getFullYear();
+  var endYear = endDate.getFullYear();
+  var startMonth = startDate.getMonth();
+  var endMonth = endDate.getMonth();
+  var startDay = startDate.getDate();
+  var endDay = endDate.getDate();
+
+  var table = $(".mult table");
+  $("#yearRow, #monthRow, #dateRow, #inputRow").empty();
+  $(".totVal").text("");
+
+  for (var year = startYear; year <= endYear; year++) {
+    var yearTh = $("<th>").text(year);
+    table.find("#yearRow").append(yearTh);
+
+    var start = year === startYear ? startMonth : 0;
+    var end = year === endYear ? endMonth : 11;
+    var yearDays = 0;
+
+    for (var month = start; month <= end; month++) {
+      var monthTh = $("<th>").text(getMonthName(month));
+      table.find("#monthRow").append(monthTh);
+
+      var startDateOfMonth =
+        year === startYear && month === start ? startDay : 1;
+      var endDateOfMonth =
+        year === endYear && month === end
+          ? endDay
+          : new Date(year, month + 1, 0).getDate();
+
+      // Count the days in the current month and add it to the year's total
+      var monthDays = endDateOfMonth - startDateOfMonth + 1;
+      yearDays += monthDays;
+
+      for (var date = startDateOfMonth; date <= endDateOfMonth; date++) {
+        var dateTh = $("<th>").text(date);
+        table.find("#dateRow").append(dateTh);
+        var inputTd = $(`<td><input type="number" /></td>`);
+        table.find("#inputRow").append(inputTd);
+        // Create a Date object for the current date
+        var currentDate = new Date(year, month, date);
+
+        // Check if the current date is a weekend (Saturday or Sunday)
+        if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+          dateTh.addClass("weekend"); // Add the 'weekend' CSS class to highlight it
+          $(inputTd).find("input").addClass("weekend");
+          $(inputTd).addClass("weekend");
+        }
+      }
+      monthTh.attr("colspan", monthDays);
+    }
+    // yearTh.append($("<div>").text(yearDays + " days"));
+    yearTh.attr("colspan", yearDays);
+  }
+}
+// Function to get the name of a month
+function getMonthName(month) {
+  var monthNames = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+  return monthNames[month];
+}
 function checkLogin() {
   //check if user is logged in
   $.ajaxSetup({ async: false });
@@ -1040,7 +1154,26 @@ function addEntries() {
   var sdate = $("#idStartDate").val();
   var edate = $("#idEndDate").val();
   var mh = $("#idMH").val() * 60;
+  var hasValue =
+    $("#inputRow input").filter(function () {
+      return $(this).val().trim() !== "";
+    }).length > 0;
+  var mult = $("#multipleInput");
   var mgaKulang = [];
+
+  if ($("#multipleInput").is(":checked")) {
+    if (!hasValue) {
+      $(".error").removeClass("d-none");
+      mgaKulang.push("MH");
+    }
+  }
+  if ($("#singleInput").is(":checked")) {
+    if (!mh || mh == 0) {
+      $("#p8").text("Please input man hour");
+      $("#idMH").addClass("border border-danger");
+      mgaKulang.push("MH");
+    }
+  }
 
   if (!grp) {
     $("#p1").text("Please select group");
@@ -1076,11 +1209,6 @@ function addEntries() {
     $("#p7").text("Please input deadline");
     $("#idEndDate").addClass("border border-danger");
     mgaKulang.push("EDATE");
-  }
-  if (!mh || mh == 0) {
-    $("#p8").text("Please input man hour");
-    $("#idMH").addClass("border border-danger");
-    mgaKulang.push("MH");
   }
 
   var fd = new FormData();
@@ -1210,11 +1338,14 @@ function resetEntry() {
   $("#idGroup,#idProject,#idItem,#idJRD,#idEmp,#idStartDate,#idEndDate,#idMH")
     .val("")
     .change();
-  $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8").text("");
+  $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,.totVal").text("");
   $(
     "#idGroup,#idProject,#idItem,#idJRD,#idEmp,#idStartDate,#idEndDate,#idMH"
   ).removeClass("border border-danger");
   sequenceValidation();
+  $(".grpbtn").prop("disabled", true);
+  $("#yearRow, #monthRow, #dateRow, #inputRow").empty();
+  $("#excludeDays").prop("checked", false);
 }
 function resetEditEntry() {
   //reset Inputs
@@ -1289,7 +1420,7 @@ function fillPlans(planString) {
     statusBadge = `<button class="badge done bg-success border-0  w-100">Finished - ${projStatus}</button>`;
   }
   var addString = `<tr plan-id="${planID}" planner="${plannerID}">
-    <th scope="row" class="text-center">${projCount}</th>
+    <td scope="row"  class="text-center">${projCount}</td>
     <td class="text-center">${projGroup}</td>
     <td class="text-center">${projName}</td>
     <td class="text-center">${projItem}</td>
@@ -1305,7 +1436,12 @@ function fillPlans(planString) {
      </div>
     </td>
     <td class="text-center d-flex">${buttons}</td>
-  </tr>`;
+  </tr>
+
+
+
+  
+  `;
   $(`#planningTable`).append(addString);
 
   $("#planningTable tr").each(function () {

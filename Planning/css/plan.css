@@ -413,6 +413,45 @@ footer {
   top: 0;
   vertical-align: middle;
 }
+.weekend {
+  background-color: #ebebeb !important;
+}
+.holiday {
+  background-color: #476f95 !important;
+}
+#dateRow th,
+#inputRow td {
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  vertical-align: middle;
+  height: 40px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+}
+#monthRow th,
+#yearRow th {
+  padding: 10px;
+  margin: 0;
+  vertical-align: middle;
+  height: 40px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+}
+#inputRow td input,
+#inputRow td input:focus,
+#inputRow td input:active {
+  border: none;
+  height: 40px !important;
+  min-width: 47px !important;
+  max-width: 47px !important;
+  -webkit-appearance: textfield;
+  text-align: center;
+}
+#inputRow td input::-webkit-inner-spin-button,
+#inputRow td input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
 
 /*loaderrrrr*/
 

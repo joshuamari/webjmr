@@ -91,7 +91,7 @@
     >
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header" style="background-color: #3980c7">
+          <div class="modal-header" style="background-color: var(--main-blue)">
             <h1
               class="modal-title fs-2 text-light text-center"
               id="staticBackdropLabel"
@@ -100,7 +100,7 @@
             </h1>
             <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
           </div>
-          <div class="modal-body">
+          <div class="modal-body pb-5">
             <div class="row">
               <div class="col-12 my-2">
                 <label for="idGroup" class="form-label">Group</label>
@@ -249,9 +249,9 @@
                       class="form-check-input"
                       type="checkbox"
                       value=""
-                      id="flexCheckDefault"
+                      id="excludeDays"
                     />
-                    <label class="form-check-label" for="flexCheckDefault">
+                    <label class="form-check-label" for="excludeDays">
                       Exclude weekend/holidays
                     </label>
                   </div>
@@ -284,7 +284,60 @@
                 ></span>
               </div>
 
-              <div class="col-12 my-2">
+              <div
+                class="btn-group col-12 my-2"
+                role="group"
+                aria-label="Basic radio toggle button group"
+              >
+                <input
+                  type="radio"
+                  class="btn-check grpbtn"
+                  name="btnradio"
+                  id="singleInput"
+                  autocomplete="off"
+                  checked
+                  disabled
+                />
+                <label class="btn btn-outline-primary" for="singleInput"
+                  >Single input</label
+                >
+
+                <input
+                  type="radio"
+                  class="btn-check grpbtn"
+                  name="btnradio"
+                  id="multipleInput"
+                  autocomplete="off"
+                  disabled
+                />
+                <label class="btn btn-outline-primary" for="multipleInput"
+                  >Multiple Input</label
+                >
+              </div>
+
+              <div class="col-12 my-2 mult d-none overflow-auto">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr id="yearRow"></tr>
+                    <tr id="monthRow"></tr>
+                    <tr id="dateRow"></tr>
+                  </thead>
+                  <tbody>
+                    <tr id="inputRow"></tr>
+                  </tbody>
+                </table>
+                <small class="error text-danger d-none"
+                  >You have no input.</small
+                >
+              </div>
+              <div class="tot my-2 d-none d-flex gap-2 align-items-baseline">
+                <span>Total MH</span
+                ><span
+                  class="totVal fs-3"
+                  style="color: var(--main-blue)"
+                ></span>
+              </div>
+              <div class="col-12 my-2 single d-none">
                 <label for="idMH" class="form-label">Daily Alloted MH</label>
                 <input
                   type="number"
@@ -300,37 +353,43 @@
                   role="alert"
                 ></span>
               </div>
-
-              <div class="col-12 my-2">
-                <label for="plannedBy"> Planned by </label>
-                <span class="form-control-plaintext" id="plannedBy"
-                  >Collene KEith</span
-                >
-              </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary border-0"
-              id="idAdd"
-              style="
-                background: linear-gradient(
-                  45deg,
-                  rgba(32, 191, 85, 1) 0%,
-                  rgba(1, 186, 239, 1) 100%
-                );
-              "
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary border-0 cancel"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
+          <div class="modal-footer justify-content-between">
+            <div class="">
+              <label for="plannedBy" style="font-size: 14px !important">
+                Planned by
+              </label>
+              <span
+                class="form-control-plaintext"
+                id="plannedBy"
+                style="font-size: 14px !important"
+                >Collene KEith</span
+              >
+            </div>
+            <div>
+              <button
+                type="button"
+                class="btn btn-primary border-0"
+                id="idAdd"
+                style="
+                  background: linear-gradient(
+                    45deg,
+                    rgba(32, 191, 85, 1) 0%,
+                    rgba(1, 186, 239, 1) 100%
+                  );
+                "
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary border-0 cancel"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -996,36 +1055,6 @@
                     </thead>
                     <tbody id="planningTable">
                       <tr>
-                        <th scope="row" class="text-center">1</th>
-                        <td class="text-center">SYS</td>
-                        <td class="text-center">Project ito</td>
-                        <td class="text-center">Sample ITEm</td>
-                        <td class="text-center">sample JRD</td>
-                        <td class="text-center">Mark Pangilinan</td>
-                        <td class="text-center">06/12/2023</td>
-                        <td class="text-center">12/7/2023</td>
-                        <td class="text-center">80</td>
-                        <td class="text-center">
-                          <div class="bdge">
-                            <button
-                              class="badge text-bg-warning border-0 w-100"
-                            >
-                              Ongoing
-                            </button>
-                          </div>
-                        </td>
-                        <td class="text-center">
-                          <button
-                            class="btn btn-primary edit editPlanningButton"
-                            title="edit"
-                            data-bs-toggle="modal"
-                            data-bs-target="#editPlanningEntry"
-                          >
-                            <i class="bx bx-edit-alt w-100 text-white"></i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
                         <th scope="row" class="text-center">2</th>
                         <td class="text-center">SYS</td>
                         <td class="text-center">Project nga</td>
@@ -1034,6 +1063,7 @@
                         <td class="text-center">Michael Angelo</td>
                         <td class="text-center">06/12/2023</td>
                         <td class="text-center">12/7/2023</td>
+                        <td class="text-center">80</td>
                         <td class="text-center">80</td>
                         <td class="text-center">
                           <div class="bdge">
@@ -1056,6 +1086,7 @@
                           </button>
                         </td>
                       </tr>
+
                       <tr>
                         <th scope="row" class="text-center">3</th>
                         <td class="text-center">SYS</td>
@@ -1065,6 +1096,7 @@
                         <td class="text-center">Donatello</td>
                         <td class="text-center">06/12/2023</td>
                         <td class="text-center">12/7/2023</td>
+                        <td class="text-center">80</td>
                         <td class="text-center">80</td>
                         <td class="text-center">
                           <div class="bdge">
