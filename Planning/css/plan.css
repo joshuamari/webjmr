@@ -413,14 +413,29 @@ footer {
   top: 0;
   vertical-align: middle;
 }
+.editmult .table,
+.mult .table {
+  border-color: #7f7f7f;
+}
 .weekend {
-  background-color: #ebebeb !important;
+  background-color: #adadad !important;
+  color: #fdfdfd !important;
 }
 .holiday {
-  background-color: #476f95 !important;
+  background-color: var(--lightblue-color) !important;
+}
+.year,
+.month,
+.date {
+  background-color: #ffedd8 !important;
+}
+.inp input {
+  font-weight: 500;
 }
 #dateRow th,
-#inputRow td {
+#inputRow td,
+#editdateRow th,
+#editinputRow td {
   padding: 0;
   margin: 0;
   text-align: center;
@@ -430,7 +445,9 @@ footer {
   max-width: 48px !important;
 }
 #monthRow th,
-#yearRow th {
+#yearRow th,
+#editmonthRow th,
+#edityearRow th {
   padding: 10px;
   margin: 0;
   vertical-align: middle;
@@ -440,7 +457,10 @@ footer {
 }
 #inputRow td input,
 #inputRow td input:focus,
-#inputRow td input:active {
+#inputRow td input:active,
+#editinputRow td input,
+#editinputRow td input:focus,
+#editinputRow td input:active {
   border: none;
   height: 40px !important;
   min-width: 47px !important;
@@ -449,7 +469,9 @@ footer {
   text-align: center;
 }
 #inputRow td input::-webkit-inner-spin-button,
-#inputRow td input::-webkit-outer-spin-button {
+#inputRow td input::-webkit-outer-spin-button,
+#editinputRow td input::-webkit-inner-spin-button,
+#editinputRow td input::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 

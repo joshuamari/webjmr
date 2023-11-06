@@ -182,6 +182,7 @@ $(document).on("change", "#idStartDateEdit", function () {
   //select Date Event
   $("#e6").text("");
   $(this).removeClass("border-danger");
+  editcreateTH();
 });
 $(document).on("change", "#idEndDate", function () {
   //select Date Event
@@ -194,6 +195,7 @@ $(document).on("change", "#idEndDateEdit", function () {
   //select Date Event
   $("#e7").text("");
   $(this).removeClass("border-danger");
+  editcreateTH();
 });
 
 $(document).on("change", "#idMH", function () {
@@ -451,7 +453,7 @@ $(document).on("click", ".cancel", function () {
   resetEntry();
 });
 $(document).on("click", ".cancel1", function () {
-  resetEditEntry();
+  // resetEditEntry();
 });
 $(document).on("keyup", "#searchEmployee", function () {
   getPlans();
@@ -501,6 +503,16 @@ $(document).on("change", "#excludeDays", function () {
     $(".weekend").find("input").attr("disabled", false);
   }
 });
+$(document).on("change", "#editexcludeDays", function () {
+  if ($(this).is(":checked")) {
+    $("#editPlanningEntry .weekend")
+      .find("input")
+      .attr("disabled", true)
+      .val("");
+  } else {
+    $("#editPlanningEntry .weekend").find("input").attr("disabled", false);
+  }
+});
 $(document).on("change", "#inputRow input", function () {
   $(".error").addClass("d-none");
 });
@@ -516,8 +528,21 @@ $(document).on("input", "#inputRow input", function () {
 
   $(".totVal").text(total);
 });
+$(document).on("input", "#editinputRow input", function () {
+  var total = 0;
+  $(this)
+    .closest("table")
+    .find("input")
+    .each(function () {
+      var value = parseFloat($(this).val()) || 0; // Convert input value to a number, default to 0 if not a valid number
+      total += value; // Add the value to the total
+    });
+
+  $(".edittot .totVal").text(total);
+});
+
 //#endregion
-L;
+
 //#region FUNCTIONS
 function createTH() {
   var startDate = new Date($("#idStartDate").val());
@@ -536,6 +561,7 @@ function createTH() {
   for (var year = startYear; year <= endYear; year++) {
     var yearTh = $("<th>").text(year);
     table.find("#yearRow").append(yearTh);
+    yearTh.addClass("year");
 
     var start = year === startYear ? startMonth : 0;
     var end = year === endYear ? endMonth : 11;
@@ -544,6 +570,7 @@ function createTH() {
     for (var month = start; month <= end; month++) {
       var monthTh = $("<th>").text(getMonthName(month));
       table.find("#monthRow").append(monthTh);
+      monthTh.addClass("month");
 
       var startDateOfMonth =
         year === startYear && month === start ? startDay : 1;
@@ -559,14 +586,15 @@ function createTH() {
       for (var date = startDateOfMonth; date <= endDateOfMonth; date++) {
         var dateTh = $("<th>").text(date);
         table.find("#dateRow").append(dateTh);
-        var inputTd = $(`<td><input type="number" /></td>`);
+        dateTh.addClass("date");
+        var inputTd = $(`<td class="inp"><input type="number" /></td>`);
         table.find("#inputRow").append(inputTd);
         // Create a Date object for the current date
         var currentDate = new Date(year, month, date);
 
         // Check if the current date is a weekend (Saturday or Sunday)
         if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
-          dateTh.addClass("weekend"); // Add the 'weekend' CSS class to highlight it
+          // dateTh.addClass("weekend"); // Add the 'weekend' CSS class to highlight it
           $(inputTd).find("input").addClass("weekend");
           $(inputTd).addClass("weekend");
         }
@@ -576,6 +604,68 @@ function createTH() {
     // yearTh.append($("<div>").text(yearDays + " days"));
     yearTh.attr("colspan", yearDays);
   }
+}
+function editcreateTH() {
+  var startDate = new Date($("#idStartDateEdit").val());
+  var endDate = new Date($("#idEndDateEdit").val());
+  var startYear = startDate.getFullYear();
+  var endYear = endDate.getFullYear();
+  var startMonth = startDate.getMonth();
+  var endMonth = endDate.getMonth();
+  var startDay = startDate.getDate();
+  var endDay = endDate.getDate();
+
+  var table = $(".editmult table");
+  $("#edityearRow, #editmonthRow, #editdateRow, #editinputRow").empty();
+  $(".edittot .totVal").text("");
+
+  for (var year = startYear; year <= endYear; year++) {
+    var yearTh = $("<th>").text(year);
+    yearTh.addClass("year");
+    table.find("#edityearRow").append(yearTh);
+    console.log(endDate);
+    var start = year === startYear ? startMonth : 0;
+    var end = year === endYear ? endMonth : 11;
+    var yearDays = 0;
+
+    for (var month = start; month <= end; month++) {
+      var monthTh = $("<th>").text(getMonthName(month));
+      table.find("#editmonthRow").append(monthTh);
+      monthTh.addClass("month");
+
+      var startDateOfMonth =
+        year === startYear && month === start ? startDay : 1;
+      var endDateOfMonth =
+        year === endYear && month === end
+          ? endDay
+          : new Date(year, month + 1, 0).getDate();
+
+      // Count the days in the current month and add it to the year's total
+      var monthDays = endDateOfMonth - startDateOfMonth + 1;
+      yearDays += monthDays;
+
+      for (var date = startDateOfMonth; date <= endDateOfMonth; date++) {
+        var dateTh = $("<th>").text(date);
+        dateTh.addClass("date");
+        table.find("#editdateRow").append(dateTh);
+        var inputTd = $(`<td class="inp"><input type="number" /></td>`);
+        table.find("#editinputRow").append(inputTd);
+        // Create a Date object for the current date
+        var currentDate = new Date(year, month, date);
+
+        // Check if the current date is a weekend (Saturday or Sunday)
+        if (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+          // dateTh.addClass("weekend"); // Add the 'weekend' CSS class to highlight it
+          $(inputTd).find("input").addClass("weekend");
+          $(inputTd).addClass("weekend");
+        }
+      }
+      monthTh.attr("colspan", monthDays);
+    }
+    // yearTh.append($("<div>").text(yearDays + " days"));
+    yearTh.attr("colspan", yearDays);
+  }
+  console.log("tae");
 }
 // Function to get the name of a month
 function getMonthName(month) {
@@ -1313,7 +1403,7 @@ function editEntries() {
       cache: false,
       processData: false,
       success: function (data) {
-        resetEditEntry();
+        // resetEditEntry();
         getPlans();
         $(".cancel1").click();
       },
@@ -1347,19 +1437,20 @@ function resetEntry() {
   $("#yearRow, #monthRow, #dateRow, #inputRow").empty();
   $("#excludeDays").prop("checked", false);
 }
-function resetEditEntry() {
-  //reset Inputs
-  $(
-    "#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit"
-  )
-    .val("")
-    .change();
-  $("#e1,#e2,#e3,#e4,#e5,#e6,#e7,#e8").text("");
-  $(
-    "#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit"
-  ).removeClass("border border-danger");
-  sequenceEditValidation();
-}
+// function resetEditEntry() {
+//   //reset Inputs
+//   $(
+//     "#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit"
+//   )
+//     .val("")
+//     .change();
+//   $("#e1,#e2,#e3,#e4,#e5,#e6,#e7,#e8").text("");
+//   $(
+//     "#idGroupEdit,#idProjectEdit,#idItemEdit,#idJRDEdit,#idEmpEdit,#idStartDateEdit,#idEndDateEdit,#idMHEdit"
+//   ).removeClass("border border-danger");
+//   sequenceEditValidation();
+//   $("#editexcludeDays").prop("checked", false);
+// }
 function getPlans() {
   var plans = [];
 
@@ -1448,9 +1539,9 @@ function fillPlans(planString) {
     var buttons = $(this).find("button");
     var planner = $(this).attr("planner");
     console.log(planner);
-    if (planner !== eid) {
-      buttons.prop("disabled", true);
-    }
+    // if (planner !== eid) {
+    //   buttons.prop("disabled", true);
+    // }
   });
 }
 function getEdeets(planID) {
@@ -1499,6 +1590,7 @@ function fillEditPlan(editDetails) {
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
   $("#editPlannedBy").html(planner);
+  editcreateTH();
 }
 function updateStatus() {
   $.post(

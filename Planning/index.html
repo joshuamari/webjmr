@@ -333,7 +333,7 @@
               <div class="tot my-2 d-none d-flex gap-2 align-items-baseline">
                 <span>Total MH</span
                 ><span
-                  class="totVal fs-3"
+                  class="totVal fs-3 fw-semibold"
                   style="color: var(--main-blue)"
                 ></span>
               </div>
@@ -405,7 +405,7 @@
       aria-labelledby="staticBackdropLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header" style="background-color: #3980c7">
             <h1
@@ -542,9 +542,22 @@
               </div>
 
               <div class="col-12 my-2 datepicker">
-                <label for="idStartDateEdit" class="form-label"
-                  >Start Date</label
-                >
+                <div class="d-flex justify-content-between">
+                  <label for="idStartDateEdit" class="form-label"
+                    >Start Date</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      id="editexcludeDays"
+                    />
+                    <label class="form-check-label" for="editexcludeDays">
+                      Exclude weekend/holidays
+                    </label>
+                  </div>
+                </div>
                 <input
                   type="date"
                   class="form-control"
@@ -573,55 +586,65 @@
                 ></span>
               </div>
 
-              <div class="col-12 my-2">
-                <label for="idMHEdit" class="form-label"
-                  >Daily MH Alloted</label
+              <div class="col-12 my-2 editmult overflow-auto">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr id="edityearRow"></tr>
+                    <tr id="editmonthRow"></tr>
+                    <tr id="editdateRow"></tr>
+                  </thead>
+                  <tbody>
+                    <tr id="editinputRow"></tr>
+                  </tbody>
+                </table>
+                <small class="error text-danger d-none"
+                  >You have no input.</small
                 >
-                <input
-                  type="number"
-                  class="form-control"
-                  id="idMHEdit"
-                  min="1"
-                  placeholder="00"
-                  required
-                />
-                <span
-                  class="col-12 col-md-6 mt-1 alert-danger text-danger"
-                  id="e8"
-                  role="alert"
-                ></span>
               </div>
-
-              <div class="col-12 my-2">
-                <label for="editPlannedBy"> Planned by </label>
-                <span class="form-control-plaintext" id="editPlannedBy">
-                  Joshua Coquia
-                </span>
+              <div class="edittot my-2 d-flex gap-2 align-items-baseline">
+                <span>Total MH</span
+                ><span
+                  class="totVal fs-3 fw-semibold"
+                  style="color: var(--main-blue)"
+                ></span>
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary border-0"
-              id="idEdit"
-              style="
-                background: linear-gradient(
-                  45deg,
-                  rgba(32, 191, 85, 1) 0%,
-                  rgba(1, 186, 239, 1) 100%
-                );
-              "
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary border-0 cancel1"
-              data-bs-dismiss="modal"
-            >
-              Cancel
-            </button>
+          <div class="modal-footer justify-content-between">
+            <div class="">
+              <label for="editPlannedBy" style="font-size: 14px !important">
+                Planned by
+              </label>
+              <span
+                class="form-control-plaintext"
+                id="editPlannedBy"
+                style="font-size: 14px !important"
+                >Collene KEith</span
+              >
+            </div>
+            <div>
+              <button
+                type="button"
+                class="btn btn-primary border-0"
+                id="idEdit"
+                style="
+                  background: linear-gradient(
+                    45deg,
+                    rgba(32, 191, 85, 1) 0%,
+                    rgba(1, 186, 239, 1) 100%
+                  );
+                "
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary border-0 cancel1"
+                data-bs-dismiss="modal"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </div>
