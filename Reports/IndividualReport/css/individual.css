@@ -5,20 +5,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
 html {
   height: fit-content;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Poppins", sans-serif;
-}
 td,
 th {
   border: 0.5px solid #777 !important;
@@ -32,6 +23,7 @@ body {
   background: #fff;
   height: 100vh;
   width: 100%;
+  font-family: "Poppins", sans-serif;
 }
 
 .st-color {
@@ -67,6 +59,11 @@ body {
   --header-color: #444;
   --lightblue-color: #476f95;
   --green-color: #7bae37;
+}
+#toPrint {
+  color: #000 !important;
+  font-size: 14px;
+  font-family: "Arial", sans-serif;
 }
 /* modal */
 .modal-header {

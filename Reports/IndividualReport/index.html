@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Careless Mistakes Report</title>
+    <title>Monthly Individual Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <link
@@ -11,16 +11,17 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-    <link rel="stylesheet" href="css/careless.css" />
+    <link rel="stylesheet" href="css/individual.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <script src="js/html2canvas.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
       var busterCall = [
-        "js/careless.js",
-        "css/careless.css",
+        "js/individual.js",
+        "css/individual.css",
         "css/bootstrap.min.css",
       ];
       $.post(
@@ -77,30 +78,224 @@
   <!-- #endregion modal-->
 
   <body>
-    <div class="home-content position-relative">
-      <div class="title xPrint">
-        <h1>Careless Mistakes Report</h1>
+    <div class="home-content position-relative d-flex">
+      <div class="w-50">
+        <div class="title xPrint">
+          <h1>Monthly Individual Report</h1>
 
-        <div class="d-flex justify-content-between align-items-center">
-          <a href="../" class="backbtn">
-            <i class="bx bx-left-arrow-alt fs-5"></i>
-            <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
-          </a>
-          <div class="right pe-2 pe-lg-0 d-flex">
-            <button
-              id="btnPrint"
-              class="xPrint btn btn-primary"
-              style="background-color: #395dc7"
-            >
-              PRINT
-            </button>
-            <button id="btnExport" class="xPrint btn btn-success">
-              EXPORT
-            </button>
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="../" class="backbtn">
+              <i class="bx bx-left-arrow-alt fs-5"></i>
+              <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
+            </a>
+            <div class="right pe-2 pe-lg-0 d-flex">
+              <button
+                id="btnPrint"
+                class="xPrint btn btn-primary"
+                style="background-color: #395dc7"
+              >
+                PRINT
+              </button>
+              <button id="btnExport" class="xPrint d-none btn btn-success">
+                EXPORT
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="content flex-column flex-md-row">
+      <div class="w-50 d-flex justify-content-center bg-body-secondary">
+        <div
+          id="toPrint"
+          class="bg-body"
+          style="width: 210mm; height: 297mm; padding: 8mm 9mm 8mm 18mm"
+        >
+          <div
+            class="logos d-flex justify-content-between"
+            style="margin-bottom: 42px"
+          >
+            <div
+              style="
+                background-image: url('./images/kdt\ logo.png');
+                height: 38px;
+                width: 75px;
+                background-size: cover;
+                background-position: center;
+              "
+            ></div>
+            <div
+              style="
+                background-image: url('./images/Kawasaki.png');
+                height: 38px;
+                width: 160px;
+                background-size: cover;
+                background-position: center;
+              "
+            ></div>
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="margin-bottom: 23px"
+          >
+            <h5 class="text-uppercase fw-semibold m-0" style="font-size: 24px">
+              KDT Monthly Working Record
+            </h5>
+          </div>
+          <div
+            class="inputs d-flex justify-content-between"
+            style="margin-bottom: 20px"
+          >
+            <div
+              class="d-flex flex-column"
+              style="width: 320px; overflow: hidden"
+            >
+              <div class="row">
+                <div
+                  class="d-flex justify-content-between"
+                  style="width: 110px"
+                >
+                  <span class="">Name</span>
+                  <span class="">:</span>
+                </div>
+                <div
+                  class=""
+                  style="
+                    border-bottom: 1px solid #000;
+                    width: calc(100% - 110px);
+                  "
+                >
+                  <span class="fw-semibold">Bolinkit</span>
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  class="d-flex justify-content-between"
+                  style="width: 110px"
+                >
+                  <span class="">KDT Group</span>
+                  <span class="">:</span>
+                </div>
+                <div
+                  class=""
+                  style="
+                    border-bottom: 1px solid #000;
+                    width: calc(100% - 110px);
+                  "
+                >
+                  <span class="fw-semibold">System</span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="d-flex flex-column"
+              style="width: 320px; overflow: hidden"
+            >
+              <div class="row">
+                <div
+                  class="d-flex justify-content-between"
+                  style="width: 110px"
+                >
+                  <span class="">Month, Year</span>
+                  <span class="">:</span>
+                </div>
+                <div
+                  class=""
+                  style="
+                    border-bottom: 1px solid #000;
+                    width: calc(100% - 110px);
+                  "
+                >
+                  <span class="fw-semibold">September, 2023</span>
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  class="d-flex justify-content-between"
+                  style="width: 110px"
+                >
+                  <span class="">Location</span>
+                  <span class="">:</span>
+                </div>
+                <div
+                  class=""
+                  style="
+                    border-bottom: 1px solid #000;
+                    width: calc(100% - 110px);
+                  "
+                >
+                  <span class="fw-semibold">KDT</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="table-cont"
+            style="width: 100%; height: 600px; border: 2px solid #000"
+          >
+            <table></table>
+          </div>
+          <div class="d-flex signature" style="padding-top: 70px">
+            <div class="kdtEmp d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Prepared by:</span>
+                <div class="w-100 text-center" style="border-bottom: 1px solid">
+                  <span class="text-uppercase">Collene medrano</span>
+                </div>
+                <span>ASE</span>
+              </div>
+            </div>
+            <div class="kdtEmp d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Checked by:</span>
+                <div class="w-100 text-center" style="border-bottom: 1px solid">
+                  <span class="text-uppercase">Erwilson Matibag</span>
+                </div>
+                <span>Department Manager</span>
+              </div>
+            </div>
+            <div class="kdtEmp d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Approved by:</span>
+                <div class="w-100 text-center" style="border-bottom: 1px solid">
+                  <span class="text-uppercase">Erwin Tan</span>
+                </div>
+                <span>Senior Manager</span>
+              </div>
+            </div>
+
+            <div class="khiEmp">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Approved by:</span>
+                <div class="w-100 text-center" style="border-bottom: 1px solid">
+                  <span class="">(KHI Representative)</span>
+                </div>
+                <span>(Designation)</span>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center"
+            style="padding-top: 20px"
+          >
+            <h5 class="fw-semibold m-0" style="font-size: 16px">
+              KHI Design & Technical Service, Inc.
+            </h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="content flex-column flex-md-row">
         <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 h-auto h-md-100">
           <div class="form-floating col-12 mb-2">
             <input type="date" id="startSel" class="form-control" />
@@ -472,67 +667,7 @@
                 </tr>
               </thead>
               <tbody id="cmrBody">
-                <!-- <tr class="bu" id="bu1">
-                  <td>BU1</td>
-                  <td>80</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td>20</td>
-                  <td>25%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr class="collapse bu1 show">
-                  <td>Employee A</td>
-                  <td>40</td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-                <tr class="collapse bu1 show">
-                  <td>Employee B</td>
-                  <td>40</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td>20</td>
-                  <td>50%</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr> -->
-
+                
                 <tr id="totalRow" class="total ent">
                   <td
                     data-f-name="Arial"
@@ -775,7 +910,7 @@
         >
           <div class="p-4 rounded-4">Please select date range</div>
         </div>
-      </div>
+      </div> -->
     </div>
   </body>
 </html>

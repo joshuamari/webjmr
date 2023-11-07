@@ -502,6 +502,7 @@ $(document).on("change", "#excludeDays", function () {
   } else {
     $(".weekend").find("input").attr("disabled", false);
   }
+  computeTot("#inputRow input");
 });
 $(document).on("change", "#editexcludeDays", function () {
   if ($(this).is(":checked")) {
@@ -512,38 +513,33 @@ $(document).on("change", "#editexcludeDays", function () {
   } else {
     $("#editPlanningEntry .weekend").find("input").attr("disabled", false);
   }
+  computeTot("#editinputRow input");
 });
 $(document).on("change", "#inputRow input", function () {
   $(".error").addClass("d-none");
 });
 $(document).on("input", "#inputRow input", function () {
-  var total = 0;
-  $(this)
-    .closest("table")
-    .find("input")
-    .each(function () {
-      var value = parseFloat($(this).val()) || 0; // Convert input value to a number, default to 0 if not a valid number
-      total += value; // Add the value to the total
-    });
-
-  $(".totVal").text(total);
+  computeTot(this);
 });
 $(document).on("input", "#editinputRow input", function () {
-  var total = 0;
-  $(this)
-    .closest("table")
-    .find("input")
-    .each(function () {
-      var value = parseFloat($(this).val()) || 0; // Convert input value to a number, default to 0 if not a valid number
-      total += value; // Add the value to the total
-    });
-
-  $(".edittot .totVal").text(total);
+  computeTot(this);
 });
 
 //#endregion
 
 //#region FUNCTIONS
+function computeTot(dot) {
+  var total = 0;
+  $(dot)
+    .closest("table")
+    .find("input")
+    .each(function () {
+      var value = parseFloat($(this).val()) || 0; // Convert input value to a number, default to 0 if not a valid number
+      total += value; // Add the value to the total
+    });
+
+  $(dot).closest(".row").find(".totVal").text(total);
+}
 function createTH() {
   var startDate = new Date($("#idStartDate").val());
   var endDate = new Date($("#idEndDate").val());
