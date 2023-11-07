@@ -30,8 +30,9 @@ if($plansStmt->rowCount()>0){
         $projStart=$plan['fldStartDate'];
         $projEnd=$plan['fldEndDate'];
         $projMH=($plan['fldHours'])/60;
+        $planner=$plan['fldPlanner'];
 
-        array_push($planDetails,"$projGroup||$projID||$itemID||$jobID||$projEmp||$projStart||$projEnd||$projMH");
+        array_push($planDetails,"$projGroup||$projID||$itemID||$jobID||$projEmp||$projStart||$projEnd||$projMH||$planner");
     }
 }
 #endregion

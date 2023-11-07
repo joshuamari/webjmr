@@ -1501,7 +1501,7 @@ function fillPlans(planString) {
   var projMH = planStringArray["projMH"];
   var usedHours = planStringArray["usedHours"];
   var projStatus = planStringArray["projStatus"];
-  var plannerID = planStringArray["planner"];
+  var plannerID = planStringArray["plannerID"];
   var statusBadge = `<button class="badge text-bg-warning border-0  w-100">Ongoing</button>`;
   var buttons = `
     <button class="btn btn-primary edit editPlanningButton" title="edit" data-bs-toggle="modal" data-bs-target="#editPlanningEntry"><i class='bx bx-edit-alt w-100 text-white' ></i></button>
@@ -1539,9 +1539,9 @@ function fillPlans(planString) {
     var buttons = $(this).find("button");
     var planner = $(this).attr("planner");
     console.log(planner);
-    // if (planner !== eid) {
-    //   buttons.prop("disabled", true);
-    // }
+    if (planner !== eid) {
+      buttons.prop("disabled", true);
+    }
   });
 }
 function getEdeets(planID) {
@@ -1589,7 +1589,7 @@ function fillEditPlan(editDetails) {
   $("#idStartDateEdit").val(projStart).change();
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
-  $("#editPlannedBy").html(planner);
+  $("#editPlannedBy").text(planner);
   editcreateTH();
 }
 function updateStatus() {

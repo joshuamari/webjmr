@@ -76,6 +76,7 @@ if ($plansStmt->rowCount() > 0) {
         $projItem = $plan['projItem'];
         $projJob = $plan['projJob'];
         $projJobID = $plan['jobID'];
+        $plannerID = $plan['fldPlanner'];
         $projEmp = $plan['fldEmployeeNum'];
         $projEmpName = getEmpName($projEmp);
         if (is_null($projEmpName)) {
@@ -93,6 +94,7 @@ if ($plansStmt->rowCount() > 0) {
             $projStatus = date("M d, Y", strtotime($projStatus));
         }
         $output += ["planID" => $planID];
+        $output += ["plannerID" => $plannerID];
         $output += ["projGroup" => $projGroup];
         $output += ["projName" => $projName];
         $output += ["projItem" => $projItem];
