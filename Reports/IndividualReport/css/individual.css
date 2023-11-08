@@ -340,3 +340,12 @@ tbody .collapse td:first-child {
 
 @media screen and (max-width: 575px) {
 }
+
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    color: #000;
+    background-color: #fff;
+  }
+}
