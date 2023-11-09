@@ -18,6 +18,7 @@ if (!empty($_POST['searchemp'])) {
     $searchEmp = $_POST['searchemp'];
 }
 $empDeets = array();
+$sharedProjects = '';
 $groupQ = "SELECT fldGroup FROM projectstable WHERE fldID=:projID";
 $groupStmt = $connwebjmr->prepare($groupQ);
 $groupStmt->execute([":projID" => $projID]);
@@ -41,7 +42,7 @@ if (!empty($_POST['selectedEmps'])) {
 #endregion
 
 #region main
-$empsQ = "SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup OR fldGroups LIKE :pGroup) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%' $exceptList";;
+$empsQ = "SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup OR fldGroups LIKE :pGroup) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%' $exceptList $sharedProjects";
 $empsStmt = $connkdt->prepare($empsQ);
 $empsStmt->execute([":projGroup" => $projGroup, ":pGroup" => "%$projGroup%"]);
 if ($empsStmt->rowCount() > 0) {
