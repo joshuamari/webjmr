@@ -13,21 +13,14 @@ switch (document.location.hostname) {
 var _empDetails = [];
 //#endregion
 checkLogin();
-checkSign();
+checkLoc();
+
 const { jsPDF } = globalThis.jspdf;
 //#region BINDS
 $(document).ready(function () {
-  // This code will execute after jsPDF is loaded
-  // if (typeof jspdf !== "undefined") {
   $(document).on("click", "#save", function () {
     saveToPDF();
   });
-  //   var test = new jsPDF();
-  // } else {
-  //   // Handle the case where jsPDF is not defined
-  //   console.log("jsPDF is not loaded.");
-  // }
-  // var test = new jsPDF();
 });
 
 $(document).on("click", "#btnPrint", function () {
@@ -50,29 +43,51 @@ $(document).on("click", "#btnPrint", function () {
     };
   });
 });
+$(document).on("click", "#descriptionList", function () {
+  $(this).toggleClass("open");
+});
+$(document).on("click", ".list-items .item", function () {
+  $(this).toggleClass("checked");
+  countCheck();
+});
+$(document).on("change", "#idGroup", function () {
+  var group = $(this).val();
+  if (group == "MPM") {
+    $(".token").removeClass("d-none");
+  } else {
+    $(".token").addClass("d-none");
+  }
+});
+$(document).on("change", "#idLoc", function () {
+  checkLoc();
+});
 
 //#endregion
 
 //#region FUNCTIONS
+function countCheck() {
+  var checked = $(".checked");
+  var btnText = $(".text-btn");
+
+  if (checked && checked.length != 0) {
+    btnText.text(`${checked.length} Selected`);
+  } else {
+    btnText.text("Select Description");
+  }
+}
 function saveToPDF() {
   html2canvas($("#toPrint")[0]).then((canvas) => {
     var imgData = canvas.toDataURL("image/jpeg", 1.0);
     var doc = new jsPDF({
-      orientation: "portrait", // 'portrait' or 'landscape'
-      unit: "mm", // 'mm', 'cm', 'in', or 'px'
-      format: "a4", // Page size: 'a0', 'a1', 'a2', 'a3', 'a4', 'a5', 'letter', etc.
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+      displayMode: "fullwidth",
+      userUnit: 1,
     });
     doc.addImage(imgData, "JPEG", 0, 0, 210, 297);
     doc.save("Monthly_Individual_Report.pdf");
   });
-
-  // doc.html($("#toPrint")[0], {
-  //   callback: function (doc) {
-  //     doc.save("Monthly_Individual_Report.pdf");
-  //   },
-  //   x: 0,
-  //   y: 0,
-  // });
 }
 function checkLogin() {
   $.ajaxSetup({ async: false });
@@ -89,12 +104,18 @@ function checkLogin() {
   });
   $.ajaxSetup({ async: true });
 }
-function checkSign() {
-  var element = $(".signature").children();
-  if (element.length > 2) {
-    $(".signature").css("justify-content", "space-between");
+function checkLoc() {
+  var loc = $("#idLoc").val();
+  if (loc == 1) {
+    $(".checker, .approver").removeClass("d-none");
+    $(".signature")
+      .addClass("justify-content-between")
+      .removeClass("justify-content-around");
   } else {
-    $(".signature").css("justify-content", "space-around");
+    $(".checker, .approver").addClass("d-none");
+    $(".signature")
+      .removeClass("justify-content-between")
+      .addClass("justify-content-around");
   }
 }
 //#endregion
