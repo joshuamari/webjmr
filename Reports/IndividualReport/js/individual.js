@@ -34,7 +34,6 @@ checkLogin()
             alert(error);
           });
       });
-      checkLoc();
     });
   })
   .catch((error) => {
@@ -134,8 +133,9 @@ function checkLogin() {
   });
 }
 function checkLoc() {
-  var loc = $("#idLoc").val();
-  if (loc == 1) {
+  var local = [0, 1, 2];
+  var loc = parseInt($("#idLoc").find(":selected").attr("loc-id"));
+  if (local.includes(loc)) {
     $(".checker, .approver").removeClass("d-none");
     $(".signature")
       .addClass("justify-content-between")
