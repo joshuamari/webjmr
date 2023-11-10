@@ -12,6 +12,7 @@ switch (document.location.hostname) {
 }
 var empDetails = [];
 var chkrs = [];
+var mmbrs = [];
 //#endregion
 checkLogin()
   .then((emp_deets) => {
@@ -24,8 +25,9 @@ checkLogin()
         $("#idGroup").val(empDetails["empGroup"]);
         Promise.all([getMembers(), getCheckers()])
           .then(([members, checkers]) => {
-            createMembers(members);
             chkrs = checkers;
+            mmbrs = members;
+            createMembers(mmbrs);
             createCheckers(chkrs);
           })
           .catch((error) => {
@@ -301,7 +303,7 @@ function createCheckers(checkers) {
     appSel.append(option.clone());
   });
 }
-function getDesig(empid) {
-  return chkrs.find((item) => item.id == empid).desig;
+function getDesig(empid, memlist) {
+  return memlist.find((item) => item.id == empid).desig;
 }
 //#endregion
