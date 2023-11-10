@@ -73,12 +73,35 @@ $(document).on("click", ".list-items .item", function () {
   countCheck();
 });
 $(document).on("change", "#idGroup", function () {
+  Promise.all([getMembers(), getCheckers()])
+    .then(([members, checkers]) => {
+      chkrs = checkers;
+      mmbrs = members;
+      createMembers(mmbrs);
+
+      createCheckers(chkrs);
+    })
+    .catch((error) => {
+      alert(error);
+    });
   var group = $(this).val();
   if (group == "MPM") {
     $(".token").removeClass("d-none");
   } else {
     $(".token").addClass("d-none");
   }
+});
+$(document).on("change", "#idMonth", function () {
+  Promise.all([getMembers(), getCheckers()])
+    .then(([members, checkers]) => {
+      chkrs = checkers;
+      mmbrs = members;
+      createMembers(mmbrs);
+      createCheckers(chkrs);
+    })
+    .catch((error) => {
+      alert(error);
+    });
 });
 $(document).on("change", "#idLoc", function () {
   checkLoc();
@@ -218,11 +241,16 @@ function getMembers() {
 }
 function createMembers(members) {
   const memSel = $("#idEmp");
+  const selectedMember = parseInt(memSel.find(":selected").attr("emp-id"));
   memSel.html("<option hidden>Select Member . . .</option>");
   members.forEach((member) => {
     const option = $("<option>").attr("emp-id", member.id).text(member.name);
     memSel.append(option);
   });
+  if (selectedMember) {
+    var selectedOption = memSel.find(`option[emp-id=${selectedMember}]`);
+    selectedOption.prop("selected", true);
+  }
 }
 function getLocations() {
   return new Promise((resolve, reject) => {
@@ -295,6 +323,8 @@ function getCheckers() {
 function createCheckers(checkers) {
   const chkSel = $("#idChecker");
   const appSel = $("#idApprover");
+  const selectedChecker = parseInt(chkSel.find(":selected").attr("emp-id"));
+  const selectedApprover = parseInt(appSel.find(":selected").attr("emp-id"));
   chkSel.html("<option hidden>Select Member . . .</option>");
   appSel.html("<option hidden>Select Member . . .</option>");
   checkers.forEach((checker) => {
@@ -302,6 +332,15 @@ function createCheckers(checkers) {
     chkSel.append(option);
     appSel.append(option.clone());
   });
+
+  if (selectedChecker) {
+    var chkOption = chkSel.find(`option[emp-id=${selectedChecker}]`);
+    chkOption.prop("selected", true);
+  }
+  if (selectedApprover) {
+    var appOption = appSel.find(`option[emp-id=${selectedApprover}]`);
+    appOption.prop("selected", true);
+  }
 }
 function getDesig(empid, memlist) {
   return memlist.find((item) => item.id == empid).desig;
