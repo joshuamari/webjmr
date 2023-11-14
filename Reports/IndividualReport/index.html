@@ -40,7 +40,7 @@
   <!-- #region modal -->
   <div
     class="modal fade"
-    id="exportModal"
+    id="changeCoreTime"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabindex="-1"
@@ -51,7 +51,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">
-            Export to Excel
+            Change Core Time
           </h1>
           <button
             type="button"
@@ -60,16 +60,91 @@
             aria-label="Close"
           ></button>
         </div>
-        <div class="modal-body pt-4 pb-5">
-          <h5>Which table type you want to export?</h5>
+        <div class="modal-body">
+          <div class="mx-2 p-2">
+            <label class="form-label">AM Shift</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sTime" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sTime" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eTime" class="form-label">End</label>
+                <input type="time" class="form-control" id="eTime" />
+              </div>
+            </div>
+          </div>
+          <div class="mx-2 p-2">
+            <label class="form-label">AM Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sAmBreak" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sAmBreak" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eAmBreak" class="form-label">End</label>
+                <input type="time" class="form-control" id="emBreak" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mx-2 p-2">
+            <label class="form-label">Halfday</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sHDay" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sHDay" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eHDay" class="form-label">End</label>
+                <input type="time" class="form-control" id="eHDay" />
+              </div>
+            </div>
+          </div>
+          <div class="mx-2 p-2">
+            <label class="form-label">Lunch Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sLunch" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sLunch" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eLunch" class="form-label">End</label>
+                <input type="time" class="form-control" id="eLunch" />
+              </div>
+            </div>
+          </div>
+          <div class="mx-2 p-2">
+            <label class="form-label">PM Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sPmBreak" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sPmBreak" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="ePmBreak" class="form-label">End</label>
+                <input type="time" class="form-control" id="ePmBreak" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mx-2 p-2">
+            <label class="form-label">PM Shift</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sDinner" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sDinner" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eDinner" class="form-label">End</label>
+                <input type="time" class="form-control" id="eDinner" />
+              </div>
+            </div>
+          </div>
         </div>
+
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="totAll">
-            Group total with all members
-          </button>
-          <button type="button" class="btn btn-O" id="totOnly">
-            Group total only
-          </button>
+          <button type="button" class="btn btn-O" id="totOnly">Change</button>
         </div>
       </div>
     </div>
@@ -268,6 +343,15 @@
                 id="unitRate"
                 placeholder="0"
               />
+            </div>
+            <div class="mb-3">
+              <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#changeCoreTime"
+              >
+                Change Core Time
+              </button>
             </div>
           </div>
         </div>
