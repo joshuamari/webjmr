@@ -785,7 +785,9 @@ function addEntries(addMode) {
   var grp = $("#idGroup").val();
   var date = $("#idDRDate").val();
   var loc = $($("#idLocation").find("option:selected")).attr("loc-id");
-  var proj = $($("#idProject").find("option:selected")).attr("proj-id");
+  var proj = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
   var item = $($("#idItem").find("option:selected")).attr("item-id");
   var trgrp = $($("#trGroup").find("option:selected")).val() || "";
   var jobreq = $($("#idJRD").find("option:selected")).attr("job-id") || "";
@@ -1010,7 +1012,9 @@ function hasJRD() {
 }
 function hasTOW() {
   var isDrawing = true;
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+  var projID = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
   var selGroup = $("#idGroup").val();
   isDrawing = !defaults.includes(projID) && projID;
   if (isDrawing) {
