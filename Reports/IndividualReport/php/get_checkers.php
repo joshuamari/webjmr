@@ -19,7 +19,7 @@ if (!empty($_POST['ymSelect'])) {
 $desigList = ["SM", "DM", "AM", "SSS", "SSV", "SV"];
 $desigString = "('" . implode("','", $desigList) . "')";
 $members = array();
-$memberQ = "SELECT ep.fldEmployeeNum,CONCAT(ep.fldFirstname,' ',ep.fldSurname) AS ename,kp.fldFull FROM emp_prof AS ep JOIN kdtpositions AS kp ON ep.fldDesig=kp.fldAcro WHERE (ep.fldGroup=:empGroup OR (CONCAT('/',ep.fldGroups,'/') LIKE :eGroups)) AND (DATE_FORMAT(ep.fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(ep.fldResignDate, '%Y-%m') >= :ymSel OR ep.fldResignDate IS NULL)) AND ep.fldDesig IN $desigString";
+$memberQ = "SELECT ep.fldEmployeeNum,ep.fldFirstname,ep.fldSurname,kp.fldFull FROM emp_prof AS ep JOIN kdtpositions AS kp ON ep.fldDesig=kp.fldAcro WHERE (ep.fldGroup=:empGroup OR (CONCAT('/',ep.fldGroups,'/') LIKE :eGroups)) AND (DATE_FORMAT(ep.fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(ep.fldResignDate, '%Y-%m') >= :ymSel OR ep.fldResignDate IS NULL)) AND ep.fldDesig IN $desigString";
 
 #endregion
 
@@ -32,10 +32,12 @@ try {
         $memarr = $memStmt->fetchAll();
         foreach ($memarr as $mem) {
             $output = array();
-            $name = $mem['ename'];
-            $id = $mem['fldEmployeeNum'];
+            $fname = $mem['fldFirstname'];
+            $sname = $mem['fldSurname'];
+            $id = (int)$mem['fldEmployeeNum'];
             $desig = $mem['fldFull'];
-            $output += ["name" => $name];
+            $output += ["fname" => $fname];
+            $output += ["sname" => $sname];
             $output += ["id" => $id];
             $output += ["desig" => $desig];
             array_push($members, $output);

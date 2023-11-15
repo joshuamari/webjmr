@@ -33,7 +33,7 @@ try {
             $output = array();
             $fname = $mem['fldFirstname'];
             $sname = $mem['fldSurname'];
-            $id = $mem['fldEmployeeNum'];
+            $id = (int)$mem['fldEmployeeNum'];
             $desig = $mem['fldDesig'];
             $output += ["fname" => $fname];
             $output += ["sname" => $sname];

@@ -230,9 +230,8 @@ function setViewerGroup() {
 function setPreparedBy() {
   var iba = parseInt($("#idEmp option:selected").attr("emp-id"));
   var emp = $("#idEmp").val();
-  var names = emp.split(" ");
 
-  var firstName = findFirstNameById(iba, mmbrs).split(" ")[0];
+  var firstName = findFirstNameById(iba, mmbrs);
   var lastName = findLastNameById(iba, mmbrs);
   $("#preparedBy").text(`${firstName} ${lastName}`);
   $("#viewPrepPos").text(getDesig(iba, mmbrs));
@@ -240,13 +239,12 @@ function setPreparedBy() {
 function setCheckedBy() {
   var iba = parseInt($("#idChecker option:selected").attr("emp-id"));
   var check = $("#idChecker").val();
-  var names = check.split(" ");
   if (check == "Select Member . . .") {
     $("#checkedBy").text("");
     $("#viewCheckPos").text("");
   } else {
-    var firstName = names[0];
-    var lastName = names[names.length - 1];
+    var firstName = findFirstNameById(iba, chkrs);
+    var lastName = findLastNameById(iba, chkrs);
     $("#checkedBy").text(`${firstName} ${lastName}`);
     $("#viewCheckPos").text(getDesig(iba, chkrs));
   }
@@ -261,13 +259,12 @@ function setKhiRep() {
 function setApprovedBy() {
   var iba = parseInt($("#idApprover option:selected").attr("emp-id"));
   var check = $("#idApprover").val();
-  var names = check.split(" ");
   if (check == "Select Member . . .") {
     $("#approvedBy").text("");
     $("#viewAppPos").text("");
   } else {
-    var firstName = names[0];
-    var lastName = names[names.length - 1];
+    var firstName = findFirstNameById(iba, chkrs);
+    var lastName = findLastNameById(iba, chkrs);
     $("#approvedBy").text(`${firstName} ${lastName}`);
     $("#viewAppPos").text(getDesig(iba, chkrs));
   }
@@ -493,7 +490,9 @@ function createCheckers(checkers) {
   chkSel.html("<option hidden >Select Member . . .</option>");
   appSel.html("<option hidden >Select Member . . .</option>");
   checkers.forEach((checker) => {
-    const option = $("<option>").attr("emp-id", checker.id).text(checker.name);
+    const option = $("<option>")
+      .attr("emp-id", checker.id)
+      .text(`${checker.fname} ${checker.sname}`);
     chkSel.append(option);
     appSel.append(option.clone());
   });
@@ -512,6 +511,7 @@ function getDesig(empid, memlist) {
 }
 function findFirstNameById(empid, memlist) {
   const result = memlist.find((item) => item.id === empid);
+  console.log(result);
   return result ? abbreviateFirstName(result.fname) : null;
 }
 function findLastNameById(empid, memlist) {
