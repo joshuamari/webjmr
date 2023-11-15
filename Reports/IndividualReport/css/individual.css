@@ -66,6 +66,10 @@ body {
   font-size: 12px;
   font-family: "Arial", sans-serif;
 }
+#toPrint table td,
+th {
+  color: #000;
+}
 /* modal */
 .modal-header {
   background-color: var(--main-blue);
@@ -295,7 +299,7 @@ table tbody td {
   body {
     margin: 0;
     padding: 0;
-    color: #000;
+    color: #000 !important;
     background-color: #fff;
   }
   .table td {

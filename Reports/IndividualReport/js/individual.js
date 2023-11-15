@@ -70,24 +70,24 @@ $(document).on("click", "#save", function () {
   saveToPDF();
 });
 $(document).on("click", "#btnPrint", function () {
-  html2canvas($("#toPrint")[0]).then((canvas) => {
-    var printWindow = window.open("", "", "width=900, height=800");
-    printWindow.document.open();
-    printWindow.document.write(
-      "<html><head><title>Monthly Individual Report</title></head><body>"
-    );
-    printWindow.document.write(
-      "<img src='" + canvas.toDataURL("image/png") + "' />"
-    );
-    printWindow.document.write("</body></html>");
-    printWindow.document.close();
-    // Wait for the image to load before calling print()
-    var image = printWindow.document.querySelector("img");
-    image.onload = function () {
-      printWindow.print();
-      printWindow.close();
-    };
-  });
+  // html2canvas($("#toPrint")[0], { scale: 1.2 }).then((canvas) => {
+  //   var printWindow = window.open("", "", "width=900, height=800");
+  //   printWindow.document.open();
+  //   printWindow.document.write(
+  //     "<html><head><title>Monthly Individual Report</title></head><body>"
+  //   );
+  //   printWindow.document.write(
+  //     "<img src='" + canvas.toDataURL("image/png") + "' />"
+  //   );
+  //   printWindow.document.write("</body></html>");
+  //   printWindow.document.close();
+  //   // Wait for the image to load before calling print()
+  //   var image = printWindow.document.querySelector("img");
+  //   image.onload = function () {
+  //     printWindow.print();
+  //     printWindow.close();
+  //   };
+  // });
 });
 $(document).on("click", "#descriptionList", function () {
   $(this).toggleClass("open");
@@ -281,7 +281,7 @@ function countCheck() {
   }
 }
 function saveToPDF() {
-  html2canvas($("#toPrint")[0]).then((canvas) => {
+  html2canvas($("#toPrint")[0], { scale: 2 }).then((canvas) => {
     var imgData = canvas.toDataURL("image/jpeg", 1.25);
     var doc = new jsPDF({
       orientation: "portrait",
