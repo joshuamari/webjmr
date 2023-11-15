@@ -18,7 +18,7 @@ if (!empty($_POST['ymSelect'])) {
     $ymSelect = $_POST['ymSelect'];
 }
 $members = array();
-$memberQ = "SELECT fldEmployeeNum,CONCAT(fldFirstname,' ',fldSurname) AS ename,fldDesig FROM emp_prof WHERE fldGroup=:empGroup AND (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) ORDER BY fldEmployeeNum";
+$memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig FROM emp_prof WHERE fldGroup=:empGroup AND (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) ORDER BY fldEmployeeNum";
 
 #endregion
 
@@ -31,10 +31,12 @@ try {
         $memarr = $memStmt->fetchAll();
         foreach ($memarr as $mem) {
             $output = array();
-            $name = $mem['ename'];
+            $fname = $mem['fldFirstname'];
+            $sname = $mem['fldSurname'];
             $id = $mem['fldEmployeeNum'];
             $desig = $mem['fldDesig'];
-            $output += ["name" => $name];
+            $output += ["fname" => $fname];
+            $output += ["sname" => $sname];
             $output += ["id" => $id];
             $output += ["desig" => $desig];
             array_push($members, $output);

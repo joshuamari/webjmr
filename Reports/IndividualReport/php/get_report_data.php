@@ -19,8 +19,14 @@ if (!empty($_POST['ymSelect'])) {
     $ymSelect  = $_POST['ymSelect'];
 }
 $locSelect = 1;
+$locStmt = '';
 if (!empty($_POST['locSelect'])) {
-    $locSelect = $_POST['locSelect'];
+    $locSelect = (int)$_POST['locSelect'];
+    if ($locSelect == 0) {
+        $locStmt = ' AND dr.fldLocation IN (1,2)';
+    } else {
+        $locStmt = " AND dr.fldLocation =$locSelect";
+    }
 }
 $uniqueCols = ["pt.fldProject", "it.fldItem", "jrd.fldJob"];
 $columnMap = [
@@ -56,7 +62,7 @@ $hoursChecked = FALSE;
 if (!empty($_POST['hrsChk'])) {
     $hoursChecked = json_decode($_POST['hrsChk']);
 }
-$reportQ = "SELECT $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$reportQ = "SELECT $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
 $reportStmt = $connwebjmr->prepare($reportQ);
 #endregion
 

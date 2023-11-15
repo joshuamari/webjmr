@@ -232,8 +232,8 @@ function setPreparedBy() {
   var emp = $("#idEmp").val();
   var names = emp.split(" ");
 
-  var firstName = names[0];
-  var lastName = names[names.length - 1];
+  var firstName = findFirstNameById(iba, mmbrs).split(" ")[0];
+  var lastName = findLastNameById(iba, mmbrs);
   $("#preparedBy").text(`${firstName} ${lastName}`);
   $("#viewPrepPos").text(getDesig(iba, mmbrs));
 }
@@ -407,7 +407,9 @@ function createMembers(members) {
   memSel.empty();
 
   members.forEach((member) => {
-    const option = $("<option>").attr("emp-id", member.id).text(member.name);
+    const option = $("<option>")
+      .attr("emp-id", member.id)
+      .text(`${member.fname} ${member.sname}`);
     memSel.append(option);
   });
   if (selectedMember) {
@@ -507,5 +509,21 @@ function createCheckers(checkers) {
 }
 function getDesig(empid, memlist) {
   return memlist.find((item) => item.id == empid).desig;
+}
+function findFirstNameById(empid, memlist) {
+  const result = memlist.find((item) => item.id === empid);
+  return result ? abbreviateFirstName(result.fname) : null;
+}
+function findLastNameById(empid, memlist) {
+  const result = memlist.find((item) => item.id === empid);
+  return result ? result.sname : null;
+}
+function abbreviateFirstName(firstName) {
+  const initials =
+    firstName
+      .split(" ")
+      .map((part) => part.charAt(0))
+      .join(".") + ".";
+  return initials;
 }
 //#endregion
