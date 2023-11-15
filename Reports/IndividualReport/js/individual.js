@@ -13,22 +13,45 @@ switch (document.location.hostname) {
 var empDetails = [];
 var chkrs = [];
 var mmbrs = [];
+const monthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 //#endregion
 checkLogin()
   .then((emp_deets) => {
     empDetails = emp_deets;
     $(document).ready(function () {
       setCurrentMonth();
+      createTable();
       Promise.all([getGroups(), getLocations()]).then(([grps, locs]) => {
         createGroupSelection(grps);
         createLocationSelection(locs);
         $("#idGroup").val(empDetails["empGroup"]);
+
         Promise.all([getMembers(), getCheckers()])
           .then(([members, checkers]) => {
             chkrs = checkers;
             mmbrs = members;
             createMembers(mmbrs);
+
+            $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
+              "selected",
+              true
+            );
             createCheckers(chkrs);
+
+            setViewer();
           })
           .catch((error) => {
             alert(error);
@@ -37,7 +60,8 @@ checkLogin()
     });
   })
   .catch((error) => {
-    window.location.href = `${rootFolder}/KDTPortalLogin`;
+    alert(error);
+    // window.location.href = `${rootFolder}/KDTPortalLogin`;
   });
 
 const { jsPDF } = globalThis.jspdf;
@@ -47,7 +71,7 @@ $(document).on("click", "#save", function () {
 });
 $(document).on("click", "#btnPrint", function () {
   html2canvas($("#toPrint")[0]).then((canvas) => {
-    var printWindow = window.open("", "", "width=900, height=600");
+    var printWindow = window.open("", "", "width=900, height=800");
     printWindow.document.open();
     printWindow.document.write(
       "<html><head><title>Monthly Individual Report</title></head><body>"
@@ -73,12 +97,12 @@ $(document).on("click", ".list-items .item", function () {
   countCheck();
 });
 $(document).on("change", "#idGroup", function () {
+  setViewerGroup();
   Promise.all([getMembers(), getCheckers()])
     .then(([members, checkers]) => {
       chkrs = checkers;
       mmbrs = members;
       createMembers(mmbrs);
-
       createCheckers(chkrs);
     })
     .catch((error) => {
@@ -92,6 +116,8 @@ $(document).on("change", "#idGroup", function () {
   }
 });
 $(document).on("change", "#idMonth", function () {
+  setViewerDate();
+  createTable();
   Promise.all([getMembers(), getCheckers()])
     .then(([members, checkers]) => {
       chkrs = checkers;
@@ -105,17 +131,148 @@ $(document).on("change", "#idMonth", function () {
 });
 $(document).on("change", "#idLoc", function () {
   checkLoc();
+  setViewerLoc();
 });
-
+$(document).on("change", "#idEmp", function () {
+  setViewerName();
+  setPreparedBy();
+});
+$(document).on("change", "#idChecker", function () {
+  setCheckedBy();
+});
+$(document).on("change", "#idApprover", function () {
+  setApprovedBy();
+});
+$(document).on("input", "#khiName , #khiPos", function () {
+  setKhiRep();
+});
 //#endregion
 
 //#region FUNCTIONS
+function createTable() {
+  var mo = $("#idMonth").val();
+  var yr = parseInt(mo.split("-")[0]);
+  var moIndex = parseInt(mo.split("-")[1]) - 1;
+  var str = "";
+
+  $("#appendHere").empty();
+  var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
+
+  for (var x = 1; x <= 31; x++) {
+    var date = new Date(yr, moIndex, x);
+
+    if (x <= daysInMonth) {
+      // If the day is within the month, create a row
+      str += `<tr${
+        date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+      }>
+        <td>${(x < 10 ? "0" : "") + x}</td>
+        <td>7:00</td>
+        <td>16:00</td>
+        <td>8</td>
+        <td></td>
+        <td>kdtKeisoSupport</td>
+        <td>SHIRAkAWA Kenji</td>
+      </tr>`;
+    } else {
+      // For days beyond the month's last day, add a row with an empty day
+      str += `<tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>`;
+    }
+  }
+  $("#appendHere").append(str);
+}
 function setCurrentMonth() {
   var currentDate = new Date();
   var year = currentDate.getFullYear();
   var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   $("#idMonth").val(`${year}-${month}`);
 }
+function setViewerDate() {
+  var mo = $("#idMonth").val();
+  var yr = parseInt(mo.split("-")[0]);
+  var moIndex = parseInt(mo.split("-")[1]) - 1;
+
+  var monthName = monthNames[moIndex];
+
+  $("#viewDate").text(`${monthName}, ${yr}`);
+}
+function setViewer() {
+  setViewerDate();
+  setViewerLoc();
+  setViewerName();
+  setViewerGroup();
+  setPreparedBy();
+  setCheckedBy();
+  setApprovedBy();
+  setKhiRep();
+}
+function setViewerLoc() {
+  var loc = $("#idLoc").val();
+
+  $("#viewLoc").text(loc);
+}
+function setViewerName() {
+  var emp = $("#idEmp").val();
+  $("#viewName").text(emp);
+}
+function setViewerGroup() {
+  var grp = $("#idGroup").val();
+  $("#viewGroup").text(grp);
+}
+function setPreparedBy() {
+  var iba = parseInt($("#idEmp option:selected").attr("emp-id"));
+  var emp = $("#idEmp").val();
+  var names = emp.split(" ");
+
+  var firstName = names[0];
+  var lastName = names[names.length - 1];
+  $("#preparedBy").text(`${firstName} ${lastName}`);
+  $("#viewPrepPos").text(getDesig(iba, mmbrs));
+}
+function setCheckedBy() {
+  var iba = parseInt($("#idChecker option:selected").attr("emp-id"));
+  var check = $("#idChecker").val();
+  var names = check.split(" ");
+  if (check == "Select Member . . .") {
+    $("#checkedBy").text("");
+    $("#viewCheckPos").text("");
+  } else {
+    var firstName = names[0];
+    var lastName = names[names.length - 1];
+    $("#checkedBy").text(`${firstName} ${lastName}`);
+    $("#viewCheckPos").text(getDesig(iba, chkrs));
+  }
+}
+function setKhiRep() {
+  var name = $("#khiName").val();
+  var desig = $("#khiPos").val();
+
+  $("#khiBy").text(name);
+  $("#viewKhiPos").text(desig);
+}
+function setApprovedBy() {
+  var iba = parseInt($("#idApprover option:selected").attr("emp-id"));
+  var check = $("#idApprover").val();
+  var names = check.split(" ");
+  if (check == "Select Member . . .") {
+    $("#approvedBy").text("");
+    $("#viewAppPos").text("");
+  } else {
+    var firstName = names[0];
+    var lastName = names[names.length - 1];
+    $("#approvedBy").text(`${firstName} ${lastName}`);
+    $("#viewAppPos").text(getDesig(iba, chkrs));
+  }
+}
+
 function countCheck() {
   var checked = $(".checked");
   var btnText = $(".text-btn");
@@ -128,7 +285,7 @@ function countCheck() {
 }
 function saveToPDF() {
   html2canvas($("#toPrint")[0]).then((canvas) => {
-    var imgData = canvas.toDataURL("image/jpeg", 1.0);
+    var imgData = canvas.toDataURL("image/jpeg", 1.25);
     var doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
@@ -210,6 +367,7 @@ function createGroupSelection(groups) {
 function getMembers() {
   const groupSel = $("#idGroup").val();
   const ymSel = $("#idMonth").val();
+  console.log(ymSel);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -241,8 +399,13 @@ function getMembers() {
 }
 function createMembers(members) {
   const memSel = $("#idEmp");
+  // var user = empDetails["empNum"];
+  // var sel = $("#idEmp option[emp-id='" + user + "']");
+  // sel.attr("selected", true);
   const selectedMember = parseInt(memSel.find(":selected").attr("emp-id"));
-  memSel.html("<option hidden>Select Member . . .</option>");
+  // memSel.html(`<option val="" hidden>Select Members ...</option>`);
+  memSel.empty();
+
   members.forEach((member) => {
     const option = $("<option>").attr("emp-id", member.id).text(member.name);
     memSel.append(option);
@@ -325,8 +488,8 @@ function createCheckers(checkers) {
   const appSel = $("#idApprover");
   const selectedChecker = parseInt(chkSel.find(":selected").attr("emp-id"));
   const selectedApprover = parseInt(appSel.find(":selected").attr("emp-id"));
-  chkSel.html("<option hidden>Select Member . . .</option>");
-  appSel.html("<option hidden>Select Member . . .</option>");
+  chkSel.html("<option hidden >Select Member . . .</option>");
+  appSel.html("<option hidden >Select Member . . .</option>");
   checkers.forEach((checker) => {
     const option = $("<option>").attr("emp-id", checker.id).text(checker.name);
     chkSel.append(option);

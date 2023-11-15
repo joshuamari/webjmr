@@ -63,7 +63,7 @@ body {
 }
 #toPrint {
   color: #000 !important;
-  font-size: 14px;
+  font-size: 12px;
   font-family: "Arial", sans-serif;
 }
 /* modal */
@@ -236,104 +236,42 @@ body {
 .item.checked i {
   transform: scale(1);
 }
-
-/*loaderrrrr*/
-
-.cs-loader {
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 25000;
-  display: flex;
-  justify-content: center;
+/*    TAAAAAAABLE */
+.weekend {
+  background-color: #c4c4c4;
 }
-
-.cs-loader-inner {
-  transform: translateY(-50%);
-  top: 50%;
-  position: absolute;
-  width: calc(100% - 200px);
-  color: #fff;
-  padding: 0 100px;
+table th,
+td {
+  border: 0.5px solid #000 !important;
+}
+table thead th {
+  font-size: 12px;
+}
+table thead th {
+  height: 20px;
+  padding: 0 !important;
   text-align: center;
 }
-
-.cs-loader-inner label {
-  font-size: 20px;
-  opacity: 0;
-  display: inline-block;
-  color: var(--main-blue);
+table thead th.sm {
+  width: 40px;
 }
-
-@keyframes lol {
-  0% {
-    opacity: 0;
-    transform: translateX(-300px);
-  }
-  33% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-  66% {
-    opacity: 1;
-    transform: translateX(0px);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(300px);
-  }
+table thead th.break {
+  white-space: wrap;
 }
-
-@-webkit-keyframes lol {
-  0% {
-    opacity: 0;
-    -webkit-transform: translateX(-300px);
-  }
-  33% {
-    opacity: 1;
-    -webkit-transform: translateX(0px);
-  }
-  66% {
-    opacity: 1;
-    -webkit-transform: translateX(0px);
-  }
-  100% {
-    opacity: 0;
-    -webkit-transform: translateX(300px);
-  }
+table thead tr:first-of-type th:last-of-type {
+  width: 150px;
 }
-
-.cs-loader-inner label:nth-child(6) {
-  -webkit-animation: lol 1.5s infinite ease-in-out;
-  animation: lol 1.5s infinite ease-in-out;
+table tbody tr {
+  overflow: hidden;
+  height: 20px !important;
 }
-
-.cs-loader-inner label:nth-child(5) {
-  -webkit-animation: lol 1.5s 100ms infinite ease-in-out;
-  animation: lol 1.5s 100ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(4) {
-  -webkit-animation: lol 1.5s 200ms infinite ease-in-out;
-  animation: lol 1.5s 200ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(3) {
-  -webkit-animation: lol 1.5s 300ms infinite ease-in-out;
-  animation: lol 1.5s 300ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(2) {
-  -webkit-animation: lol 1.5s 400ms infinite ease-in-out;
-  animation: lol 1.5s 400ms infinite ease-in-out;
-}
-
-.cs-loader-inner label:nth-child(1) {
-  -webkit-animation: lol 1.5s 500ms infinite ease-in-out;
-  animation: lol 1.5s 500ms infinite ease-in-out;
+table tbody td {
+  overflow: hidden;
+  height: 20px;
+  padding: 0;
+  margin: 0 !important;
+  font-size: 13px;
+  line-height: 1;
 }
 
 @media screen and (max-width: 800px) {
@@ -359,5 +297,11 @@ body {
     padding: 0;
     color: #000;
     background-color: #fff;
+  }
+  .table td {
+    font-size: 12px !important;
+  }
+  #toPrint {
+    padding: 8mm 9mm 8mm 18mm;
   }
 }
