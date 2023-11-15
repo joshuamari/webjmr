@@ -98,6 +98,7 @@ $(document).on("click", ".list-items .item", function () {
 });
 $(document).on("change", "#idGroup", function () {
   setViewerGroup();
+  clearViewer();
   Promise.all([getMembers(), getCheckers()])
     .then(([members, checkers]) => {
       chkrs = checkers;
@@ -111,8 +112,10 @@ $(document).on("change", "#idGroup", function () {
   var group = $(this).val();
   if (group == "MPM") {
     $(".token").removeClass("d-none");
+    $(".tokenTable").removeClass("d-none");
   } else {
     $(".token").addClass("d-none");
+    $(".tokenTable").addClass("d-none");
   }
 });
 $(document).on("change", "#idMonth", function () {
@@ -155,7 +158,6 @@ function createTable() {
   var moIndex = parseInt(mo.split("-")[1]) - 1;
   var str = "";
 
-  $("#appendHere").empty();
   var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
 
   for (var x = 1; x <= 31; x++) {
@@ -187,7 +189,8 @@ function createTable() {
       </tr>`;
     }
   }
-  $("#appendHere").append(str);
+
+  $("#appendBefore").before(str);
 }
 function setCurrentMonth() {
   var currentDate = new Date();
@@ -268,6 +271,12 @@ function setApprovedBy() {
     $("#approvedBy").text(`${firstName} ${lastName}`);
     $("#viewAppPos").text(getDesig(iba, chkrs));
   }
+}
+
+function clearViewer() {
+  $(
+    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #viewKhiPos, #khiBy"
+  ).text("");
 }
 
 function countCheck() {
@@ -400,8 +409,7 @@ function createMembers(members) {
   // var sel = $("#idEmp option[emp-id='" + user + "']");
   // sel.attr("selected", true);
   const selectedMember = parseInt(memSel.find(":selected").attr("emp-id"));
-  // memSel.html(`<option val="" hidden>Select Members ...</option>`);
-  memSel.empty();
+  memSel.html(`<option val="" hidden>Select Member . . .</option>`);
 
   members.forEach((member) => {
     const option = $("<option>")

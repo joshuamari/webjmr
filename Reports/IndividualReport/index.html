@@ -479,26 +479,63 @@
               </div>
             </div>
           </div>
-          <div class="table-cont" style="width: 100%; height: 660px">
+          <div class="table-cont" style="width: 100%; height: 615px">
             <table class="w-100">
-              <thead style="border: 2px solid #000">
+              <thead style="border: 1px solid #000">
                 <tr>
                   <th class="sm" rowspan="2">DATE</th>
                   <th colspan="2">TIME</th>
                   <th class="sm break" rowspan="2">MAN HOUR</th>
                   <th class="sm break" rowspan="2">OVER TIME</th>
                   <th rowspan="2">DESCRIPTION</th>
-                  <th rowspan="2">PERSON IN-CHARGE</th>
+                  <th rowspan="2" class="last">PERSON IN-CHARGE</th>
                 </tr>
                 <tr>
                   <th class="sm">IN</th>
                   <th class="sm">OUT</th>
                 </tr>
               </thead>
-              <tbody
-                style="border: 2px solid #000; border-top: none"
-                id="appendHere"
-              ></tbody>
+              <tbody id="appendHere">
+                <tr id="appendBefore">
+                  <td
+                    colspan="3"
+                    style="border-left: 0.25px solid #000"
+                    class="text-uppercase"
+                  >
+                    total hours
+                  </td>
+                  <td id="totalMH" class="fw-semibold"></td>
+                  <td id="totalOT" class="fw-semibold"></td>
+                  <td class="nan"></td>
+                  <td class="nan"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="d-none d-flex justify-content-center"
+            style="margin-top: 18px"
+          >
+            <table
+              class="tok"
+              style="width: calc(100% - 80px); border: 0.25px solid #000"
+            >
+              <thead>
+                <tr style="border-bottom: 0.25px solid #000">
+                  <th>Inventor Total Days</th>
+                  <th>Token Rate</th>
+                  <th>Unit Rate (Yen)</th>
+                  <th>Total Cost (Yen)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="invDays"></td>
+                  <td id="invToken"></td>
+                  <td id="invUnit"></td>
+                  <td id="invTotal"></td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <div

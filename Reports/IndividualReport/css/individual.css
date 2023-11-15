@@ -9,14 +9,32 @@
 html {
   height: fit-content;
 }
-
-td,
 th {
-  border: 0.5px solid #777 !important;
-  color: #333;
+  font-weight: 400 !important;
+}
+th:not(.last) {
+  border-right: 0.25px solid #000 !important;
+  color: #000;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
+}
+td {
+  color: #000;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  border-bottom: 0.25px solid #000 !important;
+}
+td:not(:last-of-type) {
+  border-right: 0.25px solid #000 !important;
+}
+thead tr:nth-of-type(2) th {
+  border-top: 0.25px solid #000 !important;
+}
+tr.weekend {
+  border-left: 0.25px solid #000 !important;
+  border-right: 0.25px solid #000 !important;
 }
 
 body {
@@ -244,15 +262,15 @@ th {
 .weekend {
   background-color: #c4c4c4;
 }
-table th,
-td {
-  border: 0.5px solid #000 !important;
-}
+/* table th:not(:last-child) {
+  border: 0;
+  border-left: 0.25px solid #000 !important;
+} */
 table thead th {
   font-size: 12px;
 }
 table thead th {
-  height: 20px;
+  height: 18px;
   padding: 0 !important;
   text-align: center;
 }
@@ -265,13 +283,23 @@ table thead th.break {
 table thead tr:first-of-type th:last-of-type {
   width: 150px;
 }
+table thead tr {
+  height: 18px !important;
+}
 table tbody tr {
   overflow: hidden;
-  height: 20px !important;
+  height: 18px !important;
+}
+tbody td.nan {
+  border: 0 !important;
+}
+tbody tr:not(:last-of-type) {
+  border-left: 0.25px solid #000;
+  border-right: 0.25px solid #000;
 }
 table tbody td {
   overflow: hidden;
-  height: 20px;
+  height: 18px;
   padding: 0;
   margin: 0 !important;
   font-size: 13px;
@@ -307,5 +335,8 @@ table tbody td {
   }
   #toPrint {
     padding: 8mm 9mm 8mm 18mm;
+  }
+  #toPrint table {
+    border: 0.5px solid #000;
   }
 }
