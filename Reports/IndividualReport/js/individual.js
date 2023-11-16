@@ -33,7 +33,7 @@ checkLogin()
     empDetails = emp_deets;
     $(document).ready(function () {
       setCurrentMonth();
-      createTable();
+
       Promise.all([getGroups(), getLocations()]).then(([grps, locs]) => {
         createGroupSelection(grps);
         createLocationSelection(locs);
@@ -50,7 +50,7 @@ checkLogin()
               true
             );
             createCheckers(chkrs);
-
+            createTable();
             setViewer();
           })
           .catch((error) => {
@@ -99,6 +99,7 @@ $(document).on("click", ".list-items .item", function () {
 $(document).on("change", "#idGroup", function () {
   setViewerGroup();
   clearViewer();
+  createTable();
   Promise.all([getMembers(), getCheckers()])
     .then(([members, checkers]) => {
       chkrs = checkers;
@@ -113,9 +114,15 @@ $(document).on("change", "#idGroup", function () {
   if (group == "MPM") {
     $(".token").removeClass("d-none");
     $(".tokenTable").removeClass("d-none");
+    $(".signature").css("margin-top", "18px");
+    $("td,th, table tbody tr, table thead tr").css("height", "17px ");
+    $(".table-cont").css("height", "581px ");
   } else {
     $(".token").addClass("d-none");
     $(".tokenTable").addClass("d-none");
+    $(".signature").css("margin-top", "35px");
+    $("td,th, table tbody tr, table thead tr").css("height", "18px ");
+    $(".table-cont").css("height", "615px ");
   }
 });
 $(document).on("change", "#idMonth", function () {
@@ -149,6 +156,22 @@ $(document).on("change", "#idApprover", function () {
 $(document).on("input", "#khiName , #khiPos", function () {
   setKhiRep();
 });
+$(document).on("input", "#tokenRate", function () {
+  var token = $(this).val();
+  $("#invToken").text(token);
+  totalCost();
+});
+$(document).on("input", "#unitRate", function () {
+  var unit = $(this).val();
+  $("#invUnit").text(unit);
+  totalCost();
+});
+$(document).on("click", ".toke", function () {
+  var count = $(".toke.checked").length;
+  $("#invDays").text(count);
+  console.log(count);
+  totalCost();
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -157,40 +180,116 @@ function createTable() {
   var yr = parseInt(mo.split("-")[0]);
   var moIndex = parseInt(mo.split("-")[1]) - 1;
   var str = "";
-
+  var grp = $("#idGroup").val();
+  console.log(grp);
   var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
+  var specialHeader = `<th class="sm" rowspan="2">DATE</th>
+  <th colspan="2">TIME</th>
+  <th class="sm break" rowspan="2">MAN HOUR</th>
+  <th class="sm break" rowspan="2">OVER TIME</th>
+  <th rowspan="2" style="width:150px !important">JOB NUMBER</th>
+  <th rowspan="2" style="width:calc(100% - 540px) !important">DESCRIPTION</th>
+  <th class="sm break" rowspan="2"style="width:40px !important">INV. OP.</th>
+  <th rowspan="2" class="last" style="width:150px !important">PERSON IN-CHARGE</th>`;
+  var commonHeader = `<th class="sm" rowspan="2">DATE</th>
+  <th colspan="2">TIME</th>
+  <th class="sm break" rowspan="2">MAN HOUR</th>
+  <th class="sm break" rowspan="2">OVER TIME</th>
+  <th rowspan="2">DESCRIPTION</th>
+  <th rowspan="2" class="last">PERSON IN-CHARGE</th>`;
+
+  var groupHeaders = grp === "MPM" ? specialHeader : commonHeader;
+  $(".table-cont table thead tr:first-of-type").empty();
+  $(".table-cont table thead tr:first-of-type").html(groupHeaders);
 
   for (var x = 1; x <= 31; x++) {
     var date = new Date(yr, moIndex, x);
-
-    if (x <= daysInMonth) {
-      // If the day is within the month, create a row
-      str += `<tr${
-        date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
-      }>
+    var specialTr = `<tr${
+      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+    }>
         <td>${(x < 10 ? "0" : "") + x}</td>
         <td>7:00</td>
         <td>16:00</td>
         <td>8</td>
         <td></td>
+      <td></td>
         <td>kdtKeisoSupport</td>
+        <td><svg class="custom-checkbox toke" viewBox="0 0 24 24" onclick="toggleCheckbox(this)"><circle class="circle" cx="12" cy="12" r="11" stroke="#333" fill="none"/></svg></td>
+
         <td>SHIRAkAWA Kenji</td>
       </tr>`;
+    var commonTr = `<tr${
+      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+    }>
+          <td>${(x < 10 ? "0" : "") + x}</td>
+          <td>7:00</td>
+          <td>16:00</td>
+          <td>8</td>
+          
+        <td></td>
+          <td>kdtKeisoSupport</td>
+          
+          <td>SHIRAkAWA Kenji</td>
+        </tr>`;
+    var emptySpecialTr = `<tr${
+      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+    }>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td ></td>
+            <td ></td>
+          </tr>`;
+    var emptyTr = `<tr${
+      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+    }>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              
+              <td></td>
+            <td></td>
+              <td></td>
+            </tr>`;
+
+    if (x <= daysInMonth) {
+      grp === "MPM" ? (str += specialTr) : (str += commonTr);
     } else {
+      grp === "MPM" ? (str += emptySpecialTr) : (str += emptyTr);
       // For days beyond the month's last day, add a row with an empty day
-      str += `<tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>`;
     }
   }
-
+  $(".table-cont table tbody tr:not(#appendBefore)").remove();
   $("#appendBefore").before(str);
+  calculateTotalHours();
+}
+function toggleCheckbox(checkbox) {
+  checkbox.classList.toggle("checked");
+}
+
+function calculateTotalHours() {
+  var totalManHour = 0;
+  var totalOverTime = 0;
+
+  $("#appendHere tr:not(#appendBefore)").each(function () {
+    var manHour = parseInt($(this).find("td:nth-child(4)").text());
+    var overTime = parseInt($(this).find("td:nth-child(5)").text());
+
+    if (!isNaN(manHour)) {
+      totalManHour += manHour;
+    }
+    if (!isNaN(overTime)) {
+      totalOverTime += overTime;
+    }
+  });
+
+  $("#totalMH").text(totalManHour);
+  $("#totalOT").text(totalOverTime);
 }
 function setCurrentMonth() {
   var currentDate = new Date();
@@ -198,15 +297,7 @@ function setCurrentMonth() {
   var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   $("#idMonth").val(`${year}-${month}`);
 }
-function setViewerDate() {
-  var mo = $("#idMonth").val();
-  var yr = parseInt(mo.split("-")[0]);
-  var moIndex = parseInt(mo.split("-")[1]) - 1;
 
-  var monthName = monthNames[moIndex];
-
-  $("#viewDate").text(`${monthName}, ${yr}`);
-}
 function setViewer() {
   setViewerDate();
   setViewerLoc();
@@ -216,6 +307,15 @@ function setViewer() {
   setCheckedBy();
   setApprovedBy();
   setKhiRep();
+}
+function setViewerDate() {
+  var mo = $("#idMonth").val();
+  var yr = parseInt(mo.split("-")[0]);
+  var moIndex = parseInt(mo.split("-")[1]) - 1;
+
+  var monthName = monthNames[moIndex];
+
+  $("#viewDate").text(`${monthName}, ${yr}`);
 }
 function setViewerLoc() {
   var loc = $("#idLoc").val();
@@ -277,6 +377,17 @@ function clearViewer() {
   $(
     "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #viewKhiPos, #khiBy"
   ).text("");
+}
+
+function totalCost() {
+  var indays = $("#invDays").text() ? parseInt($("#invDays").text()) : 0;
+  var tok = $("#invToken").text() ? parseInt($("#invToken").text()) : 0;
+  var unit = $("#invUnit").text() ? parseInt($("#invUnit").text()) : 0;
+  var total;
+
+  total = tok * unit * indays;
+
+  $("#invTotal").text(parseInt(total));
 }
 
 function countCheck() {

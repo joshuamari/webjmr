@@ -152,17 +152,37 @@ th {
 .right button:last-child {
   margin-left: 10px;
 }
-.tablecont {
-  overflow: auto;
-  height: calc(100vh - 120px);
+.signature {
+  margin-top: 35px;
+}
+table-cont {
+  height: 615px;
+}
+/* 
+td .toke {
+  -webkit-appearance: none !important;
+  position: relative;
+  width: 15px !important;
+  height: 12px !important;
+  border: 1px solid #333 !important;
+  border-radius: 50% !important;
+  cursor: pointer;
+  transition: 0.3s all;
+  vertical-align: middle;
+}
+td .toke.checked {
+  fill: black;
+} */
+.custom-checkbox {
+  width: 16px !important;
+  height: 13px !important;
+  cursor: pointer;
 }
 
-.noShow div {
-  background-color: #16334f;
-  color: #fff;
-  font-size: 30px;
+.custom-checkbox.checked .circle {
+  display: block;
+  fill: #777;
 }
-
 /* checkbox */
 .checkbox {
   -webkit-appearance: none;
@@ -284,11 +304,11 @@ table thead tr:first-of-type th:last-of-type {
   width: 150px;
 }
 table thead tr {
-  height: 18px !important;
+  height: 18px;
 }
 table tbody tr {
   overflow: hidden;
-  height: 18px !important;
+  height: 18px;
 }
 tbody td.nan {
   border: 0 !important;
@@ -338,5 +358,9 @@ table tbody td {
   }
   #toPrint table {
     border: 0.5px solid #000;
+  }
+
+  td .toke:checked {
+    background-color: #777;
   }
 }

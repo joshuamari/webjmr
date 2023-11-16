@@ -353,7 +353,7 @@
         </div>
       </div>
       <div
-        class="d-flex justify-content-center bg-body-secondary"
+        class="d-flex justify-content-center bg-body-secondary position-relative"
         style="width: 100%; min-width: 210mm"
       >
         <div
@@ -363,7 +363,7 @@
         >
           <div
             class="logos d-flex justify-content-between"
-            style="margin-bottom: 42px"
+            style="margin-bottom: 40px"
           >
             <div
               style="
@@ -394,7 +394,7 @@
           </div>
           <div
             class="inputs d-flex justify-content-between"
-            style="margin-bottom: 20px"
+            style="margin-bottom: 18px"
           >
             <div
               class="d-flex flex-column"
@@ -479,7 +479,7 @@
               </div>
             </div>
           </div>
-          <div class="table-cont" style="width: 100%; height: 615px">
+          <div class="table-cont" style="width: 100%;">
             <table class="w-100">
               <thead style="border: 1px solid #000">
                 <tr>
@@ -513,7 +513,7 @@
             </table>
           </div>
           <div
-            class="d-none d-flex justify-content-center"
+            class="tokenTable d-none d-flex justify-content-center"
             style="margin-top: 18px"
           >
             <table
@@ -530,18 +530,15 @@
               </thead>
               <tbody>
                 <tr>
-                  <td id="invDays"></td>
-                  <td id="invToken"></td>
-                  <td id="invUnit"></td>
-                  <td id="invTotal"></td>
+                  <td id="invDays" class="fw-semibold"></td>
+                  <td id="invToken" class="fw-semibold"></td>
+                  <td id="invUnit" class="fw-semibold"></td>
+                  <td id="invTotal" class="fw-semibold"></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div
-            class="d-flex signature justify-content-between"
-            style="padding-top: 35px"
-          >
+          <div class="d-flex signature justify-content-between">
             <div class="kdtEmp d-flex">
               <div
                 class="d-flex flex-column align-items-center"
@@ -608,7 +605,12 @@
           </div>
           <div
             class="d-flex justify-content-center align-items-center"
-            style="padding-top: 20px"
+            style="
+              position: absolute;
+              bottom: 90px;
+              left: 50%;
+              transform: translate(-50%);
+            "
           >
             <h5 class="fw-semibold m-0" style="font-size: 16px">
               KHI Design & Technical Service, Inc.

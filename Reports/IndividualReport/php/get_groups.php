@@ -56,7 +56,7 @@ try {
 function isAllGroups($empNum)
 {
     global $connkdt;
-    $pID = 240; //CMR all groups MODULE PERMISSION ID kdtphdb>>>>p_permissions
+    $pID = 24; //CMR all groups MODULE PERMISSION ID kdtphdb>>>>p_permissions
     $accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
     $accessStmt = $connkdt->prepare($accessQ);
     $accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);
