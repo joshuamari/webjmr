@@ -304,13 +304,12 @@ function extractData(entry) {
         pName: entry["pName"],
       });
       _grpOT = [...new Map(_grpOT.map((x) => [x["pIndex"], x])).values()];
-    } else {
-      _grpProj.push({
-        pIndex: entry["pIndex"],
-        pName: entry["pName"],
-      });
-      _grpProj = [...new Map(_grpProj.map((x) => [x["pIndex"], x])).values()];
     }
+    _grpProj.push({
+      pIndex: entry["pIndex"],
+      pName: entry["pName"],
+    });
+    _grpProj = [...new Map(_grpProj.map((x) => [x["pIndex"], x])).values()];
   }
 }
 

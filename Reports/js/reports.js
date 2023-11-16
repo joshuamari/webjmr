@@ -92,7 +92,8 @@ function planAccess() {
           <li><a class="link_name" href="../Planning/">Planning</a></li>
         </ul>
       </li>`;
-        $("#navigationLinks").append(addString);
+        // $("#navigationLinks").append(addString);
+        $("#drLink").after(addString);
       }
     }
   );

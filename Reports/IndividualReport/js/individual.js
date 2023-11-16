@@ -34,29 +34,32 @@ checkLogin()
     $(document).ready(function () {
       setCurrentMonth();
 
-      Promise.all([getGroups(), getLocations()]).then(([grps, locs]) => {
-        createGroupSelection(grps);
-        createLocationSelection(locs);
-        $("#idGroup").val(empDetails["empGroup"]);
+      Promise.all([getGroups(), getLocations(), getCoretime()]).then(
+        ([grps, locs, cores]) => {
+          fillCoretime(cores);
+          createGroupSelection(grps);
+          createLocationSelection(locs);
+          $("#idGroup").val(empDetails["empGroup"]);
 
-        Promise.all([getMembers(), getCheckers()])
-          .then(([members, checkers]) => {
-            chkrs = checkers;
-            mmbrs = members;
-            createMembers(mmbrs);
+          Promise.all([getMembers(), getCheckers()])
+            .then(([members, checkers]) => {
+              chkrs = checkers;
+              mmbrs = members;
+              createMembers(mmbrs);
 
-            $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
-              "selected",
-              true
-            );
-            createCheckers(chkrs);
-            createTable();
-            setViewer();
-          })
-          .catch((error) => {
-            alert(error);
-          });
-      });
+              $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
+                "selected",
+                true
+              );
+              createCheckers(chkrs);
+              createTable();
+              setViewer();
+            })
+            .catch((error) => {
+              alert(error);
+            });
+        }
+      );
     });
   })
   .catch((error) => {
@@ -128,12 +131,13 @@ $(document).on("change", "#idGroup", function () {
 $(document).on("change", "#idMonth", function () {
   setViewerDate();
   createTable();
-  Promise.all([getMembers(), getCheckers()])
-    .then(([members, checkers]) => {
+  Promise.all([getMembers(), getCheckers(), getCoretime()])
+    .then(([members, checkers, cores]) => {
       chkrs = checkers;
       mmbrs = members;
       createMembers(mmbrs);
       createCheckers(chkrs);
+      fillCoretime(cores);
     })
     .catch((error) => {
       alert(error);
@@ -142,6 +146,13 @@ $(document).on("change", "#idMonth", function () {
 $(document).on("change", "#idLoc", function () {
   checkLoc();
   setViewerLoc();
+  getCoretime()
+    .then((cores) => {
+      fillCoretime(cores);
+    })
+    .catch((error) => {
+      alert(error);
+    });
 });
 $(document).on("change", "#idEmp", function () {
   setViewerName();
@@ -181,7 +192,6 @@ function createTable() {
   var moIndex = parseInt(mo.split("-")[1]) - 1;
   var str = "";
   var grp = $("#idGroup").val();
-  console.log(grp);
   var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
   var specialHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
@@ -484,7 +494,6 @@ function createGroupSelection(groups) {
 function getMembers() {
   const groupSel = $("#idGroup").val();
   const ymSel = $("#idMonth").val();
-  console.log(ymSel);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -630,7 +639,6 @@ function getDesig(empid, memlist) {
 }
 function findFirstNameById(empid, memlist) {
   const result = memlist.find((item) => item.id === empid);
-  console.log(result);
   return result ? abbreviateFirstName(result.fname) : null;
 }
 function findLastNameById(empid, memlist) {
@@ -644,5 +652,50 @@ function abbreviateFirstName(firstName) {
       .map((part) => part.charAt(0))
       .join(".") + ".";
   return initials;
+}
+function getCoretime() {
+  const ymSel = $("#idMonth").val();
+  const selLoc = parseInt($("#idLoc").find(":selected").attr("loc-id"));
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_coretime.php",
+      data: {
+        selLoc: JSON.stringify(selLoc),
+        ymSel: ymSel,
+      },
+      dataType: "json",
+      success: function (data) {
+        const coretime = data;
+        if (Object.keys(coretime).length < 1) {
+          reject("No coretime found"); // Reject the promise
+        } else {
+          resolve(coretime); // Resolve the promise with empDetails
+        }
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
+}
+function fillCoretime(cores) {
+  const timeMappings = {
+    Time: ["#sTime", "#eTime"],
+    Halfday: ["#sHDay", "#eHDay"],
+    Lunch: ["#sLunch", "#eLunch"],
+    Dinner: ["#sDinner", "#eDinner"],
+  };
+  Object.keys(timeMappings).forEach((event) => {
+    const [startId, endId] = timeMappings[event];
+    $(startId).val(cores[event]["start"]);
+    $(endId).val(cores[event]["end"]);
+  });
 }
 //#endregion
