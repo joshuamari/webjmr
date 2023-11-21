@@ -10,9 +10,12 @@ date_default_timezone_set('Asia/Manila');
 #region Initialize Variable
 $selLoc = 1;
 $locDefaults = [0, 1, 2];
-if (!empty(json_decode($_POST['selLoc'])) && !in_array(json_decode($_POST['selLoc']), $locDefaults)) {
-    $selLoc = json_decode($_POST['selLoc']);
+if (isset($_POST['selLoc'])) {
+    if (!empty(json_decode($_POST['selLoc'])) && !in_array(json_decode($_POST['selLoc']), $locDefaults)) {
+        $selLoc = json_decode($_POST['selLoc']);
+    }
 }
+
 $ymSel = date("Y-m-01");
 if (!empty($_POST['ymSel'])) {
     $ymSel = date("Y-m-01", strtotime($_POST['ymSel']));
@@ -34,7 +37,7 @@ try {
         foreach ($coreArr as $core) {
             $name = $core['core_name'];
             $start = (int)$core['core_start'];
-            $time = $core['core_time'];
+            $time = date("H:i", strtotime($core['core_time']));
             if ($start == 0) {
                 $coretime[$name]['end'] = $time;
             } else {

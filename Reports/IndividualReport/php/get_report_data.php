@@ -62,39 +62,30 @@ $hoursChecked = FALSE;
 if (!empty($_POST['hrsChk'])) {
     $hoursChecked = json_decode($_POST['hrsChk']);
 }
-$reportQ = "SELECT $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$coretime = new stdClass();
+if (isset($_POST['core'])) {
+    $coretime = json_decode($_POST['core']);
+} else {
+    die(json_encode($reportData, JSON_PRETTY_PRINT));
+}
+$amT = getHDTow('Leave AM');
+$pmT = getHDTow('Leave PM');
+$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
 $reportStmt = $connwebjmr->prepare($reportQ);
 #endregion
 
 #region main
-$reportStmt->execute([":ymSelect" => "$ymSelect%", ":empSelect" => $empSelect]);
+$reportStmt->execute([":ymSelect" => "$ymSelect%", ":empSelect" => $empSelect, ":amTow" => $amT, ":pmTow" => $pmT]);
 if ($reportStmt->rowCount() > 0) {
     $repArr = $reportStmt->fetchAll();
     foreach ($repArr as $rep) {
-        $repDate = $rep['fldDate'];
+        $repDate = date("d", strtotime($rep['fldDate']));
         $hrs = $rep['mins'] / 60;
         $isOT = $rep['fldMHType'] == "1" ? true : false;
         $projid = (int)$rep['projid'];
         $orderNum = $rep['fldOrder'];
         $khic = $rep['fldKHIC'];
-        #region hours
-        if ($projid !== $leaveID) {
-            if (isset($reportData[$repDate]['hours'])) {
-                $reportData[$repDate]['hours'] += $hrs;
-            } else {
-                $reportData[$repDate]['hours'] = $hrs;
-            }
-        }
-        #endregion
-        #region OT
-        if ($isOT) {
-            if (isset($reportData[$repDate]['ot'])) {
-                $reportData[$repDate]['ot'] += $hrs;
-            } else {
-                $reportData[$repDate]['ot'] = $hrs;
-            }
-        }
-        #endregion
+        $isHalf = $rep['isHalfDay'];
         #region description
         $dsc = '';
         foreach ($selectedColumns as $col) {
@@ -125,6 +116,33 @@ if ($reportStmt->rowCount() > 0) {
             $reportData[$repDate]['desc'] = $dsc;
         }
         #endregion
+        #region hours
+        if ($projid !== $leaveID) {
+            if (isset($reportData[$repDate]['hours'])) {
+                $reportData[$repDate]['hours'] += $hrs;
+            } else {
+                $reportData[$repDate]['hours'] = $hrs;
+            }
+        }
+        #endregion
+        #region range
+        if (isset($reportData[$repDate]['hours'])) {
+            $range = getTimeRange($coretime, $reportData[$repDate]['hours'], $isHalf);
+            if ($range) {
+                $reportData[$repDate]['start'] = $range['startTime'];
+                $reportData[$repDate]['end'] = $range['endTime'];
+            }
+        }
+        #endregion
+        #region OT
+        if ($isOT) {
+            if (isset($reportData[$repDate]['ot'])) {
+                $reportData[$repDate]['ot'] += $hrs;
+            } else {
+                $reportData[$repDate]['ot'] = $hrs;
+            }
+        }
+        #endregion
         #region ordernum
         if ($orderNum) {
             if (!isset($reportData[$repDate]['order'])) {
@@ -139,6 +157,7 @@ if ($reportStmt->rowCount() > 0) {
             }
         }
         #endregion
+
     }
 }
 #endregion
@@ -188,5 +207,65 @@ function updateProjectHours($string, $projectToUpdate)
 
     return implode(' | ', $projects);
 }
+function getTimeRange($core, $duration, $isHalfDay)
+{
+    global $pmT;
+    global $amT;
+    // Extracting values from the $core array
+
+    $lunchStart = $core->Lunch->start;
+    $lunchEnd = $core->Lunch->end;
+    $dinnerStart = $core->Dinner->start;
+    $dinnerEnd = $core->Dinner->end;
+    // $timeEnd = $core->Time->end; //irrelevant
+    $halfdayStart = $core->Halfday->start;
+    $halfdayEnd = $core->Halfday->end;
+    if ($isHalfDay == $pmT) {
+        $timeStart = $halfdayEnd;
+    } else if ($isHalfDay == $amT && $duration == 4) {
+        $timeStart = date("H:i", strtotime($halfdayStart) - ($duration * 3600));
+    } else {
+        $timeStart = $core->Time->start;
+    }
+    // Calculate break times in seconds
+    $lunchBreakSeconds = strtotime($lunchEnd) - strtotime($lunchStart);
+    $dinnerBreakSeconds = strtotime($dinnerEnd) - strtotime($dinnerStart);
+
+    // Calculate actual working end time
+    $workingEnd = strtotime($timeStart) + ($duration * 3600);
+    if (strtotime($lunchStart) >= strtotime($timeStart) && strtotime($lunchEnd) <= $workingEnd) {
+
+        $workingEnd += $lunchBreakSeconds;
+    }
+    if (strtotime($dinnerStart) >= strtotime($timeStart) && strtotime($dinnerEnd) <= $workingEnd) {
+        $workingEnd += $dinnerBreakSeconds;
+    }
+
+    // Format times for output
+    $timeStartFormatted = date('H:i', strtotime($timeStart));
+    $workingEndFormatted = date('H:i', $workingEnd);
+
+    // Return the start time and end time as an array
+    return [
+        'startTime' => $timeStartFormatted,
+        'endTime' => $workingEndFormatted
+    ];
+}
+function getHDTow($towValue)
+{
+    global $connwebjmr;
+    $hdTow = NULL;
+
+    $hdQ = "SELECT fldID FROM `typesofworktable` WHERE `fldTOW` = :towValue";
+    $hdStmt = $connwebjmr->prepare($hdQ);
+    $hdStmt->execute([":towValue" => $towValue]);
+
+    if ($hdStmt->rowCount() > 0) {
+        $hdTow = $hdStmt->fetchColumn();
+    }
+
+    return $hdTow;
+}
 #endregion
 echo json_encode($reportData, JSON_PRETTY_PRINT);
+// echo json_encode($repArr, JSON_PRETTY_PRINT);

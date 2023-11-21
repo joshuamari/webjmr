@@ -13,6 +13,8 @@ switch (document.location.hostname) {
 var empDetails = [];
 var chkrs = [];
 var mmbrs = [];
+var crtime = [];
+var selClmns = [];
 const monthNames = [
   "January",
   "February",
@@ -36,7 +38,8 @@ checkLogin()
 
       Promise.all([getGroups(), getLocations(), getCoretime()]).then(
         ([grps, locs, cores]) => {
-          fillCoretime(cores);
+          crtime = cores;
+          fillCoretime(crtime);
           createGroupSelection(grps);
           createLocationSelection(locs);
           $("#idGroup").val(empDetails["empGroup"]);
@@ -133,11 +136,12 @@ $(document).on("change", "#idMonth", function () {
   createTable();
   Promise.all([getMembers(), getCheckers(), getCoretime()])
     .then(([members, checkers, cores]) => {
+      crtime = cores;
       chkrs = checkers;
       mmbrs = members;
       createMembers(mmbrs);
       createCheckers(chkrs);
-      fillCoretime(cores);
+      fillCoretime(crtime);
     })
     .catch((error) => {
       alert(error);
@@ -148,7 +152,8 @@ $(document).on("change", "#idLoc", function () {
   setViewerLoc();
   getCoretime()
     .then((cores) => {
-      fillCoretime(cores);
+      crtime = cores;
+      fillCoretime(crtime);
     })
     .catch((error) => {
       alert(error);
@@ -182,6 +187,10 @@ $(document).on("click", ".toke", function () {
   $("#invDays").text(count);
   console.log(count);
   totalCost();
+});
+$(document).on("click", "#totOnly", function () {
+  changeCoretime();
+  $(".btn-close").click();
 });
 //#endregion
 
@@ -696,6 +705,81 @@ function fillCoretime(cores) {
     const [startId, endId] = timeMappings[event];
     $(startId).val(cores[event]["start"]);
     $(endId).val(cores[event]["end"]);
+  });
+}
+function changeCoretime() {
+  const sTime = $("#sTime").val();
+  const eTime = $("#eTime").val();
+  const sHDay = $("#sHDay").val();
+  const eHDay = $("#eHDay").val();
+  const sLunch = $("#sLunch").val();
+  const eLunch = $("#eLunch").val();
+  const sDinner = $("#sDinner").val();
+  const eDinner = $("#eDinner").val();
+  crtime = {
+    Time: {
+      start: sTime,
+      end: eTime,
+    },
+    Halfday: {
+      start: sHDay,
+      end: eHDay,
+    },
+    Lunch: {
+      start: sLunch,
+      end: eLunch,
+    },
+    Dinner: {
+      start: sDinner,
+      end: eDinner,
+    },
+  };
+}
+function getReportData() {
+  const empSelect = parseInt($("#idEmp option:selected").attr("emp-id"));
+  const selColumns = $("#selCol .checked")
+    .map(function () {
+      return this.id;
+    })
+    .get();
+  const hrsChk = false;
+  const ymSel = $("#idMonth").val();
+  const exclude = $("#hrschk").hasClass("checked");
+  const core = crtime;
+  const locSelect = parseInt($("#idLoc").find(":selected").attr("loc-id"));
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_report_data.php",
+      data: {
+        empSelect: empSelect,
+        ymSel: ymSel,
+        locSelect: locSelect,
+        selColumns: JSON.stringify(selColumns),
+        exclude: JSON.stringify(exclude),
+        hrsChk: JSON.stringify(hrsChk),
+        core: JSON.stringify(core),
+      },
+      dataType: "json",
+      success: function (data) {
+        const repdata = data;
+        if (Object.keys(repdata).length < 1) {
+          reject("No report data found"); // Reject the promise
+        } else {
+          console.log(repdata);
+          resolve(repdata); // Resolve the promise with empDetails
+        }
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
   });
 }
 //#endregion
