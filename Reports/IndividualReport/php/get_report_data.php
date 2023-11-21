@@ -54,9 +54,11 @@ if (count($grpByRaw) > 0) {
 }
 $exclude = FALSE;
 $excludeStmt = '';
-if (!empty($_POST['exclude'])) {
+if (isset($_POST['exclude'])) {
     $exclude = json_decode($_POST['exclude']);
-    $excludeStmt = ' AND (pt.fldDirect<>0 OR pt.fldID = 6)';
+    if ($exclude) {
+        $excludeStmt = ' AND (pt.fldDirect<>0 OR pt.fldID = 6)';
+    }
 }
 $hoursChecked = FALSE;
 if (!empty($_POST['hrsChk'])) {
@@ -268,4 +270,4 @@ function getHDTow($towValue)
 }
 #endregion
 echo json_encode($reportData, JSON_PRETTY_PRINT);
-// echo json_encode($repArr, JSON_PRETTY_PRINT);
+// echo json_encode($ymSelect, JSON_PRETTY_PRINT);

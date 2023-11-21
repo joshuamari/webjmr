@@ -300,6 +300,12 @@ table thead th.sm {
 table thead th.break {
   white-space: wrap;
 }
+table thead th.des,
+table tbody td.des {
+  width: 330px;
+  max-width: 330px;
+  overflow: hidden;
+}
 table thead tr:first-of-type th:last-of-type {
   width: 150px;
 }

@@ -61,11 +61,17 @@ checkLogin()
               true
             );
             createCheckers(chkrs);
-            createTable();
             setViewer();
+            getReportData()
+              .then((repdata) => {
+                createTable(repdata);
+              })
+              .catch((error) => {
+                alert(error);
+              });
           })
           .catch((error) => {
-            alert(error);
+            alert(`${error}`);
           });
       });
     });
@@ -106,17 +112,30 @@ $(document).on("click", "#descriptionList", function () {
 $(document).on("click", ".list-items .item", function () {
   $(this).toggleClass("checked");
   countCheck();
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
+    })
+    .catch((error) => {
+      alert(error);
+    });
 });
 $(document).on("change", "#idGroup", function () {
   setViewerGroup();
   clearViewer();
-  createTable();
   Promise.all([getMembers(), getCheckers()])
     .then(([members, checkers]) => {
       chkrs = checkers;
       mmbrs = members;
       createMembers(mmbrs);
       createCheckers(chkrs);
+      getReportData()
+        .then((repdata) => {
+          createTable(repdata);
+        })
+        .catch((error) => {
+          alert(error);
+        });
     })
     .catch((error) => {
       alert(error);
@@ -138,7 +157,6 @@ $(document).on("change", "#idGroup", function () {
 });
 $(document).on("change", "#idMonth", function () {
   setViewerDate();
-  createTable();
   Promise.all([getMembers(), getCheckers(), getCoretime(), getHolidays()])
     .then(([members, checkers, cores, holidates]) => {
       holidays = holidates;
@@ -148,6 +166,13 @@ $(document).on("change", "#idMonth", function () {
       createMembers(mmbrs);
       createCheckers(chkrs);
       fillCoretime(crtime);
+      getReportData()
+        .then((repdata) => {
+          createTable(repdata);
+        })
+        .catch((error) => {
+          alert(error);
+        });
     })
     .catch((error) => {
       alert(error);
@@ -161,6 +186,13 @@ $(document).on("change", "#idLoc", function () {
       holidays = holidates;
       crtime = cores;
       fillCoretime(crtime);
+      getReportData()
+        .then((repdata) => {
+          createTable(repdata);
+        })
+        .catch((error) => {
+          alert(error);
+        });
     })
     .catch((error) => {
       alert(error);
@@ -169,6 +201,13 @@ $(document).on("change", "#idLoc", function () {
 $(document).on("change", "#idEmp", function () {
   setViewerName();
   setPreparedBy();
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
+    })
+    .catch((error) => {
+      alert(error);
+    });
 });
 $(document).on("change", "#idChecker", function () {
   setCheckedBy();
@@ -199,10 +238,19 @@ $(document).on("click", "#totOnly", function () {
   changeCoretime();
   $(".btn-close").click();
 });
+$(document).on("change", "#excludeKDT", function () {
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+});
 //#endregion
 
 //#region FUNCTIONS
-function createTable() {
+function createTable(repdata) {
   var mo = $("#idMonth").val();
   var yr = parseInt(mo.split("-")[0]);
   var moIndex = parseInt(mo.split("-")[1]) - 1;
@@ -221,78 +269,126 @@ function createTable() {
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
   <th class="sm break" rowspan="2">OVER TIME</th>
-  <th rowspan="2">DESCRIPTION</th>
+  <th class="des" rowspan="2">DESCRIPTION</th>
   <th rowspan="2" class="last">PERSON IN-CHARGE</th>`;
 
   var groupHeaders = grp === "MPM" ? specialHeader : commonHeader;
   $(".table-cont table thead tr:first-of-type").empty();
   $(".table-cont table thead tr:first-of-type").html(groupHeaders);
+  //#region LUMA
+  // for (var x = 1; x <= 31; x++) {
+  //   var date = new Date(yr, moIndex, x);
+  //   var specialTr = `<tr${
+  //     date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+  //   }>
+  //       <td>${(x < 10 ? "0" : "") + x}</td>
+  //       <td>7:00</td>
+  //       <td>16:00</td>
+  //       <td>8</td>
+  //       <td></td>
+  //     <td></td>
+  //       <td>kdtKeisoSupport</td>
+  //       <td><svg class="custom-checkbox toke" viewBox="0 0 24 24" onclick="toggleCheckbox(this)"><circle class="circle" cx="12" cy="12" r="11" stroke="#333" fill="none"/></svg></td>
 
+  //       <td>SHIRAkAWA Kenji</td>
+  //     </tr>`;
+  //   var commonTr = `<tr${
+  //     date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+  //   }>
+  //         <td>${(x < 10 ? "0" : "") + x}</td>
+  //         <td>7:00</td>
+  //         <td>16:00</td>
+  //         <td>8</td>
+
+  //       <td></td>
+  //         <td>kdtKeisoSupport</td>
+
+  //         <td>SHIRAkAWA Kenji</td>
+  //       </tr>`;
+  //   var emptySpecialTr = `<tr${
+  //     date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+  //   }>
+  //           <td></td>
+  //           <td></td>
+  //           <td></td>
+  //           <td></td>
+  //           <td></td>
+  //           <td></td>
+  //           <td></td>
+  //           <td ></td>
+  //           <td ></td>
+  //         </tr>`;
+  //   var emptyTr = `<tr${
+  //     date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
+  //   }>
+  //             <td></td>
+  //             <td></td>
+  //             <td></td>
+  //             <td></td>
+
+  //             <td></td>
+  //           <td></td>
+  //             <td></td>
+  //           </tr>`;
+
+  //   if (x <= daysInMonth) {
+  //     grp === "MPM" ? (str += specialTr) : (str += commonTr);
+  //   } else {
+  //     grp === "MPM" ? (str += emptySpecialTr) : (str += emptyTr);
+  //     // For days beyond the month's last day, add a row with an empty day
+  //   }
+  // }
+  // $(".table-cont table tbody tr:not(#appendBefore)").remove();
+  // $("#appendBefore").before(str);
+  // calculateTotalHours();
+  //#endregion
+  //#region BAGO
+
+  var dayTr = ``;
   for (var x = 1; x <= 31; x++) {
-    var date = new Date(yr, moIndex, x);
-    var specialTr = `<tr${
-      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
-    }>
-        <td>${(x < 10 ? "0" : "") + x}</td>
-        <td>7:00</td>
-        <td>16:00</td>
-        <td>8</td>
-        <td></td>
-      <td></td>
-        <td>kdtKeisoSupport</td>
-        <td><svg class="custom-checkbox toke" viewBox="0 0 24 24" onclick="toggleCheckbox(this)"><circle class="circle" cx="12" cy="12" r="11" stroke="#333" fill="none"/></svg></td>
-
-        <td>SHIRAkAWA Kenji</td>
-      </tr>`;
-    var commonTr = `<tr${
-      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
-    }>
-          <td>${(x < 10 ? "0" : "") + x}</td>
-          <td>7:00</td>
-          <td>16:00</td>
-          <td>8</td>
-          
-        <td></td>
-          <td>kdtKeisoSupport</td>
-          
-          <td>SHIRAkAWA Kenji</td>
-        </tr>`;
-    var emptySpecialTr = `<tr${
-      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
-    }>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td ></td>
-            <td ></td>
-          </tr>`;
-    var emptyTr = `<tr${
-      date.getDay() === 0 || date.getDay() === 6 ? ' class="weekend"' : ""
-    }>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              
-              <td></td>
-            <td></td>
-              <td></td>
-            </tr>`;
-
-    if (x <= daysInMonth) {
-      grp === "MPM" ? (str += specialTr) : (str += commonTr);
-    } else {
-      grp === "MPM" ? (str += emptySpecialTr) : (str += emptyTr);
-      // For days beyond the month's last day, add a row with an empty day
+    var key = x.toString().padStart(2, "0");
+    var isHoliday = holidays.includes(x) ? "weekend" : "";
+    var timeIn = "";
+    var timeOut = "";
+    var manHour = "";
+    var overtime = "";
+    var description = "";
+    var pic = "";
+    var jobNum = "";
+    const invop = `<svg class="custom-checkbox toke" viewBox="0 0 24 24" onclick="toggleCheckbox(this)"><circle class="circle" cx="12" cy="12" r="11" stroke="#333" fill="none"/></svg>`;
+    var jobMPM = "";
+    var invopMPM = "";
+    if (repdata) {
+      if (repdata.hasOwnProperty(key)) {
+        timeIn = repdata[key].start !== undefined ? repdata[key].start : "";
+        timeOut = repdata[key].end !== undefined ? repdata[key].end : "";
+        description = repdata[key].desc !== undefined ? repdata[key].desc : "";
+        overtime = repdata[key].ot !== undefined ? repdata[key].ot : "";
+        manHour = repdata[key].hours !== undefined ? repdata[key].hours : "";
+        pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
+        jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
+        jobMPM = grp === "MPM" ? `<td>${jobNum}</td>` : "";
+        invopMPM = grp === "MPM" ? `<td>${invop}</td>` : "";
+      }
     }
+
+    dayTr += `<tr class='${isHoliday}'>
+    <td>${(x < 10 ? "0" : "") + (x <= daysInMonth ? x : "")}</td>
+    <td>${timeIn}</td>
+    <td>${timeOut}</td>
+    <td>${manHour}</td>
+    <td>${overtime}</td>
+    ${jobMPM}
+    <td class="des">${description}</td>
+    ${invopMPM}
+    <td>${pic}</td>
+    </tr>`;
+
+    $(".table-cont table tbody tr:not(#appendBefore)").remove();
+    $("#appendBefore").before(dayTr);
+    calculateTotalHours();
   }
-  $(".table-cont table tbody tr:not(#appendBefore)").remove();
-  $("#appendBefore").before(str);
-  calculateTotalHours();
+  //#endregion
 }
 function toggleCheckbox(checkbox) {
   checkbox.classList.toggle("checked");
@@ -749,9 +845,9 @@ function getReportData() {
       return this.id;
     })
     .get();
-  const hrsChk = false;
+  const hrsChk = $("#hrschk").hasClass("checked");
   const ymSel = $("#idMonth").val();
-  const exclude = $("#hrschk").hasClass("checked");
+  const exclude = $("#excludeKDT").is(":checked");
   const core = crtime;
   const locSelect = parseInt($("#idLoc").find(":selected").attr("loc-id"));
   return new Promise((resolve, reject) => {
@@ -760,7 +856,7 @@ function getReportData() {
       url: "php/get_report_data.php",
       data: {
         empSelect: empSelect,
-        ymSel: ymSel,
+        ymSelect: ymSel,
         locSelect: locSelect,
         selColumns: JSON.stringify(selColumns),
         exclude: JSON.stringify(exclude),
@@ -769,13 +865,11 @@ function getReportData() {
       },
       dataType: "json",
       success: function (data) {
+        console.log(
+          `${empSelect}, ${ymSel}, ${locSelect}, ${selColumns}, ${exclude}, ${empSelect}, ${hrsChk}, ${core}`
+        );
         const repdata = data;
-        if (Object.keys(repdata).length < 1) {
-          reject("No report data found"); // Reject the promise
-        } else {
-          console.log(repdata);
-          resolve(repdata); // Resolve the promise with empDetails
-        }
+        resolve(repdata);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
