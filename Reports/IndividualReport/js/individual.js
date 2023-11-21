@@ -14,6 +14,7 @@ var empDetails = [];
 var chkrs = [];
 var mmbrs = [];
 var crtime = [];
+var holidays = [];
 var selClmns = [];
 const monthNames = [
   "January",
@@ -36,33 +37,37 @@ checkLogin()
     $(document).ready(function () {
       setCurrentMonth();
 
-      Promise.all([getGroups(), getLocations(), getCoretime()]).then(
-        ([grps, locs, cores]) => {
-          crtime = cores;
-          fillCoretime(crtime);
-          createGroupSelection(grps);
-          createLocationSelection(locs);
-          $("#idGroup").val(empDetails["empGroup"]);
+      Promise.all([
+        getGroups(),
+        getLocations(),
+        getCoretime(),
+        getHolidays(),
+      ]).then(([grps, locs, cores, holidates]) => {
+        holidays = holidates;
+        crtime = cores;
+        fillCoretime(crtime);
+        createGroupSelection(grps);
+        createLocationSelection(locs);
+        $("#idGroup").val(empDetails["empGroup"]);
 
-          Promise.all([getMembers(), getCheckers()])
-            .then(([members, checkers]) => {
-              chkrs = checkers;
-              mmbrs = members;
-              createMembers(mmbrs);
+        Promise.all([getMembers(), getCheckers()])
+          .then(([members, checkers]) => {
+            chkrs = checkers;
+            mmbrs = members;
+            createMembers(mmbrs);
 
-              $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
-                "selected",
-                true
-              );
-              createCheckers(chkrs);
-              createTable();
-              setViewer();
-            })
-            .catch((error) => {
-              alert(error);
-            });
-        }
-      );
+            $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
+              "selected",
+              true
+            );
+            createCheckers(chkrs);
+            createTable();
+            setViewer();
+          })
+          .catch((error) => {
+            alert(error);
+          });
+      });
     });
   })
   .catch((error) => {
@@ -134,8 +139,9 @@ $(document).on("change", "#idGroup", function () {
 $(document).on("change", "#idMonth", function () {
   setViewerDate();
   createTable();
-  Promise.all([getMembers(), getCheckers(), getCoretime()])
-    .then(([members, checkers, cores]) => {
+  Promise.all([getMembers(), getCheckers(), getCoretime(), getHolidays()])
+    .then(([members, checkers, cores, holidates]) => {
+      holidays = holidates;
       crtime = cores;
       chkrs = checkers;
       mmbrs = members;
@@ -150,8 +156,9 @@ $(document).on("change", "#idMonth", function () {
 $(document).on("change", "#idLoc", function () {
   checkLoc();
   setViewerLoc();
-  getCoretime()
-    .then((cores) => {
+  Promise.all([getCoretime(), getHolidays()])
+    .then(([cores, holidates]) => {
+      holidays = holidates;
       crtime = cores;
       fillCoretime(crtime);
     })
@@ -769,6 +776,34 @@ function getReportData() {
           console.log(repdata);
           resolve(repdata); // Resolve the promise with empDetails
         }
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
+}
+function getHolidays() {
+  const ymSel = $("#idMonth").val();
+  const selLoc = parseInt($("#idLoc").find(":selected").attr("loc-id"));
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_holidays.php",
+      data: {
+        selLoc: JSON.stringify(selLoc),
+        ymSel: ymSel,
+      },
+      dataType: "json",
+      success: function (data) {
+        const holidays = data;
+        resolve(holidays);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
