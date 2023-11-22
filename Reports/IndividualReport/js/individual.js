@@ -369,6 +369,9 @@ function createTable(repdata) {
         jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
         jobMPM = grp === "MPM" ? `<td>${jobNum}</td>` : "";
         invopMPM = grp === "MPM" ? `<td>${invop}</td>` : "";
+      } else {
+        jobMPM = grp === "MPM" ? `<td></td>` : "";
+        invopMPM = grp === "MPM" ? `<td></td>` : "";
       }
     }
 
