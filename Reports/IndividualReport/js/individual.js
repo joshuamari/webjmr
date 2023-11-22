@@ -84,6 +84,7 @@ checkLogin()
 const { jsPDF } = globalThis.jspdf;
 //#region BINDS
 $(document).on("click", "#save", function () {
+  $("#descriptionList").removeClass("open");
   saveToPDF();
 });
 $(document).on("click", "#btnPrint", function () {
@@ -106,8 +107,18 @@ $(document).on("click", "#btnPrint", function () {
   //   };
   // });
 });
-$(document).on("click", "#descriptionList", function () {
+$(document).on("click", "#descriptionList", function (event) {
+  event.stopPropagation();
   $(this).toggleClass("open");
+  $(this).blur();
+});
+$(document).on("click", "body", function (event) {
+  if (
+    !$("#selCol").is(event.target) &&
+    $("#selCol").has(event.target).length === 0
+  ) {
+    $("#descriptionList").removeClass("open");
+  }
 });
 $(document).on("click", ".list-items .item", function () {
   $(this).toggleClass("checked");
@@ -140,20 +151,6 @@ $(document).on("change", "#idGroup", function () {
     .catch((error) => {
       alert(error);
     });
-  var group = $(this).val();
-  if (group == "MPM") {
-    $(".token").removeClass("d-none");
-    $(".tokenTable").removeClass("d-none");
-    $(".signature").css("margin-top", "18px");
-    $("td,th, table tbody tr, table thead tr").css("height", "17px ");
-    $(".table-cont").css("height", "581px ");
-  } else {
-    $(".token").addClass("d-none");
-    $(".tokenTable").addClass("d-none");
-    $(".signature").css("margin-top", "35px");
-    $("td,th, table tbody tr, table thead tr").css("height", "18px ");
-    $(".table-cont").css("height", "615px ");
-  }
 });
 $(document).on("change", "#idMonth", function () {
   setViewerDate();
@@ -261,10 +258,10 @@ function createTable(repdata) {
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
   <th class="sm break" rowspan="2">OVER TIME</th>
-  <th rowspan="2" style="width:150px !important">JOB NUMBER</th>
-  <th rowspan="2" style="width:calc(100% - 540px) !important">DESCRIPTION</th>
-  <th class="sm break" rowspan="2"style="width:40px !important">INV. OP.</th>
-  <th rowspan="2" class="last" style="width:150px !important">PERSON IN-CHARGE</th>`;
+  <th rowspan="2" class="jn" style="width:146px" >JOB NUMBER</th>
+  <th rowspan="2" class="des">DESCRIPTION</th>
+  <th class="sm break invop" rowspan="2"style="width:40px ">INV. OP.</th>
+  <th rowspan="2" class="last" style="width:146px ">PERSON IN-CHARGE</th>`;
   var commonHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
@@ -367,11 +364,11 @@ function createTable(repdata) {
         manHour = repdata[key].hours !== undefined ? repdata[key].hours : "";
         pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
         jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
-        jobMPM = grp === "MPM" ? `<td>${jobNum}</td>` : "";
-        invopMPM = grp === "MPM" ? `<td>${invop}</td>` : "";
+        jobMPM = grp === "MPM" ? `<td class="jn">${jobNum}</td>` : "";
+        invopMPM = grp === "MPM" ? `<td class="invop">${invop}</td>` : "";
       } else {
-        jobMPM = grp === "MPM" ? `<td></td>` : "";
-        invopMPM = grp === "MPM" ? `<td></td>` : "";
+        jobMPM = grp === "MPM" ? `<td class="jn"></td>` : "";
+        invopMPM = grp === "MPM" ? `<td class="invop"></td>` : "";
       }
     }
 
@@ -390,6 +387,21 @@ function createTable(repdata) {
     $(".table-cont table tbody tr:not(#appendBefore)").remove();
     $("#appendBefore").before(dayTr);
     calculateTotalHours();
+    if (grp == "MPM") {
+      $(".token").removeClass("d-none");
+      $(".tokenTable").removeClass("d-none");
+      $(".signature").css("margin-top", "18px");
+      $("td,th, table tbody tr, table thead tr").css("height", "17px ");
+      $(".table-cont").css("height", "581px ");
+      $("th.des, td.des").css("width", "147px");
+    } else {
+      $(".token").addClass("d-none");
+      $(".tokenTable").addClass("d-none");
+      $(".signature").css("margin-top", "35px");
+      $("td,th, table tbody tr, table thead tr").css("height", "18px ");
+      $(".table-cont").css("height", "615px ");
+      $("th.des, td.des").css("width", "330px");
+    }
   }
   //#endregion
 }
@@ -526,6 +538,8 @@ function countCheck() {
   }
 }
 function saveToPDF() {
+  $(".custom-checkbox:not(.checked)").addClass("d-none");
+  $("#toPrint").css("scale", "1");
   html2canvas($("#toPrint")[0], { scale: 2 }).then((canvas) => {
     var imgData = canvas.toDataURL("image/jpeg", 1.25);
     var doc = new jsPDF({
@@ -538,6 +552,8 @@ function saveToPDF() {
     doc.addImage(imgData, "JPEG", 0, 0, 210, 297);
     doc.save("Monthly_Individual_Report.pdf");
   });
+  $("#toPrint").css("scale", "0.9");
+  $(".custom-checkbox:not(.checked)").removeClass("d-none");
 }
 function checkLogin() {
   return new Promise((resolve, reject) => {

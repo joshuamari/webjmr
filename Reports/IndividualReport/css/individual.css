@@ -81,8 +81,9 @@ body {
 }
 #toPrint {
   color: #000 !important;
-  font-size: 12px;
+  font-size: 13px;
   font-family: "Arial", sans-serif;
+  scale: 0.9;
 }
 #toPrint table td,
 th {
@@ -158,30 +159,16 @@ th {
 table-cont {
   height: 615px;
 }
-/* 
-td .toke {
-  -webkit-appearance: none !important;
-  position: relative;
-  width: 15px !important;
-  height: 12px !important;
-  border: 1px solid #333 !important;
-  border-radius: 50% !important;
-  cursor: pointer;
-  transition: 0.3s all;
-  vertical-align: middle;
-}
-td .toke.checked {
-  fill: black;
-} */
+
 .custom-checkbox {
-  width: 16px !important;
-  height: 13px !important;
+  width: 14px !important;
+  height: 11px !important;
   cursor: pointer;
 }
 
 .custom-checkbox.checked .circle {
   display: block;
-  fill: #777;
+  fill: #696969;
 }
 /* checkbox */
 .checkbox {
@@ -305,6 +292,10 @@ table tbody td.des {
   width: 330px;
   max-width: 330px;
   overflow: hidden;
+}
+table .invop {
+  width: 40px;
+  max-width: 40px;
 }
 table thead tr:first-of-type th:last-of-type {
   width: 150px;
