@@ -73,7 +73,7 @@ body {
   --darkest-blue: #16334f;
 
   --red-color: #ff6b6b;
-  --yellow-color: #feca57;
+  --yellow-color: rgb(254, 201, 88);
   --text-color: #555;
   --header-color: #444;
   --lightblue-color: #476f95;
@@ -293,12 +293,13 @@ table tbody td.des {
   max-width: 330px;
   overflow: hidden;
 }
+
 table .invop {
   width: 40px;
   max-width: 40px;
 }
 table thead tr:first-of-type th:last-of-type {
-  width: 150px;
+  width: 135px;
 }
 table thead tr {
   height: 18px;

@@ -16,6 +16,7 @@ var mmbrs = [];
 var crtime = [];
 var holidays = [];
 var selClmns = [];
+var tokens = [];
 const monthNames = [
   "January",
   "February",
@@ -62,6 +63,7 @@ checkLogin()
             );
             createCheckers(chkrs);
             setViewer();
+
             getReportData()
               .then((repdata) => {
                 createTable(repdata);
@@ -86,6 +88,36 @@ const { jsPDF } = globalThis.jspdf;
 $(document).on("click", "#save", function () {
   $("#descriptionList").removeClass("open");
   saveToPDF();
+  if ($("#doNotShowAgain").is(":checked")) {
+    const oneDayInMillis = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+    const currentDate = new Date().getTime();
+    const tomorrow = currentDate + oneDayInMillis;
+
+    // Store the 'Do not show again' preference and the expiration time in localStorage
+    localStorage.setItem("doNotShowAgain", "true");
+    localStorage.setItem("doNotShowAgainExpiration", tomorrow);
+  }
+
+  // Close the modal after handling 'Do not show again' preference
+  $("#reminderModal .close").click();
+  $("#reminderModal .close").click();
+});
+$(document).on("click", ".remind", function () {
+  const storedValue = localStorage.getItem("doNotShowAgain");
+
+  const expirationTime = localStorage.getItem("doNotShowAgainExpiration");
+  const currentDate = new Date().getTime();
+  // Check if 'Do not show again' preference is set and has not expired
+  if (
+    !(storedValue === "true" && expirationTime && currentDate < expirationTime)
+  ) {
+    $("#reminderModal").modal("show"); // Show the modal
+  } else {
+    // Continue with your process without showing the modal
+    // Add your process logic here
+    console.log("Modal is not shown for the remainder of the day");
+    $("#save").click();
+  }
 });
 $(document).on("click", "#btnPrint", function () {
   // html2canvas($("#toPrint")[0], { scale: 1.2 }).then((canvas) => {
@@ -122,16 +154,19 @@ $(document).on("click", "body", function (event) {
 });
 $(document).on("click", ".list-items .item", function () {
   $(this).toggleClass("checked");
+
   countCheck();
   getReportData()
     .then((repdata) => {
       createTable(repdata);
+      addToke();
     })
     .catch((error) => {
       alert(error);
     });
 });
 $(document).on("change", "#idGroup", function () {
+  tokens = [];
   setViewerGroup();
   clearViewer();
   Promise.all([getMembers(), getCheckers()])
@@ -153,6 +188,7 @@ $(document).on("change", "#idGroup", function () {
     });
 });
 $(document).on("change", "#idMonth", function () {
+  tokens = [];
   setViewerDate();
   Promise.all([getMembers(), getCheckers(), getCoretime(), getHolidays()])
     .then(([members, checkers, cores, holidates]) => {
@@ -176,6 +212,7 @@ $(document).on("change", "#idMonth", function () {
     });
 });
 $(document).on("change", "#idLoc", function () {
+  tokens = [];
   checkLoc();
   setViewerLoc();
   Promise.all([getCoretime(), getHolidays()])
@@ -197,6 +234,7 @@ $(document).on("change", "#idLoc", function () {
 });
 $(document).on("change", "#idEmp", function () {
   setViewerName();
+
   setPreparedBy();
   getReportData()
     .then((repdata) => {
@@ -226,10 +264,13 @@ $(document).on("input", "#unitRate", function () {
   totalCost();
 });
 $(document).on("click", ".toke", function () {
-  var count = $(".toke.checked").length;
-  $("#invDays").text(count);
-  console.log(count);
-  totalCost();
+  tokens = [];
+  $(".toke.checked").each(function () {
+    var dateT = $(this).closest("tr").find("td:first-child").text();
+    tokens.push(dateT);
+  });
+  console.log(tokens);
+  countToken();
 });
 $(document).on("click", "#totOnly", function () {
   changeCoretime();
@@ -243,9 +284,11 @@ $(document).on("click", "#totOnly", function () {
   $(".btn-close").click();
 });
 $(document).on("change", "#excludeKDT", function () {
+  console.log(tokens);
   getReportData()
     .then((repdata) => {
       createTable(repdata);
+      addToke();
     })
     .catch((error) => {
       alert(error);
@@ -254,6 +297,12 @@ $(document).on("change", "#excludeKDT", function () {
 //#endregion
 
 //#region FUNCTIONS
+function countToken() {
+  var count = $(".toke.checked").length;
+  $("#invDays").text(count);
+
+  totalCost();
+}
 function createTable(repdata) {
   var mo = $("#idMonth").val();
   var yr = parseInt(mo.split("-")[0]);
@@ -268,13 +317,13 @@ function createTable(repdata) {
   <th rowspan="2" class="jn" style="width:146px" >JOB NUMBER</th>
   <th rowspan="2" class="des">DESCRIPTION</th>
   <th class="sm break invop" rowspan="2"style="width:40px ">INV. OP.</th>
-  <th rowspan="2" class="last" style="width:146px ">PERSON IN-CHARGE</th>`;
+  <th rowspan="2" class="last pic" style="width:146px ">PERSON IN-CHARGE</th>`;
   var commonHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
   <th class="sm break" rowspan="2">OVER TIME</th>
   <th class="des" rowspan="2">DESCRIPTION</th>
-  <th rowspan="2" class="last">PERSON IN-CHARGE</th>`;
+  <th rowspan="2" class="pic" class="last">PERSON IN-CHARGE</th>`;
 
   var groupHeaders = grp === "MPM" ? specialHeader : commonHeader;
   $(".table-cont table thead tr:first-of-type").empty();
@@ -387,19 +436,35 @@ function createTable(repdata) {
     ${jobMPM}
     <td class="des">${description}</td>
     ${invopMPM}
-    <td>${pic}</td>
+    <td class="pic">${pic}</td>
     </tr>`;
 
     $(".table-cont table tbody tr:not(#appendBefore)").remove();
     $("#appendBefore").before(dayTr);
+
     calculateTotalHours();
+
     if (grp == "MPM") {
       $(".token").removeClass("d-none");
       $(".tokenTable").removeClass("d-none");
       $(".signature").css("margin-top", "18px");
       $("td,th, table tbody tr, table thead tr").css("height", "17px ");
       $(".table-cont").css("height", "581px ");
-      $("th.des, td.des").css("width", "147px");
+      $("th.des, td.des").css({
+        width: "147px",
+        "max-width": "147px",
+        overflow: "hidden",
+      });
+      $("th.jn, td.jn").css({
+        width: "146px",
+        "max-width": "146px",
+        overflow: "hidden",
+      });
+      $("th.pic, td.pic").css({
+        width: "146px",
+        "max-width": "146px",
+        overflow: "hidden",
+      });
     } else {
       $(".token").addClass("d-none");
       $(".tokenTable").addClass("d-none");
@@ -407,6 +472,11 @@ function createTable(repdata) {
       $("td,th, table tbody tr, table thead tr").css("height", "18px ");
       $(".table-cont").css("height", "615px ");
       $("th.des, td.des").css("width", "330px");
+      $("th.pic, td.pic").css({
+        width: "135px",
+        "max-width": "135px",
+        overflow: "hidden",
+      });
     }
   }
   //#endregion
@@ -518,7 +588,7 @@ function setApprovedBy() {
 
 function clearViewer() {
   $(
-    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #viewKhiPos, #khiBy"
+    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #viewKhiPos, #khiBy, #invDays"
   ).text("");
 }
 
@@ -924,4 +994,11 @@ function getHolidays() {
     });
   });
 }
+function addToke() {
+  $.each(tokens, function (indexInArray, valueOfElement) {
+    var td = $("tr td:contains(" + valueOfElement + "):first");
+    td.closest("tr").find(".custom-checkbox").addClass("checked");
+  });
+}
+
 //#endregion
