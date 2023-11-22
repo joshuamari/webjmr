@@ -233,6 +233,13 @@ $(document).on("click", ".toke", function () {
 });
 $(document).on("click", "#totOnly", function () {
   changeCoretime();
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
+    })
+    .catch((error) => {
+      alert(error);
+    });
   $(".btn-close").click();
 });
 $(document).on("change", "#excludeKDT", function () {
@@ -343,8 +350,8 @@ function createTable(repdata) {
 
   var dayTr = ``;
   for (var x = 1; x <= 31; x++) {
-    var key = x.toString().padStart(2, "0");
-    var isHoliday = holidays.includes(x) ? "weekend" : "";
+    const key = x.toString().padStart(2, "0");
+    const isHoliday = holidays.includes(x) ? "weekend" : "";
     var timeIn = "";
     var timeOut = "";
     var manHour = "";
@@ -365,11 +372,10 @@ function createTable(repdata) {
         pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
         jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
         jobMPM = grp === "MPM" ? `<td class="jn">${jobNum}</td>` : "";
-        invopMPM = grp === "MPM" ? `<td class="invop">${invop}</td>` : "";
-      } else {
-        jobMPM = grp === "MPM" ? `<td class="jn"></td>` : "";
-        invopMPM = grp === "MPM" ? `<td class="invop"></td>` : "";
       }
+      var jobMPM = grp === "MPM" ? `<td class="jn">${jobNum}</td>` : "";
+      var invopMPM =
+        grp === "MPM" ? `<td class="invop">${manHour ? invop : ""}</td>` : "";
     }
 
     dayTr += `<tr class='${isHoliday}'>
@@ -636,11 +642,7 @@ function getMembers() {
       dataType: "json",
       success: function (data) {
         const members = data;
-        if (Object.keys(members).length < 1) {
-          reject("No members found"); // Reject the promise
-        } else {
-          resolve(members); // Resolve the promise with empDetails
-        }
+        resolve(members);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -723,11 +725,7 @@ function getCheckers() {
       dataType: "json",
       success: function (data) {
         const checkers = data;
-        if (Object.keys(checkers).length < 1) {
-          reject("No checkers found"); // Reject the promise
-        } else {
-          resolve(checkers); // Resolve the promise with empDetails
-        }
+        resolve(checkers);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -860,9 +858,8 @@ function changeCoretime() {
 function getReportData() {
   const empSelect = parseInt($("#idEmp option:selected").attr("emp-id"));
   const selColumns = $("#selCol .checked")
-    .map(function () {
-      return this.id;
-    })
+    .filter((_, element) => element.id !== "hrschk")
+    .map((_, element) => element.id)
     .get();
   const hrsChk = $("#hrschk").hasClass("checked");
   const ymSel = $("#idMonth").val();
@@ -884,9 +881,6 @@ function getReportData() {
       },
       dataType: "json",
       success: function (data) {
-        console.log(
-          `${empSelect}, ${ymSel}, ${locSelect}, ${selColumns}, ${exclude}, ${empSelect}, ${hrsChk}, ${core}`
-        );
         const repdata = data;
         resolve(repdata);
       },
