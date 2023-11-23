@@ -264,11 +264,6 @@ $(document).on("input", "#unitRate", function () {
   totalCost();
 });
 $(document).on("click", ".toke", function () {
-  tokens = [];
-  $(".toke.checked").each(function () {
-    var dateT = $(this).closest("tr").find("td:first-child").text();
-    tokens.push(dateT);
-  });
   console.log(tokens);
   countToken();
 });
@@ -295,6 +290,7 @@ $(document).on("change", "#excludeKDT", function () {
 });
 $(document).on("change", "#withTokens", function () {
   tokens = [];
+  countToken();
   getReportData()
     .then((repdata) => {
       createTable(repdata);
@@ -302,11 +298,23 @@ $(document).on("change", "#withTokens", function () {
     .catch((error) => {
       alert(error);
     });
+  if (!$(this).prop("checked")) {
+    $("#checkAllTokens").prop("checked", false);
+  }
+});
+$(document).on("change", "#checkAllTokens", function () {
+  $(".custom-checkbox").toggleClass("checked");
+  countToken();
 });
 //#endregion
 
 //#region FUNCTIONS
 function countToken() {
+  tokens = [];
+  $(".toke.checked").each(function () {
+    var dateT = $(this).closest("tr").find("td:first-child").text();
+    tokens.push(dateT);
+  });
   var count = $(".toke.checked").length;
   $("#invDays").text(count);
 
