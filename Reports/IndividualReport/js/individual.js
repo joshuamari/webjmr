@@ -284,11 +284,20 @@ $(document).on("click", "#totOnly", function () {
   $(".btn-close").click();
 });
 $(document).on("change", "#excludeKDT", function () {
-  console.log(tokens);
   getReportData()
     .then((repdata) => {
       createTable(repdata);
       addToke();
+    })
+    .catch((error) => {
+      alert(error);
+    });
+});
+$(document).on("change", "#withTokens", function () {
+  tokens = [];
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
     })
     .catch((error) => {
       alert(error);
@@ -310,6 +319,7 @@ function createTable(repdata) {
   var str = "";
   var grp = $("#idGroup").val();
   var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
+  var tokenChecked = $("#withTokens").prop("checked");
   var specialHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
@@ -325,7 +335,7 @@ function createTable(repdata) {
   <th class="des" rowspan="2">DESCRIPTION</th>
   <th rowspan="2" class="pic" class="last">PERSON IN-CHARGE</th>`;
 
-  var groupHeaders = grp === "MPM" ? specialHeader : commonHeader;
+  var groupHeaders = tokenChecked === true ? specialHeader : commonHeader;
   $(".table-cont table thead tr:first-of-type").empty();
   $(".table-cont table thead tr:first-of-type").html(groupHeaders);
   //#region LUMA
@@ -420,11 +430,13 @@ function createTable(repdata) {
         manHour = repdata[key].hours !== undefined ? repdata[key].hours : "";
         pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
         jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
-        jobMPM = grp === "MPM" ? `<td class="jn">${jobNum}</td>` : "";
+        jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
       }
-      var jobMPM = grp === "MPM" ? `<td class="jn">${jobNum}</td>` : "";
+      var jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
       var invopMPM =
-        grp === "MPM" ? `<td class="invop">${manHour ? invop : ""}</td>` : "";
+        tokenChecked === true
+          ? `<td class="invop">${manHour ? invop : ""}</td>`
+          : "";
     }
 
     dayTr += `<tr class='${isHoliday}'>
@@ -444,7 +456,7 @@ function createTable(repdata) {
 
     calculateTotalHours();
 
-    if (grp == "MPM") {
+    if (tokenChecked === true) {
       $(".token").removeClass("d-none");
       $(".tokenTable").removeClass("d-none");
       $(".signature").css("margin-top", "18px");
