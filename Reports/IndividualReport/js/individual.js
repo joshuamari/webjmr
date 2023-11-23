@@ -604,7 +604,7 @@ function totalCost() {
 }
 
 function countCheck() {
-  var checked = $(".checked");
+  var checked = $("#selCol .checked");
   var btnText = $(".text-btn");
 
   if (checked && checked.length != 0) {
@@ -996,7 +996,7 @@ function getHolidays() {
 }
 function addToke() {
   $.each(tokens, function (indexInArray, valueOfElement) {
-    var td = $("tr td:contains(" + valueOfElement + "):first");
+    var td = $("tr td:first-child:contains(" + valueOfElement + ")");
     td.closest("tr").find(".custom-checkbox").addClass("checked");
   });
 }

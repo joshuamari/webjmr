@@ -19,14 +19,10 @@ if (!empty($_POST['ymSelect'])) {
     $ymSelect  = $_POST['ymSelect'];
 }
 $locSelect = 1;
-$locStmt = '';
+$locStmt = ' AND dr.fldLocation IN (1,2)';
 if (!empty($_POST['locSelect'])) {
     $locSelect = (int)$_POST['locSelect'];
-    if ($locSelect == 0) {
-        $locStmt = ' AND dr.fldLocation IN (1,2)';
-    } else {
-        $locStmt = " AND dr.fldLocation =$locSelect";
-    }
+    $locStmt = " AND dr.fldLocation =$locSelect";
 }
 $uniqueCols = ["pt.fldProject", "it.fldItem", "jrd.fldJob"];
 $columnMap = [
@@ -37,11 +33,13 @@ $columnMap = [
     'rem' => 'dr.fldRemarks',
 ];
 $columnsRaw = [];
-if (!empty($_POST['selColumns'])) {
+if (isset($_POST['selColumns'])) {
     $columnsRaw = json_decode($_POST['selColumns']);
-} else {
+}
+if (!$columnsRaw) {
     die(json_encode($reportData, JSON_PRETTY_PRINT));
 }
+
 $selectedColumns = [];
 foreach ($columnsRaw as $col) {
     $selectedColumns[] = $columnMap[$col];
@@ -270,4 +268,4 @@ function getHDTow($towValue)
 }
 #endregion
 echo json_encode($reportData, JSON_PRETTY_PRINT);
-// echo json_encode($ymSelect, JSON_PRETTY_PRINT);
+// echo json_encode($locStmt, JSON_PRETTY_PRINT);
