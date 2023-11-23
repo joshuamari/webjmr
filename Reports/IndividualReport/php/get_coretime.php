@@ -32,17 +32,19 @@ $coreStmt = $connwebjmr->prepare($coreQ);
 #region main query
 try {
     $coreStmt->execute([":selLoc" => $selLoc, ":ymSel" => $ymSel]);
-    if ($coreStmt->rowCount() > 0) {
+    $coreArr = $coreStmt->fetchAll();
+    if (empty($coreArr)) {
+        $coreStmt->execute([":selLoc" => 1, ":ymSel" => $ymSel]);
         $coreArr = $coreStmt->fetchAll();
-        foreach ($coreArr as $core) {
-            $name = $core['core_name'];
-            $start = (int)$core['core_start'];
-            $time = date("H:i", strtotime($core['core_time']));
-            if ($start == 0) {
-                $coretime[$name]['end'] = $time;
-            } else {
-                $coretime[$name]['start'] = $time;
-            }
+    }
+    foreach ($coreArr as $core) {
+        $name = $core['core_name'];
+        $start = (int)$core['core_start'];
+        $time = date("H:i", strtotime($core['core_time']));
+        if ($start == 0) {
+            $coretime[$name]['end'] = $time;
+        } else {
+            $coretime[$name]['start'] = $time;
         }
     }
 } catch (Exception $e) {
