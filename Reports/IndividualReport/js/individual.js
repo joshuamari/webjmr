@@ -309,6 +309,14 @@ $(document).on("change", "#checkAllTokens", function () {
   }
   countToken();
 });
+$(document).on("click", "#howttoToken", function () {
+  $("#tokenInstruction").removeClass("visually-hidden");
+});
+$(document).on("click", "#bgInstruction", function () {
+  console.log("boom");
+  $("#tokenInstruction").addClass("visually-hidden");
+});
+
 //#endregion
 
 //#region FUNCTIONS

@@ -418,6 +418,62 @@
                 </div>
               </div>
             </div>
+            <div class="mb-3 token position-relative">
+              <div style="width: max-content" class="position-relative">
+                <div
+                  class="d-flex gap-1 align-items-center position-relative"
+                  id="howttoToken"
+                  style="
+                    color: var(--main-blue);
+                    font-size: 14px;
+                    width: max-content;
+                  "
+                >
+                  <i
+                    class="bx bx-help-circle fs-5"
+                    style="color: var(--main-blue)"
+                    role="button"
+                  ></i>
+                  <p class="m-0" role="button">
+                    How to input daily usage of tokens?
+                  </p>
+                </div>
+                <div
+                  class="position-absolute start-0 shadow rounded-2"
+                  id="tokenInstruction"
+                  style="width: 350px; bottom: 30px; background-color: #ffffff"
+                >
+                  <div
+                    class="position-relative rounded-2"
+                    style="z-index: 1000"
+                    style="width: 350px; border: 1px solid #000000"
+                  >
+                    <video
+                      src="./images/token.mp4"
+                      muted
+                      loop
+                      autoplay
+                      style="
+                        width: 100%;
+                        border-top-left-radius: inherit;
+                        border-top-right-radius: inherit;
+                      "
+                      class=""
+                    ></video>
+                    <p class="m-0 p-3" style="font-size: 14px">
+                      To indicate daily token usage,
+                      <span class="fw-semibold">click on the circle</span> found
+                      within the "Inventor Op." column of the table.
+                    </p>
+                  </div>
+                  <div
+                    class="position-fixed d-block w-100 h-100 top-0 start-0"
+                    style="z-index: 1000"
+                    id="bgInstruction"
+                  ></div>
+                </div>
+              </div>
+            </div>
             <div class="mb-3 col-6 token d-none">
               <label for="tokenRate" class="form-label">Token Rate</label>
               <input
@@ -442,11 +498,13 @@
                 type="checkbox"
                 value=""
                 id="checkAllTokens"
+                style="z-index: -1 !important"
               />
               <label class="form-check-label" for="checkAllTokens">
                 Check All Tokens
               </label>
             </div>
+
             <div class="mb-3">
               <button
                 class="btn btn-primary"
