@@ -166,18 +166,31 @@
                 <span class="fw-semibold">Scale(%) to Actual size</span> and
                 your <span class="fw-semibold">Margins to None</span>.
               </p>
-              <img
+              <!-- <video
+                autoplay
                 class="mt-2 rounded-1"
-                src="./images/Screenshot 2023-11-22 155644.png"
+                src="./images/scale.mp4"
                 style="width: 290px"
                 alt="scale"
-              />
-              <img
+              /> -->
+              <video
                 class="mt-2 rounded-1"
-                src="./images/margin.png"
                 style="width: 290px"
-                alt="margin"
-              />
+                autoplay
+                loop
+                muted
+              >
+                <source src="./images/scale.mp4" type="video/mp4" />
+              </video>
+              <video
+                class="mt-2 rounded-1"
+                style="width: 290px"
+                autoplay
+                loop
+                muted
+              >
+                <source src="./images/margin.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
@@ -188,7 +201,11 @@
               value=""
               id="doNotShowAgain"
             />
-            <label class="form-check-label" for="doNotShowAgain">
+            <label
+              class="form-check-label"
+              style="font-size: 14px"
+              for="doNotShowAgain"
+            >
               Don't show this again
             </label>
           </div>
