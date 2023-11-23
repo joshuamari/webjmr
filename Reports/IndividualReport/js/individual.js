@@ -264,7 +264,6 @@ $(document).on("input", "#unitRate", function () {
   totalCost();
 });
 $(document).on("click", ".toke", function () {
-  console.log(tokens);
   countToken();
 });
 $(document).on("click", "#totOnly", function () {
@@ -282,7 +281,8 @@ $(document).on("change", "#excludeKDT", function () {
   getReportData()
     .then((repdata) => {
       createTable(repdata);
-      addToke();
+      // countToken();
+      // $("#checkAllTokens").prop("checked", false);
     })
     .catch((error) => {
       alert(error);
@@ -290,10 +290,10 @@ $(document).on("change", "#excludeKDT", function () {
 });
 $(document).on("change", "#withTokens", function () {
   tokens = [];
-  countToken();
   getReportData()
     .then((repdata) => {
       createTable(repdata);
+      // countToken();
     })
     .catch((error) => {
       alert(error);
@@ -303,7 +303,10 @@ $(document).on("change", "#withTokens", function () {
   }
 });
 $(document).on("change", "#checkAllTokens", function () {
-  $(".custom-checkbox").toggleClass("checked");
+  $(".custom-checkbox").removeClass("checked");
+  if ($(this).prop("checked")) {
+    $(".custom-checkbox").addClass("checked");
+  }
   countToken();
 });
 //#endregion
@@ -317,7 +320,7 @@ function countToken() {
   });
   var count = $(".toke.checked").length;
   $("#invDays").text(count);
-
+  isAllTokeChecked();
   totalCost();
 }
 function createTable(repdata) {
@@ -463,7 +466,7 @@ function createTable(repdata) {
     $("#appendBefore").before(dayTr);
 
     calculateTotalHours();
-
+    countToken();
     if (tokenChecked === true) {
       $(".token").removeClass("d-none");
       $(".tokenTable").removeClass("d-none");
@@ -907,7 +910,6 @@ function getCoretime() {
 function fillCoretime(cores) {
   const timeMappings = {
     Time: ["#sTime", "#eTime"],
-    Halfday: ["#sHDay", "#eHDay"],
     Lunch: ["#sLunch", "#eLunch"],
     Dinner: ["#sDinner", "#eDinner"],
   };
@@ -920,8 +922,6 @@ function fillCoretime(cores) {
 function changeCoretime() {
   const sTime = $("#sTime").val();
   const eTime = $("#eTime").val();
-  const sHDay = $("#sHDay").val();
-  const eHDay = $("#eHDay").val();
   const sLunch = $("#sLunch").val();
   const eLunch = $("#eLunch").val();
   const sDinner = $("#sDinner").val();
@@ -930,10 +930,6 @@ function changeCoretime() {
     Time: {
       start: sTime,
       end: eTime,
-    },
-    Halfday: {
-      start: sHDay,
-      end: eHDay,
     },
     Lunch: {
       start: sLunch,
@@ -1019,6 +1015,14 @@ function addToke() {
     var td = $("tr td:first-child:contains(" + valueOfElement + ")");
     td.closest("tr").find(".custom-checkbox").addClass("checked");
   });
+}
+function isAllTokeChecked() {
+  var toks = $(".toke").length;
+  var chekTok = $(".toke.checked").length;
+  $("#checkAllTokens").prop("checked", false);
+  if (toks && toks === chekTok) {
+    $("#checkAllTokens").prop("checked", true);
+  }
 }
 
 //#endregion
