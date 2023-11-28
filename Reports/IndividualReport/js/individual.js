@@ -80,7 +80,7 @@ checkLogin()
   })
   .catch((error) => {
     alert(error);
-    // window.location.href = `${rootFolder}/KDTPortalLogin`;
+    window.location.href = `${rootFolder}/KDTPortalLogin`;
   });
 
 const { jsPDF } = globalThis.jspdf;
@@ -739,6 +739,7 @@ function getMembers() {
       data: {
         empGroup: groupSel,
         ymSelect: ymSel,
+        empnum: empDetails["empNum"],
       },
       dataType: "json",
       success: function (data) {
@@ -845,8 +846,8 @@ function createCheckers(checkers) {
   const appSel = $("#idApprover");
   const selectedChecker = parseInt(chkSel.find(":selected").attr("emp-id"));
   const selectedApprover = parseInt(appSel.find(":selected").attr("emp-id"));
-  chkSel.html("<option hidden >Select Member . . .</option>");
-  appSel.html("<option hidden >Select Member . . .</option>");
+  chkSel.html("<option>Select Member . . .</option>");
+  appSel.html("<option>Select Member . . .</option>");
   checkers.forEach((checker) => {
     const option = $("<option>")
       .attr("emp-id", checker.id)

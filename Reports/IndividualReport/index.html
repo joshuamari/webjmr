@@ -366,6 +366,96 @@
                 With Token Option
               </label>
             </div>
+            <div class="token mb-3   ">
+              <div class="rounded-2 p-3" style="border: 1px solid #dee2e6;background-color: #e9ecf0;">
+                <div class="mb-3 token position-relative">
+                  <div style="width: max-content" class="position-relative">
+                    <div
+                      class="d-flex gap-1 align-items-center position-relative"
+                      id="howttoToken"
+                      style="
+                        color: var(--main-blue);
+                        font-size: 14px;
+                        width: max-content;
+                      "
+                    >
+                      <i
+                        class="bx bx-help-circle fs-5"
+                        style="color: var(--main-blue)"
+                        role="button"
+                      ></i>
+                      <p class="m-0" role="button">
+                        How to input daily usage of tokens?
+                      </p>
+                    </div>
+                    <div
+                      class="position-absolute start-0 shadow rounded-2 visually-hidden"
+                      id="tokenInstruction"
+                      style="width: 350px; bottom: 30px; background-color: #ffffff"
+                    >
+                      <div
+                        class="position-relative rounded-2"
+                        style="z-index: 1000"
+                        style="width: 350px; border: 1px solid #000000"
+                      >
+                        <video
+                          src="./images/toke.mp4"
+                          muted
+                          loop
+                          autoplay
+                          style="
+                            width: 100%;
+                            border-top-left-radius: inherit;
+                            border-top-right-radius: inherit;
+                          "
+                          class=""
+                        ></video>
+                        <p class="m-0 p-3" style="font-size: 14px">
+                          To indicate daily token usage,
+                          <span class="fw-semibold">click on the circle</span> found
+                          within the "Inventor Op." column of the table.
+                        </p>
+                      </div>
+                      <div
+                        class="position-fixed d-block w-100 h-100 top-0 start-0"
+                        style="z-index: 1000"
+                        id="bgInstruction"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 col-6 token d-none">
+                  <label for="tokenRate" class="form-label">Token Rate</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="tokenRate"
+                    placeholder="0"
+                  />
+                </div>
+                <div class="mb-3 col-6 token d-none">
+                  <label for="unitRate" class="form-label">Unit Rate</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="unitRate"
+                    placeholder="0"
+                  />
+                </div>
+                <div class=" d-flex align-items-center gap-2 token d-none">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    value=""
+                    id="checkAllTokens"
+                    
+                  />
+                  <label class="form-check-label" for="checkAllTokens">
+                    Check All Tokens
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="mb-3 checker">
               <label for="idChecker" class="form-label">Checked by</label>
               <select
@@ -418,7 +508,7 @@
                 </div>
               </div>
             </div>
-            <div class="mb-3 token position-relative">
+            <!-- <div class="mb-3 token position-relative">
               <div style="width: max-content" class="position-relative">
                 <div
                   class="d-flex gap-1 align-items-center position-relative"
@@ -503,7 +593,7 @@
               <label class="form-check-label" for="checkAllTokens">
                 Check All Tokens
               </label>
-            </div>
+            </div> -->
 
             <div class="mb-3">
               <button
@@ -716,7 +806,7 @@
                 >
                   <span class="text-uppercase" id="preparedBy"></span>
                 </div>
-                <span id="viewPrepPos" style="height: 18px"></span>
+                <span class="viewPos" id="viewPrepPos" style="height: 18px"></span>
               </div>
             </div>
             <div class="kdtEmp checker d-flex">
@@ -731,7 +821,7 @@
                 >
                   <span class="text-uppercase" id="checkedBy"></span>
                 </div>
-                <span id="viewCheckPos" style="height: 18px"></span>
+                <span class="viewPos" id="viewCheckPos" style="height: 18px"></span>
               </div>
             </div>
             <div class="kdtEmp approver d-flex">
@@ -746,7 +836,7 @@
                 >
                   <span class="text-uppercase" id="approvedBy"></span>
                 </div>
-                <span id="viewAppPos" style="height: 18px"></span>
+                <span class="viewPos" id="viewAppPos" style="height: 18px"></span>
               </div>
             </div>
 
@@ -764,7 +854,7 @@
                     >(KHI Representative)</span
                   >
                 </div>
-                <span id="viewKhiPos" style="height: 18px">(Designation)</span>
+                <span class="viewPos" id="viewKhiPos" style="height: 18px">(Designation)</span>
               </div>
             </div>
           </div>

@@ -20,18 +20,21 @@ $groups = array();
 
 #region main query
 try {
-    if (isAllGroups($empNum)) {
+    if (seeOtherMembers($empNum)) {
         $groupQ = "SELECT fldID,fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldDepartment<>'' ORDER BY fldBU";
         $groupStmt = $connkdt->query($groupQ);
     } else {
-        $groupQ = "SELECT DISTINCT g.fldID,g.fldBU
-        FROM kdtbu g
-        JOIN emp_prof e ON 
-    (CONCAT('/', e.fldGroups, '/') LIKE CONCAT('%/', g.fldBU, '/%') AND e.fldGroups <> '')
-    OR 
-    e.fldGroup = g.fldBU
-        WHERE e.fldEmployeeNum = :empNum ORDER BY fldBU";
+        //     $groupQ = "SELECT DISTINCT g.fldID,g.fldBU
+        //     FROM kdtbu g
+        //     JOIN emp_prof e ON 
+        // (CONCAT('/', e.fldGroups, '/') LIKE CONCAT('%/', g.fldBU, '/%') AND e.fldGroups <> '')
+        // OR 
+        // e.fldGroup = g.fldBU
+        //     WHERE e.fldEmployeeNum = :empNum ORDER BY fldBU";
 
+        //     $groupStmt = $connkdt->prepare($groupQ);
+        //     $groupStmt->execute([":empNum" => $empNum]);
+        $groupQ = "SELECT DISTINCT g.fldID,g.fldBU FROM kdtbu AS g JOIN emp_prof AS e ON e.fldGroup = g.fldBU WHERE e.fldEmployeeNum = :empNum";
         $groupStmt = $connkdt->prepare($groupQ);
         $groupStmt->execute([":empNum" => $empNum]);
     }
@@ -53,10 +56,10 @@ try {
 
 #endregion
 #region FUNCTIONS
-function isAllGroups($empNum)
+function seeOtherMembers($empNum)
 {
     global $connkdt;
-    $pID = 24; //CMR all groups MODULE PERMISSION ID kdtphdb>>>>p_permissions
+    $pID = 34; //Individual see other members MODULE PERMISSION ID kdtphdb>>>>p_permissions
     $accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
     $accessStmt = $connkdt->prepare($accessQ);
     $accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);

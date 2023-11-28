@@ -323,6 +323,9 @@ table tbody td {
   font-size: 13px;
   line-height: 1;
 }
+.viewPos {
+  text-align: center;
+}
 
 @media screen and (max-width: 800px) {
   .noShow div {

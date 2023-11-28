@@ -6,15 +6,13 @@ if (isset($_COOKIE['userID'])) {
     $userHash = $_COOKIE['userID'];
 }
 if (!empty($userHash)) {
-    $loginQ = "SELECT fldEmployeeNum FROM kdtlogin WHERE fldUserHash='$userHash'";
-    $loginStmt = $connkdt->query($loginQ);
+    $loginQ = "SELECT ep.fldEmployeeNum,ep.fldGroup,ep.fldFirstname,ep.fldSurname,ep.fldNick,ep.fldDateHired,ep.fldDesig FROM kdtlogin AS kl JOIN emp_prof AS ep ON kl.fldEmployeeNum=ep.fldEmployeeNum WHERE kl.fldUserHash=:userHash";
+    $loginStmt = $connkdt->prepare($loginQ);
+    $loginStmt->execute([":userHash" => $userHash]);
     if ($loginStmt->rowCount() > 0) {
-        $userLogin = $loginStmt->fetchColumn();
-        $output += ["empNum" => $userLogin];
-        $empDeetsQ = "SELECT * FROM emp_prof WHERE fldEmployeeNum='$userLogin'";
-        $empDeetsStmt = $connkdt->query($empDeetsQ);
-        $empDeetsArr = $empDeetsStmt->fetchAll();
+        $empDeetsArr = $loginStmt->fetchAll();
         foreach ($empDeetsArr as $empdeets) {
+            $output += ["empNum" => $empdeets['fldEmployeeNum']];
             $output += ["empGroup" => $empdeets['fldGroup']];
             $output += ["empFName" => $empdeets['fldFirstname']];
             $output += ["empSName" => $empdeets['fldSurname']];
