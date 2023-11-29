@@ -631,7 +631,7 @@ function totalCost() {
 
   total = tok * unit * indays;
 
-  $("#invTotal").text(parseInt(total));
+  $("#invTotal").text(parseInt(total).toLocaleString());
 }
 
 function countCheck() {
