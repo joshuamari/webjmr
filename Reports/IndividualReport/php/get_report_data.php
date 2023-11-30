@@ -14,6 +14,10 @@ $empSelect = NULL;
 if (!empty($_POST['empSelect'])) {
     $empSelect = $_POST['empSelect'];
 }
+$groupSel = NULL;
+if (!empty($_POST['groupSel'])) {
+    $groupSel = $_POST['groupSel'];
+}
 $ymSelect = date("Y-m");
 if (!empty($_POST['ymSelect'])) {
     $ymSelect  = $_POST['ymSelect'];
@@ -70,12 +74,12 @@ if (isset($_POST['core'])) {
 }
 $amT = getHDTow('Leave AM');
 $pmT = getHDTow('Leave PM');
-$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect AND (pt.fldGroup = :groupSel OR (pt.fldGroup IS NULL AND dr.fldGroup = :groupSel)) $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
 $reportStmt = $connwebjmr->prepare($reportQ);
 #endregion
 
 #region main
-$reportStmt->execute([":ymSelect" => "$ymSelect%", ":empSelect" => $empSelect, ":amTow" => $amT, ":pmTow" => $pmT]);
+$reportStmt->execute([":ymSelect" => "$ymSelect%", ":empSelect" => $empSelect, ":groupSel" => $groupSel, ":amTow" => $amT, ":pmTow" => $pmT]);
 if ($reportStmt->rowCount() > 0) {
     $repArr = $reportStmt->fetchAll();
     foreach ($repArr as $rep) {

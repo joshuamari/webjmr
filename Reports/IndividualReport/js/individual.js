@@ -952,6 +952,7 @@ function changeCoretime() {
 }
 function getReportData() {
   const empSelect = parseInt($("#idEmp option:selected").attr("emp-id"));
+  const groupSel = $("#idGroup").val();
   const selColumns = $("#selCol .checked")
     .filter((_, element) => element.id !== "hrschk")
     .map((_, element) => element.id)
@@ -967,6 +968,7 @@ function getReportData() {
       url: "php/get_report_data.php",
       data: {
         empSelect: empSelect,
+        groupSel: groupSel,
         ymSelect: ymSel,
         locSelect: locSelect,
         selColumns: JSON.stringify(selColumns),
