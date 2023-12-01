@@ -1126,6 +1126,9 @@ function editEntry(currentObject) {
     },
     function (data) {
       var dataEdit = $.parseJSON(data);
+      $($("#idLocation").find(`option[loc-id=${dataEdit[0]}]`))
+        .prop("selected", true)
+        .change();
       $("#idGroup").val(dataEdit[1]);
       getCheckers();
       getProjects();
