@@ -327,6 +327,18 @@ table tbody td {
   text-align: center;
 }
 
+.g1 .header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #fff;
+  transform: translateY(-25px) translateX(20px);
+  padding: 10px;
+  font-weight: 500;
+  color: var(--main-blue);
+  font-size: 18px;
+}
+
 @media screen and (max-width: 800px) {
   .noShow div {
     font-size: 25px;

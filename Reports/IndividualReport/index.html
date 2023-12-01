@@ -234,375 +234,315 @@
         <div class="title xPrint">
           <h1>Monthly Individual Report</h1>
 
-          <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between align-items-center px-2">
             <a href="../" class="backbtn">
               <i class="bx bx-left-arrow-alt fs-5"></i>
               <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
             </a>
-            <div class="right pe-2 pe-lg-0 d-flex">
-              <!-- <button
-                id="btnPrint"
-                class="xPrint btn btn-primary"
-                style="background-color: #395dc7"
-              >
-                PRINT
-              </button> -->
-              <button class="remind btn btn-success">SAVE</button>
-            </div>
-          </div>
-        </div>
-        <div class="p-4 selections" style="height: calc(100% - 120px)">
-          <div class="row">
-            <div class="mb-3 col-6">
-              <label for="idGroup" class="form-label">Group</label>
-              <select id="idGroup" class="form-select" aria-label="Group">
-                <!-- <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option> -->
-              </select>
-            </div>
-            <div class="mb-3 col-6">
-              <label for="idMonth" class="form-label">Month</label>
-              <input
-                type="month"
-                class="form-control"
-                id="idMonth"
-                placeholder="Month/Year"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="idLoc" class="form-label">Location</label>
-              <select
-                id="idLoc"
-                class="form-select"
-                aria-label="Location"
-              ></select>
-            </div>
-            <div class="mb-3">
-              <label for="idEmp" class="form-label">Employee Name</label>
-              <select
-                id="idEmp"
-                class="form-select text-uppercase"
-                aria-label="Name"
-              ></select>
-            </div>
-            <div class="mb-3 position-relative">
-              <label for="descriptionList" class="form-label"
-                >Description</label
-              >
-              <div
-                class="d-flex align-items-center justify-content-between rounded-2"
-                id="descriptionList"
-                role="button"
-              >
-                <span class="text-btn">Select Description</span>
-                <span
-                  class="arrow-down d-flex justify-content-center align-items-center"
-                >
-                  <i class="bx bx-chevron-down fs-4"></i>
-                </span>
-              </div>
-              <ul
-                id="selCol"
-                class="list-items list-unstyled mt-2 mb-0 rounded-2 p-2"
-              >
-                <li class="item rounded-1 gap-2 checked" id="proj">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Project</span>
-                </li>
-                <li class="item rounded-1 gap-2" id="item">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Item</span>
-                </li>
-                <li class="item rounded-1 gap-2" id="job">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Description</span>
-                </li>
-                <li class="item rounded-1 gap-2" id="tow">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Type of Works</span>
-                </li>
-                <li class="item rounded-1 gap-2" id="rem">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Remarks</span>
-                </li>
-                <li class="item rounded-1 gap-2" id="hrschk">
-                  <span class="checkboxx">
-                    <i class="bx bx-check text-white"></i>
-                  </span>
-                  <span class="item-text">Hours</span>
-                </li>
-              </ul>
-            </div>
-            <div class="mb-3 d-flex align-items-center gap-2">
-              <input
-                class="checkbox"
-                type="checkbox"
-                value=""
-                id="excludeKDT"
-              />
-              <label class="form-check-label" for="excludeKDT">
-                Exclude KDT Hours
-              </label>
-            </div>
-            <div class="mb-3 d-flex align-items-center gap-2">
-              <input
-                class="checkbox"
-                type="checkbox"
-                value=""
-                id="withTokens"
-              />
-              <label class="form-check-label" for="withTokens">
-                With Token Option
-              </label>
-            </div>
-            <div class="token mb-3   ">
-              <div class="rounded-2 p-3" style="border: 1px solid #dee2e6;background-color: #e9ecf0;">
-                <div class="mb-3 token position-relative">
-                  <div style="width: max-content" class="position-relative">
-                    <div
-                      class="d-flex gap-1 align-items-center position-relative"
-                      id="howttoToken"
-                      style="
-                        color: var(--main-blue);
-                        font-size: 14px;
-                        width: max-content;
-                      "
-                    >
-                      <i
-                        class="bx bx-help-circle fs-5"
-                        style="color: var(--main-blue)"
-                        role="button"
-                      ></i>
-                      <p class="m-0" role="button">
-                        How to input daily usage of tokens?
-                      </p>
-                    </div>
-                    <div
-                      class="position-absolute start-0 shadow rounded-2 visually-hidden"
-                      id="tokenInstruction"
-                      style="width: 350px; bottom: 30px; background-color: #ffffff"
-                    >
-                      <div
-                        class="position-relative rounded-2"
-                        style="z-index: 1000"
-                        style="width: 350px; border: 1px solid #000000"
-                      >
-                        <video
-                          src="./images/toke.mp4"
-                          muted
-                          loop
-                          autoplay
-                          style="
-                            width: 100%;
-                            border-top-left-radius: inherit;
-                            border-top-right-radius: inherit;
-                          "
-                          class=""
-                        ></video>
-                        <p class="m-0 p-3" style="font-size: 14px">
-                          To indicate daily token usage,
-                          <span class="fw-semibold">click on the circle</span> found
-                          within the "Inventor Op." column of the table.
-                        </p>
-                      </div>
-                      <div
-                        class="position-fixed d-block w-100 h-100 top-0 start-0"
-                        style="z-index: 1000"
-                        id="bgInstruction"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3 col-6 token d-none">
-                  <label for="tokenRate" class="form-label">Token Rate</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="tokenRate"
-                    placeholder="0"
-                  />
-                </div>
-                <div class="mb-3 col-6 token d-none">
-                  <label for="unitRate" class="form-label">Unit Rate</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="unitRate"
-                    placeholder="0"
-                  />
-                </div>
-                <div class=" d-flex align-items-center gap-2 token d-none">
-                  <input
-                    class="checkbox"
-                    type="checkbox"
-                    value=""
-                    id="checkAllTokens"
-                    
-                  />
-                  <label class="form-check-label" for="checkAllTokens">
-                    Check All Tokens
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 checker">
-              <label for="idChecker" class="form-label">Checked by</label>
-              <select
-                id="idChecker"
-                class="form-select text-uppercase"
-                aria-label="Checked by"
-              >
-                <option class="">ERWILSON MATIBAG</option>
-                <option class="">dm 2</option>
-              </select>
-            </div>
-            <div class="mb-3 approver">
-              <label for="idApprover" class="form-label">Approved by</label>
-              <select
-                id="idApprover"
-                class="form-select text-uppercase"
-                aria-label="Approved by"
-              >
-                <option class="">erwin tan</option>
-                <option class="">Ernesto Veloso</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">KHI Representative</label>
-              <div
-                class="rounded-2 p-3"
-                style="
-                  border: 1px solid #dee2e6;
-                  background-color: #e9ecf0;
-                  padding: 6px 8px 6px 12px;
-                "
-              >
-                <div class="mb-3">
-                  <label for="khiName" class="form-label">Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="khiName"
-                    placeholder="KHI Representative Name"
-                  />
-                </div>
-                <div class="">
-                  <label for="khiPos" class="form-label">Designation</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="khiPos"
-                    placeholder="KHI Representative Designation"
-                  />
-                </div>
-              </div>
-            </div>
-            <!-- <div class="mb-3 token position-relative">
-              <div style="width: max-content" class="position-relative">
-                <div
-                  class="d-flex gap-1 align-items-center position-relative"
-                  id="howttoToken"
-                  style="
-                    color: var(--main-blue);
-                    font-size: 14px;
-                    width: max-content;
-                  "
-                >
-                  <i
-                    class="bx bx-help-circle fs-5"
-                    style="color: var(--main-blue)"
-                    role="button"
-                  ></i>
-                  <p class="m-0" role="button">
-                    How to input daily usage of tokens?
-                  </p>
-                </div>
-                <div
-                  class="position-absolute start-0 shadow rounded-2 visually-hidden"
-                  id="tokenInstruction"
-                  style="width: 350px; bottom: 30px; background-color: #ffffff"
-                >
-                  <div
-                    class="position-relative rounded-2"
-                    style="z-index: 1000"
-                    style="width: 350px; border: 1px solid #000000"
-                  >
-                    <video
-                      src="./images/toke.mp4"
-                      muted
-                      loop
-                      autoplay
-                      style="
-                        width: 100%;
-                        border-top-left-radius: inherit;
-                        border-top-right-radius: inherit;
-                      "
-                      class=""
-                    ></video>
-                    <p class="m-0 p-3" style="font-size: 14px">
-                      To indicate daily token usage,
-                      <span class="fw-semibold">click on the circle</span> found
-                      within the "Inventor Op." column of the table.
-                    </p>
-                  </div>
-                  <div
-                    class="position-fixed d-block w-100 h-100 top-0 start-0"
-                    style="z-index: 1000"
-                    id="bgInstruction"
-                  ></div>
-                </div>
-              </div>
-            </div>
-            <div class="mb-3 col-6 token d-none">
-              <label for="tokenRate" class="form-label">Token Rate</label>
-              <input
-                type="number"
-                class="form-control"
-                id="tokenRate"
-                placeholder="0"
-              />
-            </div>
-            <div class="mb-3 col-6 token d-none">
-              <label for="unitRate" class="form-label">Unit Rate</label>
-              <input
-                type="number"
-                class="form-control"
-                id="unitRate"
-                placeholder="0"
-              />
-            </div>
-            <div class="mb-3 d-flex align-items-center gap-2 token d-none">
-              <input
-                class="checkbox"
-                type="checkbox"
-                value=""
-                id="checkAllTokens"
-                style="z-index: -1 !important"
-              />
-              <label class="form-check-label" for="checkAllTokens">
-                Check All Tokens
-              </label>
-            </div> -->
-
-            <div class="mb-3">
+            <div class="d-flex gap-2">
               <button
                 class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#changeCoreTime"
               >
-                Change Core Time
+                Core Time
               </button>
+              <button class="remind btn btn-success px-4">SAVE</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 selections" style="height: calc(100% - 120px)">
+          <div class="row">
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <label for="idGroup" class="form-label">Group</label>
+                  <select id="idGroup" class="form-select" aria-label="Group">
+                    <!-- <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option> -->
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label for="idMonth" class="form-label">Month</label>
+                  <input
+                    type="month"
+                    class="form-control"
+                    id="idMonth"
+                    placeholder="Month/Year"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="idLoc" class="form-label">Location</label>
+                  <select
+                    id="idLoc"
+                    class="form-select"
+                    aria-label="Location"
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label for="idEmp" class="form-label">Employee Name</label>
+                  <select
+                    id="idEmp"
+                    class="form-select text-uppercase"
+                    aria-label="Name"
+                  ></select>
+                </div>
+                <div class="position-relative">
+                  <label for="descriptionList" class="form-label"
+                    >Description</label
+                  >
+                  <div
+                    class="d-flex align-items-center justify-content-between rounded-2"
+                    id="descriptionList"
+                    role="button"
+                  >
+                    <span class="text-btn">Select Description</span>
+                    <span
+                      class="arrow-down d-flex justify-content-center align-items-center"
+                    >
+                      <i class="bx bx-chevron-down fs-4"></i>
+                    </span>
+                  </div>
+                  <ul
+                    id="selCol"
+                    class="list-items list-unstyled mt-2 mb-0 rounded-2 p-2"
+                  >
+                    <li class="item rounded-1 gap-2 checked" id="proj">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Project</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="item">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Item</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="job">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Description</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="tow">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Type of Works</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="rem">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Remarks</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="hrschk">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Hours</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <span class="header">Employee details</span>
+            </div>
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div>
+                <div class="mb-3 d-flex align-items-center gap-2">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    value=""
+                    id="excludeKDT"
+                  />
+                  <label class="form-check-label" for="excludeKDT">
+                    Exclude KDT Hours
+                  </label>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    value=""
+                    id="withTokens"
+                  />
+                  <label class="form-check-label" for="withTokens">
+                    With Token Option
+                  </label>
+                </div>
+                <div class="token mt-3">
+                  <div
+                    class="rounded-2 p-3"
+                    style="border: 1px solid #dee2e6; background-color: #e9ecf0"
+                  >
+                    <div class="mb-3 token position-relative">
+                      <div style="width: max-content" class="position-relative">
+                        <div
+                          class="d-flex gap-1 align-items-center position-relative"
+                          id="howttoToken"
+                          style="
+                            color: var(--main-blue);
+                            font-size: 14px;
+                            width: max-content;
+                          "
+                        >
+                          <i
+                            class="bx bx-help-circle fs-5"
+                            style="color: var(--main-blue)"
+                            role="button"
+                          ></i>
+                          <p class="m-0" role="button">
+                            How to input daily usage of tokens?
+                          </p>
+                        </div>
+                        <div
+                          class="position-absolute start-0 shadow rounded-2 visually-hidden"
+                          id="tokenInstruction"
+                          style="
+                            width: 350px;
+                            bottom: 30px;
+                            background-color: #ffffff;
+                          "
+                        >
+                          <div
+                            class="position-relative rounded-2"
+                            style="z-index: 1000"
+                            style="width: 350px; border: 1px solid #000000"
+                          >
+                            <video
+                              src="./images/toke.mp4"
+                              muted
+                              loop
+                              autoplay
+                              style="
+                                width: 100%;
+                                border-top-left-radius: inherit;
+                                border-top-right-radius: inherit;
+                              "
+                              class=""
+                            ></video>
+                            <p class="m-0 p-3" style="font-size: 14px">
+                              To indicate daily token usage,
+                              <span class="fw-semibold"
+                                >click on the circle</span
+                              >
+                              found within the "Inventor Op." column of the
+                              table.
+                            </p>
+                          </div>
+                          <div
+                            class="position-fixed d-block w-100 h-100 top-0 start-0"
+                            style="z-index: 1000"
+                            id="bgInstruction"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 col-6 token d-none">
+                      <label for="tokenRate" class="form-label"
+                        >Token Rate</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="tokenRate"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div class="mb-3 col-6 token d-none">
+                      <label for="unitRate" class="form-label">Unit Rate</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="unitRate"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div class="d-flex align-items-center gap-2 token d-none">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="checkAllTokens"
+                      />
+                      <label class="form-check-label" for="checkAllTokens">
+                        Check All Tokens
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="header">Optional</span>
+            </div>
+
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div>
+                <div class="mb-3 checker">
+                  <label for="idChecker" class="form-label">Checked by</label>
+                  <select
+                    id="idChecker"
+                    class="form-select text-uppercase"
+                    aria-label="Checked by"
+                  >
+                    <option class="">ERWILSON MATIBAG</option>
+                    <option class="">dm 2</option>
+                  </select>
+                </div>
+                <div class="mb-3 approver">
+                  <label for="idApprover" class="form-label">Approved by</label>
+                  <select
+                    id="idApprover"
+                    class="form-select text-uppercase"
+                    aria-label="Approved by"
+                  >
+                    <option class="">erwin tan</option>
+                    <option class="">Ernesto Veloso</option>
+                  </select>
+                </div>
+                <div class="">
+                  <label class="form-label">KHI Representative</label>
+                  <div
+                    class="rounded-2 p-3"
+                    style="
+                      border: 1px solid #dee2e6;
+                      background-color: #e9ecf0;
+                      padding: 6px 8px 6px 12px;
+                    "
+                  >
+                    <div class="mb-3">
+                      <label for="khiName" class="form-label">Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="khiName"
+                        placeholder="KHI Representative Name"
+                      />
+                    </div>
+                    <div class="">
+                      <label for="khiPos" class="form-label">Designation</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="khiPos"
+                        placeholder="KHI Representative Designation"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="header">Signatory</span>
             </div>
           </div>
         </div>
@@ -806,7 +746,11 @@
                 >
                   <span class="text-uppercase" id="preparedBy"></span>
                 </div>
-                <span class="viewPos" id="viewPrepPos" style="height: 18px"></span>
+                <span
+                  class="viewPos"
+                  id="viewPrepPos"
+                  style="height: 18px"
+                ></span>
               </div>
             </div>
             <div class="kdtEmp checker d-flex">
@@ -821,7 +765,11 @@
                 >
                   <span class="text-uppercase" id="checkedBy"></span>
                 </div>
-                <span class="viewPos" id="viewCheckPos" style="height: 18px"></span>
+                <span
+                  class="viewPos"
+                  id="viewCheckPos"
+                  style="height: 18px"
+                ></span>
               </div>
             </div>
             <div class="kdtEmp approver d-flex">
@@ -836,7 +784,11 @@
                 >
                   <span class="text-uppercase" id="approvedBy"></span>
                 </div>
-                <span class="viewPos" id="viewAppPos" style="height: 18px"></span>
+                <span
+                  class="viewPos"
+                  id="viewAppPos"
+                  style="height: 18px"
+                ></span>
               </div>
             </div>
 
@@ -854,7 +806,9 @@
                     >(KHI Representative)</span
                   >
                 </div>
-                <span class="viewPos" id="viewKhiPos" style="height: 18px">(Designation)</span>
+                <span class="viewPos" id="viewKhiPos" style="height: 18px"
+                  >(Designation)</span
+                >
               </div>
             </div>
           </div>
