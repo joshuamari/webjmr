@@ -1,6 +1,7 @@
 <?php
 #region DB Connect
 require_once '../dbconn/dbconnectkdtph.php';
+require_once '../dbconn/dbconnectwebjmr.php';
 #endregion
 
 #region set timezone
@@ -14,8 +15,9 @@ if (!empty($_POST['empnum'])) {
     $empNum = $_POST['empnum'];
 }
 $groups = array();
-
-
+$myGroups = array();
+$mainGroupStmt = "";
+$myGroupStmt = "";
 #endregion
 
 #region main query
@@ -24,7 +26,7 @@ try {
         $groupQ = "SELECT fldID,fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldDepartment<>'' ORDER BY fldBU";
         $groupStmt = $connkdt->query($groupQ);
     } else {
-        $groupQ = "SELECT DISTINCT g.fldID,g.fldBU
+        $mainGroupQ = "SELECT DISTINCT g.fldID,g.fldBU
             FROM kdtbu g
             JOIN emp_prof e ON 
         (CONCAT('/', e.fldGroups, '/') LIKE CONCAT('%/', g.fldBU, '/%') AND e.fldGroups <> '')
@@ -32,11 +34,29 @@ try {
         e.fldGroup = g.fldBU
             WHERE e.fldEmployeeNum = :empNum ORDER BY fldBU";
 
+        $mainGroupStmt = $connkdt->prepare($mainGroupQ);
+        $mainGroupStmt->execute([":empNum" => $empNum]);
+        if ($mainGroupStmt->rowCount() > 0) {
+            $myGroupArr = $mainGroupStmt->fetchAll();
+            foreach ($myGroupArr as $mg) {
+                array_push($myGroups, $mg['fldBU']);
+            }
+            $mainGroupStmt = " AND pt.fldGroup NOT IN ('" . implode("','", $myGroups) . "')";
+        }
+        $drGroupQ = "SELECT DISTINCT(pt.fldGroup) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE dr.fldEmployeeNum=:empNum $mainGroupStmt";
+        $drGroupStmt = $connwebjmr->prepare($drGroupQ);
+        $drGroupStmt->execute([":empNum" => $empNum]);
+
+        if ($drGroupStmt->rowCount() > 0) {
+            $drGroupArr = $drGroupStmt->fetchAll();
+            foreach ($drGroupArr as $dg) {
+                array_push($myGroups, $dg['fldGroup']);
+            }
+        }
+        $myGroupStmt = " AND fldBU IN ('" . implode("','", $myGroups) . "')";
+        $groupQ = "SELECT fldID,fldBU FROM kdtbu WHERE fldDepartment IS NOT NULL AND fldDepartment<>'' $myGroupStmt ORDER BY fldBU";
         $groupStmt = $connkdt->prepare($groupQ);
-        $groupStmt->execute([":empNum" => $empNum]);
-        // $groupQ = "SELECT DISTINCT g.fldID,g.fldBU FROM kdtbu AS g JOIN emp_prof AS e ON e.fldGroup = g.fldBU WHERE e.fldEmployeeNum = :empNum";
-        // $groupStmt = $connkdt->prepare($groupQ);
-        // $groupStmt->execute([":empNum" => $empNum]);
+        $groupStmt->execute();
     }
 
     if ($groupStmt->rowCount() > 0) {
