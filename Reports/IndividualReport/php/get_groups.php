@@ -71,7 +71,7 @@ try {
         }
     }
 } catch (Exception $e) {
-    echo "Connection failed: " . $e->getMessage();
+    echo "Connections failed: " . $e->getMessage();
 }
 
 #endregion
