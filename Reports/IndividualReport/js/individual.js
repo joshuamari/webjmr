@@ -316,7 +316,24 @@ $(document).on("click", "#bgInstruction", function () {
   console.log("boom");
   $("#tokenInstruction").addClass("visually-hidden");
 });
-
+$(document).on("input", ".cts", function () {
+  var startValue = $(this).val();
+  var endValue = $(this).closest(".row").find(".cte").val();
+  if (!valiDate(startValue, endValue)) {
+    $(this).val($(this).data("prevValue"));
+  } else {
+    $(this).data("prevValue", startValue);
+  }
+});
+$(document).on("input", ".cte", function () {
+  var endValue = $(this).val();
+  var startValue = $(this).closest(".row").find(".cts").val();
+  if (!valiDate(startValue, endValue)) {
+    $(this).val($(this).data("prevValue"));
+  } else {
+    $(this).data("prevValue", endValue);
+  }
+});
 //#endregion
 
 //#region FUNCTIONS
@@ -567,8 +584,12 @@ function setViewerLoc() {
   $("#viewLoc").text(loc);
 }
 function setViewerName() {
-  var emp = $("#idEmp").val();
-  $("#viewName").text(emp);
+  var iba = parseInt($("#idEmp option:selected").attr("emp-id"));
+  if (iba) {
+    var emp = $("#idEmp").val();
+
+    $("#viewName").text(emp);
+  }
 }
 function setViewerGroup() {
   var grp = $("#idGroup").val();
@@ -576,12 +597,12 @@ function setViewerGroup() {
 }
 function setPreparedBy() {
   var iba = parseInt($("#idEmp option:selected").attr("emp-id"));
-  var emp = $("#idEmp").val();
-
-  var firstName = findFirstNameById(iba, mmbrs);
-  var lastName = findLastNameById(iba, mmbrs);
-  $("#preparedBy").text(`${firstName} ${lastName}`);
-  $("#viewPrepPos").text(getDesig(iba, mmbrs));
+  if (iba) {
+    var firstName = findFirstNameById(iba, mmbrs);
+    var lastName = findLastNameById(iba, mmbrs);
+    $("#preparedBy").text(`${firstName} ${lastName}`);
+    $("#viewPrepPos").text(getDesig(iba, mmbrs));
+  }
 }
 function setCheckedBy() {
   var iba = parseInt($("#idChecker option:selected").attr("emp-id"));
@@ -760,9 +781,6 @@ function getMembers() {
 }
 function createMembers(members) {
   const memSel = $("#idEmp");
-  // var user = empDetails["empNum"];
-  // var sel = $("#idEmp option[emp-id='" + user + "']");
-  // sel.attr("selected", true);
   const selectedMember = parseInt(memSel.find(":selected").attr("emp-id"));
   memSel.html(`<option val="" hidden>Select Member . . .</option>`);
 
@@ -775,6 +793,7 @@ function createMembers(members) {
   if (selectedMember) {
     var selectedOption = memSel.find(`option[emp-id=${selectedMember}]`);
     selectedOption.prop("selected", true);
+    $("#idEmp").change();
   }
 }
 function getLocations() {
@@ -927,6 +946,10 @@ function fillCoretime(cores) {
     $(startId).val(cores[event]["start"]);
     $(endId).val(cores[event]["end"]);
   });
+
+  $(".cts").each(function () {
+    $(this).data("prevValue", $(this).val());
+  });
 }
 function changeCoretime() {
   const sTime = $("#sTime").val();
@@ -1034,6 +1057,9 @@ function isAllTokeChecked() {
   if (toks && toks === chekTok) {
     $("#checkAllTokens").prop("checked", true);
   }
+}
+function valiDate(start, end) {
+  return start <= end;
 }
 
 //#endregion

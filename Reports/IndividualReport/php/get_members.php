@@ -1,9 +1,7 @@
 <?php
 #region DB Connect
-require '../dbconn/dbconnectkdtph.php';
-require '../dbconn/dbconnectwebjmr.php';
-global $mngProjID;
-global $solProjID;
+require_once '../dbconn/dbconnectkdtph.php';
+require_once '../dbconn/dbconnectwebjmr.php';
 #endregion
 
 #region set timezone
@@ -25,23 +23,34 @@ if (!empty($_POST['ymSelect'])) {
 }
 $members = array();
 $sharedEmp = "";
+$mainMemStmt = "";
 $sharedArr = array();
-$hiramQ = "SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:empGroup) OR fldTrGroup=:empGroup  OR (fldProject IN (:mngProjID,:solProjID) AND fldGroup=:empGroup))  AND fldDate LIKE :ymSel";
+$mainQ = "SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup = :empGroup AND (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) AND fldNick<>''";
+$mainStmt = $connkdt->prepare($mainQ);
+$mainStmt->execute([":empGroup" => $empGroup, ":ymSel" => "$ymSelect%"]);
+if ($mainStmt->rowCount() > 0) {
+    $mainArr = $mainStmt->fetchAll();
+    foreach ($mainArr as $main) {
+        array_push($sharedArr, $main['fldEmployeeNum']);
+    }
+    $mainMemStmt = " AND fldEmployeeNum NOT IN (" . implode(",", $sharedArr) . ")";
+}
+$hiramQ = "SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:empGroup) OR fldTrGroup=:empGroup  OR (fldProject IN (:mngProjID,:solProjID,:leaveID) AND fldGroup=:empGroup)) $mainMemStmt AND fldDate LIKE :ymSel";
 $hiramStmt = $connwebjmr->prepare($hiramQ);
-$hiramStmt->execute([":empGroup" => $empGroup, ":ymSel" => "$ymSelect%", ":mngProjID" => $mngProjID, ":solProjID" => $solProjID]);
+$hiramStmt->execute([":empGroup" => $empGroup, ":ymSel" => "$ymSelect%", ":mngProjID" => $mngProjID, ":solProjID" => $solProjID, ":leaveID" => $leaveID]);
 if ($hiramStmt->rowCount() > 0) {
     $hiramArr = $hiramStmt->fetchAll();
     foreach ($hiramArr as $hEmp) {
         array_push($sharedArr, $hEmp['fldEmployeeNum']);
     }
-    $sharedEmp = "AND fldEmployeeNum IN (" . implode(",", $sharedArr) . ")";
 }
-// echo json_encode(["messag" => $sharedEmp]);
+$sharedEmp = "AND fldEmployeeNum IN (" . implode(",", $sharedArr) . ")";
 #endregion
 
 #region main query
 try {
     if (seeOtherMembers($empNum)) {
+        // $memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig,fldGroup FROM emp_prof WHERE (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) $sharedEmp ORDER BY CASE WHEN fldGroup=:empGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
         $memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig,fldGroup FROM emp_prof WHERE (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) $sharedEmp ORDER BY CASE WHEN fldGroup=:empGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
         $memStmt = $connkdt->prepare($memberQ);
         $memStmt->execute([":empGroup" => $empGroup, ":ymSel" => $ymSelect]);
