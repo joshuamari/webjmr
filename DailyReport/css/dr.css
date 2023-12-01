@@ -539,7 +539,7 @@ footer {
   width: 100%;
   height: 80px;
   background: #fff;
-  margin: 15px;
+  /* margin: 15px; */
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 0px 25px rgba(0, 0, 0, 0.2);
@@ -664,12 +664,45 @@ footer {
 .right .table-container .table thead th {
   color: var(--header-color);
 }
+.right .planned {
+  height: 98px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgb(0 0 0/25%);
+  transition: height 0.25s ease, background 0.25s ease;
+}
+.right .planned:hover {
+  background-color: #dbe7f1 !important;
+}
+.right .planned.open {
+  height: 310px;
+  overflow: auto;
+}
+.right .planned.open:hover {
+  background-color: #fff !important;
+}
+.planned .header small,
+.planned .header small i {
+  color: var(--main-blue);
+}
 .right .planned .table thead,
 .right .planned .table tbody {
   white-space: nowrap;
 }
 .right .planned .table .planEntries {
   cursor: pointer;
+}
+.planned .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.planned .header > i {
+  font-size: 42px;
+  transition: transform 0.5s ease;
+}
+.planned.open .header > i {
+  transform: rotate(-180deg);
 }
 .selectBut {
   height: 40px;
@@ -1286,6 +1319,10 @@ footer {
 .bg-err {
   background-color: #ff6b6b3e;
 }
+.right-cont .table-container {
+  height: calc(100% - 248px);
+}
+
 @media (max-width: 550px) {
   .sidebar.close .nav-links li .sub-menu {
     display: none;

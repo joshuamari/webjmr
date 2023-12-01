@@ -398,6 +398,22 @@ $(document).on(
     $(this).removeClass("bg-err");
   }
 );
+$(document).on("click", ".planned .header", function () {
+  $(".planned").toggleClass("open");
+  if ($(".planned").hasClass("open")) {
+    $(".right-cont .table-container").css("height", "calc(100% - 500px)");
+    $(".planned .header small")
+      .html(`<i class="bx bx-info-circle"></i>Please click each
+    row to see more details about the item.`);
+  } else {
+    $(".right-cont .table-container").css("height", "calc(100% - 248px)");
+    $(".planned .header")
+      .find("small")
+      .html(
+        `<i class="bx bx-info-circle"></i>Please click here to toggle this collapsible element.`
+      );
+  }
+});
 
 //#endregion
 
