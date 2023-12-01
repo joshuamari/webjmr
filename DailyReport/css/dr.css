@@ -1283,7 +1283,9 @@ footer {
 .jord .content .options li:hover {
   background: #f2f2f2;
 }
-
+.bg-err {
+  background-color: #ff6b6b3e;
+}
 @media (max-width: 550px) {
   .sidebar.close .nav-links li .sub-menu {
     display: none;

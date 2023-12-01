@@ -277,7 +277,7 @@ $(document).on("click", ".day", function () {
 });
 $(document).on("change", "#trGroup", function () {
   $("#p12").text("");
-  $("#trGroup").removeClass("border border-danger");
+  $("#trGroup").removeClass("border border-danger").removeClass("bg-err");
 });
 $(document).on("click", "#back2Project", function () {
   $("#drInstruction").modal("hide");
@@ -391,6 +391,13 @@ $(document).on("click", ".planEntries", function () {
   var planID = $(this).attr("plan-id");
   getDeets(planID);
 });
+$(document).on(
+  "click",
+  "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
+  function () {
+    $(this).removeClass("bg-err");
+  }
+);
 
 //#endregion
 
@@ -807,32 +814,32 @@ function addEntries(addMode) {
   }
   if (!grp) {
     $("#p1").text("Please select group");
-    $("#idGroup").addClass("border border-danger");
+    $("#idGroup").addClass("border border-danger ").addClass("bg-err");
     mgaKulang.push("GROUP");
   }
   if (!date) {
     $("#p2").text("Please select date");
-    $("#idDRDate").addClass("border border-danger");
+    $("#idDRDate").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("DATE");
   }
   if (!loc) {
     $("#p3").text("Please select location");
-    $("#idLocation").addClass("border border-danger");
+    $("#idLocation").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("LOCATION");
   }
   if (!proj) {
     $("#p4").text("Please select project");
-    $("#idProject").addClass("border border-danger");
+    $("#idProject").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("PROJECT");
   }
   if (!item) {
     $("#p5").text("Please select item of works");
-    $("#idItem").addClass("border border-danger");
+    $("#idItem").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ITEM");
   }
   if (!jobreq && proj != leaveID && proj != otherID) {
     $("#p6").text("Please select job request description");
-    $("#idJRD").addClass("border border-danger");
+    $("#idJRD").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("JRD");
   }
   if ($("#idRev").is(":checked") && !$("#idRevDiv").hasClass("d-none")) {
@@ -846,37 +853,37 @@ function addEntries(addMode) {
     } else {
       $("#p11").text("Please select type of work");
     }
-    $("#idTOW").addClass("border border-danger");
+    $("#idTOW").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("TOW");
   }
   if (tow == 3) {
     //If checker
     if (!checker) {
       $("#p8").text("Please select member");
-      $("#idChecking").addClass("border border-danger");
+      $("#idChecking").addClass("border border-danger").addClass("bg-err");
       mgaKulang.push("CHECKER");
     }
   }
   if (hour > 1200 || hour < 0) {
     //hour*60
     $("#p9").text("Please input valid time");
-    $("#getHour").addClass("border border-danger");
+    $("#getHour").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ORAS");
   }
   if (mins > 59 || mins < 0) {
     $("#p9").text("Please input valid time");
-    $("#getMin").addClass("border border-danger");
+    $("#getMin").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ORAS");
   }
   if (hour == "" && mins == "") {
     $("#p9").text("Please input valid time");
-    $("#getHour").addClass("border border-danger");
-    $("#getMin").addClass("border border-danger");
+    $("#getHour").addClass("border border-danger").addClass("bg-err");
+    $("#getMin").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ORAS");
   }
   if (!mhtype && proj != leaveID) {
     $("#p10").text("Please select manhour type");
-    $("#idMH").addClass("border border-danger");
+    $("#idMH").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("MHTYPE");
   }
   if (proj == leaveID) {
@@ -886,7 +893,7 @@ function addEntries(addMode) {
   if (item == oneBUTrainerID) {
     if (!trgrp) {
       $("#p12").text("Please select group to train");
-      $("#trGroup").addClass("border border-danger");
+      $("#trGroup").addClass("border border-danger").addClass("bg-err");
       mgaKulang.push("TRGROUP");
     }
   }
@@ -962,7 +969,9 @@ function resetEntry() {
   $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12").text("");
   $(
     "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
-  ).removeClass("border border-danger");
+  )
+    .removeClass("border border-danger")
+    .removeClass("bg-err");
   $(".checker").addClass("d-none");
   sequenceValidation();
 }
