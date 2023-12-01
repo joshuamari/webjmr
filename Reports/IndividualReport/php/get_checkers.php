@@ -16,7 +16,7 @@ $ymSelect = date("Y-m");
 if (!empty($_POST['ymSelect'])) {
     $ymSelect = $_POST['ymSelect'];
 }
-$desigList = ["SM", "DM", "AM", "SSS", "SSV", "SV"];
+$desigList = ["SM", "DM", "AM", "SSS", "SSV", "SV", "IT-SV"];
 $desigString = "('" . implode("','", $desigList) . "')";
 $members = array();
 $memberQ = "SELECT ep.fldEmployeeNum,ep.fldFirstname,ep.fldSurname,kp.fldFull FROM emp_prof AS ep JOIN kdtpositions AS kp ON ep.fldDesig=kp.fldAcro WHERE (ep.fldGroup=:empGroup OR (CONCAT('/',ep.fldGroups,'/') LIKE :eGroups)) AND (DATE_FORMAT(ep.fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(ep.fldResignDate, '%Y-%m') >= :ymSel OR ep.fldResignDate IS NULL)) AND ep.fldDesig IN $desigString";
