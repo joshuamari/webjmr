@@ -307,6 +307,7 @@ $(document).on("change", "#withTokens", function () {
     .then((repdata) => {
       createTable(repdata);
       // countToken();
+      $("#checkAllTokens").click();
     })
     .catch((error) => {
       alert(error);
@@ -495,7 +496,7 @@ function createTable(repdata) {
     <td>${manHour}</td>
     <td>${overtime}</td>
     ${jobMPM}
-    <td class="des">${description}</td>
+    <td class="des text-start">${description}</td>
     ${invopMPM}
     <td class="pic">${pic}</td>
     </tr>`;

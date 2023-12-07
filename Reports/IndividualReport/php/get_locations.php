@@ -11,7 +11,7 @@ date_default_timezone_set('Asia/Manila');
 $locations = [];
 $extraLocation = ["name" => "KDT/WFH", "id" => 0];
 
-$locations[] = $extraLocation;
+
 #endregion
 
 #region main query
@@ -22,11 +22,14 @@ try {
         $locArr = $locStmt->fetchAll();
         foreach ($locArr as $loc) {
             $output = array();
-            $id = $loc['fldID'];
+            $id = (int)$loc['fldID'];
             $name = $loc['fldLocation'];
             $output += ["name" => $name];
             $output += ["id" => $id];
             array_push($locations, $output);
+            if ($name == "WFH") {
+                $locations[] = $extraLocation;
+            }
         }
     }
 } catch (Exception $e) {
