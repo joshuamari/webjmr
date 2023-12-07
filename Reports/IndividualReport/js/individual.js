@@ -655,8 +655,6 @@ function clearViewer() {
   $(
     "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #invDays"
   ).text("");
-  $("#khiBy").text("(KHI Representative)");
-  $("#viewKhiPos").text("(Designation)");
 }
 
 function totalCost() {
