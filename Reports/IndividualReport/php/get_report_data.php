@@ -222,12 +222,12 @@ function getTimeRange($core, $duration, $isHalfDay)
     $dinnerStart = $core->Dinner->start;
     $dinnerEnd = $core->Dinner->end;
     // $timeEnd = $core->Time->end; //irrelevant
-    $halfdayStart = $core->Halfday->start;
-    $halfdayEnd = $core->Halfday->end;
+    // $halfdayStart = $core->Halfday->start;
+    // $halfdayEnd = $core->Halfday->end;
     if ($isHalfDay == $pmT) {
-        $timeStart = $halfdayEnd;
+        $timeStart = $lunchEnd;
     } else if ($isHalfDay == $amT && $duration == 4) {
-        $timeStart = date("H:i", strtotime($halfdayStart) - ($duration * 3600));
+        $timeStart = date("H:i", strtotime($lunchStart) - ($duration * 3600));
     } else {
         $timeStart = $core->Time->start;
     }

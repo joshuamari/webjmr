@@ -86,6 +86,13 @@ checkLogin()
 const { jsPDF } = globalThis.jspdf;
 //#region BINDS
 $(document).on("click", "#save", function () {
+  if ($("#khiName").val().trim() === "") {
+    $("#khiBy").text("");
+  }
+  if ($("#khiPos").val().trim() === "") {
+    $("#viewKhiPos").text("");
+  }
+
   $("#descriptionList").removeClass("open");
   saveToPDF();
   if ($("#doNotShowAgain").is(":checked")) {
@@ -100,7 +107,13 @@ $(document).on("click", "#save", function () {
 
   // Close the modal after handling 'Do not show again' preference
   $("#reminderModal .close").click();
-  $("#reminderModal .close").click();
+  if ($("#khiName").val().trim() === "") {
+    $("#khiBy").text("(KHI Representative)");
+    $("#viewKhiPos").text("(Designation)");
+  }
+  if ($("#khiPos").val().trim() === "") {
+    $("#viewKhiPos").text("(Designation)");
+  }
 });
 $(document).on("click", ".remind", function () {
   const storedValue = localStorage.getItem("doNotShowAgain");
