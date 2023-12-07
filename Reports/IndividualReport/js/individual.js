@@ -618,8 +618,8 @@ function setCheckedBy() {
   }
 }
 function setKhiRep() {
-  var name = $("#khiName").val();
-  var desig = $("#khiPos").val();
+  var name = $("#khiName").val() ? $("#khiName").val() : "(KHI Representative)";
+  var desig = $("#khiPos").val() ? $("#khiPos").val() : "(Designation)";
 
   $("#khiBy").text(name);
   $("#viewKhiPos").text(desig);
@@ -640,8 +640,10 @@ function setApprovedBy() {
 
 function clearViewer() {
   $(
-    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #viewKhiPos, #khiBy, #invDays"
+    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #invDays"
   ).text("");
+  $("#khiBy").text("(KHI Representative)");
+  $("#viewKhiPos").text("(Designation)");
 }
 
 function totalCost() {
