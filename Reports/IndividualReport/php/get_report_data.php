@@ -59,7 +59,8 @@ $excludeStmt = '';
 if (isset($_POST['exclude'])) {
     $exclude = json_decode($_POST['exclude']);
     if ($exclude) {
-        $excludeStmt = ' AND (pt.fldDirect<>0 OR pt.fldID = 6)';
+        // $excludeStmt = ' AND (pt.fldDirect<>0 OR pt.fldID = 6)';
+        $excludeStmt = ' AND (pt.fldDirect<>0)';
     }
 }
 $hoursChecked = FALSE;
