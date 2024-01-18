@@ -122,11 +122,44 @@ if ($entriesStmt->rowCount() > 0) {
         $totalOT = $ent['totalot'];
         $totalLeave = $ent['totallv'];
         $totalMH = $ent['totalmh'];
-        $regularOT = $ent['reg_ot'];
-        $rdOT = $ent['rd_ot'];
-        $rdLegal = $ent['rd_legal'];
-        $spcOT = $ent['spc_ot'];
-        $rdSpc = $ent['rd_spc'];
+        if (array_key_exists('reg_ot', $ent)) {
+            $regularOT = $ent['reg_ot'];
+            if ($regularOT) {
+                $report_data[$empid]['regularOT'] = $regularOT / 60;
+            }
+        }
+        if (array_key_exists('rd_ot', $ent)) {
+            $rdOT = $ent['rd_ot'];
+            if ($rdOT) {
+                $report_data[$empid]['rdOT'] = $rdOT / 60;
+            }
+        }
+        if (array_key_exists('legal_ot', $ent)) {
+            $legalOT = $ent['legal_ot'];
+            if ($legalOT) {
+                $report_data[$empid]['legalOT'] = $legalOT / 60;
+            }
+        }
+        if (array_key_exists('rd_legal', $ent)) {
+            $rdLegal = $ent['rd_legal'];
+            if ($rdLegal) {
+                $report_data[$empid]['rdLegal'] = $rdLegal / 60;
+            }
+        }
+        if (array_key_exists('spc_ot', $ent)) {
+            $spcOT = $ent['spc_ot'];
+            if ($spcOT) {
+                $report_data[$empid]['spcOT'] = $spcOT / 60;
+            }
+        }
+        if (array_key_exists('rd_spc', $ent)) {
+            $rdSpc = $ent['rd_spc'];
+            if ($rdSpc) {
+                $report_data[$empid]['rdSpc'] = $rdSpc / 60;
+            }
+        }
+
+
         if ($totalReg) {
             $report_data[$empid]['totalReg'] = $totalReg / 60;
         }
@@ -138,21 +171,6 @@ if ($entriesStmt->rowCount() > 0) {
         }
         if ($totalMH) {
             $report_data[$empid]['totalMH'] = $totalMH / 60;
-        }
-        if ($regularOT) {
-            $report_data[$empid]['regularOT'] = $regularOT / 60;
-        }
-        if ($rdOT) {
-            $report_data[$empid]['rdOT'] = $rdOT / 60;
-        }
-        if ($rdLegal) {
-            $report_data[$empid]['rdLegal'] = $rdLegal / 60;
-        }
-        if ($spcOT) {
-            $report_data[$empid]['spcOT'] = $spcOT / 60;
-        }
-        if ($rdSpc) {
-            $report_data[$empid]['rdSpc'] = $rdSpc / 60;
         }
     }
 }
