@@ -19,7 +19,7 @@
     <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
       var busterCall = [
-        "js/accounting.js",
+        "js/acct.js",
         "css/accounting.css",
         "css/bootstrap.min.css",
       ];
@@ -88,8 +88,9 @@
 
           <div class="form-floating col-12 col-lg-2 col-md-3 col-sm-4 mb-2">
             <select class="form-select" id="co" aria-label="Select Cut-off">
-              <option>First half</option>
-              <option>Second Half</option>
+              <option value=0>Monthly</option>
+              <option value=1>First half</option>
+              <option value=2>Second Half</option>
             </select>
             <label for="co">Select Cut-off</label>
           </div>
