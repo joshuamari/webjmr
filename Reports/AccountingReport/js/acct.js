@@ -190,7 +190,7 @@ function createTable(data){
     <td>${totreg}</td>
     <td>${totot}</td>
     <td>${totl}</td>
-    <td>unpaid katangahan</td>
+ 
     
     <td>${totmh}</td>
     <td>${totreot}</td>
