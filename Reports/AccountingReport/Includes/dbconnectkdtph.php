@@ -1,18 +1,18 @@
 <?php 
 $config = [
-  'host' => 'localhost',
+  'host' => 'kdt-ph',
   'port' => 3306,
   'dbname' => 'kdtphdb',
   'charset' => 'utf8mb4'
 ];
-$username = 'root';
-$password = '';
+$username = 'kdt';
+$password = 'none';
 $dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
   $connkdt = new PDO($dsn, $username, $password,[
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
-  $gods=['464','465','487'];
+  $gods=['464','487', '510'];
   $sys=array();
   $sysQ="SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,465,487,466)";
   $sysStmt=$connkdt->query($sysQ);

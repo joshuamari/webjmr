@@ -28,6 +28,7 @@ checkAccess()
             getReportData()
               .then((repd) => {
                 console.log(repd);
+                createTable(repd)
               })
               .catch((error) => {
                 alert(`${error}`);
@@ -81,7 +82,16 @@ function getLocations() {
       dataType: "json",
       success: function (response) {
         const locs = response;
-        resolve(locs);
+        var str = "";
+        
+        $.each(locs, function(index, loc) {
+          str += `<option value="${loc.id}">${loc.locName}</option>`;
+         
+        });
+        resolve(locs); 
+        
+        $("#selLoc").append(str);
+         
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -124,5 +134,86 @@ function getReportData() {
       },
     });
   });
+}
+function createTable(data){
+  var str = '';
+  
+  $.each(data, function(index, type) {
+      lot = type.legalOT;
+      var totreg = totot = totl = totmh = totreot = rdot = spc = rdl = rdspc = 0;
+   
+    if(type.totalReg !== undefined){
+       totreg = type.totalReg;
+       
+    }
+    if(type.totalOT !== undefined){
+      totot = type.totalOT;
+    }
+    if(type.totalLeave !== undefined){
+      totl = type.totalLeave;
+    }
+    if(type.totalMH !== undefined){
+      totmh = type.totalMH;
+    }
+    if(type.regularOT !== undefined){
+      totreot = type.regularOT;
+    }
+    if(type.rdOT !== undefined){
+      rdot = beyondHours(type.rdOT);
+    }else{
+      rdot = `<td>0</td><td>0</td>`;
+    }
+    if(type.legalOT !== undefined){
+      lot = beyondHours(type.legalOT);
+    }else{
+      lot = `<td>0</td><td>0</td>`;
+    }
+    if(type.rdLegal !== undefined){
+      rdl = beyondHours(type.rdLegal);
+    }else{
+      rdl = `<td>0</td><td>0</td>`;
+    }
+    if(type.spcOT !== undefined){
+      spc = beyondHours(type.spcOT);
+    }else{
+      spc = `<td>0</td><td>0</td>`;
+    }
+    if(type.rdSpc !== undefined){
+      rdspc = beyondHours(type.rdSpc);
+    }else{
+      rdspc = `<td>0</td><td>0</td>`;
+    }
+    str += 
+    `<tr>
+    <td>${index}</td>
+    <td>${type.name}</td>
+    <td>${totreg}</td>
+    <td>${totot}</td>
+    <td>${totl}</td>
+    <td>unpaid katangahan</td>
+    
+    <td>${totmh}</td>
+    <td>${totreot}</td>
+    ${rdot}
+    ${lot}
+    ${rdl}
+    ${spc}
+    ${rdspc}
+    </tr>
+    `;
+    
+  });$("#acctBody").append(str)
+}
+function beyondHours(data){
+  var out = "";
+  if (data > 8){
+    var sobra = '';
+    sobra = data - 8;
+    out = `<td>8</td><td>${sobra}</td>`;
+  }
+  else{
+    out = `<td>${data}</td><td>0</td>`
+  }
+  return out;
 }
 //#endregion

@@ -1,12 +1,12 @@
 <?php
 $config = [
-  'host' => 'localhost',
+  'host' => 'kdt-ph',
   'port' => 3306,
   'dbname' => 'webjmrdb',
   'charset' => 'utf8mb4'
 ];
-$username = 'root';
-$password = '';
+$username = 'kdt';
+$password = 'none';
 $dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
   $connwebjmr = new PDO($dsn, $username, $password,[
