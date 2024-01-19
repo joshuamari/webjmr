@@ -28,7 +28,7 @@ checkAccess()
             getReportData()
               .then((repd) => {
                 console.log(repd);
-                createTable(repd)
+                createTable(repd);
               })
               .catch((error) => {
                 alert(`${error}`);
@@ -48,7 +48,36 @@ checkAccess()
   });
 
 //#region BINDS
-
+$(document).on("change", "#monthSel", function () {
+  getReportData()
+    .then((repd) => {
+      console.log(repd);
+      createTable(repd);
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+});
+$(document).on("change", "#selLoc", function () {
+  getReportData()
+    .then((repd) => {
+      console.log(repd);
+      createTable(repd);
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+});
+$(document).on("change", "#co", function () {
+  getReportData()
+    .then((repd) => {
+      console.log(repd);
+      createTable(repd);
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+});
 //#endregion
 
 //#region FUNCTION
@@ -83,15 +112,13 @@ function getLocations() {
       success: function (response) {
         const locs = response;
         var str = "";
-        
-        $.each(locs, function(index, loc) {
+
+        $.each(locs, function (index, loc) {
           str += `<option value="${loc.id}">${loc.locName}</option>`;
-         
         });
-        resolve(locs); 
-        
+        resolve(locs);
+
         $("#selLoc").append(str);
-         
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -135,56 +162,64 @@ function getReportData() {
     });
   });
 }
-function createTable(data){
-  var str = '';
-  
-  $.each(data, function(index, type) {
-      lot = type.legalOT;
-      var totreg = totot = totl = totmh = totreot = rdot = spc = rdl = rdspc = 0;
-   
-    if(type.totalReg !== undefined){
-       totreg = type.totalReg;
-       
+function createTable(data) {
+  $("#acctBody").empty();
+  var str = "";
+
+  $.each(data, function (index, type) {
+    lot = type.legalOT;
+    var totreg =
+      (totot =
+      totl =
+      totmh =
+      totreot =
+      rdot =
+      spc =
+      rdl =
+      rdspc =
+        0);
+
+    if (type.totalReg !== undefined) {
+      totreg = type.totalReg;
     }
-    if(type.totalOT !== undefined){
+    if (type.totalOT !== undefined) {
       totot = type.totalOT;
     }
-    if(type.totalLeave !== undefined){
+    if (type.totalLeave !== undefined) {
       totl = type.totalLeave;
     }
-    if(type.totalMH !== undefined){
+    if (type.totalMH !== undefined) {
       totmh = type.totalMH;
     }
-    if(type.regularOT !== undefined){
+    if (type.regularOT !== undefined) {
       totreot = type.regularOT;
     }
-    if(type.rdOT !== undefined){
+    if (type.rdOT !== undefined) {
       rdot = beyondHours(type.rdOT);
-    }else{
+    } else {
       rdot = `<td>0</td><td>0</td>`;
     }
-    if(type.legalOT !== undefined){
+    if (type.legalOT !== undefined) {
       lot = beyondHours(type.legalOT);
-    }else{
+    } else {
       lot = `<td>0</td><td>0</td>`;
     }
-    if(type.rdLegal !== undefined){
+    if (type.rdLegal !== undefined) {
       rdl = beyondHours(type.rdLegal);
-    }else{
+    } else {
       rdl = `<td>0</td><td>0</td>`;
     }
-    if(type.spcOT !== undefined){
+    if (type.spcOT !== undefined) {
       spc = beyondHours(type.spcOT);
-    }else{
+    } else {
       spc = `<td>0</td><td>0</td>`;
     }
-    if(type.rdSpc !== undefined){
+    if (type.rdSpc !== undefined) {
       rdspc = beyondHours(type.rdSpc);
-    }else{
+    } else {
       rdspc = `<td>0</td><td>0</td>`;
     }
-    str += 
-    `<tr>
+    str += `<tr>
     <td>${index}</td>
     <td>${type.name}</td>
     <td>${totreg}</td>
@@ -201,18 +236,17 @@ function createTable(data){
     ${rdspc}
     </tr>
     `;
-    
-  });$("#acctBody").append(str)
+  });
+  $("#acctBody").append(str);
 }
-function beyondHours(data){
+function beyondHours(data) {
   var out = "";
-  if (data > 8){
-    var sobra = '';
+  if (data > 8) {
+    var sobra = "";
     sobra = data - 8;
     out = `<td>8</td><td>${sobra}</td>`;
-  }
-  else{
-    out = `<td>${data}</td><td>0</td>`
+  } else {
+    out = `<td>${data}</td><td>0</td>`;
   }
   return out;
 }
