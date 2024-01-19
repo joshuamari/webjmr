@@ -24,6 +24,8 @@ checkAccess()
         );
         getLocations()
           .then((locs) => {
+            console.log(locs)
+            createTable1(locs);
             fillLocations(locs);
             getReportData()
               .then((repd) => {
@@ -59,6 +61,7 @@ $(document).on("change", "#monthSel", function () {
     });
 });
 $(document).on("change", "#selLoc", function () {
+  
   getReportData()
     .then((repd) => {
       console.log(repd);
@@ -111,14 +114,7 @@ function getLocations() {
       dataType: "json",
       success: function (response) {
         const locs = response;
-        var str = "";
-
-        $.each(locs, function (index, loc) {
-          str += `<option value="${loc.id}">${loc.locName}</option>`;
-        });
         resolve(locs);
-
-        $("#selLoc").append(str);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -135,7 +131,7 @@ function getLocations() {
 function fillLocations(loc) {
   $("#selLoc").empty();
   var str = "";
-
+  str = `<option loc-id="0">All</option>`;
   $.each(loc, function (index, loc) {
     str += `<option loc-id="${loc.id}">${loc.locName}</option>`;
   });
@@ -172,8 +168,470 @@ function getReportData() {
     });
   });
 }
+function createTable1(location){
+  $(".mainTable").empty();
+  var str = "";
+  $.each(location, function (index, loc){
+    if (index === 0 ){
+      str += `
+    <table table-id="${loc.id}" class="table table-hover w-100">
+    <thead class="sticky-top shadow-sm">
+    <tr>
+      <th colspan="17" class="locName" style="background-color: #eee !important;">${loc.locName}</th>
+    </tr>
+    <tr data-fill-color="b6f9a1" class="heady">
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Employee No.
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Employee Name
+      </th>
+      <th id="loc-head"
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+        style="display:none"
+      >
+        Location
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Regular Hours
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Overtime
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Leave
+      </th>
+      <!-- <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Unpaid Leave
+      </th> -->
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Hours
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Regular Overtime (1.3)
+      </th>
+      <th
+        colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Rest-day OT
+      </th>
+      <th
+        colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Legal Holiday
+      </th>
+      <th
+        colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        RDOT & Legal Holiday
+      </th>
+      <th
+        colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Special Holiday
+      </th>
+      <th
+        colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        RDOT & Special Holiday
+      </th>
+    </tr>
+    <tr class="heady">
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        First 8 Hours (1.3)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Beyond 8 Hours (1.7)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        First 8 Hours (2.0)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Beyond 8 Hours (2.6)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        First 8 Hours (2.6)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Beyond 8 Hours (3.3)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        First 8 Hours (1.4)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Beyond 8 Hours (1.7)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        First 8 Hours (1.5)
+      </th>
+      <th
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Beyond 8 Hours (1.8)
+      </th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+    </table>
+    `}
+    else{
+      str += `
+    <table table-id="${loc.id}" class="table table-hover w-100 ">
+    <thead class="sticky-top">
+    <tr>
+      <th colspan="7" class="locName" style="background-color: #eee !important;">${loc.locName}</th>
+    </tr>
+    <tr data-fill-color="b6f9a1" class="heady">
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Employee No.
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Employee Name
+      </th>
+      <th id="loc-head"
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+        style="display:none"
+      >
+        Location
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Regular Hours
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Overtime
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Leave
+      </th>
+      <!-- <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Unpaid Leave
+      </th> -->
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Total Hours
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Regular Overtime (1.3)
+      </th>
+      
+    </tr>
+    
+  </thead>
+  <tbody></tbody>
+    </table>
+    `
+    }
+  })
+  $(".mainTable").append(str)
+
+}
 function createTable(data) {
-  $("#acctBody").empty();
+  var table = $(".mainTable table[table-id='1'] tbody");
+  table.empty();
+  // $("#acctBody").empty();
   var str = "";
 
   $.each(data, function (index, type) {
@@ -247,7 +705,8 @@ function createTable(data) {
     </tr>
     `;
   });
-  $("#acctBody").append(str);
+  // $("#acctBody").append(str);
+  table.append(str);
 }
 function beyondHours(data) {
   var out = "";

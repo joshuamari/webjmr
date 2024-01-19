@@ -21,7 +21,7 @@ h6 {
 }
 td,
 th {
-  border: 0.5px solid #777 !important;
+  border: 1px solid #777 !important;
   color: #333;
   text-align: center;
   vertical-align: middle;
@@ -67,6 +67,26 @@ body {
   --header-color: #444;
   --lightblue-color: #476f95;
   --green-color: #7bae37;
+}
+table {
+  border-collapse:separate !important;
+  border-spacing: 0;
+  width: 100%;
+}
+table thead tr:first-of-type th{
+  border-bottom: 0px !important;
+}
+table thead tr:nth-of-type(3) th{
+  border-top: 0px !important;
+}
+table thead tr:not(:first-of-type) th:not(:last-of-type){
+  border-right: 0px !important;
+}
+table tbody tr:not(:last-of-type) td{
+  border-bottom: 0px !important;
+}
+table tbody tr td:not(:last-of-type){
+  border-right: 0px !important;
 }
 /* modal */
 .modal-header {
