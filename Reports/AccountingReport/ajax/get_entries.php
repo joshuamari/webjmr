@@ -15,8 +15,10 @@ if (!empty($_POST['yearMonth'])) {
 }
 $selYearMonth = date("Y-m-01", strtotime($yearMonth));
 $loc = 'KDT';
+$locStmt = " `fldLocation` <> 0 ";
 if (!empty($_POST['loc'])) {
     $loc = (int)$_POST['loc'];
+    $locStmt = " `fldLocation` = $loc ";
 }
 $dateRanges = getRanges($yearMonth);
 $cutOff = 0;
@@ -109,13 +111,13 @@ END
 FROM
     `dailyreport`
 WHERE
-    `fldLocation` = :locID
+$locStmt
 $dateCompare
 GROUP BY
     `fldEmployeeNum`
 ";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
-$entriesStmt->execute([":leaveID" => $leaveID, ":locID" => $loc]);
+$entriesStmt->execute([":leaveID" => $leaveID]);
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $ent) {

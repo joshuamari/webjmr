@@ -24,7 +24,7 @@ checkAccess()
         );
         getLocations()
           .then((locs) => {
-            console.log(locs)
+            console.log(locs);
             createTable1(locs);
             fillLocations(locs);
             getReportData()
@@ -61,7 +61,6 @@ $(document).on("change", "#monthSel", function () {
     });
 });
 $(document).on("change", "#selLoc", function () {
-  
   getReportData()
     .then((repd) => {
       console.log(repd);
@@ -168,11 +167,11 @@ function getReportData() {
     });
   });
 }
-function createTable1(location){
+function createTable1(location) {
   $(".mainTable").empty();
   var str = "";
-  $.each(location, function (index, loc){
-    if (index === 0 ){
+  $.each(location, function (index, loc) {
+    if (index === 0) {
       str += `
     <table table-id="${loc.id}" class="table table-hover w-100">
     <thead class="sticky-top shadow-sm">
@@ -489,8 +488,8 @@ function createTable1(location){
   </thead>
   <tbody></tbody>
     </table>
-    `}
-    else{
+    `;
+    } else {
       str += `
     <table table-id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
@@ -622,11 +621,10 @@ function createTable1(location){
   </thead>
   <tbody></tbody>
     </table>
-    `
+    `;
     }
-  })
-  $(".mainTable").append(str)
-
+  });
+  $(".mainTable").append(str);
 }
 function createTable(data) {
   var table = $(".mainTable table[table-id='1'] tbody");
