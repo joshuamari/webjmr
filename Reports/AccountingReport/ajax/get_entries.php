@@ -16,7 +16,7 @@ if (!empty($_POST['yearMonth'])) {
 $selYearMonth = date("Y-m-01", strtotime($yearMonth));
 $loc = 'KDT';
 if (!empty($_POST['loc'])) {
-    $loc = $_POST['loc'];
+    $loc = (int)$_POST['loc'];
 }
 $dateRanges = getRanges($yearMonth);
 $cutOff = 0;
@@ -26,13 +26,13 @@ if (!empty($_POST['cutOff'])) {
 $dateCompare = '';
 switch ($cutOff) {
     case 1:
-        $dateCompare = " WHERE `fldDate` >= '" . $dateRanges['firstHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['firstHalf']['end'] . "'";
+        $dateCompare = " AND `fldDate` >= '" . $dateRanges['firstHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['firstHalf']['end'] . "'";
         break;
     case 2:
-        $dateCompare = " WHERE `fldDate` >= '" . $dateRanges['secondHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['secondHalf']['end'] . "'";
+        $dateCompare = " AND `fldDate` >= '" . $dateRanges['secondHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['secondHalf']['end'] . "'";
         break;
     default:
-        $dateCompare = " WHERE `fldDate` LIKE '$yearMonth-%'";
+        $dateCompare = " AND `fldDate` LIKE '$yearMonth-%'";
 }
 $entriesArray = array();
 $maypasok = getMayPasok($yearMonth, $loc);
@@ -108,12 +108,14 @@ END
 ) AS totalmh $regOTStmt $restdayOT $legalOTStmt $restdayLegalStmt $specialOTStmt $restdaySpcStmt
 FROM
     `dailyreport`
+WHERE
+    `fldLocation` = :locID
 $dateCompare
 GROUP BY
     `fldEmployeeNum`
 ";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
-$entriesStmt->execute([":leaveID" => $leaveID]);
+$entriesStmt->execute([":leaveID" => $leaveID, ":locID" => $loc]);
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $ent) {

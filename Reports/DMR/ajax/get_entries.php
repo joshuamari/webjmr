@@ -39,7 +39,11 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldDirect,pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJobRequestDescription=jrd.fldID AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldNoSheets,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr JOIN projectstable AS pt ON pt.fldID=dr.fldProject JOIN itemofworkstable AS it ON dr.fldItem=it.fldID JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay $projStatement AND ((pt.fldGroup IS NULL AND dr.fldGroup=:groupSel) OR (pt.fldGroup = :groupSel))GROUP BY dr.fldEmployeeNum,dr.fldJobRequestDescription,dr.fldDate ORDER BY pt.fldDirect DESC,pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
+$entriesQuery = "SELECT pt.fldDirect,pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND (
+    (fldJobRequestDescription = jrd.fldID AND fldProject <> 5)
+    OR
+    (fldItem = it.fldID AND fldProject = 5)
+  ) AND fldDate BETWEEN :fDay AND :lDay) AS mhused,(SELECT fldHours FROM planning WHERE fldEmployeeNum=dr.fldEmployeeNum AND fldJob=jrd.fldID AND dr.fldDate BETWEEN fldStartDate AND fldEndDate) AS planned,jrd.fldNoSheets,jrd.fldDrawingName,jrd.fldKHIC,jrd.fldKHIDate,jrd.fldKHIDeadline,jrd.fldKDTDeadline FROM `dailyreport` AS dr LEFT JOIN projectstable AS pt ON pt.fldID=dr.fldProject LEFT JOIN itemofworkstable AS it ON dr.fldItem=it.fldID LEFT JOIN drawingreference AS jrd ON dr.fldJobRequestDescription=jrd.fldID WHERE dr.`fldEmployeeNum` IN $mgaEmp AND fldDate BETWEEN :fDay AND :lDay $projStatement AND ((pt.fldGroup IS NULL AND dr.fldGroup=:groupSel) OR (pt.fldGroup = :groupSel)) AND pt.fldID<>6 GROUP BY dr.fldEmployeeNum,dr.fldJobRequestDescription,dr.fldDate ORDER BY pt.fldDirect DESC,pt.fldProject,dr.fldEmployeeNum,dr.fldDate";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":fDay" => $firstDay, ":lDay" => $lastDay, ":groupSel" => $groupSel]);
 $entriesArr = $entriesStmt->fetchAll();
