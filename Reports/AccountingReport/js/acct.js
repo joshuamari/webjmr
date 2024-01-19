@@ -24,7 +24,7 @@ checkAccess()
         );
         getLocations()
           .then((locs) => {
-            console.log(locs);
+            fillLocations(locs);
             getReportData()
               .then((repd) => {
                 console.log(repd);
@@ -131,6 +131,16 @@ function getLocations() {
       },
     });
   });
+}
+function fillLocations(loc) {
+  $("#selLoc").empty();
+  var str = "";
+
+  $.each(loc, function (index, loc) {
+    str += `<option loc-id="${loc.id}">${loc.locName}</option>`;
+  });
+
+  $("#selLoc").append(str);
 }
 function getReportData() {
   const locSel = $("#selLoc").find("option:selected").attr("loc-id");
