@@ -51,6 +51,7 @@ checkAccess()
 
 //#region BINDS
 $(document).on("change", "#monthSel", function () {
+  
   getReportData()
     .then((repd) => {
       console.log(repd);
@@ -61,6 +62,31 @@ $(document).on("change", "#monthSel", function () {
     });
 });
 $(document).on("change", "#selLoc", function () {
+  var loc = parseInt($("#selLoc :selected").attr("loc-id"));
+  console.log(loc)
+  if(loc === 0){
+    $("table").removeClass("d-none");
+  }
+  if(loc === 1){
+    $("table").addClass("d-none");
+    $(".mainTable table[table-id='1']").removeClass("d-none")
+  }
+  if(loc === 2){
+    $("table").addClass("d-none");
+    $(".mainTable table[table-id='2']").removeClass("d-none")
+  }
+  if(loc === 3){
+    $("table").addClass("d-none");
+    $(".mainTable table[table-id='3']").removeClass("d-none")
+  }
+  if(loc === 4){
+    $("table").addClass("d-none");
+    $(".mainTable table[table-id='4']").removeClass("d-none")
+  }
+  if(loc === 5){
+    $("table").addClass("d-none");
+    $(".mainTable table[table-id='5']").removeClass("d-none")
+  }
   getReportData()
     .then((repd) => {
       console.log(repd);
