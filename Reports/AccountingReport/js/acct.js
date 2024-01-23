@@ -586,7 +586,7 @@ function createTable1(location) {
         data-b-a-c="000000"
         data-fill-color="bbffbc"
       >
-        Total Overtime
+        Total Overtime (1.3)
       </th>
       <th
         rowspan="2"
@@ -627,19 +627,7 @@ function createTable1(location) {
       >
         Total Hours
       </th>
-      <th
-        rowspan="2"
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Regular Overtime (1.3)
-      </th>
+      
       
     </tr>
     
@@ -731,9 +719,9 @@ function createTable(data, locs) {
     <td>${totl}</td>
 
     <td>${totmh}</td>
-    <td>${totreot}</td>`;
+    `;
         if (locid == 1) {
-          str += `<td>${rdot}</td>
+          str += `<td>${totreot}</td><td>${rdot}</td>
     <td>${rdot_beyond}</td>
     <td>${lot}</td>
     <td>${lot_beyond}</td>
