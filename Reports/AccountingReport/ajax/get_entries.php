@@ -15,11 +15,11 @@ if (!empty($_POST['yearMonth'])) {
 }
 $selYearMonth = date("Y-m-01", strtotime($yearMonth));
 $loc = 'KDT';
-$locStmt = " `fldLocation` <> 0 ";
-if (!empty($_POST['loc'])) {
-    $loc = (int)$_POST['loc'];
-    $locStmt = " `fldLocation` = $loc ";
-}
+// $locStmt = " `fldLocation` <> 0 ";
+// if (!empty($_POST['loc'])) {
+//     $loc = (int)$_POST['loc'];
+//     $locStmt = " `fldLocation` = $loc ";
+// }
 $dateRanges = getRanges($yearMonth);
 $cutOff = 0;
 if (!empty($_POST['cutOff'])) {
@@ -43,55 +43,65 @@ $regHolidaysRaw = getRegular($yearMonth, $loc);
 $specialHolidaysRaw = getSpecial($yearMonth, $loc);
 $legalRegular = array_values(array_intersect($weekendsRaw, $regHolidaysRaw));
 $restdayLegalStmt = '';
+$restdayLegalBeyondStmt = '';
 if (!empty($legalRegular)) {
-    $restdayLegalStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` IN ('" . implode("','", $legalRegular) . "') THEN `fldDuration` ELSE 0 END) AS rd_legal";
+    $restdayLegalStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalRegular) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_legal";
+    $restdayLegalBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalRegular) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_legalbeyond";
 }
 $legalSpecial = array_values(array_intersect($weekendsRaw, $specialHolidaysRaw));
 $restdaySpcStmt = '';
+$restdaySpcBeyondStmt = '';
 if (!empty($legalSpecial)) {
-    $restdaySpcStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') THEN `fldDuration` ELSE 0 END) AS rd_spc";
+    $restdaySpcStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_spc";
+    $restdaySpcBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_spcbeyond";
 }
 $regHolidays = array_diff($regHolidaysRaw, $legalRegular);
 $legalOTStmt = '';
+$legalOTBeyondStmt = '';
 if (!empty($regHolidays)) {
-    $legalOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` IN ('" . implode("','", $regHolidays) . "') THEN `fldDuration` ELSE 0 END) AS legal_ot";
+    $legalOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $regHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS legal_ot";
+    $legalOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $regHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS legal_otbeyond";
 }
 $specialHolidays = array_diff($specialHolidaysRaw, $legalSpecial);
 $specialOTStmt = '';
+$specialOTBeyondStmt = '';
 if (!empty($specialHolidays)) {
-    $specialOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') THEN `fldDuration` ELSE 0 END) AS spc_ot";
+    $specialOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS spc_ot";
+    $specialOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS spc_otbeyond";
 }
 $weekends = array_diff($weekendsRaw, $legalRegular, $legalSpecial);
-$restdayOT = '';
+$restdayOTStmt = '';
+$restdayOTBeyondStmt = '';
 if (!empty($weekends)) {
-    $restdayOT = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` IN ('" . implode("','", $weekends) . "') THEN `fldDuration` ELSE 0 END) AS rd_ot";
+    $restdayOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $weekends) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_ot";
+    $restdayOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $weekends) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_otbeyond";
 }
 $nonWorkingDays = array_values(array_unique(array_merge($weekendsRaw, $regHolidaysRaw, $specialHolidaysRaw)));
 $regOTStmt = '';
 if (!empty($nonWorkingDays)) {
-    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` ELSE 0 END) AS reg_ot";
+    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` WHEN `fldMHType` = 1 AND `fldLocation` <> 1 THEN `fldDuration` ELSE 0 END) AS reg_ot";
 }
 
 
 $report_data = array();
 //employee query here
-$allEmpQ = "SELECT `fldEmployeeNum`,CONCAT(`fldSurname`,', ',`fldFirstname`)  AS ename FROM emp_prof WHERE fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>:selYearMonth) ORDER BY fldEmployeeNum";
-$elStmt = $connkdt->prepare($allEmpQ);
-$elStmt->execute([":selYearMonth" => $selYearMonth]);
-if ($elStmt->rowCount() > 0) {
-    $elArr = $elStmt->fetchAll();
-    foreach ($elArr as $el) {
-        $enum = $el['fldEmployeeNum'];
-        $ename = $el['ename'];
-        $report_data[$enum]['name'] = $ename;
-    }
-}
+// $allEmpQ = "SELECT `fldEmployeeNum`,CONCAT(`fldSurname`,', ',`fldFirstname`)  AS ename FROM emp_prof WHERE fldNick<>'' AND (fldResignDate IS NULL OR fldResignDate>:selYearMonth) ORDER BY fldEmployeeNum";
+// $elStmt = $connkdt->prepare($allEmpQ);
+// $elStmt->execute([":selYearMonth" => $selYearMonth]);
+// if ($elStmt->rowCount() > 0) {
+//     $elArr = $elStmt->fetchAll();
+//     foreach ($elArr as $el) {
+//         $enum = $el['fldEmployeeNum'];
+//         $ename = $el['ename'];
+//         $report_data[$enum]['name'] = $ename;
+//     }
+// }
 
 #endregion
 
 #region main
 $entriesQuery = "SELECT
-`fldEmployeeNum`,
+`fldEmployeeNum`,`fldLocation`,
 SUM(
     CASE WHEN `fldMHType` = 0 THEN `fldDuration` ELSE 0
 END
@@ -107,14 +117,14 @@ END
 SUM(
 CASE WHEN `fldProject` != :leaveID THEN `fldDuration` ELSE 0
 END
-) AS totalmh $regOTStmt $restdayOT $legalOTStmt $restdayLegalStmt $specialOTStmt $restdaySpcStmt
+) AS totalmh $regOTStmt $restdayOTStmt $restdayOTBeyondStmt $legalOTStmt $legalOTBeyondStmt $restdayLegalStmt $restdayLegalBeyondStmt $specialOTStmt $specialOTBeyondStmt $restdaySpcStmt $restdaySpcBeyondStmt
 FROM
     `dailyreport`
 WHERE
-$locStmt
+`fldLocation` <> 0
 $dateCompare
 GROUP BY
-    `fldEmployeeNum`
+    `fldEmployeeNum`,`fldLocation`
 ";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":leaveID" => $leaveID]);
@@ -122,6 +132,8 @@ if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $ent) {
         $empid = $ent['fldEmployeeNum'];
+        $ename = getName($empid);
+        $location = (int)$ent['fldLocation'];
         $totalReg = $ent['totalreg'];
         $totalOT = $ent['totalot'];
         $totalLeave = $ent['totallv'];
@@ -129,52 +141,85 @@ if ($entriesStmt->rowCount() > 0) {
         if (array_key_exists('reg_ot', $ent)) {
             $regularOT = $ent['reg_ot'];
             if ($regularOT) {
-                $report_data[$empid]['regularOT'] = $regularOT / 60;
+                $report_data[$location][$empid]['mh']['regularOT'] = $regularOT / 60;
             }
         }
         if (array_key_exists('rd_ot', $ent)) {
             $rdOT = $ent['rd_ot'];
             if ($rdOT) {
-                $report_data[$empid]['rdOT'] = $rdOT / 60;
+                $report_data[$location][$empid]['mh']['rdOT'] = $rdOT / 60;
+            }
+        }
+        if (array_key_exists('rd_otbeyond', $ent)) {
+            $rdOTBeyond = $ent['rd_otbeyond'];
+            if ($rdOT) {
+                $report_data[$location][$empid]['mh']['rdOTBeyond'] = $rdOTBeyond / 60;
             }
         }
         if (array_key_exists('legal_ot', $ent)) {
             $legalOT = $ent['legal_ot'];
             if ($legalOT) {
-                $report_data[$empid]['legalOT'] = $legalOT / 60;
+                $report_data[$location][$empid]['mh']['legalOT'] = $legalOT / 60;
+            }
+        }
+        if (array_key_exists('legal_otbeyond', $ent)) {
+            $legalOTBeyond = $ent['legal_otbeyond'];
+            if ($legalOTBeyond) {
+                $report_data[$location][$empid]['mh']['legalOTBeyond'] = $legalOTBeyond / 60;
             }
         }
         if (array_key_exists('rd_legal', $ent)) {
             $rdLegal = $ent['rd_legal'];
             if ($rdLegal) {
-                $report_data[$empid]['rdLegal'] = $rdLegal / 60;
+                $report_data[$location][$empid]['mh']['rdLegal'] = $rdLegal / 60;
+            }
+        }
+        if (array_key_exists('rd_legalbeyond', $ent)) {
+            $rdLegalBeyond = $ent['rd_legalbeyond'];
+            if ($rdLegalBeyond) {
+                $report_data[$location][$empid]['mh']['rdLegalBeyond'] = $rdLegalBeyond / 60;
             }
         }
         if (array_key_exists('spc_ot', $ent)) {
             $spcOT = $ent['spc_ot'];
             if ($spcOT) {
-                $report_data[$empid]['spcOT'] = $spcOT / 60;
+                $report_data[$location][$empid]['mh']['spcOT'] = $spcOT / 60;
+            }
+        }
+        if (array_key_exists('spc_otbeyond', $ent)) {
+            $spcOTBeyond = $ent['spc_otbeyond'];
+            if ($spcOTBeyond) {
+                $report_data[$location][$empid]['mh']['spcOTBeyond'] = $spcOTBeyond / 60;
             }
         }
         if (array_key_exists('rd_spc', $ent)) {
             $rdSpc = $ent['rd_spc'];
             if ($rdSpc) {
-                $report_data[$empid]['rdSpc'] = $rdSpc / 60;
+                $report_data[$location][$empid]['mh']['rdSpc'] = $rdSpc / 60;
+            }
+        }
+        if (array_key_exists('rd_spcbeyond', $ent)) {
+            $rdSpcBeyond = $ent['rd_spcbeyond'];
+            if ($rdSpcBeyond) {
+                $report_data[$location][$empid]['mh']['rdSpcBeyond'] = $rdSpcBeyond / 60;
             }
         }
 
 
         if ($totalReg) {
-            $report_data[$empid]['totalReg'] = $totalReg / 60;
+            $report_data[$location][$empid]['mh']['totalReg'] = $totalReg / 60;
         }
         if ($totalOT) {
-            $report_data[$empid]['totalOT'] = $totalOT / 60;
+            $report_data[$location][$empid]['mh']['totalOT'] = $totalOT / 60;
         }
         if ($totalLeave) {
-            $report_data[$empid]['totalLeave'] = $totalLeave / 60;
+            $report_data[$location][$empid]['mh']['totalLeave'] = $totalLeave / 60;
         }
         if ($totalMH) {
-            $report_data[$empid]['totalMH'] = $totalMH / 60;
+            $report_data[$location][$empid]['mh']['totalMH'] = $totalMH / 60;
+        }
+        if (!array_key_exists('name', $report_data[$location][$empid])) {
+            $report_data[$location][$empid]['name'] = $ename;
         }
     }
 }

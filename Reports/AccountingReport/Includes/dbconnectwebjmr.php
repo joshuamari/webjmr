@@ -1,6 +1,6 @@
 <?php
 $config = [
-  'host' => 'kdt-ph',
+  'host' => 'kdtw593',
   'port' => 3306,
   'dbname' => 'webjmrdb',
   'charset' => 'utf8mb4'

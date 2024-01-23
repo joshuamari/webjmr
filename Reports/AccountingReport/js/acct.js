@@ -12,6 +12,7 @@ switch (document.location.hostname) {
 }
 
 const today = new Date();
+var locations = [];
 //#endregion
 checkAccess()
   .then((acc) => {
@@ -24,13 +25,12 @@ checkAccess()
         );
         getLocations()
           .then((locs) => {
-            console.log(locs);
-            createTable1(locs);
-            fillLocations(locs);
+            locations = locs;
+            createTable1(locations);
+            fillLocations(locations);
             getReportData()
               .then((repd) => {
-                console.log(repd);
-                createTable(repd);
+                createTable(repd, locations);
               })
               .catch((error) => {
                 alert(`${error}`);
@@ -51,11 +51,10 @@ checkAccess()
 
 //#region BINDS
 $(document).on("change", "#monthSel", function () {
-  
   getReportData()
     .then((repd) => {
       console.log(repd);
-      createTable(repd);
+      createTable(repd, locations);
     })
     .catch((error) => {
       alert(`${error}`);
@@ -63,34 +62,34 @@ $(document).on("change", "#monthSel", function () {
 });
 $(document).on("change", "#selLoc", function () {
   var loc = parseInt($("#selLoc :selected").attr("loc-id"));
-  console.log(loc)
-  if(loc === 0){
+  console.log(loc);
+  if (loc === 0) {
     $("table").removeClass("d-none");
   }
-  if(loc === 1){
+  if (loc === 1) {
     $("table").addClass("d-none");
-    $(".mainTable table[table-id='1']").removeClass("d-none")
+    $(".mainTable table[table-id='1']").removeClass("d-none");
   }
-  if(loc === 2){
+  if (loc === 2) {
     $("table").addClass("d-none");
-    $(".mainTable table[table-id='2']").removeClass("d-none")
+    $(".mainTable table[table-id='2']").removeClass("d-none");
   }
-  if(loc === 3){
+  if (loc === 3) {
     $("table").addClass("d-none");
-    $(".mainTable table[table-id='3']").removeClass("d-none")
+    $(".mainTable table[table-id='3']").removeClass("d-none");
   }
-  if(loc === 4){
+  if (loc === 4) {
     $("table").addClass("d-none");
-    $(".mainTable table[table-id='4']").removeClass("d-none")
+    $(".mainTable table[table-id='4']").removeClass("d-none");
   }
-  if(loc === 5){
+  if (loc === 5) {
     $("table").addClass("d-none");
-    $(".mainTable table[table-id='5']").removeClass("d-none")
+    $(".mainTable table[table-id='5']").removeClass("d-none");
   }
   getReportData()
     .then((repd) => {
       console.log(repd);
-      createTable(repd);
+      createTable(repd, locations);
     })
     .catch((error) => {
       alert(`${error}`);
@@ -100,7 +99,7 @@ $(document).on("change", "#co", function () {
   getReportData()
     .then((repd) => {
       console.log(repd);
-      createTable(repd);
+      createTable(repd, locations);
     })
     .catch((error) => {
       alert(`${error}`);
@@ -652,95 +651,197 @@ function createTable1(location) {
   });
   $(".mainTable").append(str);
 }
-function createTable(data) {
-  var table = $(".mainTable table[table-id='1'] tbody");
-  table.empty();
-  // $("#acctBody").empty();
-  var str = "";
-
-  $.each(data, function (index, type) {
-    lot = type.legalOT;
-    var totreg =
-      (totot =
-      totl =
-      totmh =
-      totreot =
-      rdot =
-      spc =
-      rdl =
-      rdspc =
-        0);
-
-    if (type.totalReg !== undefined) {
-      totreg = type.totalReg;
-    }
-    if (type.totalOT !== undefined) {
-      totot = type.totalOT;
-    }
-    if (type.totalLeave !== undefined) {
-      totl = type.totalLeave;
-    }
-    if (type.totalMH !== undefined) {
-      totmh = type.totalMH;
-    }
-    if (type.regularOT !== undefined) {
-      totreot = type.regularOT;
-    }
-    if (type.rdOT !== undefined) {
-      rdot = beyondHours(type.rdOT);
-    } else {
-      rdot = `<td>0</td><td>0</td>`;
-    }
-    if (type.legalOT !== undefined) {
-      lot = beyondHours(type.legalOT);
-    } else {
-      lot = `<td>0</td><td>0</td>`;
-    }
-    if (type.rdLegal !== undefined) {
-      rdl = beyondHours(type.rdLegal);
-    } else {
-      rdl = `<td>0</td><td>0</td>`;
-    }
-    if (type.spcOT !== undefined) {
-      spc = beyondHours(type.spcOT);
-    } else {
-      spc = `<td>0</td><td>0</td>`;
-    }
-    if (type.rdSpc !== undefined) {
-      rdspc = beyondHours(type.rdSpc);
-    } else {
-      rdspc = `<td>0</td><td>0</td>`;
-    }
-    str += `<tr>
-    <td>${index}</td>
-    <td>${type.name}</td>
+function createTable(data, locs) {
+  $(".mainTable table tbody").empty();
+  locs.forEach((element) => {
+    const locid = element.id;
+    var table = $(`.mainTable table[table-id='${locid}'] tbody`);
+    if (data.hasOwnProperty(locid)) {
+      var locData = data[locid];
+      Object.keys(locData).forEach((employeeKey) => {
+        const mhObject = locData[employeeKey]["mh"];
+        const employeeName = locData[employeeKey]["name"];
+        var str = "";
+        var totreg = 0,
+          totot = 0,
+          totl = 0,
+          totmh = 0,
+          totreot = 0,
+          rdot = 0,
+          rdot_beyond = 0,
+          lot = 0,
+          lot_beyond = 0,
+          spc = 0,
+          spc_beyond = 0,
+          rdl = 0,
+          rdl_beyond = 0,
+          rdspc = 0,
+          rdspc_beyond = 0;
+        if (mhObject.totalReg !== undefined) {
+          totreg = mhObject.totalReg;
+        }
+        if (mhObject.totalOT !== undefined) {
+          totot = mhObject.totalOT;
+        }
+        if (mhObject.totalLeave !== undefined) {
+          totl = mhObject.totalLeave;
+        }
+        if (mhObject.totalMH !== undefined) {
+          totmh = mhObject.totalMH;
+        }
+        if (mhObject.regularOT !== undefined) {
+          totreot = mhObject.regularOT;
+        }
+        if (mhObject.rdOT !== undefined) {
+          rdot = mhObject.rdOT;
+        }
+        if (mhObject.rdOTBeyond !== undefined) {
+          rdot_beyond = mhObject.rdOTBeyond;
+        }
+        if (mhObject.legalOT !== undefined) {
+          lot = mhObject.legalOT;
+        }
+        if (mhObject.legalOTBeyond !== undefined) {
+          lot_beyond = mhObject.legalOTBeyond;
+        }
+        if (mhObject.rdLegal !== undefined) {
+          rdl = mhObject.rdLegal;
+        }
+        if (mhObject.rdLegalBeyond !== undefined) {
+          //
+          rdl_beyond = mhObject.rdLegalBeyond;
+        }
+        if (mhObject.spcOT !== undefined) {
+          spc = mhObject.spcOT;
+        }
+        if (mhObject.spcOTBeyond !== undefined) {
+          spc_beyond = mhObject.spcOTBeyond;
+        }
+        if (mhObject.rdSpc !== undefined) {
+          rdspc = mhObject.rdSpc;
+        }
+        if (mhObject.rdSpcBeyond !== undefined) {
+          rdspc_beyond = mhObject.rdSpcBeyond;
+        }
+        str += `<tr>
+    <td>${employeeKey}</td>
+    <td>${employeeName}</td>
     <td>${totreg}</td>
     <td>${totot}</td>
     <td>${totl}</td>
- 
-    
+
     <td>${totmh}</td>
-    <td>${totreot}</td>
-    ${rdot}
-    ${lot}
-    ${rdl}
-    ${spc}
-    ${rdspc}
+    <td>${totreot}</td>`;
+        if (locid == 1) {
+          str += `<td>${rdot}</td>
+    <td>${rdot_beyond}</td>
+    <td>${lot}</td>
+    <td>${lot_beyond}</td>
+    <td>${rdl}</td>
+    <td>${rdl_beyond}</td>
+    <td>${spc}</td>
+    <td>${spc_beyond}</td>
+    <td>${rdspc}</td>
+    <td>${rdspc_beyond}</td>
     </tr>
     `;
+        }
+
+        str += `</tr>`;
+        table.append(str);
+      });
+    } else {
+      table.append("no data found row here");
+    }
   });
+  // var table = $(".mainTable table[table-id='1'] tbody");
+  // var str = "";
+  // $.each(data, function (index, type) {
+  //   var totreg = 0,
+  //     totot = 0,
+  //     totl = 0,
+  //     totmh = 0,
+  //     totreot = 0,
+  //     rdot = 0,
+  //     rdot_beyond = 0,
+  //     lot = 0,
+  //     lot_beyond = 0,
+  //     spc = 0,
+  //     spc_beyond = 0,
+  //     rdl = 0,
+  //     rdl_beyond = 0,
+  //     rdspc = 0,
+  //     rdspc_beyond = 0;
+
+  //   if (type.totalReg !== undefined) {
+  //     totreg = type.totalReg;
+  //   }
+  //   if (type.totalOT !== undefined) {
+  //     totot = type.totalOT;
+  //   }
+  //   if (type.totalLeave !== undefined) {
+  //     totl = type.totalLeave;
+  //   }
+  //   if (type.totalMH !== undefined) {
+  //     totmh = type.totalMH;
+  //   }
+  //   if (type.regularOT !== undefined) {
+  //     totreot = type.regularOT;
+  //   }
+  //   if (type.rdOT !== undefined) {
+  //     rdot = type.rdOT;
+  //   }
+  //   if (type.rdOTBeyond !== undefined) {
+  //     rdot_beyond = type.rdOTBeyond;
+  //   }
+  //   if (type.legalOT !== undefined) {
+  //     lot = type.legalOT;
+  //   }
+  //   if (type.legalOTBeyond !== undefined) {
+  //     lot_beyond = type.legalOTBeyond;
+  //   }
+  //   if (type.rdLegal !== undefined) {
+  //     rdl = type.rdLegal;
+  //   }
+  //   if (type.rdLegalBeyond !== undefined) {
+  //     //
+  //     rdl_beyond = type.rdLegalBeyond;
+  //   }
+  //   if (type.spcOT !== undefined) {
+  //     spc = type.spcOT;
+  //   }
+  //   if (type.spcOTBeyond !== undefined) {
+  //     spc_beyond = type.spcOTBeyond;
+  //   }
+  //   if (type.rdSpc !== undefined) {
+  //     rdspc = type.rdSpc;
+  //   }
+  //   if (type.rdSpcBeyond !== undefined) {
+  //     rdspc_beyond = type.rdSpcBeyond;
+  //   }
+  //   str += `<tr>
+  //   <td>${index}</td>
+  //   <td>${type.name}</td>
+  //   <td>${totreg}</td>
+  //   <td>${totot}</td>
+  //   <td>${totl}</td>
+
+  //   <td>${totmh}</td>
+  //   <td>${totreot}</td>
+  //   <td>${rdot}</td>
+  //   <td>${rdot_beyond}</td>
+  //   <td>${lot}</td>
+  //   <td>${lot_beyond}</td>
+  //   <td>${rdl}</td>
+  //   <td>${rdl_beyond}</td>
+  //   <td>${spc}</td>
+  //   <td>${spc_beyond}</td>
+  //   <td>${rdspc}</td>
+  //   <td>${rdspc_beyond}</td>
+  //   </tr>
+  //   `;
+  // });
   // $("#acctBody").append(str);
-  table.append(str);
-}
-function beyondHours(data) {
-  var out = "";
-  if (data > 8) {
-    var sobra = "";
-    sobra = data - 8;
-    out = `<td>8</td><td>${sobra}</td>`;
-  } else {
-    out = `<td>${data}</td><td>0</td>`;
-  }
-  return out;
+  // table.append(str);
 }
 //#endregion
