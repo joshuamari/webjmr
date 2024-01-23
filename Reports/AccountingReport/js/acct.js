@@ -751,7 +751,13 @@ function createTable(data, locs) {
         table.append(str);
       });
     } else {
-      table.append("no data found row here");
+      if(locid == 1){
+        table.append("<tr><td colspan='17'>No data found.</td></tr>");
+      }
+      else{
+        table.append("<tr><td colspan='7'>No data found.</td></tr>");
+      }
+      
     }
   });
   // var table = $(".mainTable table[table-id='1'] tbody");
