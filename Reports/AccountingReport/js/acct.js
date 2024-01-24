@@ -511,15 +511,15 @@ function createTable1(location) {
       </th>
     </tr>
   </thead>
-  <tbody></tbody>
+  <tbody id="mainBody"></tbody>
     </table>
     `;
     } else {
       str += `
-    <table table-id="${loc.id}" class="table table-hover w-100 ">
+    <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
-    <tr>
-      <th colspan="7" class="locName" style="background-color: #eee !important;"
+    <tr class="locRow" >
+      <th colspan="6" class="locName" style="background-color: #eee !important;"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -531,7 +531,7 @@ function createTable1(location) {
     </tr>
     <tr data-fill-color="b6f9a1" class="heady">
       <th
-        rowspan="2"
+    
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -544,7 +544,7 @@ function createTable1(location) {
         Employee No.
       </th>
       <th
-        rowspan="2"
+   
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -558,7 +558,7 @@ function createTable1(location) {
       </th>
       
       <th
-        rowspan="2"
+     
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -571,7 +571,7 @@ function createTable1(location) {
         Regular Hours
       </th>
       <th
-        rowspan="2"
+     
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -584,7 +584,7 @@ function createTable1(location) {
         Total Overtime (1.3)
       </th>
       <th
-        rowspan="2"
+      
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -597,7 +597,7 @@ function createTable1(location) {
         Total Leave
       </th>
       <!-- <th
-        rowspan="2"
+   
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -610,7 +610,7 @@ function createTable1(location) {
         Unpaid Leave
       </th> -->
       <th
-        rowspan="2"
+      
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -883,7 +883,7 @@ function createTable(data, locs) {
         data-b-a-c="000000">No data found.</td></tr>`);
       }
       else{
-        table.append(`<tr class="noData"><td colspan='7'data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='6'data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -1136,10 +1136,59 @@ function calculateTotals(table) {
 
   return totals;
 }
+function convertTables() {
+  var str = "";
+  $(".mainTable table[id!=1]").each(function () {
+    var tableId = $(this).attr("id");
+    var table = $(`#${tableId}`);
+    var htmlString = "";
+    table.find("tr").each(function () {
+      var props = `data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"`;
+      if ($(this).hasClass("locRow")) {
+        props = `data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="eeeeee"
+        colspan="6"`;
+      }
+      if ($(this).hasClass("heady")) {
+        props = `data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"`;
+      }
+      htmlString += "<tr class='toRemove'>";
+      $(this)
+        .find("td, th")
+        .each(function () {
+          htmlString += `<td class='toRemove' ${props}>${$(this).html()}</td>`;
+        });
+      htmlString += "</tr>";
+    });
+    str += htmlString;
+  });
+  $("#mainBody").append(str);
+}
 
 
 function tableToExcel(){
+  
   addTotal();
+  convertTables();
   var month = $("#monthSel").val();
   var co = $("#co option:selected").text();
   TableToExcel.convert(document.getElementById("1"), {
@@ -1150,6 +1199,7 @@ function tableToExcel(){
   });
 
   $("tfoot").remove()
+  $(".toRemove").remove()
 }
 
 // function tableToExcel() {
