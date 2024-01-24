@@ -874,7 +874,8 @@ function createTable(data, locs) {
       });
     } else {
       if(locid == 1){
-        table.append(`<tr class="noData"><td colspan='17' data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='17' 
+        data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -883,7 +884,8 @@ function createTable(data, locs) {
         data-b-a-c="000000">No data found.</td></tr>`);
       }
       else{
-        table.append(`<tr class="noData"><td colspan='6'data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='6'
+        data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -911,8 +913,8 @@ function addTotal() {
       var str = "";
       var totals = calculateTotals(table);
       if (index === 0) {
-      str = `<tfoot>
-      <tr>
+      str = `
+      <tr class="totalAll">
         <td colspan="2"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1071,11 +1073,19 @@ function addTotal() {
         >${totals[14]}</td>
       
       </tr>
-    </tfoot>`;
+    `;
     } else {
-      str = `<tfoot>
-      <tr>
-        <td colspan="2">Total</td>
+      str = `
+      <tr class="totalAll">
+      <td colspan="2"
+      data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"
+      >Total</td>
         <td
         data-f-name="Arial"
         data-f-sz="9"
@@ -1113,10 +1123,10 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[3]}</td>
       </tr>
-      </tfoot>`;
+      `;
     }
 
-    table.append(str);
+    table.find("tbody").append(str);
   }
   });
 }
@@ -1175,7 +1185,15 @@ function convertTables() {
       $(this)
         .find("td, th")
         .each(function () {
-          htmlString += `<td class='toRemove' ${props}>${$(this).html()}</td>`;
+          var col = '';
+          if($(this).html()=="Total"){
+            col = `colspan=2`;
+           
+          }
+          if($($(this).parent()).hasClass("noData")){
+            col = `colspan=6`;
+          }
+          htmlString += `<td class='toRemove' ${props} ${col}>${$(this).html()}</td>`;
         });
       htmlString += "</tr>";
     });
@@ -1198,7 +1216,7 @@ function tableToExcel(){
     },
   });
 
-  $("tfoot").remove()
+  $(".totalAll").remove()
   $(".toRemove").remove()
 }
 
