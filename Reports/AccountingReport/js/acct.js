@@ -105,6 +105,9 @@ $(document).on("change", "#co", function () {
       alert(`${error}`);
     });
 });
+$(document).on("click", "#btnExport", function(){
+  tableToExcel();
+})
 //#endregion
 
 //#region FUNCTION
@@ -198,10 +201,18 @@ function createTable1(location) {
   $.each(location, function (index, loc) {
     if (index === 0) {
       str += `
-    <table table-id="${loc.id}" class="table table-hover w-100">
+    <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100">
     <thead class="sticky-top shadow-sm">
     <tr>
-      <th colspan="17" class="locName" style="background-color: #eee !important;">${loc.locName}</th>
+      <th colspan="17" class="locName" style="background-color: #eee !important;"
+      data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="eeeeee">${loc.locName}</th>
     </tr>
     <tr data-fill-color="b6f9a1" class="heady">
       <th
@@ -230,20 +241,7 @@ function createTable1(location) {
       >
         Employee Name
       </th>
-      <th id="loc-head"
-        rowspan="2"
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-        style="display:none"
-      >
-        Location
-      </th>
+      
       <th
         rowspan="2"
         data-f-name="Arial"
@@ -519,7 +517,15 @@ function createTable1(location) {
     <table table-id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
     <tr>
-      <th colspan="7" class="locName" style="background-color: #eee !important;">${loc.locName}</th>
+      <th colspan="7" class="locName" style="background-color: #eee !important;"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="eeeeee">${loc.locName}</th>
     </tr>
     <tr data-fill-color="b6f9a1" class="heady">
       <th
@@ -548,20 +554,7 @@ function createTable1(location) {
       >
         Employee Name
       </th>
-      <th id="loc-head"
-        rowspan="2"
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-        style="display:none"
-      >
-        Location
-      </th>
+      
       <th
         rowspan="2"
         data-f-name="Arial"
@@ -712,25 +705,164 @@ function createTable(data, locs) {
           rdspc_beyond = mhObject.rdSpcBeyond;
         }
         str += `<tr>
-    <td>${employeeKey}</td>
-    <td>${employeeName}</td>
-    <td>${totreg}</td>
-    <td>${totot}</td>
-    <td>${totl}</td>
+    <td 
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${employeeKey}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="left"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${employeeName}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totreg}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totot}</td>
+    <td 
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totl}</td>
 
-    <td>${totmh}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totmh}</td>
     `;
         if (locid == 1) {
-          str += `<td>${totreot}</td><td>${rdot}</td>
-    <td>${rdot_beyond}</td>
-    <td>${lot}</td>
-    <td>${lot_beyond}</td>
-    <td>${rdl}</td>
-    <td>${rdl_beyond}</td>
-    <td>${spc}</td>
-    <td>${spc_beyond}</td>
-    <td>${rdspc}</td>
-    <td>${rdspc_beyond}</td>
+          str += `
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totreot}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdot}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdot_beyond}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${lot}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${lot_beyond}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdl}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdl_beyond}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${spc}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${spc_beyond}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdspc}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${rdspc_beyond}</td>
+    
     </tr>
     `;
         }
@@ -740,102 +872,100 @@ function createTable(data, locs) {
       });
     } else {
       if(locid == 1){
-        table.append("<tr><td colspan='17'>No data found.</td></tr>");
+        table.append(`<tr><td colspan='17' data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000">No data found.</td></tr>`);
       }
       else{
-        table.append("<tr><td colspan='7'>No data found.</td></tr>");
+        table.append(`<tr><td colspan='7'data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000">No data found.</td></tr>`);
       }
       
     }
   });
-  // var table = $(".mainTable table[table-id='1'] tbody");
-  // var str = "";
-  // $.each(data, function (index, type) {
-  //   var totreg = 0,
-  //     totot = 0,
-  //     totl = 0,
-  //     totmh = 0,
-  //     totreot = 0,
-  //     rdot = 0,
-  //     rdot_beyond = 0,
-  //     lot = 0,
-  //     lot_beyond = 0,
-  //     spc = 0,
-  //     spc_beyond = 0,
-  //     rdl = 0,
-  //     rdl_beyond = 0,
-  //     rdspc = 0,
-  //     rdspc_beyond = 0;
-
-  //   if (type.totalReg !== undefined) {
-  //     totreg = type.totalReg;
-  //   }
-  //   if (type.totalOT !== undefined) {
-  //     totot = type.totalOT;
-  //   }
-  //   if (type.totalLeave !== undefined) {
-  //     totl = type.totalLeave;
-  //   }
-  //   if (type.totalMH !== undefined) {
-  //     totmh = type.totalMH;
-  //   }
-  //   if (type.regularOT !== undefined) {
-  //     totreot = type.regularOT;
-  //   }
-  //   if (type.rdOT !== undefined) {
-  //     rdot = type.rdOT;
-  //   }
-  //   if (type.rdOTBeyond !== undefined) {
-  //     rdot_beyond = type.rdOTBeyond;
-  //   }
-  //   if (type.legalOT !== undefined) {
-  //     lot = type.legalOT;
-  //   }
-  //   if (type.legalOTBeyond !== undefined) {
-  //     lot_beyond = type.legalOTBeyond;
-  //   }
-  //   if (type.rdLegal !== undefined) {
-  //     rdl = type.rdLegal;
-  //   }
-  //   if (type.rdLegalBeyond !== undefined) {
-  //     //
-  //     rdl_beyond = type.rdLegalBeyond;
-  //   }
-  //   if (type.spcOT !== undefined) {
-  //     spc = type.spcOT;
-  //   }
-  //   if (type.spcOTBeyond !== undefined) {
-  //     spc_beyond = type.spcOTBeyond;
-  //   }
-  //   if (type.rdSpc !== undefined) {
-  //     rdspc = type.rdSpc;
-  //   }
-  //   if (type.rdSpcBeyond !== undefined) {
-  //     rdspc_beyond = type.rdSpcBeyond;
-  //   }
-  //   str += `<tr>
-  //   <td>${index}</td>
-  //   <td>${type.name}</td>
-  //   <td>${totreg}</td>
-  //   <td>${totot}</td>
-  //   <td>${totl}</td>
-
-  //   <td>${totmh}</td>
-  //   <td>${totreot}</td>
-  //   <td>${rdot}</td>
-  //   <td>${rdot_beyond}</td>
-  //   <td>${lot}</td>
-  //   <td>${lot_beyond}</td>
-  //   <td>${rdl}</td>
-  //   <td>${rdl_beyond}</td>
-  //   <td>${spc}</td>
-  //   <td>${spc_beyond}</td>
-  //   <td>${rdspc}</td>
-  //   <td>${rdspc_beyond}</td>
-  //   </tr>
-  //   `;
-  // });
-  // $("#acctBody").append(str);
-  // table.append(str);
+  
 }
-//#endregion
+function addTotal(){
+  var tblid = $(".mainTable ")
+  $('.maintTable table').each(function (index){
+    if()
+  })
+}
+function tableToExcel(){
+  var month = $("#monthSel").val();
+  var co = $("#co option:selected").text();
+  TableToExcel.convert(document.getElementById("1"), {
+    name: `Accounting Report_${month}_${co}.xlsx`,
+    sheet: {
+      name: `${month}`
+    },
+  });
+}
+
+// function tableToExcel() {
+//   const wb = XLSX.utils.book_new();
+
+//   $('table').each(function (index) {
+//     const ws_data = [];
+//     $(this).find('tr').each(function () {
+//       const row_data = [];
+//       $(this).find('th, td').each(function () {
+//         const cellValue = $(this).text();
+//         const cell = { v: cellValue };
+
+//         // Mapping some styles
+//         const cellStyle = {};
+
+//         if ($(this).is('th')) {
+//           // Header styles
+//           cellStyle.font = { bold: true, color: { rgb: '000000' } };
+//           cellStyle.fill = { fgColor: { rgb: 'EEEEEE' } };
+//           cellStyle.alignment = { horizontal: 'center', vertical: 'middle' };
+//           cellStyle.border = { top: { style: 'thin', color: { rgb: '000000' } }, bottom: { style: 'thin', color: { rgb: '000000' } } };
+//         } else {
+//           // Data cell styles
+//           cellStyle.alignment = { horizontal: 'center', vertical: 'middle' };
+//           cellStyle.border = { top: { style: 'thin', color: { rgb: '000000' } }, bottom: { style: 'thin', color: { rgb: '000000' } } };
+
+//           // Extracting background color
+//           const bgColor = $(this).css('background-color');
+//           if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
+//             cellStyle.fill = { fgColor: { rgb: rgbToHex(bgColor) } };
+//           }
+//         }
+
+//         if (Object.keys(cellStyle).length > 0) {
+//           cell.s = cellStyle;
+//         }
+
+//         row_data.push(cell);
+//       });
+//       ws_data.push(row_data);
+//     });
+
+//     const ws = XLSX.utils.aoa_to_sheet(ws_data);
+//     XLSX.utils.book_append_sheet(wb, ws, `Sheet${index + 1}`);
+//   });
+
+//   XLSX.writeFile(wb, 'exported_tables.xlsx');
+// }
+
+// function rgbToHex(rgb) {
+//   const hex = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+//   return hex ? '#' +
+//     ('0' + parseInt(hex[1], 10).toString(16)).slice(-2) +
+//     ('0' + parseInt(hex[2], 10).toString(16)).slice(-2) +
+//     ('0' + parseInt(hex[3], 10).toString(16)).slice(-2) : '';
+// }
+
+
+// #endregion
