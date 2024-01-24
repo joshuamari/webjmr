@@ -107,6 +107,8 @@ $(document).on("change", "#co", function () {
 });
 $(document).on("click", "#btnExport", function(){
   tableToExcel();
+  
+
 })
 //#endregion
 
@@ -872,7 +874,7 @@ function createTable(data, locs) {
       });
     } else {
       if(locid == 1){
-        table.append(`<tr><td colspan='17' data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='17' data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -881,7 +883,7 @@ function createTable(data, locs) {
         data-b-a-c="000000">No data found.</td></tr>`);
       }
       else{
-        table.append(`<tr><td colspan='7'data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='7'data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -891,16 +893,253 @@ function createTable(data, locs) {
       }
       
     }
+    
   });
   
 }
-function addTotal(){
-  var tblid = $(".mainTable ")
-  $('.maintTable table').each(function (index){
-    if()
-  })
+function addTotal() {
+  $('.mainTable table').each(function (index) {
+    var table = $(this);
+    
+
+    var hasNoData = table.find('tbody tr.noData').length > 0;
+
+    // Calculate totals
+    
+
+    if(!hasNoData){
+      var str = "";
+      var totals = calculateTotals(table);
+      if (index === 0) {
+      str = `<tfoot>
+      <tr>
+        <td colspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        >Total</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[0]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[1]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[2]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[3]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[4]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[5]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[6]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[7]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[8]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[9]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[10]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[11]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[12]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[13]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[14]}</td>
+      
+      </tr>
+    </tfoot>`;
+    } else {
+      str = `<tfoot>
+      <tr>
+        <td colspan="2">Total</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[0]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[1]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[2]}</td>
+        <td
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[3]}</td>
+      </tr>
+      </tfoot>`;
+    }
+
+    table.append(str);
+  }
+  });
 }
+function calculateTotals(table) {
+  var totals = [];
+
+  table.find('tbody tr:first-child td').each(function () {
+    var columnIndex = $(this).index() + 3;
+    var total = 0;
+
+    table.find('tbody tr td:nth-child(' + columnIndex + ')').each(function () {
+      total += parseFloat($(this).text()) || 0;
+    });
+
+    totals.push(total);
+  });
+
+  return totals;
+}
+
+
 function tableToExcel(){
+  addTotal();
   var month = $("#monthSel").val();
   var co = $("#co option:selected").text();
   TableToExcel.convert(document.getElementById("1"), {
@@ -909,6 +1148,8 @@ function tableToExcel(){
       name: `${month}`
     },
   });
+
+  $("tfoot").remove()
 }
 
 // function tableToExcel() {

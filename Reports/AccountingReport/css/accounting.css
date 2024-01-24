@@ -162,6 +162,15 @@ table tbody tr td:not(:last-of-type){
 }
 table thead th {
   background-color: #bbffbc !important;
+
+}
+table tfoot td{
+  font-weight: bold;
+  border-top: 0 !important;
+
+}
+table tfoot td:not(:last-of-type){
+  border-right: 0 !important;
 }
 table tbody .bu {
   cursor: pointer;
