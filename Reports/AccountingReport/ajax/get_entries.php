@@ -79,9 +79,9 @@ if (!empty($weekends)) {
 $nonWorkingDays = array_values(array_unique(array_merge($weekendsRaw, $regHolidaysRaw, $specialHolidaysRaw)));
 $regOTStmt = '';
 if (!empty($nonWorkingDays)) {
-    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` WHEN `fldMHType` = 1 AND `fldLocation` <> 1 THEN `fldDuration` ELSE 0 END) AS reg_ot";
+    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` ELSE 0 END) AS reg_ot";
 }
-
+$totalWorkingDays = getDaysInMonths($yearMonth) - count($nonWorkingDays);
 
 $report_data = array();
 //employee query here
@@ -138,6 +138,8 @@ if ($entriesStmt->rowCount() > 0) {
         $totalOT = $ent['totalot'];
         $totalLeave = $ent['totallv'];
         $totalMH = $ent['totalmh'];
+
+        $totalMH_WFH = 450 * ($totalWorkingDays - getPinasokSaKDT($yearMonth, $empid));
         if (array_key_exists('reg_ot', $ent)) {
             $regularOT = $ent['reg_ot'];
             if ($regularOT) {
@@ -206,14 +208,29 @@ if ($entriesStmt->rowCount() > 0) {
         }
 
 
+
         if ($totalReg) {
-            $report_data[$location][$empid]['mh']['totalReg'] = $totalReg / 60;
+            if ($location == 2 && $totalReg > $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalReg'] = $totalMH_WFH / 60;
+            } else {
+                $report_data[$location][$empid]['mh']['totalReg'] = $totalReg / 60;
+            }
         }
+
         if ($totalOT) {
             $report_data[$location][$empid]['mh']['totalOT'] = $totalOT / 60;
+        } else {
+            if ($location == 2 && $cutOff == 0  && $totalReg > $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalOT'] = ($totalReg - $totalMH_WFH) / 60;
+            }
         }
+
         if ($totalLeave) {
             $report_data[$location][$empid]['mh']['totalLeave'] = $totalLeave / 60;
+        } else {
+            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalLeave'] = ($totalMH_WFH - $totalReg) / 60;
+            }
         }
         if ($totalMH) {
             $report_data[$location][$empid]['mh']['totalMH'] = $totalMH / 60;
@@ -322,5 +339,22 @@ function getRanges($yearmonth)
         'firstHalf' => ['start' => $firstHalfStartDate, 'end' => $firstHalfEndDate],
         'secondHalf' => ['start' => $secondHalfStartDate, 'end' => $secondHalfEndDate],
     ];
+}
+function getDaysInMonths($yearmonth)
+{
+    $numberOfDays = 0;
+    list($year, $month) = explode("-", $yearmonth);
+    $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    return $numberOfDays;
+}
+function getPinasokSaKDT($yearmonth, $empid)
+{
+    global $connwebjmr;
+    $count = 0;
+    $countQ = "SELECT COUNT(*) FROM dailyreport WHERE fldDate LIKE :yearmonth AND fldEmployeeNum = :empid AND fldLocation = 1";
+    $countStmt = $connwebjmr->prepare($countQ);
+    $countStmt->execute([":yearmonth" => "$yearmonth%", ":empid" => $empid]);
+    $count = $countStmt->fetchColumn();
+    return $count;
 }
 #endregion
