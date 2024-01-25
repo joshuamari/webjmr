@@ -243,6 +243,7 @@ function createTable1(location) {
       
       <th
         rowspan="2"
+        
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -723,6 +724,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${employeeName}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -732,6 +734,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${totreg}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -741,6 +744,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${totot}</td>
     <td 
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -751,6 +755,7 @@ function createTable(data, locs) {
     ${totl}</td>
 
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -763,6 +768,7 @@ function createTable(data, locs) {
         if (locid == 1) {
           str += `
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -772,6 +778,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${totreot}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -781,6 +788,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${rdot}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -790,6 +798,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${rdot_beyond}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -799,6 +808,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${lot}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -808,6 +818,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${lot_beyond}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -817,6 +828,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${rdl}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -826,6 +838,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${rdl_beyond}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -835,6 +848,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${spc}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -844,6 +858,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${spc_beyond}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -853,6 +868,7 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${rdspc}</td>
     <td
+    data-t="n"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -917,6 +933,7 @@ function addTotal() {
         data-b-a-c="000000"
         >Total</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -927,6 +944,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[0]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -936,6 +954,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[1]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -945,6 +964,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[2]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -954,6 +974,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[3]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -964,6 +985,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[4]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -974,6 +996,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[5]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -984,6 +1007,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[6]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -994,6 +1018,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[7]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1004,6 +1029,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[8]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1014,6 +1040,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[9]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1024,6 +1051,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[10]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1034,6 +1062,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[11]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1044,6 +1073,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[12]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1054,6 +1084,7 @@ function addTotal() {
         data-f-color="dc1f1f"
         >${totals[13]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1079,6 +1110,7 @@ function addTotal() {
       data-b-a-c="000000"
       >Total</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1088,6 +1120,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[0]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1097,6 +1130,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[1]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1106,6 +1140,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[2]}</td>
         <td class="pula"
+        data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1151,6 +1186,7 @@ function convertTables() {
         .each(function () {
           var col = "";
           var props = `data-f-name="Arial"
+         
           data-f-sz="9"
           data-f-bold="true"
           data-a-h="center"
@@ -1163,9 +1199,11 @@ function convertTables() {
           }
           if ($($(this).parent()).hasClass("noData")) {
             col = `colspan=6`;
+            
           }
           if ($($(this).parent()).hasClass("locRow")) {
             props = `data-f-name="Arial"
+            data-t="s"
             data-f-sz="9"
             data-f-bold="true"
             data-a-h="center"
@@ -1177,6 +1215,7 @@ function convertTables() {
           }
           if ($($(this).parent()).hasClass("heady")) {
             props = `data-f-name="Arial"
+            data-t="s"
             data-f-sz="9"
             data-f-bold="true"
             data-a-h="center"
@@ -1187,6 +1226,7 @@ function convertTables() {
           }
           if ($($(this)).hasClass("pula")) {
             props = `data-f-name="Arial"
+            data-t="n"
             data-f-sz="9"
             data-f-bold="true"
             data-a-h="center"
@@ -1197,6 +1237,7 @@ function convertTables() {
           }
           if ($(this).hasClass("pangalan")) {
             props = `data-f-name="Arial"
+            data-t="s"
             data-f-sz="9"
             data-f-bold="true"
             data-a-h="left"
