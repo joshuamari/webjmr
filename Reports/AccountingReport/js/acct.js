@@ -55,7 +55,6 @@ checkAccess()
 $(document).on("change", "#monthSel", function () {
   getReportData()
     .then((repd) => {
-      console.log(repd);
       createTable(repd, locations);
     })
     .catch((error) => {
@@ -64,7 +63,6 @@ $(document).on("change", "#monthSel", function () {
 });
 $(document).on("change", "#selLoc", function () {
   var loc = parseInt($("#selLoc :selected").attr("loc-id"));
-  console.log(loc);
   if (loc === 0) {
     $("table").removeClass("d-none");
   }
@@ -90,7 +88,6 @@ $(document).on("change", "#selLoc", function () {
   }
   getReportData()
     .then((repd) => {
-      console.log(repd);
       createTable(repd, locations);
     })
     .catch((error) => {
@@ -100,7 +97,6 @@ $(document).on("change", "#selLoc", function () {
 $(document).on("change", "#co", function () {
   getReportData()
     .then((repd) => {
-      console.log(repd);
       createTable(repd, locations);
     })
     .catch((error) => {
@@ -1237,7 +1233,7 @@ function tableToExcel() {
 }
 function loading() {
   var lottie = `<div class=" d-flex lottie justify-content-center align-items-center">
-  <dotlottie-player src="lottie.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
+  <dotlottie-player src="lottie.json" background="transparent" speed="1" style="width: 800px; height: 800px;" loop autoplay></dotlottie-player>
 </div>`;
 
   $(".mainTable").before(lottie);
