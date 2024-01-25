@@ -716,7 +716,7 @@ function createTable(data, locs) {
     data-b-a-s="thin"
     data-b-a-c="000000">
     ${employeeKey}</td>
-    <td
+    <td class="pangalan text-start"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -874,7 +874,8 @@ function createTable(data, locs) {
       });
     } else {
       if(locid == 1){
-        table.append(`<tr class="noData"><td colspan='17' data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='17' 
+        data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -883,7 +884,8 @@ function createTable(data, locs) {
         data-b-a-c="000000">No data found.</td></tr>`);
       }
       else{
-        table.append(`<tr class="noData"><td colspan='6'data-f-name="Arial"
+        table.append(`<tr class="noData"><td colspan='6'
+        data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
         data-a-h="center"
@@ -911,8 +913,8 @@ function addTotal() {
       var str = "";
       var totals = calculateTotals(table);
       if (index === 0) {
-      str = `<tfoot>
-      <tr>
+      str = `
+      <tr class="totalAll">
         <td colspan="2"
         data-f-name="Arial"
         data-f-sz="9"
@@ -922,7 +924,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         >Total</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -932,7 +934,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[0]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -941,7 +943,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[1]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -950,7 +952,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[2]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -959,7 +961,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[3]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -969,7 +971,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[4]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -979,7 +981,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[5]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -989,7 +991,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[6]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -999,7 +1001,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[7]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1009,7 +1011,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[8]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1019,7 +1021,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[9]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1029,7 +1031,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[10]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1039,7 +1041,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[11]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1049,7 +1051,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[12]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1059,7 +1061,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[13]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1071,12 +1073,20 @@ function addTotal() {
         >${totals[14]}</td>
       
       </tr>
-    </tfoot>`;
+    `;
     } else {
-      str = `<tfoot>
-      <tr>
-        <td colspan="2">Total</td>
-        <td
+      str = `
+      <tr class="totalAll">
+      <td colspan="2"
+      data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"
+      >Total</td>
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1085,7 +1095,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[0]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1094,7 +1104,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[1]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1103,7 +1113,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[2]}</td>
-        <td
+        <td class="pula"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1113,10 +1123,10 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[3]}</td>
       </tr>
-      </tfoot>`;
+      `;
     }
 
-    table.append(str);
+    table.find("tbody").append(str);
   }
   });
 }
@@ -1143,39 +1153,71 @@ function convertTables() {
     var table = $(`#${tableId}`);
     var htmlString = "";
     table.find("tr").each(function () {
-      var props = `data-f-name="Arial"
-      data-f-sz="9"
-      data-f-bold="true"
-      data-a-h="center"
-      data-a-v="middle"
-      data-b-a-s="thin"
-      data-b-a-c="000000"`;
-      if ($(this).hasClass("locRow")) {
-        props = `data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="eeeeee"
-        colspan="6"`;
-      }
-      if ($(this).hasClass("heady")) {
-        props = `data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"`;
-      }
+      
+
+    
       htmlString += "<tr class='toRemove'>";
       $(this)
         .find("td, th")
         .each(function () {
-          htmlString += `<td class='toRemove' ${props}>${$(this).html()}</td>`;
+          var col = '';
+          var props = `data-f-name="Arial"
+          data-f-sz="9"
+          data-f-bold="true"
+          data-a-h="center"
+          data-a-v="middle"
+          data-b-a-s="thin"
+          data-b-a-c="000000"`;
+
+          if($(this).html()=="Total"){
+            col = `colspan=2`;
+           
+          }
+          if($($(this).parent()).hasClass("noData")){
+            col = `colspan=6`;
+          }
+          if ($($(this).parent()).hasClass("locRow")) {
+            props = `data-f-name="Arial"
+            data-f-sz="9"
+            data-f-bold="true"
+            data-a-h="center"
+            data-a-v="middle"
+            data-b-a-s="thin"
+            data-b-a-c="000000"
+            data-fill-color="eeeeee"
+            colspan="6"`;
+          }
+          if ($($(this).parent()).hasClass("heady")) {
+            props = `data-f-name="Arial"
+            data-f-sz="9"
+            data-f-bold="true"
+            data-a-h="center"
+            data-a-v="middle"
+            data-b-a-s="thin"
+            data-b-a-c="000000"
+            data-fill-color="bbffbc"`;
+          }
+          if($($(this)).hasClass("pula")){
+            props = `data-f-name="Arial"
+            data-f-sz="9"
+            data-f-bold="true"
+            data-a-h="center"
+            data-a-v="middle"
+            data-b-a-s="thin"
+            data-b-a-c="000000"
+            data-f-color="dc1f1f"`
+          }
+          if($(this).hasClass("pangalan")){
+            props = `data-f-name="Arial"
+            data-f-sz="9"
+            data-f-bold="true"
+            data-a-h="left"
+            data-a-v="middle"
+            data-b-a-s="thin"
+            data-b-a-c="000000"
+            `
+          }
+          htmlString += `<td class='toRemove' ${props} ${col}>${$(this).html()}</td>`;
         });
       htmlString += "</tr>";
     });
@@ -1198,65 +1240,9 @@ function tableToExcel(){
     },
   });
 
-  $("tfoot").remove()
+  $(".totalAll").remove()
   $(".toRemove").remove()
 }
-
-// function tableToExcel() {
-//   const wb = XLSX.utils.book_new();
-
-//   $('table').each(function (index) {
-//     const ws_data = [];
-//     $(this).find('tr').each(function () {
-//       const row_data = [];
-//       $(this).find('th, td').each(function () {
-//         const cellValue = $(this).text();
-//         const cell = { v: cellValue };
-
-//         // Mapping some styles
-//         const cellStyle = {};
-
-//         if ($(this).is('th')) {
-//           // Header styles
-//           cellStyle.font = { bold: true, color: { rgb: '000000' } };
-//           cellStyle.fill = { fgColor: { rgb: 'EEEEEE' } };
-//           cellStyle.alignment = { horizontal: 'center', vertical: 'middle' };
-//           cellStyle.border = { top: { style: 'thin', color: { rgb: '000000' } }, bottom: { style: 'thin', color: { rgb: '000000' } } };
-//         } else {
-//           // Data cell styles
-//           cellStyle.alignment = { horizontal: 'center', vertical: 'middle' };
-//           cellStyle.border = { top: { style: 'thin', color: { rgb: '000000' } }, bottom: { style: 'thin', color: { rgb: '000000' } } };
-
-//           // Extracting background color
-//           const bgColor = $(this).css('background-color');
-//           if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent') {
-//             cellStyle.fill = { fgColor: { rgb: rgbToHex(bgColor) } };
-//           }
-//         }
-
-//         if (Object.keys(cellStyle).length > 0) {
-//           cell.s = cellStyle;
-//         }
-
-//         row_data.push(cell);
-//       });
-//       ws_data.push(row_data);
-//     });
-
-//     const ws = XLSX.utils.aoa_to_sheet(ws_data);
-//     XLSX.utils.book_append_sheet(wb, ws, `Sheet${index + 1}`);
-//   });
-
-//   XLSX.writeFile(wb, 'exported_tables.xlsx');
-// }
-
-// function rgbToHex(rgb) {
-//   const hex = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-//   return hex ? '#' +
-//     ('0' + parseInt(hex[1], 10).toString(16)).slice(-2) +
-//     ('0' + parseInt(hex[2], 10).toString(16)).slice(-2) +
-//     ('0' + parseInt(hex[3], 10).toString(16)).slice(-2) : '';
-// }
 
 
 // #endregion
