@@ -200,7 +200,16 @@ table tbody .collapse {
 tbody .collapse td:first-child {
   text-align: left !important;
 }
-
+.lottie{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100000;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(255 255 255 / 75%);
+    backdrop-filter: blur(3px);
+}
 @media screen and (max-width: 768px) {
   .right button {
     width: 100%;

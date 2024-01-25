@@ -30,7 +30,9 @@ checkAccess()
             fillLocations(locations);
             getReportData()
               .then((repd) => {
+                // loading();
                 createTable(repd, locations);
+                // $(".lottie").remove();
               })
               .catch((error) => {
                 alert(`${error}`);
@@ -171,6 +173,7 @@ function getReportData() {
   const locSel = $("#selLoc").find("option:selected").attr("loc-id");
   const yrMonth = $("#monthSel").val();
   const cutOff = $("#co").val();
+  loading();
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -895,7 +898,7 @@ function createTable(data, locs) {
       }
       
     }
-    
+    $(".lottie").remove();
   });
   
 }
@@ -1243,6 +1246,12 @@ function tableToExcel(){
   $(".totalAll").remove()
   $(".toRemove").remove()
 }
+function loading(){
+  var lottie= `<div class=" d-flex lottie justify-content-center align-items-center">
+  <dotlottie-player src="lottie.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
+</div>`;
 
+  $(".mainTable").before(lottie);
+}
 
 // #endregion
