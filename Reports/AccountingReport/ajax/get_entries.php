@@ -351,7 +351,7 @@ function getPinasokSaKDT($yearmonth, $empid)
 {
     global $connwebjmr;
     $count = 0;
-    $countQ = "SELECT COUNT(*) FROM dailyreport WHERE fldDate LIKE :yearmonth AND fldEmployeeNum = :empid AND fldLocation = 1";
+    $countQ = "SELECT COUNT(DISTINCT(fldDate)) FROM dailyreport WHERE fldDate LIKE :yearmonth AND fldEmployeeNum = :empid AND fldLocation = 1";
     $countStmt = $connwebjmr->prepare($countQ);
     $countStmt->execute([":yearmonth" => "$yearmonth%", ":empid" => $empid]);
     $count = $countStmt->fetchColumn();
