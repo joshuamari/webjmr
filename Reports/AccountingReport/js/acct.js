@@ -107,11 +107,9 @@ $(document).on("change", "#co", function () {
       alert(`${error}`);
     });
 });
-$(document).on("click", "#btnExport", function(){
+$(document).on("click", "#btnExport", function () {
   tableToExcel();
-  
-
-})
+});
 //#endregion
 
 //#region FUNCTION
@@ -876,7 +874,7 @@ function createTable(data, locs) {
         table.append(str);
       });
     } else {
-      if(locid == 1){
+      if (locid == 1) {
         table.append(`<tr class="noData"><td colspan='17' 
         data-f-name="Arial"
         data-f-sz="9"
@@ -885,8 +883,7 @@ function createTable(data, locs) {
         data-a-v="middle"
         data-b-a-s="thin"
         data-b-a-c="000000">No data found.</td></tr>`);
-      }
-      else{
+      } else {
         table.append(`<tr class="noData"><td colspan='6'
         data-f-name="Arial"
         data-f-sz="9"
@@ -896,27 +893,23 @@ function createTable(data, locs) {
         data-b-a-s="thin"
         data-b-a-c="000000">No data found.</td></tr>`);
       }
-      
     }
     $(".lottie").remove();
   });
-  
 }
 function addTotal() {
-  $('.mainTable table').each(function (index) {
+  $(".mainTable table").each(function (index) {
     var table = $(this);
-    
 
-    var hasNoData = table.find('tbody tr.noData').length > 0;
+    var hasNoData = table.find("tbody tr.noData").length > 0;
 
     // Calculate totals
-    
 
-    if(!hasNoData){
+    if (!hasNoData) {
       var str = "";
       var totals = calculateTotals(table);
       if (index === 0) {
-      str = `
+        str = `
       <tr class="totalAll">
         <td colspan="2"
         data-f-name="Arial"
@@ -1077,8 +1070,8 @@ function addTotal() {
       
       </tr>
     `;
-    } else {
-      str = `
+      } else {
+        str = `
       <tr class="totalAll">
       <td colspan="2"
       data-f-name="Arial"
@@ -1127,20 +1120,20 @@ function addTotal() {
         data-f-color="dc1f1f">${totals[3]}</td>
       </tr>
       `;
-    }
+      }
 
-    table.find("tbody").append(str);
-  }
+      table.find("tbody").append(str);
+    }
   });
 }
 function calculateTotals(table) {
   var totals = [];
 
-  table.find('tbody tr:first-child td').each(function () {
+  table.find("tbody tr:first-child td").each(function () {
     var columnIndex = $(this).index() + 3;
     var total = 0;
 
-    table.find('tbody tr td:nth-child(' + columnIndex + ')').each(function () {
+    table.find("tbody tr td:nth-child(" + columnIndex + ")").each(function () {
       total += parseFloat($(this).text()) || 0;
     });
 
@@ -1156,14 +1149,11 @@ function convertTables() {
     var table = $(`#${tableId}`);
     var htmlString = "";
     table.find("tr").each(function () {
-      
-
-    
       htmlString += "<tr class='toRemove'>";
       $(this)
         .find("td, th")
         .each(function () {
-          var col = '';
+          var col = "";
           var props = `data-f-name="Arial"
           data-f-sz="9"
           data-f-bold="true"
@@ -1172,11 +1162,10 @@ function convertTables() {
           data-b-a-s="thin"
           data-b-a-c="000000"`;
 
-          if($(this).html()=="Total"){
+          if ($(this).html() == "Total") {
             col = `colspan=2`;
-           
           }
-          if($($(this).parent()).hasClass("noData")){
+          if ($($(this).parent()).hasClass("noData")) {
             col = `colspan=6`;
           }
           if ($($(this).parent()).hasClass("locRow")) {
@@ -1200,7 +1189,7 @@ function convertTables() {
             data-b-a-c="000000"
             data-fill-color="bbffbc"`;
           }
-          if($($(this)).hasClass("pula")){
+          if ($($(this)).hasClass("pula")) {
             props = `data-f-name="Arial"
             data-f-sz="9"
             data-f-bold="true"
@@ -1208,9 +1197,9 @@ function convertTables() {
             data-a-v="middle"
             data-b-a-s="thin"
             data-b-a-c="000000"
-            data-f-color="dc1f1f"`
+            data-f-color="dc1f1f"`;
           }
-          if($(this).hasClass("pangalan")){
+          if ($(this).hasClass("pangalan")) {
             props = `data-f-name="Arial"
             data-f-sz="9"
             data-f-bold="true"
@@ -1218,9 +1207,11 @@ function convertTables() {
             data-a-v="middle"
             data-b-a-s="thin"
             data-b-a-c="000000"
-            `
+            `;
           }
-          htmlString += `<td class='toRemove' ${props} ${col}>${$(this).html()}</td>`;
+          htmlString += `<td class='toRemove' ${props} ${col}>${$(
+            this
+          ).html()}</td>`;
         });
       htmlString += "</tr>";
     });
@@ -1229,9 +1220,7 @@ function convertTables() {
   $("#mainBody").append(str);
 }
 
-
-function tableToExcel(){
-  
+function tableToExcel() {
   addTotal();
   convertTables();
   var month = $("#monthSel").val();
@@ -1239,15 +1228,15 @@ function tableToExcel(){
   TableToExcel.convert(document.getElementById("1"), {
     name: `Accounting Report_${month}_${co}.xlsx`,
     sheet: {
-      name: `${month}`
+      name: `${month}`,
     },
   });
 
-  $(".totalAll").remove()
-  $(".toRemove").remove()
+  $(".totalAll").remove();
+  $(".toRemove").remove();
 }
-function loading(){
-  var lottie= `<div class=" d-flex lottie justify-content-center align-items-center">
+function loading() {
+  var lottie = `<div class=" d-flex lottie justify-content-center align-items-center">
   <dotlottie-player src="lottie.json" background="transparent" speed="1" style="width: 500px; height: 500px;" loop autoplay></dotlottie-player>
 </div>`;
 

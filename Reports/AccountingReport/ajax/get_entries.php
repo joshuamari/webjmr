@@ -235,8 +235,10 @@ if ($entriesStmt->rowCount() > 0) {
         if ($totalMH) {
             $report_data[$location][$empid]['mh']['totalMH'] = $totalMH / 60;
         }
-        if (!array_key_exists('name', $report_data[$location][$empid])) {
-            $report_data[$location][$empid]['name'] = $ename;
+        if (array_key_exists($empid, $report_data[$location])) {
+            if (!array_key_exists('name', $report_data[$location][$empid])) {
+                $report_data[$location][$empid]['name'] = $ename;
+            }
         }
     }
 }
