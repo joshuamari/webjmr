@@ -1193,7 +1193,8 @@ function convertTables() {
             data-a-v="middle"
             data-b-a-s="thin"
             data-b-a-c="000000"
-            data-f-color="dc1f1f"`;
+            data-f-color="dc1f1f"
+            data-t="n"`;
           }
           if ($(this).hasClass("pangalan")) {
             props = `data-f-name="Arial"
@@ -1219,6 +1220,7 @@ function convertTables() {
 function tableToExcel() {
   addTotal();
   convertTables();
+  ratioTable();
   var month = $("#monthSel").val();
   var co = $("#co option:selected").text();
   TableToExcel.convert(document.getElementById("1"), {
@@ -1237,6 +1239,79 @@ function loading() {
 </div>`;
 
   $(".mainTable").before(lottie);
+}
+function ratioTable() {
+  var kdtRegular = parseFloat($("table#1 tr.totalAll td:nth-child(2)").text());
+  var kdtOT = parseFloat($("table#1 tr.totalAll td:nth-child(3)").text());
+  var wfhRegular = parseFloat($("table#2 tr.totalAll td:nth-child(2)").text());
+  var wfhOT = parseFloat($("table#2 tr.totalAll td:nth-child(3)").text());
+  var totalRegular = kdtRegular + wfhRegular;
+  var totalOT = kdtOT + wfhOT;
+  var ratio = ((totalOT / totalRegular) * 100).toFixed(2);
+
+  var newTable = `<tr></tr><tr class='toRemove'>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="eeeeee" colspan='3'>Total Regular Hours and OT Ratio</td>
+  </tr>
+  <tr class='toRemove'>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc">Regular</td>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc">OT</td>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc">%</td>
+  </tr>
+  <tr class='toRemove'>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-t="n">${totalRegular}</td>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-t="n">${totalOT}</td>
+  <td data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000">${ratio}%</td>
+  </tr>`;
+  $("#mainBody").append(newTable);
+  // console.log(`${totalRegular} : ${totalOT}`);
 }
 
 // #endregion
