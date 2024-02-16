@@ -48,15 +48,19 @@ if (!empty($_POST['getOGP'])) {
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp $locStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
+$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID,CASE WHEN pt.fldGroup IS NULL OR pt.fldGroup='$groupSel' THEN 0 ELSE pt.fldGroup END AS isHiram FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp $locStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $entries) {
+        $isHiram = '';
+        if ($entries['isHiram']) {
+            $isHiram = "(" . $entries['isHiram'] . ")";
+        }
         $output = array();
         $output += ["pIndex" => $entries['projID']];
-        $output += ["pName" => $entries['projName']];
+        $output += ["pName" => $entries['projName'] . $isHiram];
         $output += ["empNum" => $entries['eNum']];
         $rawDate = $entries['eDate'];
         $entryDay = date("d", strtotime($rawDate));
