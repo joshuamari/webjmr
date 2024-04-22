@@ -21,6 +21,8 @@ $loc = 'KDT';
 //     $locStmt = " `fldLocation` = $loc ";
 // }
 $dateRanges = getRanges($yearMonth);
+echo json_encode($dateRanges);
+die();
 $cutOff = 0;
 if (!empty($_POST['cutOff'])) {
     $cutOff = (int)$_POST['cutOff'];
@@ -28,10 +30,10 @@ if (!empty($_POST['cutOff'])) {
 $dateCompare = '';
 switch ($cutOff) {
     case 1:
-        $dateCompare = " AND `fldDate` >= '" . $dateRanges['firstHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['firstHalf']['end'] . "'";
+        $dateCompare = " AND `fldDate` >= '" . $dateRanges['firstHalf']['start'] . "' AND `fldDate`<='" . $dateRanges['firstHalf']['end'] . "'";
         break;
     case 2:
-        $dateCompare = " AND `fldDate` >= '" . $dateRanges['secondHalf']['start'] . "' AND `fldDate`<'" . $dateRanges['secondHalf']['end'] . "'";
+        $dateCompare = " AND `fldDate` >= '" . $dateRanges['secondHalf']['start'] . "' AND `fldDate`<='" . $dateRanges['secondHalf']['end'] . "'";
         break;
     default:
         $dateCompare = " AND `fldDate` LIKE '$yearMonth-%'";

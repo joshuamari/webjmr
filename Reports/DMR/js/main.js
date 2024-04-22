@@ -340,12 +340,14 @@ function latagProjects(data) {
     $.each(det.Items, function (itemName, iDet) {
       latagPDetails(iDet, itemName).forEach((element) => {
         $("#main-tbody")
-          .append(`<tr data-height="20" class="plan-row" job-num emp-num ${det.Direct ? "direct" : "indirect"
-            }>
+          .append(`<tr data-height="20" class="plan-row" job-num emp-num ${
+          det.Direct ? "direct" : "indirect"
+        }>
         ${element}
         </tr>
-        <tr data-height="20" class="actual-row" job-num emp-num ${det.Direct ? "direct" : "indirect"
-            }>
+        <tr data-height="20" class="actual-row" job-num emp-num ${
+          det.Direct ? "direct" : "indirect"
+        }>
         <td class="tot-mh" data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">totActual</td>
         <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
         </tr>`);
@@ -404,19 +406,16 @@ function latagPlanning(data) {
             totPlanned += parseFloat(hours.Planned);
             totActual += parseFloat(hours.Actual);
           });
-          $(
-            `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
-          ).children(`.tot-mh`)
+          $(`.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+            .children(`.tot-mh`)
             .text(totPlanned)
             .css("background-color", "#ccff99")
             .attr("data-fill-color", "ccff99");
-          $(
-            `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
-          ).children(`.tot-mh`)
+          $(`.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+            .children(`.tot-mh`)
             .text(totActual)
             .css("background-color", "#ffccff")
             .attr("data-fill-color", "ffccff");
-
         });
       });
     });
@@ -607,8 +606,8 @@ function gawaBaba() {
   $.each($("[isMonday]"), function (indexInArray, valueOfElement) {
     $("#tr-group-1").append(`
       <th data-b-a-s="thin" data-f-bold="true" data-f-name="Arial" data-f-sz="9" colspan="3" class="week-start">${$(
-      valueOfElement
-    ).text()}</th>
+        valueOfElement
+      ).text()}</th>
       `);
     $("#tr-group-2").append(`
       <th data-b-a-s="thin" data-f-sz="7" data-a-wrap="true" data-f-bold="true" data-f-name="Arial">JMR</th>
@@ -681,8 +680,9 @@ function gawaBaba() {
 $(document).on("click", "#btnExport", function () {
   $("#main-table").append(`<tbody id="xLater-1">
   <tr>
-  <td data-a-h="center" data-a-v="middle"  colspan="${$("#headrow").children().length
-    }"></td>
+  <td data-a-h="center" data-a-v="middle"  colspan="${
+    $("#headrow").children().length
+  }"></td>
   </tr>
   <tr>
   <td data-a-h="center" data-a-v="middle"  colspan="10" rowspan="4"></td>

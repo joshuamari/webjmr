@@ -18,7 +18,7 @@ $yearMonth = date("Y-m-01");
 if (!empty($_POST['monthSel'])) {
     $yearMonth = $_POST['monthSel'];
 }
-$cutOff = "1";
+$cutOff = "0";
 if (isset($_REQUEST['getHalfSel'])) {
     $cutOff = $_REQUEST['getHalfSel'];
 }

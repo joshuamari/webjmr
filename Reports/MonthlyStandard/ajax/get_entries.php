@@ -56,7 +56,7 @@ if ($entriesStmt->rowCount() > 0) {
     foreach ($entriesArr as $entries) {
         $isHiram = '';
         if ($entries['isHiram']) {
-            $isHiram = "(" . $entries['isHiram'] . ")";
+            $isHiram = " (" . $entries['isHiram'] . ")";
         }
         $output = array();
         $output += ["pIndex" => $entries['projID']];

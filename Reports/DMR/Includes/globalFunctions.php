@@ -37,6 +37,9 @@ function getLastday($yearMonthValue, $cutOffValue, $firstd)
         case "5":
             $lastDay = date('Y-m-d', strtotime('this week +6 days'));
             break;
+        default:
+            $lastDay = date("Y-m-t", strtotime($yearMonthValue));
+            break;
     }
     return $lastDay;
 }

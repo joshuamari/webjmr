@@ -1199,7 +1199,6 @@ function convertTables() {
           }
           if ($($(this).parent()).hasClass("noData")) {
             col = `colspan=6`;
-            
           }
           if ($($(this).parent()).hasClass("locRow")) {
             props = `data-f-name="Arial"
