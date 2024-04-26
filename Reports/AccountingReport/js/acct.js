@@ -31,6 +31,7 @@ checkAccess()
             getReportData()
               .then((repd) => {
                 // loading();
+                // console.log(repd);
                 createTable(repd, locations);
                 // $(".lottie").remove();
               })
@@ -100,7 +101,7 @@ $(document).on("change", "#co", function () {
       createTable(repd, locations);
     })
     .catch((error) => {
-      alert(`${error}`);
+      alert(`${error} etits ka adrian`);
     });
 });
 $(document).on("click", "#btnExport", function () {
@@ -144,7 +145,7 @@ function getLocations() {
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
           reject("Not Found Error: The requested resource was not found.");
-        } else if (chr.status === 500) {
+        } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject("An unspecified error occured2.");
@@ -167,6 +168,7 @@ function getReportData() {
   const locSel = $("#selLoc").find("option:selected").attr("loc-id");
   const yrMonth = $("#monthSel").val();
   const cutOff = $("#co").val();
+  // console.log(locSel, yrMonth, cutOff);
   loading();
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -203,7 +205,7 @@ function createTable1(location) {
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100">
     <thead class="sticky-top shadow-sm">
     <tr>
-      <th colspan="17" class="locName" style="background-color: #eee !important;"
+      <th colspan="20" class="locName" style="background-color: #eee !important;"
       data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -269,6 +271,45 @@ function createTable1(location) {
         Total Overtime
       </th>
       <th
+      rowspan="2"
+      data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"
+      data-fill-color="bbffbc"
+    >
+      VL
+    </th>
+    <th
+    rowspan="2"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000"
+    data-fill-color="bbffbc"
+  >
+    SL
+  </th>
+    <th
+    rowspan="2"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000"
+    data-fill-color="bbffbc"
+  >
+    Others(EL,PL)
+  </th>
+      <th
         rowspan="2"
         data-f-name="Arial"
         data-f-sz="9"
@@ -281,19 +322,6 @@ function createTable1(location) {
       >
         Total Leave
       </th>
-      <!-- <th
-        rowspan="2"
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Unpaid Leave
-      </th> -->
       <th
         rowspan="2"
         data-f-name="Arial"
@@ -517,7 +545,7 @@ function createTable1(location) {
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
     <tr class="locRow" >
-      <th colspan="6" class="locName" style="background-color: #eee !important;"
+      <th colspan="9" class="locName" style="background-color: #eee !important;"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -582,6 +610,45 @@ function createTable1(location) {
         Total Overtime (1.3)
       </th>
       <th
+      rowspan="2"
+      data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"
+      data-fill-color="bbffbc"
+    >
+      VL
+    </th>
+    <th
+    rowspan="2"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000"
+    data-fill-color="bbffbc"
+  >
+    SL
+  </th>
+    <th
+    rowspan="2"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000"
+    data-fill-color="bbffbc"
+  >
+    Others(EL,PL)
+  </th>
+      <th
       
         data-f-name="Arial"
         data-f-sz="9"
@@ -594,19 +661,6 @@ function createTable1(location) {
       >
         Total Leave
       </th>
-      <!-- <th
-   
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Unpaid Leave
-      </th> -->
       <th
       
         data-f-name="Arial"
@@ -646,6 +700,9 @@ function createTable(data, locs) {
         var totreg = 0,
           totot = 0,
           totl = 0,
+          totvl = 0,
+          totsl = 0,
+          totel = 0,
           totmh = 0,
           totreot = 0,
           rdot = 0,
@@ -663,6 +720,15 @@ function createTable(data, locs) {
         }
         if (mhObject.totalOT !== undefined) {
           totot = mhObject.totalOT;
+        }
+        if (mhObject.totalvl !== undefined) {
+          totvl = mhObject.totalvl;
+        }
+        if (mhObject.totalsl !== undefined) {
+          totsl = mhObject.totalsl;
+        }
+        if (mhObject.totalel !== undefined) {
+          totel = mhObject.totalel;
         }
         if (mhObject.totalLeave !== undefined) {
           totl = mhObject.totalLeave;
@@ -743,6 +809,36 @@ function createTable(data, locs) {
     data-b-a-s="thin"
     data-b-a-c="000000">
     ${totot}</td>
+    <td 
+    data-t="n"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totvl}</td>
+    <td 
+    data-t="n"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totsl}</td>
+    <td 
+    data-t="n"
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${totel}</td>
     <td 
     data-t="n"
     data-f-name="Arial"
@@ -887,7 +983,7 @@ function createTable(data, locs) {
       });
     } else {
       if (locid == 1) {
-        table.append(`<tr class="noData"><td colspan='17' 
+        table.append(`<tr class="noData"><td colspan='20' 
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -896,7 +992,7 @@ function createTable(data, locs) {
         data-b-a-s="thin"
         data-b-a-c="000000">No data found.</td></tr>`);
       } else {
-        table.append(`<tr class="noData"><td colspan='6'
+        table.append(`<tr class="noData"><td colspan='9'
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"

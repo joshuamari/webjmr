@@ -5,8 +5,8 @@ $config = [
   'dbname' => 'webjmrdb',
   'charset' => 'utf8mb4'
 ];
-$username = 'root';
-$password = '';
+$username = 'kdt';
+$password = 'none';
 $dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
   $connwebjmr = new PDO($dsn, $username, $password, [
@@ -24,6 +24,14 @@ try {
   $leaveQ = "SELECT fldID FROM projectstable WHERE fldProject='Leave'";
   $leaveStmt = $connwebjmr->query($leaveQ);
   $leaveID = $leaveStmt->fetchColumn();
+  $vlQ = "SELECT fldID FROM itemofworkstable WHERE fldItem='Vacation Leave' AND fldProject=:leaveID";
+  $vlStmt = $connwebjmr->prepare($vlQ);
+  $vlStmt->execute([":leaveID" => $leaveID]);
+  $vlID = $vlStmt->fetchColumn();
+  $slQ = "SELECT fldID FROM itemofworkstable WHERE fldItem='Sick Leave' AND fldProject=:leaveID";
+  $slStmt = $connwebjmr->prepare($slQ);
+  $slStmt->execute([":leaveID" => $leaveID]);
+  $slID = $slStmt->fetchColumn();
   $mngProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt = $connwebjmr->query($mngProjQ);
   $mngProjID = $mngProjStmt->fetchColumn();

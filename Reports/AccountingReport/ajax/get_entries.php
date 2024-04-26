@@ -21,8 +21,8 @@ $loc = 'KDT';
 //     $locStmt = " `fldLocation` = $loc ";
 // }
 $dateRanges = getRanges($yearMonth);
-echo json_encode($dateRanges);
-die();
+// echo json_encode($dateRanges);
+// die();
 $cutOff = 0;
 if (!empty($_POST['cutOff'])) {
     $cutOff = (int)$_POST['cutOff'];
@@ -113,6 +113,18 @@ CASE WHEN `fldMHType` = 1 THEN `fldDuration` ELSE 0
 END
 ) AS totalot,
 SUM(
+CASE WHEN `fldProject` = :leaveID AND `fldItem` = :vlID THEN `fldDuration`
+END
+) AS totalvl,
+SUM(
+CASE WHEN `fldProject` = :leaveID AND `fldItem` = :slID THEN `fldDuration`
+END
+) AS totalsl,
+SUM(
+CASE WHEN `fldProject` = :leaveID AND `fldItem` NOT IN (:vlID,:slID) THEN `fldDuration`
+END
+) AS totalel,
+SUM(
 CASE WHEN `fldProject` = :leaveID THEN `fldDuration`
 END
 ) AS totallv,
@@ -129,7 +141,7 @@ GROUP BY
     `fldEmployeeNum`,`fldLocation`
 ";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
-$entriesStmt->execute([":leaveID" => $leaveID]);
+$entriesStmt->execute([":leaveID" => $leaveID, ":vlID" => $vlID, ":slID" => $slID]);
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $ent) {
@@ -138,6 +150,9 @@ if ($entriesStmt->rowCount() > 0) {
         $location = (int)$ent['fldLocation'];
         $totalReg = $ent['totalreg'];
         $totalOT = $ent['totalot'];
+        $totalVL = $ent['totalvl'];
+        $totalSL = $ent['totalsl'];
+        $totalEL = $ent['totalel'];
         $totalLeave = $ent['totallv'];
         $totalMH = $ent['totalmh'];
 
@@ -232,6 +247,27 @@ if ($entriesStmt->rowCount() > 0) {
         } else {
             if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
                 $report_data[$location][$empid]['mh']['totalLeave'] = ($totalMH_WFH - $totalReg) / 60;
+            }
+        }
+        if ($totalVL) {
+            $report_data[$location][$empid]['mh']['totalvl'] = $totalVL / 60;
+        } else {
+            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalvl'] = ($totalMH_WFH - $totalReg) / 60;
+            }
+        }
+        if ($totalSL) {
+            $report_data[$location][$empid]['mh']['totalsl'] = $totalSL / 60;
+        } else {
+            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalsl'] = 0;
+            }
+        }
+        if ($totalEL) {
+            $report_data[$location][$empid]['mh']['totalel'] = $totalEL / 60;
+        } else {
+            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
+                $report_data[$location][$empid]['mh']['totalel'] = 0;
             }
         }
         if ($totalMH) {
