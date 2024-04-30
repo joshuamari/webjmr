@@ -31,7 +31,6 @@ checkAccess()
             getReportData()
               .then((repd) => {
                 // loading();
-                // console.log(repd);
                 createTable(repd, locations);
                 // $(".lottie").remove();
               })
@@ -271,7 +270,7 @@ function createTable1(location) {
         Total Overtime
       </th>
       <th
-      rowspan="2"
+      colspan="4"
       data-f-name="Arial"
       data-f-sz="9"
       data-f-bold="true"
@@ -281,47 +280,9 @@ function createTable1(location) {
       data-b-a-c="000000"
       data-fill-color="bbffbc"
     >
-      VL
+      Leave
     </th>
-    <th
-    rowspan="2"
-    data-f-name="Arial"
-    data-f-sz="9"
-    data-f-bold="true"
-    data-a-h="center"
-    data-a-v="middle"
-    data-b-a-s="thin"
-    data-b-a-c="000000"
-    data-fill-color="bbffbc"
-  >
-    SL
-  </th>
-    <th
-    rowspan="2"
-    data-f-name="Arial"
-    data-f-sz="9"
-    data-f-bold="true"
-    data-a-h="center"
-    data-a-v="middle"
-    data-b-a-s="thin"
-    data-b-a-c="000000"
-    data-fill-color="bbffbc"
-  >
-    Others(EL,PL)
-  </th>
-      <th
-        rowspan="2"
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Total Leave
-      </th>
+
       <th
         rowspan="2"
         data-f-name="Arial"
@@ -415,6 +376,54 @@ function createTable1(location) {
       </th>
     </tr>
     <tr class="heady">
+    <th
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000"
+    data-fill-color="bbffbc"
+  >
+    VL
+  </th>
+  <th
+  data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc"
+>
+  SL
+</th>
+  <th
+  data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc"
+>
+  Others(EL,PL)
+</th>
+    <th
+      data-f-name="Arial"
+      data-f-sz="9"
+      data-f-bold="true"
+      data-a-h="center"
+      data-a-v="middle"
+      data-b-a-s="thin"
+      data-b-a-c="000000"
+      data-fill-color="bbffbc"
+    >
+      Total Leave
+    </th>
       <th
         data-f-name="Arial"
         data-f-sz="9"
@@ -557,7 +566,6 @@ function createTable1(location) {
     </tr>
     <tr data-fill-color="b6f9a1" class="heady">
       <th
-    
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -570,7 +578,6 @@ function createTable1(location) {
         Employee No.
       </th>
       <th
-   
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -584,7 +591,6 @@ function createTable1(location) {
       </th>
       
       <th
-     
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -597,7 +603,6 @@ function createTable1(location) {
         Regular Hours
       </th>
       <th
-     
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -610,7 +615,18 @@ function createTable1(location) {
         Total Overtime (1.3)
       </th>
       <th
-      rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        VL
+      </th>
+      <th
       data-f-name="Arial"
       data-f-sz="9"
       data-f-bold="true"
@@ -620,23 +636,9 @@ function createTable1(location) {
       data-b-a-c="000000"
       data-fill-color="bbffbc"
     >
-      VL
+      SL
     </th>
     <th
-    rowspan="2"
-    data-f-name="Arial"
-    data-f-sz="9"
-    data-f-bold="true"
-    data-a-h="center"
-    data-a-v="middle"
-    data-b-a-s="thin"
-    data-b-a-c="000000"
-    data-fill-color="bbffbc"
-  >
-    SL
-  </th>
-    <th
-    rowspan="2"
     data-f-name="Arial"
     data-f-sz="9"
     data-f-bold="true"
@@ -648,21 +650,19 @@ function createTable1(location) {
   >
     Others(EL,PL)
   </th>
+  <th
+  data-f-name="Arial"
+  data-f-sz="9"
+  data-f-bold="true"
+  data-a-h="center"
+  data-a-v="middle"
+  data-b-a-s="thin"
+  data-b-a-c="000000"
+  data-fill-color="bbffbc"
+>
+  Total Leave
+</th>
       <th
-      
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Total Leave
-      </th>
-      <th
-      
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -674,10 +674,7 @@ function createTable1(location) {
       >
         Total Hours
       </th>
-      
-      
-    </tr>
-    
+    </tr>    
   </thead>
   <tbody></tbody>
     </table>
@@ -1016,6 +1013,7 @@ function addTotal() {
     if (!hasNoData) {
       var str = "";
       var totals = calculateTotals(table);
+      console.log(totals.length);
       if (index === 0) {
         str = `
       <tr class="totalAll">
@@ -1190,7 +1188,39 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[14]}</td>
-      
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[15]}</td>
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[16]}</td>
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f"
+        >${totals[17]}</td>
       </tr>
     `;
       } else {
@@ -1245,6 +1275,36 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[3]}</td>
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[4]}</td>
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[5]}</td>
+        <td class="pula"
+        data-t="n"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-f-color="dc1f1f">${totals[6]}</td>
       </tr>
       `;
       }
@@ -1294,7 +1354,7 @@ function convertTables() {
             col = `colspan=2`;
           }
           if ($($(this).parent()).hasClass("noData")) {
-            col = `colspan=6`;
+            col = `colspan=9`;
           }
           if ($($(this).parent()).hasClass("locRow")) {
             props = `data-f-name="Arial"
@@ -1306,7 +1366,7 @@ function convertTables() {
             data-b-a-s="thin"
             data-b-a-c="000000"
             data-fill-color="eeeeee"
-            colspan="6"`;
+            colspan="9"`;
           }
           if ($($(this).parent()).hasClass("heady")) {
             props = `data-f-name="Arial"
