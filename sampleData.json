@@ -1,0 +1,24 @@
+[
+  {
+    "firstName": "Timothy",
+    "lastName": "Pogi",
+    "RegularHourEntries": [
+      {
+        "pName": "kdtCablewayBranchSplit",
+        "hours": 8,
+        "entryDate": "12",
+        "iIndex": "2242",
+        "pIndex": "90"
+      }
+    ],
+    "OTEntries": [
+      {
+        "pName": "kdtCablewayBranchSplit",
+        "hours": 4,
+        "entryDate": "12",
+        "iIndex": "2242",
+        "pIndex": "90"
+      }
+    ]
+  }
+]

@@ -12,6 +12,33 @@ switch (document.location.hostname) {
 }
 
 // const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+
+const sampleData = [
+  {
+    firstName: "Timothy",
+    lastName: "Pogi",
+    empId: 511,
+    RegularHourEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        hours: 8,
+        entryDate: "12",
+        iIndex: "2242",
+        pIndex: "90",
+      },
+    ],
+    OTEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        hours: 4,
+        entryDate: "12",
+        iIndex: "2242",
+        pIndex: "90",
+      },
+    ],
+  },
+];
+
 const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
 const today = new Date();
@@ -224,6 +251,7 @@ function getLocations() {
 function createTables(ymVal) {
   _grpProj = [];
   _grpOT = [];
+
   var groupSel = $(`#buSel`).val();
   var halfSel = $(`#CO`).val();
   var getOGP = $(`.checkbox`).is(":checked"); //eto papalitan pag may checkbox na
@@ -236,6 +264,14 @@ function createTables(ymVal) {
   $(".noShow").addClass("d-none");
   $(".lower .right").removeClass("d-none");
   $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
+  console.log("POST DATA MO", {
+    monthSel: ymVal,
+    empArray: _selectedMembers,
+    groupSel: groupSel,
+    getHalfSel: halfSel,
+    getOGP: getOGP,
+    location: location,
+  });
   $.post(
     "ajax/get_entries.php",
     {
@@ -248,27 +284,73 @@ function createTables(ymVal) {
     },
     function (data) {
       var empEntries = $.parseJSON(data);
+      console.log("RESPONSEDATA MO", empEntries);
+
       _maxDays = new Date(
         ymVal.split("-")[0],
         ymVal.split("-")[1],
         0
       ).getDate();
+
       createHeader();
-      _unifiedQ = empEntries;
-      _unifiedQ.map(extractData);
-      _selectedMembers.map(getEmpProjects);
-      addGrpData(_grpProj, _grpOT);
-      addCells();
-      adjustWidth();
-      _unifiedQ.map(fillTable);
-      getTotals();
-      colorYellow();
-      colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
+      sampleData.forEach((user) => {
+        createMemberHours(user);
+      });
+      // _unifiedQ = empEntries;
+      // _unifiedQ.map(extractData);
+      // _selectedMembers.map(getEmpProjects);
+      // addGrpData(_grpProj, _grpOT);
+      // addCells();
+      // //adjustWidth();
+      // console.log("unified", _unifiedQ);
+      // _unifiedQ.map(fillTable);
+      // getTotals();
+      // colorYellow();
+      // colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
     }
   );
   // console.log(_selectedMembers);
 }
-
+/**
+ *
+ * @param {
+ * } user :{
+ * firstName:string,
+ * lastName:string,
+ * OTEntries:{
+ *
+ * }
+ * }
+ */
+function createMemberHours(user) {
+  var addHtml = "";
+  console.log("currUser", user);
+  user["RegularHourEntries"].forEach((element) => {
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${user["empId"]}" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${element["pName"]}</td>
+      </tr>`;
+  });
+  user["OTEntries"].forEach((element) => {
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${user["empId"]}" p-index="${element["pIndex"]}">
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+      <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">OT-${element["pName"]}</td>
+      </tr>`;
+  });
+  $("#mainTbody")
+    .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${
+    user["empId"]
+  }">
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+    user["lastName"]
+  }, ${user["firstName"]}</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${
+    _maxDays + 1
+  }"></td>
+  </tr>
+  ${addHtml}`);
+}
 function createHeader() {
   var addDates = "";
   for (let x = 1; x <= _maxDays; x++) {
@@ -444,6 +526,7 @@ function addCells() {
 //#region latag
 
 function fillTable(entry) {
+  console.log("ENTRY", entry);
   //ETOBAGUHIN MO NEXT WEEK
   var currentHours = 0;
   if (!Leaves.includes(entry["pIndex"])) {
