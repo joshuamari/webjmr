@@ -12,6 +12,114 @@ switch (document.location.hostname) {
 }
 
 // const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
+var allEmployees = {};
+const sampleData = [
+  {
+    firstName: "Timothy",
+    lastName: "Pogi",
+    empId: 511,
+    RegularHourEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        dateEntries: [
+          { hours: 8, entryDate: "12" },
+          { hours: 8, entryDate: "1" },
+          { hours: 8, entryDate: "30" },
+        ],
+        iIndex: "2242",
+        pIndex: "90",
+      },
+      {
+        pIndex: "322",
+        pName: "kdtKeisoSupport",
+        dateEntries: [
+          { hours: 8, entryDate: "12" },
+          { hours: 8, entryDate: "1" },
+          { hours: 8, entryDate: "30" },
+        ],
+        iIndex: "8018",
+      },
+    ],
+    OTEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        dateEntries: [
+          { hours: 1, entryDate: "12" },
+          { hours: 2, entryDate: "1" },
+          { hours: 2, entryDate: "30" },
+        ],
+        iIndex: "2242",
+        pIndex: "90",
+      },
+      {
+        pIndex: "322",
+        pName: "kdtKeisoSupport",
+        dateEntries: [
+          { hours: 1, entryDate: "12" },
+          { hours: 1, entryDate: "1" },
+          { hours: 1, entryDate: "30" },
+        ],
+        iIndex: "8018",
+      },
+    ],
+  },
+  {
+    firstName: "Edmon",
+    lastName: "Pogi",
+    empId: 1,
+    RegularHourEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        dateEntries: [
+          { hours: 8, entryDate: "12" },
+          { hours: 8, entryDate: "1" },
+          { hours: 8, entryDate: "30" },
+          { hours: 8, entryDate: "5" },
+          { hours: 8, entryDate: "6" },
+          { hours: 8, entryDate: "7" },
+        ],
+        iIndex: "2242",
+        pIndex: "90",
+      },
+      {
+        pIndex: "322",
+        pName: "kdtKeisoSupport",
+        dateEntries: [
+          { hours: 8, entryDate: "12" },
+          { hours: 8, entryDate: "1" },
+          { hours: 8, entryDate: "30" },
+          { hours: 8, entryDate: "8" },
+          { hours: 8, entryDate: "9" },
+          { hours: 8, entryDate: "10" },
+        ],
+        iIndex: "8018",
+      },
+    ],
+    OTEntries: [
+      {
+        pName: "kdtCablewayBranchSplit",
+        dateEntries: [
+          { hours: 1, entryDate: "12" },
+          { hours: 2, entryDate: "8" },
+          { hours: 2, entryDate: "27" },
+        ],
+        iIndex: "2242",
+        pIndex: "90",
+      },
+      {
+        pIndex: "322",
+        pName: "kdtKeisoSupport",
+        dateEntries: [
+          { hours: 1, entryDate: "4" },
+          { hours: 1, entryDate: "3" },
+          { hours: 1, entryDate: "2" },
+        ],
+        iIndex: "8018",
+      },
+    ],
+  },
+];
+
 const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
 const today = new Date();
@@ -31,7 +139,7 @@ const onlyUnique = (value, index, self) => {
 // ];
 
 var _selectedMembers = [];
-
+var empArray = [];
 var _unifiedQ = [];
 var _grpProj = [];
 var _grpOT = [];
@@ -55,11 +163,11 @@ $(document).ready(function () {
 
 $(document).on("change", "#monthSel", function () {
   // $($('#members-label').nextAll()).remove()
+  _selectedMembers = [];
   $.ajaxSetup({ async: false });
   getEmployeeList();
   $.ajaxSetup({ async: true });
   createTables($(this).val());
-  _selectedMembers.length = 0;
 
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
@@ -71,7 +179,7 @@ $(document).on("change", "#buSel", function () {
   $.ajaxSetup({ async: true });
   createTables($("#monthSel").val());
 
-  _selectedMembers.length = 0;
+  _selectedMembers = [];
 
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
@@ -87,7 +195,7 @@ $(document).on("click", "#selAll", function () {
     $(this).text("Deselect All");
     $(".memBtn").attr("class", "w-100 btn btn-primary memBtn");
   }
-  _selectedMembers.length = 0;
+  _selectedMembers = [];
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
@@ -96,7 +204,7 @@ $(document).on("click", "#selAll", function () {
 
 $(document).on("click", ".memBtn", function () {
   $(this).toggleClass("btn-primary btn-secondary");
-  _selectedMembers.length = 0;
+  _selectedMembers = [];
   $(".memBtn.btn-primary").each(function () {
     _selectedMembers.push($(this).attr("emp-num"));
   });
@@ -151,6 +259,92 @@ function checkLogin() {
     },
   });
   $.ajaxSetup({ async: true });
+}
+function fillEmployeeData(empEntries) {
+  _selectedMembers.forEach((memberId) => {
+    const employee = _emplist.find((emp) => emp["empNum"] === memberId);
+    const empName = employee["empName"].split(", ");
+
+    //Creating new Employee
+    if (allEmployees[memberId] === undefined) {
+      allEmployees[memberId] = {
+        firstName: empName[1],
+        lastName: empName[0],
+        empId: memberId,
+        RegularHourEntries: [],
+        OTEntries: [],
+        Leaves: [],
+      };
+    }
+  });
+
+  empEntries.forEach((entry) => {
+    //Leaves
+    console.log(entry);
+
+    if (allEmployees[entry["empNum"]]["Leaves"] === undefined) {
+      allEmployees[entry["empNum"]]["Leaves"] = [];
+    }
+
+    if (entry["pName"] === "Leave") {
+      allEmployees[entry["empNum"]]["Leaves"].push({ ...entry });
+    }
+
+    const newEntry = {
+      entryDate: parseInt(entry["entryDate"]),
+      hours: entry["hours"],
+    };
+    if (entry["OT"] === true) {
+      let isProjectAdded = false;
+      allEmployees[entry["empNum"]]["OTEntries"] = allEmployees[
+        entry["empNum"]
+      ]["OTEntries"].map((otEntry) => {
+        if (entry["pName"] === otEntry["pName"]) {
+          otEntry = {
+            ...otEntry,
+            dateEntries: [...otEntry["dateEntries"], newEntry],
+          };
+          isProjectAdded = true;
+        }
+        return otEntry;
+      });
+      if (!isProjectAdded) {
+        const newProjectEntry = {
+          pName: entry["pName"],
+          dateEntries: [newEntry],
+          iIndex: entry["iIndex"],
+          pIndex: ["pIndex"],
+        };
+        allEmployees[entry["empNum"]]["OTEntries"].push(newProjectEntry);
+      }
+    } else if (entry["OT"] === false) {
+      let isProjectAdded = false;
+      allEmployees[entry["empNum"]]["RegularHourEntries"] = allEmployees[
+        entry["empNum"]
+      ]["RegularHourEntries"].map((regularEntry) => {
+        if (entry["pName"] === regularEntry["pName"]) {
+          const newRegEntry = {
+            ...regularEntry,
+            dateEntries: [...regularEntry["dateEntries"], newEntry],
+          };
+          isProjectAdded = true;
+          return newRegEntry;
+        }
+        return regularEntry;
+      });
+      if (!isProjectAdded && entry["pName"] !== "Leave") {
+        const newProjectEntry = {
+          pName: entry["pName"],
+          dateEntries: [newEntry],
+          iIndex: entry["iIndex"],
+          pIndex: ["pIndex"],
+        };
+        allEmployees[entry["empNum"]]["RegularHourEntries"].push(
+          newProjectEntry
+        );
+      }
+    }
+  });
 }
 function msAccess() {
   $.post(
@@ -224,6 +418,7 @@ function getLocations() {
 function createTables(ymVal) {
   _grpProj = [];
   _grpOT = [];
+  allEmployees = {};
   var groupSel = $(`#buSel`).val();
   var halfSel = $(`#CO`).val();
   var getOGP = $(`.checkbox`).is(":checked"); //eto papalitan pag may checkbox na
@@ -248,25 +443,347 @@ function createTables(ymVal) {
     },
     function (data) {
       var empEntries = $.parseJSON(data);
+      fillEmployeeData(empEntries);
       _maxDays = new Date(
         ymVal.split("-")[0],
         ymVal.split("-")[1],
         0
       ).getDate();
+
       createHeader();
-      _unifiedQ = empEntries;
-      _unifiedQ.map(extractData);
-      _selectedMembers.map(getEmpProjects);
-      addGrpData(_grpProj, _grpOT);
-      addCells();
-      adjustWidth();
-      _unifiedQ.map(fillTable);
-      getTotals();
+      generateMainTable(allEmployees);
+      generateSubTable(allEmployees);
       colorYellow();
+      getTotals();
+      // addCells();
+      // _unifiedQ = empEntries;
+      // _unifiedQ.map(extractData);
+      // _selectedMembers.map(getEmpProjects);
+      // addGrpData(_grpProj, _grpOT);
+      // addCells();
+      // //adjustWidth();
+      // console.log("unified", _unifiedQ);
+      // _unifiedQ.map(fillTable);
+      // getTotals();
+      // colorYellow();
       colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
     }
   );
   // console.log(_selectedMembers);
+}
+/**
+ *
+ * @param {
+ * } user :{
+ * firstName:string,
+ * lastName:string,
+ * OTEntries:{
+ *
+ * }
+ * }
+ */
+function generateRegularHours(regularHours, employeeId = 0) {
+  let htmlString = "";
+  let totalHourCells = "";
+  const totalHours = {};
+  const monthTotalHours = {};
+  regularHours.forEach((rhEntry) => {
+    const dateEntries = rhEntry["dateEntries"].reduce((map, curr) => {
+      map[curr["entryDate"]] = curr["hours"];
+      if (totalHours[curr["entryDate"]] === undefined) {
+        totalHours[curr["entryDate"]] = curr["hours"];
+      } else {
+        totalHours[curr["entryDate"]] += curr["hours"];
+      }
+      if (monthTotalHours[rhEntry["pName"]] === undefined) {
+        monthTotalHours[rhEntry["pName"]] = curr["hours"];
+      } else {
+        monthTotalHours[rhEntry["pName"]] += curr["hours"];
+      }
+
+      if (monthTotalHours["totalHours"] === undefined) {
+        monthTotalHours["totalHours"] = curr["hours"];
+      } else {
+        monthTotalHours["totalHours"] += curr["hours"];
+      }
+
+      return map;
+    }, {});
+    let regularHourCells = "";
+
+    for (let x = 1; x <= _maxDays; x++) {
+      regularHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+        dateEntries[x] ? dateEntries[x] : ""
+      }</td>`;
+    }
+    htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
+      rhEntry["pIndex"]
+    }">
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    rhEntry["pName"]
+                  }</td>
+                  ${regularHourCells}
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    monthTotalHours[rhEntry["pName"]]
+                  }</td>`;
+  });
+
+  for (let x = 1; x <= _maxDays; x++) {
+    totalHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      totalHours[x] ? totalHours[x] : ""
+    }</td>`;
+  }
+  htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tTot"employee-number="${employeeId}" >
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Total Hours</td>
+  ${totalHourCells}
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+    monthTotalHours["totalHours"] ? monthTotalHours["totalHours"] : "0"
+  }</td>
+
+  </tr>
+  </tr>`;
+  return htmlString;
+}
+function generateOtHours(OtHours, employeeId = 0) {
+  const monthTotalHours = {};
+  const totalOtHours = {};
+  let totalOtCells = "";
+  let addHtml = "";
+  OtHours.forEach((otEntry) => {
+    otEntry["dateEntries"].forEach((entry) => {
+      if (totalOtHours[entry["entryDate"]] === undefined) {
+        totalOtHours[entry["entryDate"]] = entry["hours"];
+      } else {
+        totalOtHours[entry["entryDate"]] += entry["hours"];
+      }
+      if (monthTotalHours["totalOtHours"] === undefined) {
+        monthTotalHours["totalOtHours"] = entry["hours"];
+      } else {
+        monthTotalHours["totalOtHours"] += entry["hours"];
+      }
+    });
+  });
+  for (let x = 1; x <= _maxDays; x++) {
+    totalOtCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      totalOtHours[x] ? totalOtHours[x] : ""
+    }</td>`;
+  }
+  addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="oTot"employee-number="${employeeId}" >
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Overtime</td>
+  ${totalOtCells}
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+    monthTotalHours["totalOtHours"] ? monthTotalHours["totalOtHours"] : "0"
+  }</td>
+
+  </tr>
+  </tr>`;
+
+  OtHours.forEach((otEntry) => {
+    //Setup data
+    const otDateEntries = otEntry["dateEntries"].reduce((map, curr) => {
+      map[curr["entryDate"]] = curr["hours"];
+
+      if (totalOtHours[curr["entryDate"]] === undefined) {
+        totalOtHours[curr["entryDate"]] = curr["hours"];
+      } else {
+        totalOtHours[curr["entryDate"]] += curr["hours"];
+      }
+      if (monthTotalHours["ot-" + otEntry["pName"]] === undefined) {
+        monthTotalHours["ot-" + otEntry["pName"]] = curr["hours"];
+      } else {
+        monthTotalHours["ot-" + otEntry["pName"]] += curr["hours"];
+      }
+      return map;
+    }, {});
+
+    //Render UI
+    let otHoursCells = "";
+    for (let x = 1; x <= _maxDays; x++) {
+      otHoursCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+        otDateEntries[x] ? otDateEntries[x] : ""
+      }</td>`;
+    }
+
+    addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
+      otEntry["pIndex"]
+    }">
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    "OT-" + otEntry["pName"]
+                  }</td>
+                  ${otHoursCells}
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    monthTotalHours["ot-" + otEntry["pName"]]
+                      ? monthTotalHours["ot-" + otEntry["pName"]]
+                      : "0"
+                  }</td>
+                  `;
+  });
+  return addHtml;
+}
+function generateLeaves(leaves, employeeId = 0) {
+  let vlCells;
+  let slCells;
+  let otherLeaveCells;
+  let totalLeaveCells;
+  const leavesMap = {};
+  monthTotalHours = {};
+  let addHtml = "";
+  //Setup data
+  leaves.forEach((leaveEntry) => {
+    if (leaveEntry["iIndex"] === "25") {
+      leavesMap[`vl-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (monthTotalHours["totalVl"] === undefined) {
+        monthTotalHours["totalVl"] = leaveEntry["hours"];
+      } else {
+        monthTotalHours["totalVl"] += leaveEntry["hours"];
+      }
+    } else if (leaveEntry["iIndex"] === "26") {
+      leavesMap[`sl-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (monthTotalHours["totalSl"] === undefined) {
+        monthTotalHours["totalSl"] = leaveEntry["hours"];
+      } else {
+        monthTotalHours["totalSl"] += leaveEntry["hours"];
+      }
+    } else {
+      leavesMap[`other-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (monthTotalHours["totalOtherLeave"] === undefined) {
+        monthTotalHours["totalOtherLeave"] = leaveEntry["hours"];
+      } else {
+        monthTotalHours["totalOtherLeave"] += leaveEntry["hours"];
+      }
+    }
+    if (leavesMap[`total-${leaveEntry["entryDate"]}`] === undefined) {
+      leavesMap[`total-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+    } else {
+      leavesMap[`total-${leaveEntry["entryDate"]}`] += leaveEntry["hours"];
+    }
+    if (monthTotalHours["totalLeave"] === undefined) {
+      monthTotalHours["totalLeave"] = leaveEntry["hours"];
+    } else {
+      monthTotalHours["totalLeave"] += leaveEntry["hours"];
+    }
+  });
+
+  //Render UI
+  for (let x = 1; x <= _maxDays; x++) {
+    vlCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      leavesMap[`vl-${x}`] ? leavesMap[`vl-${x}`] : ""
+    }</td>`;
+    otherLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      leavesMap[`sl-${x}`] ? leavesMap[`sl-${x}`] : ""
+    }</td>`;
+    slCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      leavesMap[`other-${x}`] ? leavesMap[`other-${x}`] : ""
+    }</td>`;
+    totalLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      leavesMap[`total-${x}`] ? leavesMap[`total-${x}`] : ""
+    }</td>`;
+  }
+  addHtml += `
+  <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" i-index="25">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">VL</td>
+    ${vlCells}
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"> ${
+      monthTotalHours["totalVl"] ? monthTotalHours["totalVl"] : "0"
+    }</td>
+  </tr>
+  <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" i-index="26">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;
+    </td><td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">SL</td>
+    ${slCells}
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"> ${
+      monthTotalHours["totalSl"] ? monthTotalHours["totalSl"] : "0"
+    }</td>
+
+  </tr>
+  <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glRow" p-index="others">
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">EL,PL,ML,Others</td>
+    ${otherLeaveCells}
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"> ${
+      monthTotalHours["totalOtherLeave"]
+        ? monthTotalHours["totalOtherLeave"]
+        : "0"
+    }</td>
+
+    </tr>
+
+  <tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="glTot" >
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">&nbsp;</td>
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Leave</td>
+    ${totalLeaveCells}
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"> ${
+      monthTotalHours["totalLeave"] ? monthTotalHours["totalLeave"] : "0"
+    }</td>
+  </tr>
+  `;
+  return addHtml;
+}
+function generateMainTable(allEmployees) {
+  Object.values(allEmployees).forEach((user) => {
+    createMemberHours(user);
+  });
+}
+function generateSubTable(allUsers) {
+  let addHtml = "";
+
+  const data = Object.values(allUsers).reduce(
+    (prev, curr) => {
+      return {
+        Leaves: [...prev["Leaves"], ...curr["Leaves"]],
+        OTEntries: [...prev["OTEntries"], ...curr["OTEntries"]],
+        RegularHourEntries: [
+          ...prev["RegularHourEntries"],
+          ...curr["RegularHourEntries"],
+        ],
+      };
+    },
+    {
+      Leaves: [],
+      OTEntries: [],
+      RegularHourEntries: [],
+    }
+  );
+  addHtml += generateRegularHours(data["RegularHourEntries"]);
+  addHtml += generateOtHours(data["OTEntries"]);
+  addHtml += generateLeaves(data["Leaves"]);
+
+  $("#subTbody").append(addHtml);
+}
+function createMemberHours(user) {
+  let addHtml = "";
+  /**totalHours
+   * {
+   *  [date]:totalHoursForThatDate
+   * }
+   */
+
+  addHtml += generateRegularHours(user["RegularHourEntries"], user["empId"]);
+  //End Regular Hour Section
+  //OT Section
+  addHtml += generateOtHours(user["OTEntries"], user["empId"]);
+  //End Ot Section
+  addHtml += generateLeaves(user["Leaves"], user["empId"]);
+  //Start Leave Section
+
+  $("#mainTbody")
+    .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${
+    user["empId"]
+  }">
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+    user["lastName"]
+  }, ${user["firstName"]}</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${
+    _maxDays + 1
+  }"></td>
+  </tr>
+  ${addHtml}`);
 }
 
 function createHeader() {
@@ -470,12 +987,15 @@ function fillTable(entry) {
     }
   } else {
     if (oLeaves.hasOwnProperty(entry["iIndex"])) {
+      //EL PL
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`
         ).children()[parseInt(entry["entryDate"]) + 1]
-      ).text(entry["hours"]);
+      ).text(1233);
     }
+    // iIndex === 25 = VL
+    // iIndex === 26 = SL
     $(
       $(
         `.lRow[i-index="${entry["iIndex"]}"][employee-number="${entry["empNum"]}"]`
