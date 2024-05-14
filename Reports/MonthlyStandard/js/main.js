@@ -279,9 +279,6 @@ function fillEmployeeData(empEntries) {
   });
 
   empEntries.forEach((entry) => {
-    //Leaves
-    console.log(entry);
-
     if (allEmployees[entry["empNum"]]["Leaves"] === undefined) {
       allEmployees[entry["empNum"]]["Leaves"] = [];
     }
@@ -443,18 +440,18 @@ function createTables(ymVal) {
     },
     function (data) {
       var empEntries = $.parseJSON(data);
+      console.log(empEntries);
       fillEmployeeData(empEntries);
       _maxDays = new Date(
         ymVal.split("-")[0],
         ymVal.split("-")[1],
         0
       ).getDate();
-
+      console.log(allEmployees);
       createHeader();
       generateMainTable(allEmployees);
       generateSubTable(allEmployees);
       colorYellow();
-      getTotals();
       // addCells();
       // _unifiedQ = empEntries;
       // _unifiedQ.map(extractData);
@@ -489,7 +486,12 @@ function generateRegularHours(regularHours, employeeId = 0) {
   const monthTotalHours = {};
   regularHours.forEach((rhEntry) => {
     const dateEntries = rhEntry["dateEntries"].reduce((map, curr) => {
-      map[curr["entryDate"]] = curr["hours"];
+      if (map[curr["entryDate"]]) {
+        map[curr["entryDate"]] += curr["hours"];
+      } else {
+        map[curr["entryDate"]] = curr["hours"];
+      }
+
       if (totalHours[curr["entryDate"]] === undefined) {
         totalHours[curr["entryDate"]] = curr["hours"];
       } else {
@@ -584,8 +586,11 @@ function generateOtHours(OtHours, employeeId = 0) {
   OtHours.forEach((otEntry) => {
     //Setup data
     const otDateEntries = otEntry["dateEntries"].reduce((map, curr) => {
-      map[curr["entryDate"]] = curr["hours"];
-
+      if (map[curr["entryDate"]]) {
+        map[curr["entryDate"]] += curr["hours"];
+      } else {
+        map[curr["entryDate"]] = curr["hours"];
+      }
       if (totalOtHours[curr["entryDate"]] === undefined) {
         totalOtHours[curr["entryDate"]] = curr["hours"];
       } else {
@@ -635,21 +640,42 @@ function generateLeaves(leaves, employeeId = 0) {
   //Setup data
   leaves.forEach((leaveEntry) => {
     if (leaveEntry["iIndex"] === "25") {
-      leavesMap[`vl-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] !== undefined) {
+        leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] +=
+          leaveEntry["hours"];
+      } else {
+        leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] =
+          leaveEntry["hours"];
+      }
+
       if (monthTotalHours["totalVl"] === undefined) {
         monthTotalHours["totalVl"] = leaveEntry["hours"];
       } else {
         monthTotalHours["totalVl"] += leaveEntry["hours"];
       }
     } else if (leaveEntry["iIndex"] === "26") {
-      leavesMap[`sl-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] !== undefined) {
+        leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] +=
+          leaveEntry["hours"];
+      } else {
+        leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] =
+          leaveEntry["hours"];
+      }
       if (monthTotalHours["totalSl"] === undefined) {
         monthTotalHours["totalSl"] = leaveEntry["hours"];
       } else {
         monthTotalHours["totalSl"] += leaveEntry["hours"];
       }
     } else {
-      leavesMap[`other-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
+      if (
+        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] !== undefined
+      ) {
+        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] +=
+          leaveEntry["hours"];
+      } else {
+        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] =
+          leaveEntry["hours"];
+      }
       if (monthTotalHours["totalOtherLeave"] === undefined) {
         monthTotalHours["totalOtherLeave"] = leaveEntry["hours"];
       } else {
@@ -669,6 +695,7 @@ function generateLeaves(leaves, employeeId = 0) {
   });
 
   //Render UI
+  console.log(leavesMap);
   for (let x = 1; x <= _maxDays; x++) {
     vlCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
       leavesMap[`vl-${x}`] ? leavesMap[`vl-${x}`] : ""
@@ -733,14 +760,31 @@ function generateSubTable(allUsers) {
   let addHtml = "";
 
   const data = Object.values(allUsers).reduce(
-    (prev, curr) => {
+    (prev, currUser) => {
+      const regularHours = [...prev["RegularHourEntries"]];
+      console.log(regularHours);
+      currUser["RegularHourEntries"].forEach((entry) => {
+        const index = regularHours.findIndex(
+          (e) => e["pName"] === entry["pName"]
+        );
+        console.log(index);
+        if (index > -1) {
+          regularHours[index] = {
+            ...regularHours[index],
+            dateEntries: [
+              ...regularHours[index]["dateEntries"],
+              ...entry["dateEntries"],
+            ],
+          };
+        } else {
+          regularHours.push(entry);
+        }
+      });
+      //console.log(regularHours);
       return {
-        Leaves: [...prev["Leaves"], ...curr["Leaves"]],
-        OTEntries: [...prev["OTEntries"], ...curr["OTEntries"]],
-        RegularHourEntries: [
-          ...prev["RegularHourEntries"],
-          ...curr["RegularHourEntries"],
-        ],
+        Leaves: [...prev["Leaves"], ...currUser["Leaves"]],
+        RegularHourEntries: regularHours,
+        OTEntries: [...prev["OTEntries"], ...currUser["OTEntries"]],
       };
     },
     {
@@ -749,6 +793,7 @@ function generateSubTable(allUsers) {
       RegularHourEntries: [],
     }
   );
+  console.log(data);
   addHtml += generateRegularHours(data["RegularHourEntries"]);
   addHtml += generateOtHours(data["OTEntries"]);
   addHtml += generateLeaves(data["Leaves"]);
