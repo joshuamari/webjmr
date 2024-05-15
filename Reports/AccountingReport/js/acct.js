@@ -1026,7 +1026,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         >Total</td>
-        <td class="pula"
+        <td class="pula reg-total"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1037,7 +1037,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[0]}</td>
-        <td class="pula"
+        <td class="pula ot-total"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1235,7 +1235,7 @@ function addTotal() {
       data-b-a-s="thin"
       data-b-a-c="000000"
       >Total</td>
-        <td class="pula"
+        <td class="pula reg-tot"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1245,7 +1245,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[0]}</td>
-        <td class="pula"
+        <td class="pula ot-tot"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1340,6 +1340,8 @@ function convertTables() {
       $(this)
         .find("td, th")
         .each(function () {
+          let isRegTotal = "";
+          let isOtTotal = "";
           var col = "";
           var props = `data-f-name="Arial"
          
@@ -1402,7 +1404,13 @@ function convertTables() {
             data-b-a-c="000000"
             `;
           }
-          htmlString += `<td class='toRemove' ${props} ${col}>${$(
+          if ($($(this)).hasClass("reg-tot")) {
+            isRegTotal = `reg-total`;
+          }
+          if ($($(this)).hasClass("ot-tot")) {
+            isOtTotal = `ot-total`;
+          }
+          htmlString += `<td class='toRemove ${isRegTotal} ${isOtTotal}' ${props} ${col}>${$(
             this
           ).html()}</td>`;
         });
@@ -1437,15 +1445,23 @@ function loading() {
   $(".mainTable").before(lottie);
 }
 function ratioTable() {
-  var kdtRegular = parseFloat($("table#1 tr.totalAll td:nth-child(2)").text());
-  var kdtOT = parseFloat($("table#1 tr.totalAll td:nth-child(3)").text());
-  var wfhRegular = parseFloat($("table#2 tr.totalAll td:nth-child(2)").text());
-  var wfhOT = parseFloat($("table#2 tr.totalAll td:nth-child(3)").text());
-  var totalRegular = kdtRegular + wfhRegular;
-  var totalOT = kdtOT + wfhOT;
+  // var kdtRegular = parseFloat($("table#1 tr.totalAll td:nth-child(2)").text());
+  // var kdtOT = parseFloat($("table#1 tr.totalAll td:nth-child(3)").text());
+  // var wfhRegular = parseFloat($("table#2 tr.totalAll td:nth-child(2)").text());
+  // var wfhOT = parseFloat($("table#2 tr.totalAll td:nth-child(3)").text());
+  let totalRegular = 0;
+  let totalOT = 0;
+  $(".reg-total").each(function () {
+    totalRegular += parseFloat($(this).text());
+  });
+  $(".ot-total").each(function () {
+    totalOT += parseFloat($(this).text());
+  });
+  // var totalRegular = kdtRegular + wfhRegular;
+  // var totalOT = kdtOT + wfhOT;
   var ratio = ((totalOT / totalRegular) * 100).toFixed(2);
 
-  var newTable = `<tr></tr><tr class='toRemove'>
+  var newTable = `<tr class='toRemove'>
   <td data-f-name="Arial"
   data-f-sz="9"
   data-f-bold="true"
