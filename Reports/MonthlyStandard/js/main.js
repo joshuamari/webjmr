@@ -271,8 +271,8 @@ function fillEmployeeData(empEntries) {
         firstName: empName[1],
         lastName: empName[0],
         empId: memberId,
-        RegularHourEntries: [],
-        OTEntries: [],
+        RegularHourEntries: {},
+        OTEntries: {},
         Leaves: [],
       };
     }
@@ -292,54 +292,41 @@ function fillEmployeeData(empEntries) {
       hours: entry["hours"],
     };
     if (entry["OT"] === true) {
-      let isProjectAdded = false;
-      allEmployees[entry["empNum"]]["OTEntries"] = allEmployees[
-        entry["empNum"]
-      ]["OTEntries"].map((otEntry) => {
-        if (entry["pName"] === otEntry["pName"]) {
-          otEntry = {
-            ...otEntry,
-            dateEntries: [...otEntry["dateEntries"], newEntry],
-          };
-          isProjectAdded = true;
-        }
-        return otEntry;
-      });
-      if (!isProjectAdded) {
+      if (
+        allEmployees[entry["empNum"]]["OTEntries"][entry["pIndex"]] ===
+        undefined
+      ) {
+        //Create new project
         const newProjectEntry = {
           pName: entry["pName"],
-          dateEntries: [newEntry],
+          dateEntries: [],
           iIndex: entry["iIndex"],
-          pIndex: ["pIndex"],
+          pIndex: entry["pIndex"],
         };
-        allEmployees[entry["empNum"]]["OTEntries"].push(newProjectEntry);
+        allEmployees[entry["empNum"]]["OTEntries"][entry["pIndex"]] =
+          newProjectEntry;
       }
+      allEmployees[entry["empNum"]]["OTEntries"][entry["pIndex"]][
+        "dateEntries"
+      ].push(newEntry);
     } else if (entry["OT"] === false) {
-      let isProjectAdded = false;
-      allEmployees[entry["empNum"]]["RegularHourEntries"] = allEmployees[
-        entry["empNum"]
-      ]["RegularHourEntries"].map((regularEntry) => {
-        if (entry["pName"] === regularEntry["pName"]) {
-          const newRegEntry = {
-            ...regularEntry,
-            dateEntries: [...regularEntry["dateEntries"], newEntry],
-          };
-          isProjectAdded = true;
-          return newRegEntry;
-        }
-        return regularEntry;
-      });
-      if (!isProjectAdded && entry["pName"] !== "Leave") {
+      if (
+        allEmployees[entry["empNum"]]["RegularHourEntries"][entry["pIndex"]] ===
+        undefined
+      ) {
+        //Create new project
         const newProjectEntry = {
           pName: entry["pName"],
-          dateEntries: [newEntry],
+          dateEntries: [],
           iIndex: entry["iIndex"],
-          pIndex: ["pIndex"],
+          pIndex: entry["pIndex"],
         };
-        allEmployees[entry["empNum"]]["RegularHourEntries"].push(
-          newProjectEntry
-        );
+        allEmployees[entry["empNum"]]["RegularHourEntries"][entry["pIndex"]] =
+          newProjectEntry;
       }
+      allEmployees[entry["empNum"]]["RegularHourEntries"][entry["pIndex"]][
+        "dateEntries"
+      ].push(newEntry);
     }
   });
 }
@@ -440,14 +427,14 @@ function createTables(ymVal) {
     },
     function (data) {
       var empEntries = $.parseJSON(data);
-      console.log(empEntries);
       fillEmployeeData(empEntries);
+      console.log("all employees", allEmployees);
       _maxDays = new Date(
         ymVal.split("-")[0],
         ymVal.split("-")[1],
         0
       ).getDate();
-      console.log(allEmployees);
+
       createHeader();
       generateMainTable(allEmployees);
       generateSubTable(allEmployees);
@@ -758,45 +745,41 @@ function generateMainTable(allEmployees) {
 }
 function generateSubTable(allUsers) {
   let addHtml = "";
-
-  const data = Object.values(allUsers).reduce(
-    (prev, currUser) => {
-      const regularHours = [...prev["RegularHourEntries"]];
-      console.log(regularHours);
-      currUser["RegularHourEntries"].forEach((entry) => {
-        const index = regularHours.findIndex(
-          (e) => e["pName"] === entry["pName"]
-        );
-        console.log(index);
-        if (index > -1) {
-          regularHours[index] = {
-            ...regularHours[index],
-            dateEntries: [
-              ...regularHours[index]["dateEntries"],
-              ...entry["dateEntries"],
-            ],
-          };
-        } else {
-          regularHours.push(entry);
-        }
-      });
-      //console.log(regularHours);
-      return {
-        Leaves: [...prev["Leaves"], ...currUser["Leaves"]],
-        RegularHourEntries: regularHours,
-        OTEntries: [...prev["OTEntries"], ...currUser["OTEntries"]],
-      };
-    },
-    {
-      Leaves: [],
-      OTEntries: [],
-      RegularHourEntries: [],
+  let Leaves = [];
+  const OTEntries = {};
+  const RegularHourEntries = {};
+  Object.values(allUsers).forEach((user) => {
+    //Regular hour merge
+    for (let key in user["RegularHourEntries"]) {
+      if (RegularHourEntries[key] === undefined) {
+        RegularHourEntries[key] = user["RegularHourEntries"][key];
+      } else {
+        RegularHourEntries[key]["dateEntries"] = [
+          ...RegularHourEntries[key]["dateEntries"],
+          ...user["RegularHourEntries"][key]["dateEntries"],
+        ];
+      }
     }
-  );
-  console.log(data);
-  addHtml += generateRegularHours(data["RegularHourEntries"]);
-  addHtml += generateOtHours(data["OTEntries"]);
-  addHtml += generateLeaves(data["Leaves"]);
+
+    //OT Hour Merge
+    for (let key in user["OTEntries"]) {
+      if (RegularHourEntries[key] === undefined) {
+        OTEntries[key] = user["OTEntries"][key];
+      } else {
+        OTEntries[key]["dateEntries"] = [
+          ...OTEntries[key]["dateEntries"],
+          ...user["OTEntries"][key]["dateEntries"],
+        ];
+      }
+    }
+
+    //Leaves
+    Leaves.push(...user["Leaves"]);
+  });
+  console.log("sub mo", Leaves);
+  addHtml += generateRegularHours(Object.values(RegularHourEntries));
+  addHtml += generateOtHours(Object.values(OTEntries));
+  addHtml += generateLeaves(Leaves);
 
   $("#subTbody").append(addHtml);
 }
@@ -808,11 +791,16 @@ function createMemberHours(user) {
    * }
    */
 
-  addHtml += generateRegularHours(user["RegularHourEntries"], user["empId"]);
+  addHtml += generateRegularHours(
+    Object.values(user["RegularHourEntries"]),
+    user["empId"]
+  );
   //End Regular Hour Section
   //OT Section
-  addHtml += generateOtHours(user["OTEntries"], user["empId"]);
+  addHtml += generateOtHours(Object.values(user["OTEntries"]), user["empId"]);
   //End Ot Section
+  console.log("main", user["Leaves"]);
+
   addHtml += generateLeaves(user["Leaves"], user["empId"]);
   //Start Leave Section
 
