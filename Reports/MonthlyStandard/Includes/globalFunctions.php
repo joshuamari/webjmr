@@ -1,7 +1,4 @@
 <?php
-require_once "dbconnectkdtph.php";
-require_once "dbconnectwebjmr.php";
-
 function stringify($string)
 {
     $stringRet = $string;
@@ -42,19 +39,4 @@ function getLastday($yearMonthValue, $cutOffValue, $firstd)
             break;
     }
     return $lastDay;
-}
-
-function getName($empnum)
-{
-    global $connkdt;
-    $empname = [];
-    $nameQ = "SELECT fldFirstname,fldSurname FROM emp_prof WHERE fldEmployeeNum =:empnum";
-    $nameStmt = $connkdt->prepare($nameQ);
-    $nameStmt->execute([":empnum" => $empnum]);
-    if ($nameStmt->rowCount() > 0) {
-        $emp = $nameStmt->fetch();
-        $empname["firstName"] = $emp["fldFirstname"];
-        $empname["lastName"] = $emp["fldSurname"];
-    }
-    return $empname;
 }

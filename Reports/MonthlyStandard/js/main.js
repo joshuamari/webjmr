@@ -13,112 +13,6 @@ switch (document.location.hostname) {
 
 // const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
 var allEmployees = {};
-const sampleData = [
-  {
-    firstName: "Timothy",
-    lastName: "Pogi",
-    empId: 511,
-    RegularHourEntries: [
-      {
-        pName: "kdtCablewayBranchSplit",
-        dateEntries: [
-          { hours: 8, entryDate: "12" },
-          { hours: 8, entryDate: "1" },
-          { hours: 8, entryDate: "30" },
-        ],
-        iIndex: "2242",
-        pIndex: "90",
-      },
-      {
-        pIndex: "322",
-        pName: "kdtKeisoSupport",
-        dateEntries: [
-          { hours: 8, entryDate: "12" },
-          { hours: 8, entryDate: "1" },
-          { hours: 8, entryDate: "30" },
-        ],
-        iIndex: "8018",
-      },
-    ],
-    OTEntries: [
-      {
-        pName: "kdtCablewayBranchSplit",
-        dateEntries: [
-          { hours: 1, entryDate: "12" },
-          { hours: 2, entryDate: "1" },
-          { hours: 2, entryDate: "30" },
-        ],
-        iIndex: "2242",
-        pIndex: "90",
-      },
-      {
-        pIndex: "322",
-        pName: "kdtKeisoSupport",
-        dateEntries: [
-          { hours: 1, entryDate: "12" },
-          { hours: 1, entryDate: "1" },
-          { hours: 1, entryDate: "30" },
-        ],
-        iIndex: "8018",
-      },
-    ],
-  },
-  {
-    firstName: "Edmon",
-    lastName: "Pogi",
-    empId: 1,
-    RegularHourEntries: [
-      {
-        pName: "kdtCablewayBranchSplit",
-        dateEntries: [
-          { hours: 8, entryDate: "12" },
-          { hours: 8, entryDate: "1" },
-          { hours: 8, entryDate: "30" },
-          { hours: 8, entryDate: "5" },
-          { hours: 8, entryDate: "6" },
-          { hours: 8, entryDate: "7" },
-        ],
-        iIndex: "2242",
-        pIndex: "90",
-      },
-      {
-        pIndex: "322",
-        pName: "kdtKeisoSupport",
-        dateEntries: [
-          { hours: 8, entryDate: "12" },
-          { hours: 8, entryDate: "1" },
-          { hours: 8, entryDate: "30" },
-          { hours: 8, entryDate: "8" },
-          { hours: 8, entryDate: "9" },
-          { hours: 8, entryDate: "10" },
-        ],
-        iIndex: "8018",
-      },
-    ],
-    OTEntries: [
-      {
-        pName: "kdtCablewayBranchSplit",
-        dateEntries: [
-          { hours: 1, entryDate: "12" },
-          { hours: 2, entryDate: "8" },
-          { hours: 2, entryDate: "27" },
-        ],
-        iIndex: "2242",
-        pIndex: "90",
-      },
-      {
-        pIndex: "322",
-        pName: "kdtKeisoSupport",
-        dateEntries: [
-          { hours: 1, entryDate: "4" },
-          { hours: 1, entryDate: "3" },
-          { hours: 1, entryDate: "2" },
-        ],
-        iIndex: "8018",
-      },
-    ],
-  },
-];
 
 const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
@@ -262,7 +156,7 @@ function checkLogin() {
 }
 function fillEmployeeData(empEntries) {
   _selectedMembers.forEach((memberId) => {
-    const employee = _emplist.find((emp) => emp["empNum"] == memberId);
+    const employee = _emplist.find((emp) => emp["empNum"] === memberId);
     const empName = employee["empName"].split(", ");
 
     //Creating new Employee
@@ -288,7 +182,7 @@ function fillEmployeeData(empEntries) {
     }
 
     const newEntry = {
-      entryDate: parseInt(entry["entryDate"]),
+      entryDate: entry["entryDate"],
       hours: entry["hours"],
     };
     if (entry["OT"] === true) {
@@ -427,8 +321,7 @@ function createTables(ymVal) {
     },
     function (data) {
       var empEntries = $.parseJSON(data);
-      fillEmployeeData(empEntries);
-      console.log("all employees", allEmployees);
+      allEmployees = empEntries;
       _maxDays = new Date(
         ymVal.split("-")[0],
         ymVal.split("-")[1],
@@ -466,12 +359,15 @@ function createTables(ymVal) {
  * }
  * }
  */
-function generateRegularHours(regularHours, employeeId = 0) {
+function padZero(num) {
+  return String(num).padStart(2, "0");
+}
+function generateRegularHours(projects, employeeId = 0) {
   let htmlString = "";
   let totalHourCells = "";
   const totalHours = {};
   const monthTotalHours = {};
-  regularHours.forEach((rhEntry) => {
+  projects.forEach((rhEntry) => {
     const dateEntries = rhEntry["dateEntries"].reduce((map, curr) => {
       if (map[curr["entryDate"]]) {
         map[curr["entryDate"]] += curr["hours"];
@@ -490,19 +386,13 @@ function generateRegularHours(regularHours, employeeId = 0) {
         monthTotalHours[rhEntry["pName"]] += curr["hours"];
       }
 
-      if (monthTotalHours["totalHours"] === undefined) {
-        monthTotalHours["totalHours"] = curr["hours"];
-      } else {
-        monthTotalHours["totalHours"] += curr["hours"];
-      }
-
       return map;
     }, {});
     let regularHourCells = "";
 
     for (let x = 1; x <= _maxDays; x++) {
       regularHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-        dateEntries[x] ? dateEntries[x] : ""
+        dateEntries[padZero(x)] ? dateEntries[padZero(x)] : ""
       }</td>`;
     }
     htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
@@ -595,7 +485,7 @@ function generateOtHours(OtHours, employeeId = 0) {
     let otHoursCells = "";
     for (let x = 1; x <= _maxDays; x++) {
       otHoursCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-        otDateEntries[x] ? otDateEntries[x] : ""
+        otDateEntries[padZero(x)] ? otDateEntries[padZero(x)] : ""
       }</td>`;
     }
 
@@ -626,75 +516,102 @@ function generateLeaves(leaves, employeeId = 0) {
   let addHtml = "";
   //Setup data
   leaves.forEach((leaveEntry) => {
-    if (leaveEntry["iIndex"] === "25") {
-      if (leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] !== undefined) {
-        leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] +=
-          leaveEntry["hours"];
-      } else {
-        leavesMap[`vl-${parseInt(leaveEntry["entryDate"])}`] =
-          leaveEntry["hours"];
-      }
+    if (leaveEntry["iIndex"] === 25) {
+      leaveEntry["dateEntries"].forEach((entry) => {
+        if (leavesMap[`vl-${entry["entryDate"]}`] !== undefined) {
+          leavesMap[`vl-${entry["entryDate"]}`] += entry["hours"];
+        } else {
+          leavesMap[`vl-${entry["entryDate"]}`] = entry["hours"];
+        }
+        if (monthTotalHours["totalVl"] === undefined) {
+          monthTotalHours["totalVl"] = entry["hours"];
+        } else {
+          monthTotalHours["totalVl"] += entry["hours"];
+        }
+        if (leavesMap[`total-${entry["entryDate"]}`] === undefined) {
+          leavesMap[`total-${entry["entryDate"]}`] = entry["hours"];
+        } else {
+          leavesMap[`total-${entry["entryDate"]}`] += entry["hours"];
+        }
+        if (monthTotalHours["totalLeave"] === undefined) {
+          monthTotalHours["totalLeave"] = entry["hours"];
+        } else {
+          monthTotalHours["totalLeave"] += entry["hours"];
+        }
+      });
+    } else if (leaveEntry["iIndex"] === 26) {
+      leaveEntry["dateEntries"].forEach((entry) => {
+        if (leavesMap[`sl-${entry["entryDate"]}`] !== undefined) {
+          leavesMap[`sl-${entry["entryDate"]}`] += entry["hours"];
+        } else {
+          leavesMap[`sl-${entry["entryDate"]}`] = entry["hours"];
+        }
+        if (monthTotalHours["totalSl"] === undefined) {
+          monthTotalHours["totalSl"] = entry["hours"];
+        } else {
+          monthTotalHours["totalSl"] += entry["hours"];
+        }
+        if (leavesMap[`total-${entry["entryDate"]}`] === undefined) {
+          leavesMap[`total-${entry["entryDate"]}`] = entry["hours"];
+        } else {
+          leavesMap[`total-${entry["entryDate"]}`] += entry["hours"];
+        }
+        if (monthTotalHours["totalLeave"] === undefined) {
+          monthTotalHours["totalLeave"] = entry["hours"];
+        } else {
+          monthTotalHours["totalLeave"] += entry["hours"];
+        }
+      });
+    } else {
+      leaveEntry["dateEntries"].forEach((entry) => {
+        if (leavesMap[`other-${entry["entryDate"]}`] !== undefined) {
+          leavesMap[`other-${entry["entryDate"]}`] += entry["hours"];
+        } else {
+          leavesMap[`other-${entry["entryDate"]}`] = entry["hours"];
+        }
+        if (monthTotalHours["totalOtherLeave"] === undefined) {
+          monthTotalHours["totalOtherLeave"] = entry["hours"];
+        } else {
+          monthTotalHours["totalOtherLeave"] += entry["hours"];
+        }
 
-      if (monthTotalHours["totalVl"] === undefined) {
-        monthTotalHours["totalVl"] = leaveEntry["hours"];
-      } else {
-        monthTotalHours["totalVl"] += leaveEntry["hours"];
-      }
-    } else if (leaveEntry["iIndex"] === "26") {
-      if (leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] !== undefined) {
-        leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] +=
-          leaveEntry["hours"];
-      } else {
-        leavesMap[`sl-${parseInt(leaveEntry["entryDate"])}`] =
-          leaveEntry["hours"];
-      }
-      if (monthTotalHours["totalSl"] === undefined) {
-        monthTotalHours["totalSl"] = leaveEntry["hours"];
-      } else {
-        monthTotalHours["totalSl"] += leaveEntry["hours"];
-      }
-    } else {
-      if (
-        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] !== undefined
-      ) {
-        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] +=
-          leaveEntry["hours"];
-      } else {
-        leavesMap[`other-${parseInt(leaveEntry["entryDate"])}`] =
-          leaveEntry["hours"];
-      }
-      if (monthTotalHours["totalOtherLeave"] === undefined) {
-        monthTotalHours["totalOtherLeave"] = leaveEntry["hours"];
-      } else {
-        monthTotalHours["totalOtherLeave"] += leaveEntry["hours"];
-      }
+        if (leavesMap[`total-${entry["entryDate"]}`] === undefined) {
+          leavesMap[`total-${entry["entryDate"]}`] = entry["hours"];
+        } else {
+          leavesMap[`total-${entry["entryDate"]}`] += entry["hours"];
+        }
+        if (monthTotalHours["totalLeave"] === undefined) {
+          monthTotalHours["totalLeave"] = entry["hours"];
+        } else {
+          monthTotalHours["totalLeave"] += entry["hours"];
+        }
+      });
     }
-    if (leavesMap[`total-${leaveEntry["entryDate"]}`] === undefined) {
-      leavesMap[`total-${leaveEntry["entryDate"]}`] = leaveEntry["hours"];
-    } else {
-      leavesMap[`total-${leaveEntry["entryDate"]}`] += leaveEntry["hours"];
-    }
-    if (monthTotalHours["totalLeave"] === undefined) {
-      monthTotalHours["totalLeave"] = leaveEntry["hours"];
-    } else {
-      monthTotalHours["totalLeave"] += leaveEntry["hours"];
-    }
+    // if (leavesMap[`total-${leaveEntry["entryDate"]}`] === undefined) {
+    //   leavesMap[`total-${leaveEntry["entryDate"]}`] = entry["hours"];
+    // } else {
+    //   leavesMap[`total-${leaveEntry["entryDate"]}`] += entry["hours"];
+    // }
+    // if (monthTotalHours["totalLeave"] === undefined) {
+    //   monthTotalHours["totalLeave"] = entry["hours"];
+    // } else {
+    //   monthTotalHours["totalLeave"] += entry["hours"];
+    // }
   });
 
   //Render UI
-  console.log(leavesMap);
   for (let x = 1; x <= _maxDays; x++) {
     vlCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      leavesMap[`vl-${x}`] ? leavesMap[`vl-${x}`] : ""
+      leavesMap[`vl-${padZero(x)}`] ? leavesMap[`vl-${padZero(x)}`] : ""
     }</td>`;
     otherLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      leavesMap[`sl-${x}`] ? leavesMap[`sl-${x}`] : ""
+      leavesMap[`sl-${padZero(x)}`] ? leavesMap[`sl-${padZero(x)}`] : ""
     }</td>`;
     slCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      leavesMap[`other-${x}`] ? leavesMap[`other-${x}`] : ""
+      leavesMap[`other-${padZero(x)}`] ? leavesMap[`other-${padZero(x)}`] : ""
     }</td>`;
     totalLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      leavesMap[`total-${x}`] ? leavesMap[`total-${x}`] : ""
+      leavesMap[`total-${padZero(x)}`] ? leavesMap[`total-${padZero(x)}`] : ""
     }</td>`;
   }
   addHtml += `
@@ -763,7 +680,7 @@ function generateSubTable(allUsers) {
 
     //OT Hour Merge
     for (let key in user["OTEntries"]) {
-      if (RegularHourEntries[key] === undefined) {
+      if (OTEntries[key] === undefined) {
         OTEntries[key] = user["OTEntries"][key];
       } else {
         OTEntries[key]["dateEntries"] = [
@@ -772,11 +689,9 @@ function generateSubTable(allUsers) {
         ];
       }
     }
-
     //Leaves
-    Leaves.push(...user["Leaves"]);
+    Leaves.push(...Object.values(user["Leaves"]));
   });
-  console.log("sub mo", Leaves);
   addHtml += generateRegularHours(Object.values(RegularHourEntries));
   addHtml += generateOtHours(Object.values(OTEntries));
   addHtml += generateLeaves(Leaves);
@@ -799,9 +714,8 @@ function createMemberHours(user) {
   //OT Section
   addHtml += generateOtHours(Object.values(user["OTEntries"]), user["empId"]);
   //End Ot Section
-  console.log("main", user["Leaves"]);
 
-  addHtml += generateLeaves(user["Leaves"], user["empId"]);
+  addHtml += generateLeaves(Object.values(user["Leaves"]), user["empId"]);
   //Start Leave Section
 
   $("#mainTbody")
@@ -905,7 +819,6 @@ function getEmpProjects(empDetails) {
   var empName = _emplist.find((employee) => employee.empNum == empDetails)[
     "empName"
   ];
-  // console.log(empDetails)
   $("#mainTbody")
     .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${empDetails}">
     <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${empName}</td>
@@ -1002,20 +915,20 @@ function fillTable(entry) {
         $(
           $(
             `.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
-          ).children()[parseInt(entry["entryDate"]) + 1]
+          ).children()[entry["entryDate"] + 1]
         ).text()
       ) || 0;
     currentHours += parseFloat(entry["hours"]);
     $(
       $(
         `.pRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
-      ).children()[parseInt(entry["entryDate"]) + 1]
+      ).children()[entry["entryDate"] + 1]
     ).text(`${currentHours}`);
     if (entry["OT"]) {
       $(
         $(
           `.oRow[p-index="${entry["pIndex"]}"][employee-number="${entry["empNum"]}"]`
-        ).children()[parseInt(entry["entryDate"]) + 1]
+        ).children()[entry["entryDate"] + 1]
       ).text(entry["hours"]);
     }
   } else {
@@ -1024,7 +937,7 @@ function fillTable(entry) {
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`
-        ).children()[parseInt(entry["entryDate"]) + 1]
+        ).children()[entry["entryDate"] + 1]
       ).text(1233);
     }
     // iIndex === 25 = VL
@@ -1032,7 +945,7 @@ function fillTable(entry) {
     $(
       $(
         `.lRow[i-index="${entry["iIndex"]}"][employee-number="${entry["empNum"]}"]`
-      ).children()[parseInt(entry["entryDate"]) + 1]
+      ).children()[entry["entryDate"] + 1]
     ).text(entry["hours"]);
   }
 }
