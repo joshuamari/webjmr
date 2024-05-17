@@ -53,24 +53,98 @@ $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
+    // die(json_encode($entriesArr));
     foreach ($entriesArr as $entries) {
         $isHiram = '';
         if ($entries['isHiram']) {
             $isHiram = " (" . $entries['isHiram'] . ")";
         }
-        $output = array();
-        $output += ["pIndex" => $entries['projID']];
-        $output += ["pName" => $entries['projName'] . $isHiram];
-        $output += ["empNum" => $entries['eNum']];
+        // $output = array();
+        // $output += ["pIndex" => $entries['projID']];
+        // $output += ["pName" => $entries['projName'] . $isHiram];
+        // $output += ["empNum" => $entries['eNum']];
+        // $rawDate = $entries['eDate'];
+        // $entryDay = date("d", strtotime($rawDate));
+        // $output += ["entryDate" => $entryDay];
+        // $rawMinutes = $entries['projMinute'];
+        // $entryHours = $rawMinutes / 60;
+        // $output += ["hours" => $entryHours];
+        // $output += ["OT" => ($entries['eMHT'] == 1) ? TRUE : FALSE];
+        // $output += ["iIndex" => $entries['itemID']];
+        // array_push($entriesArray, $output);
+        #region new fetch
+        $employee_number = $entries['eNum'];
+        $fullname = getName($employee_number);
+        $project_name = $entries['projName'] . $isHiram;
+        $project_id = $entries['projID'];
+        $item_id = $entries['itemID'];
         $rawDate = $entries['eDate'];
-        $entryDay = date("d", strtotime($rawDate));
-        $output += ["entryDate" => $entryDay];
         $rawMinutes = $entries['projMinute'];
         $entryHours = $rawMinutes / 60;
-        $output += ["hours" => $entryHours];
-        $output += ["OT" => ($entries['eMHT'] == 1) ? TRUE : FALSE];
-        $output += ["iIndex" => $entries['itemID']];
-        array_push($entriesArray, $output);
+        $isOT = ($entries['eMHT'] == 1) ? TRUE : FALSE;
+        $isLeave = ($entries['projID'] == 6) ? TRUE : FALSE;
+        $entryDay = date("d", strtotime($rawDate));
+        $entryDates[] = array(
+            "entryDate" => $entryDay,
+            "hours" => $entryHours
+        );
+        $entriesArray[$employee_number]["firstName"] = $fullname["firstName"];
+        $entriesArray[$employee_number]["lastName"] = $fullname["lastName"];
+        $entriesArray[$employee_number]["empId"] = $employee_number;
+
+        if ($isOT) {
+            if (!isset($entriesArray[$employee_number]["OTEntries"][$project_id])) {
+                $entriesArray[$employee_number]["OTEntries"][$project_id] = [
+                    "pName" => $project_name,
+                    'dateEntries' => [],
+                    "iIndex" => $item_id,
+                ];
+            }
+            // Add the date and hours to the nested structure
+            $entriesArray[$employee_number]["OTEntries"][$project_id]['dateEntries'][] = [
+                'entryDate' => $entryDay,
+                'hours' => $entryHours
+            ];
+        } else {
+            if ($isLeave) {
+                if (!isset($entriesArray[$employee_number]["Leaves"][$project_id])) {
+                    $entriesArray[$employee_number]["Leaves"][$project_id] = [
+                        "pName" => $project_name,
+                        'dateEntries' => [],
+                        "iIndex" => $item_id,
+                    ];
+                }
+                // Add the date and hours to the nested structure
+                $entriesArray[$employee_number]["Leaves"][$project_id]['dateEntries'][] = [
+                    'entryDate' => $entryDay,
+                    'hours' => $entryHours
+                ];
+            } else {
+                if (!isset($entriesArray[$employee_number]["RegularHourEntries"][$project_id])) {
+                    $entriesArray[$employee_number]["RegularHourEntries"][$project_id] = [
+                        "pName" => $project_name,
+                        'dateEntries' => [],
+                        "iIndex" => $item_id,
+                    ];
+                }
+                // Add the date and hours to the nested structure
+                $entriesArray[$employee_number]["RegularHourEntries"][$project_id]['dateEntries'][] = [
+                    'entryDate' => $entryDay,
+                    'hours' => $entryHours
+                ];
+            }
+        }
+
+        if (!array_key_exists("RegularHourEntries", $entriesArray[$employee_number])) {
+            $entriesArray[$employee_number]["RegularHourEntries"] = [];
+        }
+        if (!array_key_exists("OTEntries", $entriesArray[$employee_number])) {
+            $entriesArray[$employee_number]["OTEntries"] = [];
+        }
+        if (!array_key_exists("Leaves", $entriesArray[$employee_number])) {
+            $entriesArray[$employee_number]["Leaves"] = [];
+        }
+        #endregion
     }
 }
 #endregion

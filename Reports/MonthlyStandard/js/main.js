@@ -262,7 +262,7 @@ function checkLogin() {
 }
 function fillEmployeeData(empEntries) {
   _selectedMembers.forEach((memberId) => {
-    const employee = _emplist.find((emp) => emp["empNum"] === memberId);
+    const employee = _emplist.find((emp) => emp["empNum"] == memberId);
     const empName = employee["empName"].split(", ");
 
     //Creating new Employee
