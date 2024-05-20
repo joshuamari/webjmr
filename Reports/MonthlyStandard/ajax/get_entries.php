@@ -20,7 +20,7 @@ if (!empty($_POST['monthSel'])) {
 $empStatement = "";
 $employeeArray = array();
 if (!empty($_POST['empArray'])) {
-    $employeeArray = $_POST['empArray'];
+    $employeeArray = json_decode($_POST['empArray']);
     $implodeString = implode("','", $employeeArray);
     $empStatement = "AND dr.fldEmployeeNum IN ('" . $implodeString . "')";
 }

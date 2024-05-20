@@ -313,7 +313,7 @@ function createTables(ymVal) {
     "ajax/get_entries.php",
     {
       monthSel: ymVal,
-      empArray: _selectedMembers,
+      empArray: JSON.stringify(_selectedMembers),
       groupSel: groupSel,
       getHalfSel: halfSel,
       getOGP: getOGP,
