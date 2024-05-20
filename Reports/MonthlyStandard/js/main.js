@@ -655,6 +655,32 @@ function generateLeaves(leaves, employeeId = 0) {
   `;
   return addHtml;
 }
+function generateAMS(amsLogs, employeeId = 0) {
+  let amsLogsSection = "";
+  let amsLogsCells = "";
+  let totalAmsMonth = 0;
+  const dummyAmsLogs = {
+    "01": 8,
+    "02": 8,
+    "03": 8,
+    "04": 8,
+  };
+
+  for (let x = 1; x <= _maxDays; x++) {
+    if (dummyAmsLogs[padZero(x)] !== undefined) {
+      totalAmsMonth += dummyAmsLogs[padZero(x)];
+    }
+    amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      dummyAmsLogs[padZero(x)] ? dummyAmsLogs[padZero(x)] : ""
+    }</td>`;
+  }
+  amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}">
+  <td></td>  
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">AMS</td>
+    ${amsLogsCells}
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
+  return amsLogsSection;
+}
 function generateMainTable(allEmployees) {
   Object.values(allEmployees).forEach((user) => {
     createMemberHours(user);
@@ -706,6 +732,7 @@ function createMemberHours(user) {
    * }
    */
 
+  addHtml += generateAMS([], 100);
   addHtml += generateRegularHours(
     Object.values(user["RegularHourEntries"]),
     user["empId"]
