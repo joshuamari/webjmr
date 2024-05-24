@@ -320,7 +320,97 @@ function createTables(ymVal) {
       location: location,
     },
     function (data) {
-      var empEntries = $.parseJSON(data);
+      var empEntries = {
+        464: {
+          firstName: "Joshua Mari",
+          lastName: "Coquia",
+          empId: 464,
+          RegularHourEntries: {
+            523: {
+              pName: "ETCL.OrderingSystem",
+              dateEntries: [
+                {
+                  entryDate: "06",
+                  hours: 4,
+                },
+                {
+                  entryDate: "09",
+                  hours: 8,
+                },
+                {
+                  entryDate: "10",
+                  hours: 8,
+                },
+                {
+                  entryDate: "08",
+                  hours: 8,
+                },
+              ],
+              iIndex: 11772,
+            },
+            526: {
+              pName: "PassportControlSystem",
+              dateEntries: [
+                {
+                  entryDate: "01",
+                  hours: 8,
+                },
+                {
+                  entryDate: "02",
+                  hours: 8,
+                },
+                {
+                  entryDate: "13",
+                  hours: 8,
+                },
+                {
+                  entryDate: "06",
+                  hours: 4,
+                },
+              ],
+              iIndex: 11783,
+            },
+            4: {
+              pName: "Development, Analysis & IT",
+              dateEntries: [
+                {
+                  entryDate: "15",
+                  hours: 8,
+                },
+                {
+                  entryDate: "14",
+                  hours: 8,
+                },
+              ],
+              iIndex: 16,
+            },
+          },
+          OTEntries: {
+            523: {
+              pName: "ETCL.OrderingSystem",
+              dateEntries: [
+                {
+                  entryDate: "06",
+                  hours: 2,
+                },
+              ],
+              iIndex: 11772,
+            },
+          },
+          Leaves: {
+            6: {
+              pName: "Leave",
+              dateEntries: [
+                {
+                  entryDate: "07",
+                  hours: 8,
+                },
+              ],
+              iIndex: 25,
+            },
+          },
+        },
+      };
       allEmployees = empEntries;
       _maxDays = new Date(
         ymVal.split("-")[0],
@@ -410,7 +500,7 @@ function generateRegularHours(projects, employeeId = 0) {
 
   for (let x = 1; x <= _maxDays; x++) {
     totalHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      totalHours[x] ? totalHours[x] : ""
+      totalHours[padZero(x)] ? totalHours[padZero(x)] : ""
     }</td>`;
   }
   htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tTot"employee-number="${employeeId}" >
@@ -660,10 +750,10 @@ function generateAMS(amsLogs, employeeId = 0) {
   let amsLogsCells = "";
   let totalAmsMonth = 0;
   const dummyAmsLogs = {
-    "01": 8,
-    "02": 8,
-    "03": 8,
-    "04": 8,
+    "01": 80,
+    "02": 80,
+    "03": 80,
+    "04": 80,
   };
 
   for (let x = 1; x <= _maxDays; x++) {
