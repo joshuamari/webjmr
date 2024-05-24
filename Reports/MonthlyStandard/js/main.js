@@ -320,97 +320,7 @@ function createTables(ymVal) {
       location: location,
     },
     function (data) {
-      var empEntries = {
-        464: {
-          firstName: "Joshua Mari",
-          lastName: "Coquia",
-          empId: 464,
-          RegularHourEntries: {
-            523: {
-              pName: "ETCL.OrderingSystem",
-              dateEntries: [
-                {
-                  entryDate: "06",
-                  hours: 4,
-                },
-                {
-                  entryDate: "09",
-                  hours: 8,
-                },
-                {
-                  entryDate: "10",
-                  hours: 8,
-                },
-                {
-                  entryDate: "08",
-                  hours: 8,
-                },
-              ],
-              iIndex: 11772,
-            },
-            526: {
-              pName: "PassportControlSystem",
-              dateEntries: [
-                {
-                  entryDate: "01",
-                  hours: 8,
-                },
-                {
-                  entryDate: "02",
-                  hours: 8,
-                },
-                {
-                  entryDate: "13",
-                  hours: 8,
-                },
-                {
-                  entryDate: "06",
-                  hours: 4,
-                },
-              ],
-              iIndex: 11783,
-            },
-            4: {
-              pName: "Development, Analysis & IT",
-              dateEntries: [
-                {
-                  entryDate: "15",
-                  hours: 8,
-                },
-                {
-                  entryDate: "14",
-                  hours: 8,
-                },
-              ],
-              iIndex: 16,
-            },
-          },
-          OTEntries: {
-            523: {
-              pName: "ETCL.OrderingSystem",
-              dateEntries: [
-                {
-                  entryDate: "06",
-                  hours: 2,
-                },
-              ],
-              iIndex: 11772,
-            },
-          },
-          Leaves: {
-            6: {
-              pName: "Leave",
-              dateEntries: [
-                {
-                  entryDate: "07",
-                  hours: 8,
-                },
-              ],
-              iIndex: 25,
-            },
-          },
-        },
-      };
+      var empEntries = $.parseJSON(data);
       allEmployees = empEntries;
       _maxDays = new Date(
         ymVal.split("-")[0],
@@ -764,7 +674,7 @@ function generateAMS(amsLogs, employeeId = 0) {
       dummyAmsLogs[padZero(x)] ? dummyAmsLogs[padZero(x)] : ""
     }</td>`;
   }
-  amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}">
+  amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
   <td></td>  
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">AMS</td>
     ${amsLogsCells}
@@ -822,17 +732,22 @@ function createMemberHours(user) {
    * }
    */
 
-  addHtml += generateAMS([], 100);
-  addHtml += generateRegularHours(
+  const regularHourCells = generateRegularHours(
     Object.values(user["RegularHourEntries"]),
     user["empId"]
   );
   //End Regular Hour Section
   //OT Section
-  addHtml += generateOtHours(Object.values(user["OTEntries"]), user["empId"]);
+  const otHoursCells = generateOtHours(
+    Object.values(user["OTEntries"]),
+    user["empId"]
+  );
   //End Ot Section
-
-  addHtml += generateLeaves(Object.values(user["Leaves"]), user["empId"]);
+  const amsLogs = generateAMS([], 511);
+  const leaveCells = generateLeaves(
+    Object.values(user["Leaves"]),
+    user["empId"]
+  );
   //Start Leave Section
 
   $("#mainTbody")
@@ -847,7 +762,11 @@ function createMemberHours(user) {
     _maxDays + 1
   }"></td>
   </tr>
-  ${addHtml}`);
+  ${regularHourCells}
+  ${amsLogs}
+  ${otHoursCells}
+  ${leaveCells}
+  `);
 }
 
 function createHeader() {
@@ -1269,6 +1188,7 @@ function colorYellow() {
     `goTot`,
     `glRow`,
     `glTot`,
+    "amsRow",
   ];
   myClass.forEach((element) => {
     $(`.${element}`).each(function () {
@@ -1307,6 +1227,7 @@ function colorWeekends(year, month) {
     `.goTot`,
     `.glRow`,
     `.glTot`,
+    `.amsRow`,
   ];
   mySelectors.forEach((element) => {
     $(`${element}`).each(function () {
