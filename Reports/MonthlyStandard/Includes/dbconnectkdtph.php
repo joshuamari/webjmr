@@ -12,7 +12,7 @@ try {
   $connkdt = new PDO($dsn, $username, $password, [
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
   ]);
-  $gods = ['464', '487'];
+  $gods = [464, 487];
   $itMembers = array();
   $itQ = "SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='IT' AND fldActive=1";
   $itStmt = $connkdt->query($itQ);

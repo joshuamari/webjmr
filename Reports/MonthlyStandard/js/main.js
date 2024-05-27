@@ -42,39 +42,61 @@ var _emplist = [];
 var _empDetails = [];
 var _sundays = [];
 var _saturdays = [];
+var amsData = {};
 //#endregion
-checkLogin();
+checkLogin()
+  .then((emp) => {
+    if (emp) {
+      _empDetails = emp;
+      msAccess();
+      $(document).ready(function () {
+        Promise.all([getGroupList(), getLocations()]).then(([grps, locs]) => {
+          fillGroups(grps);
+          getEmployeeList().then((emplist) => {
+            if (emplist) {
+              emplist.map(fillMembers);
+            }
+          });
+          if (locs) {
+            fillLocations(locs);
+          }
+        });
+      });
+    } else {
+      window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
+    }
+  })
+  .catch((error) => {
+    alert(`${error}`);
+  });
 //#region BINDS
-$(document).ready(function () {
-  $.ajaxSetup({ async: false });
-  getGroupList();
-  getEmployeeList();
-  getLocations();
-  $.ajaxSetup({ async: true });
-
-  // createTables($("#monthSel").val());
-});
 
 $(document).on("change", "#monthSel", function () {
   // $($('#members-label').nextAll()).remove()
   _selectedMembers = [];
-  $.ajaxSetup({ async: false });
-  getEmployeeList();
-  $.ajaxSetup({ async: true });
-  createTables($(this).val());
+  hideTable();
+  getEmployeeList().then((emps) => {
+    if (emps) {
+      emps.map(fillMembers);
+    }
+  });
 
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
   $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
 });
 $(document).on("change", "#buSel", function () {
-  $.ajaxSetup({ async: false });
-  getEmployeeList();
-  $.ajaxSetup({ async: true });
-  createTables($("#monthSel").val());
-
+  // $.ajaxSetup({ async: false });
+  // getEmployeeList();
+  // $.ajaxSetup({ async: true });
+  // createTables($("#monthSel").val());
+  getEmployeeList().then((emps) => {
+    if (emps) {
+      emps.map(fillMembers);
+    }
+  });
   _selectedMembers = [];
-
+  hideTable();
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
   $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
@@ -139,20 +161,47 @@ $(document).on("change", "#locSel", function () {
 
 //#region FUNCTIONS
 function checkLogin() {
-  $.ajaxSetup({ async: false });
-  $.ajax({
-    url: "Includes/check_login.php",
-    success: function (data) {
-      //ajax to check if user is logged in
-      _empDetails = $.parseJSON(data);
+  // $.ajaxSetup({ async: false });
+  // $.ajax({
+  //   url: "Includes/check_login.php",
+  //   success: function (data) {
+  //     //ajax to check if user is logged in
+  //     _empDetails = $.parseJSON(data);
 
-      if (Object.keys(_empDetails).length < 1) {
-        window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
-      }
-      msAccess();
-    },
+  //     if (Object.keys(_empDetails).length < 1) {
+  //       window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
+  //     }
+  //     msAccess();
+  //   },
+  // });
+  // $.ajaxSetup({ async: true });
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "Includes/check_login.php",
+      dataType: "json",
+      success: function (data) {
+        const empdetails = data;
+        resolve(empdetails);
+        // //ajax to check if user is logged in
+        // _empDetails = $.parseJSON(data);
+
+        // if (Object.keys(_empDetails).length < 1) {
+        //   window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
+        // }
+        // msAccess();
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
   });
-  $.ajaxSetup({ async: true });
 }
 function fillEmployeeData(empEntries) {
   _selectedMembers.forEach((memberId) => {
@@ -241,54 +290,124 @@ function msAccess() {
 }
 function getGroupList() {
   $("#buSel").empty();
-  $.post(
-    "ajax/get_group_list.php",
-    {
-      empNum: _empDetails["empNum"],
-    },
-    function (data) {
-      var grpList = $.parseJSON(data);
-      grpList.forEach((grp) => {
-        $("#buSel").append(`<option>${grp}</option>`);
-        $("#buSel").val(_empDetails["empGroup"]);
-      });
-    }
-  );
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_group_list.php",
+      data: {
+        empNum: _empDetails["empNum"],
+      },
+      dataType: "json",
+      success: function (response) {
+        const grplist = response;
+        resolve(grplist);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
+}
+function fillGroups(grplist) {
+  grplist.forEach((grp) => {
+    $("#buSel").append(`<option>${grp}</option>`);
+    $("#buSel").val(_empDetails["empGroup"]);
+  });
 }
 function getEmployeeList() {
-  var selDate = $("#monthSel").val();
-  var grpSel = $("#buSel").val();
-  var cutOff = $(`#CO`).val();
+  const selDate = $("#monthSel").val();
+  const grpSel = $("#buSel").val();
+  const cutOff = $(`#CO`).val();
   $("#members-list").empty();
-  $.post(
-    "ajax/get_emplist.php",
-    {
-      monthSel: selDate,
-      groupSel: grpSel,
-      getHalfSel: cutOff,
-    },
-    function (data) {
-      _emplist = $.parseJSON(data);
-      _emplist.map(fillMembers);
-      _selectedMembers = _selectedMembers.filter((item) =>
-        _emplist.some((myItem) => myItem.empNum === item)
-      );
-    }
-  );
+  // $.post(
+  //   "ajax/get_emplist.php",
+  //   {
+  //     monthSel: selDate,
+  //     groupSel: grpSel,
+  //     getHalfSel: cutOff,
+  //   },
+  //   function (data) {
+  //     _emplist = $.parseJSON(data);
+  //     _emplist.map(fillMembers);
+  //     _selectedMembers = _selectedMembers.filter((item) =>
+  //       _emplist.some((myItem) => myItem.empNum === item)
+  //     );
+  //   }
+  // );
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_emplist.php",
+      data: {
+        monthSel: selDate,
+        groupSel: grpSel,
+        getHalfSel: cutOff,
+      },
+      dataType: "json",
+      success: function (response) {
+        const emplist = response;
+        resolve(emplist);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
 }
 function getLocations() {
+  // $("#locSel").html(`<option loc-id=0>KDT/WFH</option>`);
+  // var addString = ``;
+  // $.ajax({
+  //   url: "ajax/get_locations.php",
+  //   success: function (data) {
+  //     var locs = $.parseJSON(data);
+  //     const locIDs = Object.keys(locs);
+  //     locIDs.forEach((locID) => {
+  //       const locName = locs[locID];
+  //       addString += `<option loc-id=${locID}>${locName}</option>`;
+  //     });
+  //   },
+  // });
+  // $("#locSel").append(addString);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "ajax/get_locations.php",
+      dataType: "json",
+      success: function (response) {
+        const loc = response;
+        resolve(loc);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
+}
+function fillLocations(locs) {
   $("#locSel").html(`<option loc-id=0>KDT/WFH</option>`);
   var addString = ``;
-  $.ajax({
-    url: "ajax/get_locations.php",
-    success: function (data) {
-      var locs = $.parseJSON(data);
-      const locIDs = Object.keys(locs);
-      locIDs.forEach((locID) => {
-        const locName = locs[locID];
-        addString += `<option loc-id=${locID}>${locName}</option>`;
-      });
-    },
+  $.each(locs, function (key, value) {
+    var option = $("<option>").attr("loc-id", key).text(value);
+    $("select").append(option);
   });
   $("#locSel").append(addString);
 }
@@ -302,10 +421,18 @@ function createTables(ymVal) {
   var getOGP = $(`.checkbox`).is(":checked"); //eto papalitan pag may checkbox na
   var location = $($(`#locSel`).find("option:selected")).attr("loc-id");
   if (_selectedMembers.length < 1) {
-    $(".noShow").removeClass("d-none");
-    $(".lower .right").addClass("d-none");
+    hideTable();
     return;
   }
+  $.ajaxSetup({ async: false });
+  getAMS()
+    .then((am) => {
+      amsData = am;
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+  $.ajaxSetup({ async: true });
   $(".noShow").addClass("d-none");
   $(".lower .right").removeClass("d-none");
   $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
@@ -313,7 +440,7 @@ function createTables(ymVal) {
     "ajax/get_entries.php",
     {
       monthSel: ymVal,
-      empArray: _selectedMembers,
+      empArray: JSON.stringify(_selectedMembers),
       groupSel: groupSel,
       getHalfSel: halfSel,
       getOGP: getOGP,
@@ -347,6 +474,38 @@ function createTables(ymVal) {
     }
   );
   // console.log(_selectedMembers);
+}
+function hideTable() {
+  $(".noShow").removeClass("d-none");
+  $(".lower .right").addClass("d-none");
+}
+function getEntries() {}
+function getAMS() {
+  const monthSel = $("#monthSel").val();
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_ams.php",
+      data: {
+        yearMonth: monthSel,
+        empArray: JSON.stringify(_selectedMembers),
+      },
+      dataType: "json",
+      success: function (response) {
+        const ams = response;
+        resolve(ams);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+  });
 }
 /**
  *
@@ -656,16 +815,18 @@ function generateLeaves(leaves, employeeId = 0) {
   return addHtml;
 }
 function generateAMS(amsLogs, employeeId = 0) {
+  var filteredData = amsLogs[employeeId];
+  console.log(filteredData);
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
-  const dummyAmsLogs = {
-    "01": 80,
-    "02": 80,
-    "03": 80,
-    "04": 80,
-  };
-
+  // const dummyAmsLogs = {
+  //   "01": 80,
+  //   "02": 80,
+  //   "03": 80,
+  //   "04": 80,
+  // };
+  let dummyAmsLogs = filteredData;
   for (let x = 1; x <= _maxDays; x++) {
     if (dummyAmsLogs[padZero(x)] !== undefined) {
       totalAmsMonth += dummyAmsLogs[padZero(x)];
@@ -737,13 +898,13 @@ function createMemberHours(user) {
     user["empId"]
   );
   //End Regular Hour Section
-  //OT Section
+  //#region OT Section
   const otHoursCells = generateOtHours(
     Object.values(user["OTEntries"]),
     user["empId"]
   );
-  //End Ot Section
-  const amsLogs = generateAMS([], 511);
+  //#endregion Ot Section
+  const amsLogs = generateAMS(amsData, user["empId"]);
   const leaveCells = generateLeaves(
     Object.values(user["Leaves"]),
     user["empId"]
