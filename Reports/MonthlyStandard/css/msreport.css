@@ -181,7 +181,8 @@ body {
   display: flex;
   justify-content: center;
 }
-
+.wfh {
+}
 .cs-loader-inner {
   transform: translateY(-50%);
   top: 50%;
@@ -197,6 +198,34 @@ body {
   opacity: 0;
   display: inline-block;
   color: var(--main-blue);
+}
+
+.halfDay {
+  background-color: #ffa500 !important;
+}
+.holiday {
+  background-color: #f08080;
+}
+.jmrHours {
+  background-color: #a80000;
+}
+.invalid {
+  background-color: #ff0000;
+}
+.noInOut {
+  background-color: #ffff00 !important;
+}
+.ams {
+  background-color: #ff6cff;
+}
+.wfh {
+  background-color: #ffc0cb;
+}
+.amsSelected {
+  background-color: #d3d3d3;
+}
+.overStay {
+  background-color: #00ffff;
 }
 
 /* checkbox */

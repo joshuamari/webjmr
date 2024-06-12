@@ -149,11 +149,12 @@ $(document).on("change", "#CO", function () {
 });
 $(document).on("change", ".checkbox", function () {
   //eto uuncomment tas papalitan id pag may checkbox na
-  createTables($("#monthSel").val());
+  createTables($("#monthSel").val(), true);
 });
 $(document).on("click", ".tog", function () {
   $(".left").toggleClass("hide");
 });
+
 $(document).on("change", "#locSel", function () {
   createTables($("#monthSel").val());
 });
@@ -197,7 +198,7 @@ function checkLogin() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred while checking login details.");
         }
       },
     });
@@ -308,7 +309,7 @@ function getGroupList() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred while fetching group list.");
         }
       },
     });
@@ -360,7 +361,7 @@ function getEmployeeList() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred while fetching employee list.");
         }
       },
     });
@@ -396,7 +397,7 @@ function getLocations() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred while fetching locations.");
         }
       },
     });
@@ -412,7 +413,7 @@ function fillLocations(locs) {
   $("#locSel").append(addString);
 }
 //#region table creation
-function createTables(ymVal) {
+function createTables(ymVal, useAmsCache = false) {
   _grpProj = [];
   _grpOT = [];
   allEmployees = {};
@@ -424,15 +425,19 @@ function createTables(ymVal) {
     hideTable();
     return;
   }
-  $.ajaxSetup({ async: false });
-  getAMS()
-    .then((am) => {
-      amsData = am;
-    })
-    .catch((error) => {
-      alert(`${error}`);
-    });
-  $.ajaxSetup({ async: true });
+
+  if (useAmsCache === false || Object.entries(amsData).length < 1) {
+    $.ajaxSetup({ async: false });
+    getAMS()
+      .then((am) => {
+        amsData = am;
+      })
+      .catch((error) => {
+        alert(`${error}`);
+      });
+    $.ajaxSetup({ async: true });
+  }
+
   $(".noShow").addClass("d-none");
   $(".lower .right").removeClass("d-none");
   $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
@@ -443,7 +448,7 @@ function createTables(ymVal) {
       empArray: JSON.stringify(_selectedMembers),
       groupSel: groupSel,
       getHalfSel: halfSel,
-      getOGP: getOGP,
+      getOGP: true,
       location: location,
     },
     function (data) {
@@ -456,20 +461,9 @@ function createTables(ymVal) {
       ).getDate();
 
       createHeader();
-      generateMainTable(allEmployees);
+      generateMainTable(allEmployees, getOGP);
       generateSubTable(allEmployees);
       colorYellow();
-      // addCells();
-      // _unifiedQ = empEntries;
-      // _unifiedQ.map(extractData);
-      // _selectedMembers.map(getEmpProjects);
-      // addGrpData(_grpProj, _grpOT);
-      // addCells();
-      // //adjustWidth();
-      // console.log("unified", _unifiedQ);
-      // _unifiedQ.map(fillTable);
-      // getTotals();
-      // colorYellow();
       colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
     }
   );
@@ -501,32 +495,74 @@ function getAMS() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred while fetching ams data.");
         }
       },
     });
   });
 }
-/**
- *
- * @param {
- * } user :{
- * firstName:string,
- * lastName:string,
- * OTEntries:{
- *
- * }
- * }
- */
+
 function padZero(num) {
   return String(num).padStart(2, "0");
 }
-function generateRegularHours(projects, employeeId = 0) {
-  let htmlString = "";
-  let totalHourCells = "";
+
+function getRegularHoursData(projects, otProjects, includeOgp = false) {
   const totalHours = {};
-  const monthTotalHours = {};
-  projects.forEach((rhEntry) => {
+
+  const monthTotalHours = { totalHours: 0 };
+  const projectEntries = projects
+    .map((rhEntry) => {
+      const isOGPProject =
+        rhEntry["pName"].substr(rhEntry["pName"].length - 5) === "[ogp]";
+      if (includeOgp === false && isOGPProject) {
+        return;
+      }
+      const dateEntries = rhEntry["dateEntries"].reduce((map, curr) => {
+        if (map[curr["entryDate"]]) {
+          map[curr["entryDate"]] += curr["hours"];
+        } else {
+          map[curr["entryDate"]] = curr["hours"];
+        }
+
+        if (totalHours[curr["entryDate"]] === undefined) {
+          const totalOtEntry = otProjects[curr["entryDate"]]
+            ? otProjects[curr["entryDate"]]
+            : 0;
+          totalHours[curr["entryDate"]] = curr["hours"] + totalOtEntry;
+        } else {
+          totalHours[curr["entryDate"]] += curr["hours"];
+        }
+        if (monthTotalHours[rhEntry["pName"]] === undefined) {
+          monthTotalHours[rhEntry["pName"]] = curr["hours"];
+        } else {
+          monthTotalHours[rhEntry["pName"]] += curr["hours"];
+        }
+        monthTotalHours["totalHours"] += curr["hours"];
+        return map;
+      }, {});
+      return {
+        ...rhEntry,
+        dateEntries: dateEntries,
+      };
+    })
+    .filter((x) => x !== undefined);
+
+  return {
+    monthTotalHours,
+    totalHours,
+    projectEntries,
+  };
+}
+function getOTHoursData(OTprojects, includeOgp) {
+  const totalHours = {};
+  const monthTotalHours = { totalHours: 0 };
+
+  const projectEntries = OTprojects.map((rhEntry) => {
+    const isOGPProject =
+      rhEntry["pName"].substr(rhEntry["pName"].length - 5) === "[ogp]";
+    if (includeOgp === false && isOGPProject) {
+      return;
+    }
     const dateEntries = rhEntry["dateEntries"].reduce((map, curr) => {
       if (map[curr["entryDate"]]) {
         map[curr["entryDate"]] += curr["hours"];
@@ -544,37 +580,79 @@ function generateRegularHours(projects, employeeId = 0) {
       } else {
         monthTotalHours[rhEntry["pName"]] += curr["hours"];
       }
-
+      monthTotalHours["totalHours"] += curr["hours"];
       return map;
     }, {});
+    return {
+      ...rhEntry,
+      dateEntries: dateEntries,
+    };
+  }).filter((x) => x !== undefined);
+  return {
+    otMonthTotalHours: monthTotalHours,
+    otTotalHours: totalHours,
+    otProjectEntries: projectEntries,
+  };
+}
+function generateRegularHours(
+  totalHours,
+  monthTotalHours,
+  projectEntries,
+  employeeId = 0,
+  shouldIncludeOgp = false,
+  ams = {},
+  includeColor = {
+    totalHours: false,
+  },
+  totalOtHours
+) {
+  let htmlString = "";
+  let totalHourCells = "";
+  projectEntries.forEach((projectEntry) => {
+    const dateEntries = projectEntry["dateEntries"];
+    const isOGPProject =
+      projectEntry["pName"].substr(projectEntry["pName"].length - 5) ===
+      "[ogp]";
+    if (isOGPProject && !shouldIncludeOgp) {
+      return;
+    }
+    const projectName = isOGPProject
+      ? projectEntry["pName"].slice(0, -5)
+      : projectEntry["pName"];
     let regularHourCells = "";
-
+    const employee = allEmployees[employeeId];
     for (let x = 1; x <= _maxDays; x++) {
       regularHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
         dateEntries[padZero(x)] ? dateEntries[padZero(x)] : ""
       }</td>`;
     }
     htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
-      rhEntry["pIndex"]
+      projectEntry["pIndex"]
     }">
-                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
-                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
-                    rhEntry["pName"]
-                  }</td>
+                  <td data-a-v="middle" style="width:300px;" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${projectName}</td>
                   ${regularHourCells}
                   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
-                    monthTotalHours[rhEntry["pName"]]
+                    monthTotalHours[projectEntry["pName"]]
                   }</td>`;
   });
-
   for (let x = 1; x <= _maxDays; x++) {
-    totalHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+    ams[padZero(x)];
+
+    let cellColor = "rgb(255, 255, 0)";
+    if (includeColor.totalHours && ams[padZero(x)]) {
+      cellColor = getTotalHourColor(
+        totalHours[padZero(x)],
+        ams[padZero(x)]["hours"]
+      );
+    }
+    totalHourCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: ${cellColor};" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
       totalHours[padZero(x)] ? totalHours[padZero(x)] : ""
     }</td>`;
   }
   htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tTot"employee-number="${employeeId}" >
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Total Hours</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255, 255, 0);">Total Hours</td>
   ${totalHourCells}
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
     monthTotalHours["totalHours"] ? monthTotalHours["totalHours"] : "0"
@@ -582,72 +660,69 @@ function generateRegularHours(projects, employeeId = 0) {
 
   </tr>
   </tr>`;
-  return htmlString;
+  return { regularHourCells: htmlString, totalHours };
 }
-function generateOtHours(OtHours, employeeId = 0) {
-  const monthTotalHours = {};
-  const totalOtHours = {};
+function generateOtHours(
+  OtHours,
+  monthTotalHours,
+  totalOtHours,
+  employeeId = 0,
+  shouldIncludeOgp
+) {
+  let overTimeTotal = "";
   let totalOtCells = "";
   let addHtml = "";
-  OtHours.forEach((otEntry) => {
-    otEntry["dateEntries"].forEach((entry) => {
-      if (totalOtHours[entry["entryDate"]] === undefined) {
-        totalOtHours[entry["entryDate"]] = entry["hours"];
-      } else {
-        totalOtHours[entry["entryDate"]] += entry["hours"];
-      }
-      if (monthTotalHours["totalOtHours"] === undefined) {
-        monthTotalHours["totalOtHours"] = entry["hours"];
-      } else {
-        monthTotalHours["totalOtHours"] += entry["hours"];
-      }
-    });
-  });
+
   for (let x = 1; x <= _maxDays; x++) {
     totalOtCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      totalOtHours[x] ? totalOtHours[x] : ""
+      totalOtHours[padZero(x)] ? totalOtHours[padZero(x)] : ""
     }</td>`;
   }
-  addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="oTot"employee-number="${employeeId}" >
+  overTimeTotal += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="oTot"employee-number="${employeeId}" >
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Overtime</td>
   ${totalOtCells}
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
-    monthTotalHours["totalOtHours"] ? monthTotalHours["totalOtHours"] : "0"
+    monthTotalHours["totalHours"] ? monthTotalHours["totalHours"] : "0"
   }</td>
 
   </tr>
   </tr>`;
+  //Setup data for ot cells with projectname
+  let projectOtCellsWithProjectName = "";
 
   OtHours.forEach((otEntry) => {
     //Setup data
-    const otDateEntries = otEntry["dateEntries"].reduce((map, curr) => {
-      if (map[curr["entryDate"]]) {
-        map[curr["entryDate"]] += curr["hours"];
-      } else {
-        map[curr["entryDate"]] = curr["hours"];
-      }
-      if (totalOtHours[curr["entryDate"]] === undefined) {
-        totalOtHours[curr["entryDate"]] = curr["hours"];
-      } else {
-        totalOtHours[curr["entryDate"]] += curr["hours"];
-      }
-      if (monthTotalHours["ot-" + otEntry["pName"]] === undefined) {
-        monthTotalHours["ot-" + otEntry["pName"]] = curr["hours"];
-      } else {
-        monthTotalHours["ot-" + otEntry["pName"]] += curr["hours"];
-      }
-      return map;
-    }, {});
-
+    const otDateEntries = otEntry["dateEntries"];
     //Render UI
+    const isOGPProject =
+      otEntry["pName"].substr(otEntry["pName"].length - 5) === "[ogp]";
+    if (isOGPProject && !shouldIncludeOgp) {
+      return;
+    }
+    const projectName = isOGPProject
+      ? otEntry["pName"].slice(0, -5)
+      : otEntry["pName"];
     let otHoursCells = "";
     for (let x = 1; x <= _maxDays; x++) {
       otHoursCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
         otDateEntries[padZero(x)] ? otDateEntries[padZero(x)] : ""
       }</td>`;
     }
-
+    projectOtCellsWithProjectName += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
+      otEntry["pIndex"]
+    }">
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    "OT-" + projectName
+                  }</td>
+                  ${otHoursCells}
+                  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+                    monthTotalHours[otEntry["pName"]]
+                      ? monthTotalHours[otEntry["pName"]]
+                      : "0"
+                  }</td>
+                  `;
     addHtml += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
       otEntry["pIndex"]
     }">
@@ -663,7 +738,7 @@ function generateOtHours(OtHours, employeeId = 0) {
                   }</td>
                   `;
   });
-  return addHtml;
+  return { projectOtCellsWithProjectName, overTimeTotal, totalOtHours };
 }
 function generateLeaves(leaves, employeeId = 0) {
   let vlCells;
@@ -812,43 +887,67 @@ function generateLeaves(leaves, employeeId = 0) {
     }</td>
   </tr>
   `;
-  return addHtml;
+  return { leavesUI: addHtml, leavesData: leavesMap };
 }
-function generateAMS(amsLogs, employeeId = 0) {
-  var filteredData = amsLogs[employeeId];
-  console.log(filteredData);
+function generateAMS(
+  amsLogs,
+  employeeId = 0,
+  regularHourEntries,
+  leavesData,
+  otEntries
+) {
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
-  // const dummyAmsLogs = {
-  //   "01": 80,
-  //   "02": 80,
-  //   "03": 80,
-  //   "04": 80,
-  // };
-  let dummyAmsLogs = filteredData;
+
   for (let x = 1; x <= _maxDays; x++) {
-    if (dummyAmsLogs[padZero(x)] !== undefined) {
-      totalAmsMonth += dummyAmsLogs[padZero(x)];
+    let cellColor = "";
+    if (amsLogs[padZero(x)] && amsLogs[padZero(x)]["hours"] !== undefined) {
+      totalAmsMonth += amsLogs[padZero(x)]["hours"];
+      cellColor = getAMSEntryColor(
+        amsLogs[padZero(x)]["locationName"] === "WFH",
+        amsLogs[padZero(x)]["hours"],
+        leavesData[`total-${padZero(x)}`],
+        regularHourEntries[padZero(x)]
+      );
+    } else {
+      //No ams entry
+      const location = $("#locSel").val();
+      if (
+        (location === "WFH" || location === "KDT/WFH" || location === "KDT") &&
+        regularHourEntries[padZero(x)] !== undefined
+      ) {
+        //Not Dispatch
+        if (regularHourEntries[padZero(x)] !== undefined) {
+          cellColor = "#ff0000";
+        }
+      } else {
+        if (regularHourEntries[padZero(x)] !== undefined) {
+          cellColor = "#c5976a";
+        }
+      }
     }
-    amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
-      dummyAmsLogs[padZero(x)] ? dummyAmsLogs[padZero(x)] : ""
+
+    amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: ${cellColor};"  data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+      amsLogs[padZero(x)] ? amsLogs[padZero(x)]["hours"] : ""
     }</td>`;
   }
   amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
   <td></td>  
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">AMS</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255,255,0);">AMS</td>
     ${amsLogsCells}
     <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
   return amsLogsSection;
 }
-function generateMainTable(allEmployees) {
+function generateMainTable(allEmployees, includeOgp = false) {
   Object.values(allEmployees).forEach((user) => {
     createMemberHours(user);
   });
 }
 function generateSubTable(allUsers) {
   let addHtml = "";
+  const includeOgp = $(`.checkbox`).is(":checked");
+
   let Leaves = [];
   const OTEntries = {};
   const RegularHourEntries = {};
@@ -879,13 +978,40 @@ function generateSubTable(allUsers) {
     //Leaves
     Leaves.push(...Object.values(user["Leaves"]));
   });
-  addHtml += generateRegularHours(Object.values(RegularHourEntries));
-  addHtml += generateOtHours(Object.values(OTEntries));
-  addHtml += generateLeaves(Leaves);
 
+  const { otMonthTotalHours, otProjectEntries, otTotalHours } = getOTHoursData(
+    Object.values(OTEntries)
+  );
+  const { monthTotalHours, totalHours, projectEntries } = getRegularHoursData(
+    Object.values(RegularHourEntries),
+    otTotalHours,
+    includeOgp
+  );
+  const { regularHourCells } = generateRegularHours(
+    totalHours,
+    monthTotalHours,
+    projectEntries,
+    0,
+    includeOgp,
+    otTotalHours
+  );
+  const { projectOtCellsWithProjectName, overTimeTotal, totalOtHours } =
+    generateOtHours(
+      otProjectEntries,
+      otMonthTotalHours,
+      otTotalHours,
+      0,
+      includeOgp
+    );
+  addHtml += regularHourCells;
+  addHtml += overTimeTotal;
+  addHtml += projectOtCellsWithProjectName;
   $("#subTbody").append(addHtml);
+  return;
+  addHtml += generateLeaves(Leaves);
 }
 function createMemberHours(user) {
+  const includeOgp = $(`.checkbox`).is(":checked");
   let addHtml = "";
   /**totalHours
    * {
@@ -893,40 +1019,70 @@ function createMemberHours(user) {
    * }
    */
 
-  const regularHourCells = generateRegularHours(
-    Object.values(user["RegularHourEntries"]),
-    user["empId"]
+  //Get Required Data
+
+  const { otMonthTotalHours, otTotalHours, otProjectEntries } = getOTHoursData(
+    Object.values(user["OTEntries"]),
+    includeOgp
   );
+
+  const { monthTotalHours, totalHours, projectEntries } = getRegularHoursData(
+    Object.values(user["RegularHourEntries"]),
+    otTotalHours,
+    includeOgp
+  );
+  const { regularHourCells } = generateRegularHours(
+    totalHours,
+    monthTotalHours,
+    projectEntries,
+    user["empId"],
+    includeOgp,
+    amsData[user["empId"]],
+    { totalHours: true },
+    otTotalHours
+  );
+
   //End Regular Hour Section
   //#region OT Section
-  const otHoursCells = generateOtHours(
-    Object.values(user["OTEntries"]),
-    user["empId"]
-  );
+  const { projectOtCellsWithProjectName, overTimeTotal, totalOtHours } =
+    generateOtHours(
+      otProjectEntries,
+      otMonthTotalHours,
+      otTotalHours,
+      user["empId"],
+      includeOgp
+    );
   //#endregion Ot Section
-  const amsLogs = generateAMS(amsData, user["empId"]);
-  const leaveCells = generateLeaves(
+  const { leavesData, leavesUI } = generateLeaves(
     Object.values(user["Leaves"]),
     user["empId"]
   );
+  const amsLogs = generateAMS(
+    amsData[user["empId"]] ? amsData[user["empId"]] : {},
+    user["empId"],
+    totalHours,
+    leavesData
+  );
+
   //Start Leave Section
 
   $("#mainTbody")
     .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${
     user["empId"]
   }">
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
-    user["lastName"]
-  }, ${user["firstName"]}</td>
+  <td data-a-v="middle" style="width:300px;" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+    user["firstName"]
+  }, ${user["lastName"]}</td>
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" colspan="${
     _maxDays + 1
   }"></td>
   </tr>
   ${regularHourCells}
+  ${overTimeTotal}
   ${amsLogs}
-  ${otHoursCells}
-  ${leaveCells}
+  ${projectOtCellsWithProjectName}
+  ${leavesUI}
   `);
 }
 
@@ -1339,9 +1495,39 @@ function getTotals() {
     $(this).text(rightTot);
   });
 }
+
+function getAMSEntryColor(isWfh, totalAmsHours, leaveHours, totalRegularHours) {
+  if (totalAmsHours === undefined) {
+    totalAmsHours = 0;
+  }
+  if (leaveHours === undefined) {
+    leaveHours = 0;
+  }
+  if (totalRegularHours === undefined) {
+    totalRegularHours = 0;
+  }
+
+  if (isWfh === true) {
+    return "#ffc0cb";
+  }
+}
+
+function getTotalHourColor(totalHour, amsHour, otHour) {
+  if (totalHour > 8 && otHour !== undefined) {
+    return "#ff0000";
+  }
+  if (totalHour !== amsHour) {
+    if (totalHour > amsHour || !amsHour) {
+      return "#ff0000";
+    }
+    if (totalHour < amsHour) {
+      return "#00ffff";
+    }
+  }
+  return "rgb(255, 255, 0)";
+}
 function colorYellow() {
   var myClass = [
-    `tTot`,
     `oTot`,
     `lRow`,
     `lTot`,
@@ -1349,7 +1535,7 @@ function colorYellow() {
     `goTot`,
     `glRow`,
     `glTot`,
-    "amsRow",
+    "amsRowLabel",
   ];
   myClass.forEach((element) => {
     $(`.${element}`).each(function () {

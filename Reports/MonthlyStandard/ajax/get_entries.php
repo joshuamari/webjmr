@@ -48,15 +48,17 @@ if (!empty($_POST['getOGP'])) {
 #endregion
 
 #region main
-$entriesQuery = "SELECT dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID,CASE WHEN pt.fldGroup IS NULL OR pt.fldGroup='$groupSel' THEN 0 ELSE pt.fldGroup END AS isHiram FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp $locStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
+$entriesQuery = "SELECT dr.fldLocation AS projLocation, dr.fldProject AS projID, pt.fldProject AS projName, dr.fldEmployeeNum AS eNum, dr.fldDate AS eDate, SUM(dr.fldDuration) AS projMinute, dr.fldMHType AS eMHT, dr.fldItem AS itemID,CASE WHEN pt.fldGroup IS NULL OR pt.fldGroup='$groupSel' THEN 0 ELSE pt.fldGroup END AS isHiram FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject = pt.fldID WHERE $dateCompare $empStatement $ogp $locStatement GROUP BY dr.fldProject,dr.fldMHType,dr.fldDate,dr.fldEmployeeNum ORDER BY CASE WHEN pt.fldGroup IS NULL THEN 1 ELSE 0 END, pt.fldProject";
 $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute();
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
     foreach ($entriesArr as $entries) {
         $isHiram = '';
+        $ogpLabel = '';
         if ($entries['isHiram']) {
             $isHiram = " (" . $entries['isHiram'] . ")";
+            $ogpLabel = "[ogp]";
         }
         // $output = array();
         // $output += ["pIndex" => $entries['projID']];
@@ -74,8 +76,10 @@ if ($entriesStmt->rowCount() > 0) {
         #region new fetch
         $employee_number = $entries['eNum'];
         $fullname = getName($employee_number);
-        $project_name = $entries['projName'] . $isHiram;
+        $project_name =   $entries['projName'] . $isHiram . $ogpLabel;
         $project_id = $entries['projID'];
+        $project_location = "";
+
         $item_id = $entries['itemID'];
         $rawDate = $entries['eDate'];
         $rawMinutes = $entries['projMinute'];
@@ -85,11 +89,20 @@ if ($entriesStmt->rowCount() > 0) {
         $entryDay = date("d", strtotime($rawDate));
         $entryDates[] = array(
             "entryDate" => $entryDay,
-            "hours" => $entryHours
+            "hours" => $entryHours,
+            "location" => $project_location
         );
         $entriesArray[$employee_number]["firstName"] = $fullname["firstName"];
         $entriesArray[$employee_number]["lastName"] = $fullname["lastName"];
         $entriesArray[$employee_number]["empId"] = $employee_number;
+
+        if ($entries["projLocation"] === "1") {
+            $project_location = "KDT";
+        } else if ($entries["projLocation"] === "2") {
+            $project_location = "WFH";
+        } else {
+            $project_location = "Dispatch";
+        }
 
         if ($isOT) {
             if (!isset($entriesArray[$employee_number]["OTEntries"][$project_id])) {
@@ -102,7 +115,8 @@ if ($entriesStmt->rowCount() > 0) {
             // Add the date and hours to the nested structure
             $entriesArray[$employee_number]["OTEntries"][$project_id]['dateEntries'][] = [
                 'entryDate' => $entryDay,
-                'hours' => $entryHours
+                'hours' => $entryHours,
+                "location" => $project_location
             ];
         } else {
             if ($isLeave) {
@@ -116,7 +130,8 @@ if ($entriesStmt->rowCount() > 0) {
                 // Add the date and hours to the nested structure
                 $entriesArray[$employee_number]["Leaves"][$project_id]['dateEntries'][] = [
                     'entryDate' => $entryDay,
-                    'hours' => $entryHours
+                    'hours' => $entryHours,
+                    "location" => $project_location
                 ];
             } else {
                 if (!isset($entriesArray[$employee_number]["RegularHourEntries"][$project_id])) {
@@ -129,7 +144,8 @@ if ($entriesStmt->rowCount() > 0) {
                 // Add the date and hours to the nested structure
                 $entriesArray[$employee_number]["RegularHourEntries"][$project_id]['dateEntries'][] = [
                     'entryDate' => $entryDay,
-                    'hours' => $entryHours
+                    'hours' => $entryHours,
+                    "location" => $project_location
                 ];
             }
         }
