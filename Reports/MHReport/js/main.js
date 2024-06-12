@@ -223,7 +223,7 @@ function getEmplist() {
       getGroup: $("#buSel").val(),
     },
     function (data) {
-      // console.log(data)
+      console.log(data);
       eList = $.parseJSON(data);
     },
     (async = false)

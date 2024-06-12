@@ -63,7 +63,7 @@ if (empty($mgaEmpNgBU)) {
 }
 //emp#||Name||Group and Desig
 
-$elQ = "SELECT ep.fldEmployeeNum,CONCAT(ep.fldSurname,', ',ep.fldFirstname) AS ename,ep.fldGroup,ep.fldDesig,kdtd.fldDeptCode FROM emp_prof AS ep LEFT OUTER JOIN departments AS kdtd ON ep.fldEmployeeNum=kdtd.fldManager WHERE ep.fldNick<>'' AND ep.fldEmployeeNum IN $mgaEmpNgBU ORDER BY CASE WHEN ep.fldDesig='SM' THEN 1 WHEN ep.fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN ep.fldGroup='$rawGetGroup' THEN 1 ELSE ep.fldGroup END,ep.fldEmployeeNum";
+$elQ = "SELECT ep.fldEmployeeNum,CONCAT(ep.fldSurname,', ',ep.fldFirstname) AS ename,ep.fldGroup,ep.fldDesig,kdtd.fldDeptCode FROM emp_prof AS ep LEFT OUTER JOIN departments AS kdtd ON ep.fldEmployeeNum=kdtd.fldManager WHERE ep.fldNick<>'' AND ep.fldEmployeeNum IN $mgaEmpNgBU GROUP BY ep.fldEmployeeNum ORDER BY CASE WHEN ep.fldDesig='SM' THEN 1 WHEN ep.fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN ep.fldGroup='$rawGetGroup' THEN 1 ELSE ep.fldGroup END,ep.fldEmployeeNum";
 $elStmt = $connkdt->prepare($elQ);
 $elStmt->execute();
 if ($elStmt->rowCount() > 0) {

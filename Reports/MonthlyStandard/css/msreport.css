@@ -26,7 +26,9 @@ th {
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
+  min-width: 100px;
 }
+
 .table.ayos thead tr th {
   background-color: #fff !important;
 }
