@@ -66,7 +66,16 @@ if ($entriesStmt->rowCount() > 0) {
                 $hours = 0;
             }
         }
-        $amsArray[$empid][$day] = $hours;
+        if ($location === "1") {
+            $amsArray[$empid][$day]["locationName"] = "KDT";
+        } else {
+            if ($location === "2") {
+                $amsArray[$empid][$day]["locationName"] = "WFH";
+            } else {
+                $amsArray[$empid][$day]["locationName"] = "Unknown";
+            }
+        }
+        $amsArray[$empid][$day]["hours"] = $hours;
     }
 }
 #endregion

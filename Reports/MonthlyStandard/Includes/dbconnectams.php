@@ -5,8 +5,8 @@ $config = [
     'dbname' => 'pc_login',
     'charset' => 'utf8mb4'
 ];
-$username = 'kdt';
-$password = 'none';
+$username = 'root';
+$password = '';
 $dsn = 'mysql:' . http_build_query($config, '', ';');
 try {
     $connams = new PDO($dsn, $username, $password, [
