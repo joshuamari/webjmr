@@ -427,15 +427,17 @@ function createTables(ymVal, useAmsCache = false) {
   }
 
   if (useAmsCache === false || Object.entries(amsData).length < 1) {
-    $.ajaxSetup({ async: false });
     getAMS()
-      .then((am) => {
-        amsData = am;
+      .then((res) => {
+        if (res.isSuccess) {
+          amsData = res.data;
+        } else {
+          alert(`${res.message}`);
+        }
       })
       .catch((error) => {
         alert(`${error}`);
       });
-    $.ajaxSetup({ async: true });
   }
 
   $(".noShow").addClass("d-none");
@@ -465,6 +467,7 @@ function createTables(ymVal, useAmsCache = false) {
       generateSubTable(allEmployees);
       colorYellow();
       colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
+      addWidthtoGroupTable();
     }
   );
   // console.log(_selectedMembers);
@@ -629,7 +632,7 @@ function generateRegularHours(
     htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="pRow" employee-number="${employeeId}" p-index="${
       projectEntry["pIndex"]
     }">
-                  <td data-a-v="middle" style="width:300px;" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
+                  <td data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"></td>
                   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${projectName}</td>
                   ${regularHourCells}
                   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
@@ -1070,7 +1073,7 @@ function createMemberHours(user) {
     .append(`<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="emprow" employee-number="${
     user["empId"]
   }">
-  <td data-a-v="middle" style="width:300px;" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+  <td data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
     user["firstName"]
   }, ${user["lastName"]}</td>
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project and Job Name</td>
@@ -1095,13 +1098,13 @@ function createHeader() {
   }
   addDates += `<th data-fill-color="00ffff" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">TOTAL</th>`;
   $("#mainThead").html(`
-    <th data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Members</th>
-    <th data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project</th>
+    <th class="lagyan" data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Members</th>
+    <th class="lagyan2" data-fill-color="00ffff"  data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project</th>
     ${addDates}
     `);
   $("#subThead").html(`
     <th data-f-bold="true" data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" id="grpTotTitle">&nbsp;</th>
-    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">Project</th>
+    <th data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="grpPrjTitle">Project</th>
     ${addDates}
     `);
 }
@@ -1690,6 +1693,14 @@ function exportTable() {
   $(`#grpTotTitle`).text(``);
   // $(".fx").remove();
   // $("#mainTable").addClass("ayos");
+}
+
+function addWidthtoGroupTable() {
+  var first = $(".lagyan").outerWidth();
+  var second = $(".lagyan2").outerWidth();
+  $("#grpTotTitle").css("min-width", first + "px");
+  $(".grpPrjTitle").css("min-width", second + "px");
+  console.log(top);
 }
 //#endregion
 //#endregion

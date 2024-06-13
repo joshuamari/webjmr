@@ -25,68 +25,76 @@ $yearMonth = date("Y-m");
 if (!empty($_POST["yearMonth"])) {
     $yearMonth = $_POST["yearMonth"];
 }
-
+$result = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT fldEmployeeNum AS empid, DATE(fldDT) AS `Date`, MIN( CASE WHEN fldStatus = 1 THEN fldDT END ) AS `in`, MAX( CASE WHEN fldStatus = 0 THEN fldDT END ) AS `out` FROM `timelog` WHERE fldDT LIKE :yearMonth $empStatement GROUP BY fldEmployeeNum,DATE(fldDT) ORDER BY fldEmployeeNum,fldDT";
-$entriesStmt = $connams->prepare($entriesQuery);
-$entriesStmt->execute([":yearMonth" => "$yearMonth%"]);
-if ($entriesStmt->rowCount() > 0) {
-    $entriesArr = $entriesStmt->fetchAll();
-    // die(json_encode($entriesArr));
-    foreach ($entriesArr as $entries) {
-        $reductions = 0;
-        $empid = $entries["empid"];
-        $rawIn = $entries["in"];
-        $rawOut = $entries["out"];
-        $in_timestamp = strtotime($rawIn);
-        $out_timestamp = strtotime($rawOut);
-        $in_time = date("H:i:s ",  $in_timestamp);
-        $out_time = date("H:i:s ", $out_timestamp);
-        $currentDay = date("Y-m-d", $in_timestamp);
-        $day = date("d", $in_timestamp);
-        $location = getCoreLocation($empid, $currentDay);
-        if (isWFH($empid, $currentDay)) {
-            $reductions = (int)getReductions($in_time, $out_time, $location, $currentDay);
-            $diff_in_seconds = max(0, $out_timestamp - $in_timestamp - $reductions);
-            $diff_in_minutes = floor($diff_in_seconds / 60);
-            $hours = floor($diff_in_seconds / 3600);
-            $minutes = $diff_in_minutes % 60;
-            if ($minutes >= 30) {
-                $hours += 0.5;
-            }
-        } else {
-            $new_in = checkStart($in_time, $location, $currentDay);
-            $new_in_timestamp = strtotime($currentDay . " " . $new_in);
-
-            if ($new_in !== NULL) {
-                $reductions = (int)getReductions($new_in, $out_time, $location, $currentDay);
-                $diff_in_seconds = max(0, $out_timestamp - $new_in_timestamp - $reductions);
+try {
+    $entriesQuery = "SELECT fldEmployeeNum AS empid, DATE(fldDT) AS `Date`, MIN( CASE WHEN fldStatus = 1 THEN fldDT END ) AS `in`, MAX( CASE WHEN fldStatus = 0 THEN fldDT END ) AS `out` FROM `timelog` WHERE fldDT LIKE :yearMonth $empStatement GROUP BY fldEmployeeNum,DATE(fldDT) ORDER BY fldEmployeeNum,fldDT";
+    $entriesStmt = $connams->prepare($entriesQuery);
+    $entriesStmt->execute([":yearMonth" => "$yearMonth%"]);
+    if ($entriesStmt->rowCount() > 0) {
+        $entriesArr = $entriesStmt->fetchAll();
+        // die(json_encode($entriesArr));
+        foreach ($entriesArr as $entries) {
+            $reductions = 0;
+            $empid = $entries["empid"];
+            $rawIn = $entries["in"];
+            $rawOut = $entries["out"];
+            $in_timestamp = strtotime($rawIn);
+            $out_timestamp = strtotime($rawOut);
+            $in_time = date("H:i:s ",  $in_timestamp);
+            $out_time = date("H:i:s ", $out_timestamp);
+            $currentDay = date("Y-m-d", $in_timestamp);
+            $day = date("d", $in_timestamp);
+            $location = getCoreLocation($empid, $currentDay);
+            if (isWFH($empid, $currentDay)) {
+                $reductions = (int)getReductions($in_time, $out_time, $location, $currentDay);
+                $diff_in_seconds = max(0, $out_timestamp - $in_timestamp - $reductions);
+                $diff_in_minutes = floor($diff_in_seconds / 60);
                 $hours = floor($diff_in_seconds / 3600);
+                $minutes = $diff_in_minutes % 60;
+                if ($minutes >= 30) {
+                    $hours += 0.5;
+                }
             } else {
-                $hours = 0;
+                $new_in = checkStart($in_time, $location, $currentDay);
+                $new_in_timestamp = strtotime($currentDay . " " . $new_in);
+
+                if ($new_in !== NULL) {
+                    $reductions = (int)getReductions($new_in, $out_time, $location, $currentDay);
+                    $diff_in_seconds = max(0, $out_timestamp - $new_in_timestamp - $reductions);
+                    $hours = floor($diff_in_seconds / 3600);
+                } else {
+                    $hours = 0;
+                }
+                // if ($currentDay == "2024-06-05") {
+                //     echo $new_in . "new";
+                //     echo $out_time . "out";
+                //     echo $reductions . "red";
+                //     echo $hours . "hrs";
+                // }
+                // die($new_in . " at " . $reductions);
             }
-            // if ($currentDay == "2024-06-05") {
-            //     echo $new_in . "new";
-            //     echo $out_time . "out";
-            //     echo $reductions . "red";
-            //     echo $hours . "hrs";
-            // }
-            // die($new_in . " at " . $reductions);
-        }
-        if ($location == "1") {
-            $amsArray[$empid][$day]["locationName"] = "KDT";
-        } else {
-            if ($location == "2") {
-                $amsArray[$empid][$day]["locationName"] = "WFH";
+            if ($location == "1") {
+                $amsArray[$empid][$day]["locationName"] = "KDT";
             } else {
-                $amsArray[$empid][$day]["locationName"] = "Unknown";
+                if ($location == "2") {
+                    $amsArray[$empid][$day]["locationName"] = "WFH";
+                } else {
+                    $amsArray[$empid][$day]["locationName"] = "Unknown";
+                }
             }
+            $amsArray[$empid][$day]["hours"] = $hours;
         }
-        $amsArray[$empid][$day]["hours"] = $hours;
     }
+    $result['data'] = $amsArray;
+    $result['isSuccess'] = true;
+} catch (PDOException $e) {
+    $result['isSuccess'] = false;
+    $result['message'] = `Failed to get AMS: ` . $e->getMessage();
 }
+
 #endregion
 
 #region function
@@ -210,4 +218,4 @@ function getHalfend($location)
 }
 
 #endregion
-echo json_encode($amsArray);
+echo json_encode($result);
