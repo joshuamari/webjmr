@@ -57,19 +57,28 @@ if ($entriesStmt->rowCount() > 0) {
                 $hours += 0.5;
             }
         } else {
-            $new_in = checkStart($in_time, $location);
+            $new_in = checkStart($in_time, $location, $currentDay);
+            $new_in_timestamp = strtotime($currentDay . " " . $new_in);
+
             if ($new_in !== NULL) {
                 $reductions = (int)getReductions($new_in, $out_time, $location, $currentDay);
-                $diff_in_seconds = max(0, $out_timestamp - $in_timestamp - $reductions);
+                $diff_in_seconds = max(0, $out_timestamp - $new_in_timestamp - $reductions);
                 $hours = floor($diff_in_seconds / 3600);
             } else {
                 $hours = 0;
             }
+            // if ($currentDay == "2024-06-05") {
+            //     echo $new_in . "new";
+            //     echo $out_time . "out";
+            //     echo $reductions . "red";
+            //     echo $hours . "hrs";
+            // }
+            // die($new_in . " at " . $reductions);
         }
-        if ($location === "1") {
+        if ($location == "1") {
             $amsArray[$empid][$day]["locationName"] = "KDT";
         } else {
-            if ($location === "2") {
+            if ($location == "2") {
                 $amsArray[$empid][$day]["locationName"] = "WFH";
             } else {
                 $amsArray[$empid][$day]["locationName"] = "Unknown";
@@ -145,11 +154,17 @@ function getReductions($start, $end, $location, $currentday)
     }
     return $reductions;
 }
-function checkStart($start, $location)
+function checkStart($start, $location, $cur)
 {
     $newStart = $start;
     $start_stamp = strtotime($start);
     $halfstart = getHalfstart($location);
+    // if ($cur == "2024-06-05") {
+    //     echo $location;
+    //     echo "eto half: " . $halfstart;
+    //     echo "eto start: " . $newStart;
+    // }
+
     $halfstart_stamp = strtotime($halfstart);
     $halfend = getHalfend($location);
     $halfend_stamp = strtotime($halfend);
@@ -167,7 +182,7 @@ function getHalfstart($location)
 {
     global $connwebjmr;
     $halfday = null;
-    $halfQ = "SELECT core_time FROM `coretime` AS ct JOIN `coretime_name` AS cn ON ct.core_name_id=cn.core_name_id WHERE ct.core_start = 0 AND cn.core_name = 'Time' AND ct.location_id <> :location_id";
+    $halfQ = "SELECT core_time FROM `coretime` AS ct JOIN `coretime_name` AS cn ON ct.core_name_id=cn.core_name_id WHERE ct.core_start = 0 AND cn.core_name = 'Time' AND ct.location_id = :location_id";
     $halfStmt = $connwebjmr->prepare($halfQ);
     $halfStmt->execute([":location_id" => $location]);
     if ($halfStmt->rowCount() > 0) {
@@ -182,7 +197,7 @@ function getHalfend($location)
 {
     global $connwebjmr;
     $halfday = null;
-    $halfQ = "SELECT core_time FROM `coretime` AS ct JOIN `coretime_name` AS cn ON ct.core_name_id=cn.core_name_id WHERE ct.core_start = 0 AND cn.core_name = 'Halfday' AND ct.location_id <> :location_id";
+    $halfQ = "SELECT core_time FROM `coretime` AS ct JOIN `coretime_name` AS cn ON ct.core_name_id=cn.core_name_id WHERE ct.core_start = 0 AND cn.core_name = 'Halfday' AND ct.location_id = :location_id";
     $halfStmt = $connwebjmr->prepare($halfQ);
     $halfStmt->execute([":location_id" => $location]);
     if ($halfStmt->rowCount() > 0) {
