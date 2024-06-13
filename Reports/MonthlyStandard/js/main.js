@@ -431,6 +431,36 @@ function createTables(ymVal, useAmsCache = false) {
       .then((res) => {
         if (res.isSuccess) {
           amsData = res.data;
+          $(".noShow").addClass("d-none");
+          $(".lower .right").removeClass("d-none");
+          $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
+          $.post(
+            "ajax/get_entries.php",
+            {
+              monthSel: ymVal,
+              empArray: JSON.stringify(_selectedMembers),
+              groupSel: groupSel,
+              getHalfSel: halfSel,
+              getOGP: true,
+              location: location,
+            },
+            function (data) {
+              var empEntries = $.parseJSON(data);
+              allEmployees = empEntries;
+              _maxDays = new Date(
+                ymVal.split("-")[0],
+                ymVal.split("-")[1],
+                0
+              ).getDate();
+
+              createHeader();
+              generateMainTable(allEmployees, getOGP);
+              generateSubTable(allEmployees);
+              colorYellow();
+              colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
+              addWidthtoGroupTable();
+            }
+          );
         } else {
           alert(`${res.message}`);
         }
@@ -440,36 +470,6 @@ function createTables(ymVal, useAmsCache = false) {
       });
   }
 
-  $(".noShow").addClass("d-none");
-  $(".lower .right").removeClass("d-none");
-  $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
-  $.post(
-    "ajax/get_entries.php",
-    {
-      monthSel: ymVal,
-      empArray: JSON.stringify(_selectedMembers),
-      groupSel: groupSel,
-      getHalfSel: halfSel,
-      getOGP: true,
-      location: location,
-    },
-    function (data) {
-      var empEntries = $.parseJSON(data);
-      allEmployees = empEntries;
-      _maxDays = new Date(
-        ymVal.split("-")[0],
-        ymVal.split("-")[1],
-        0
-      ).getDate();
-
-      createHeader();
-      generateMainTable(allEmployees, getOGP);
-      generateSubTable(allEmployees);
-      colorYellow();
-      colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
-      addWidthtoGroupTable();
-    }
-  );
   // console.log(_selectedMembers);
 }
 function hideTable() {
@@ -902,7 +902,7 @@ function generateAMS(
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
-
+  console.log(amsLogs);
   for (let x = 1; x <= _maxDays; x++) {
     let cellColor = "";
     if (amsLogs[padZero(x)] && amsLogs[padZero(x)]["hours"] !== undefined) {
@@ -943,6 +943,7 @@ function generateAMS(
   return amsLogsSection;
 }
 function generateMainTable(allEmployees, includeOgp = false) {
+  $("#mainTbody").empty();
   Object.values(allEmployees).forEach((user) => {
     createMemberHours(user);
   });
@@ -1700,7 +1701,6 @@ function addWidthtoGroupTable() {
   var second = $(".lagyan2").outerWidth();
   $("#grpTotTitle").css("min-width", first + "px");
   $(".grpPrjTitle").css("min-width", second + "px");
-  console.log(top);
 }
 //#endregion
 //#endregion
