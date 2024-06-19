@@ -118,37 +118,38 @@ if ($entriesStmt->rowCount() > 0) {
                 'hours' => $entryHours,
                 "location" => $project_location
             ];
-        } else {
-            if ($isLeave) {
-                if (!isset($entriesArray[$employee_number]["Leaves"][$project_id])) {
-                    $entriesArray[$employee_number]["Leaves"][$project_id] = [
-                        "pName" => $project_name,
-                        'dateEntries' => [],
-                        "iIndex" => $item_id,
-                    ];
-                }
-                // Add the date and hours to the nested structure
-                $entriesArray[$employee_number]["Leaves"][$project_id]['dateEntries'][] = [
-                    'entryDate' => $entryDay,
-                    'hours' => $entryHours,
-                    "location" => $project_location
-                ];
-            } else {
-                if (!isset($entriesArray[$employee_number]["RegularHourEntries"][$project_id])) {
-                    $entriesArray[$employee_number]["RegularHourEntries"][$project_id] = [
-                        "pName" => $project_name,
-                        'dateEntries' => [],
-                        "iIndex" => $item_id,
-                    ];
-                }
-                // Add the date and hours to the nested structure
-                $entriesArray[$employee_number]["RegularHourEntries"][$project_id]['dateEntries'][] = [
-                    'entryDate' => $entryDay,
-                    'hours' => $entryHours,
-                    "location" => $project_location
+        }
+
+        if ($isLeave) {
+            if (!isset($entriesArray[$employee_number]["Leaves"][$project_id])) {
+                $entriesArray[$employee_number]["Leaves"][$project_id] = [
+                    "pName" => $project_name,
+                    'dateEntries' => [],
+                    "iIndex" => $item_id,
                 ];
             }
+            // Add the date and hours to the nested structure
+            $entriesArray[$employee_number]["Leaves"][$project_id]['dateEntries'][] = [
+                'entryDate' => $entryDay,
+                'hours' => $entryHours,
+                "location" => $project_location
+            ];
+        } else {
+            if (!isset($entriesArray[$employee_number]["RegularHourEntries"][$project_id])) {
+                $entriesArray[$employee_number]["RegularHourEntries"][$project_id] = [
+                    "pName" => $project_name,
+                    'dateEntries' => [],
+                    "iIndex" => $item_id,
+                ];
+            }
+            // Add the date and hours to the nested structure
+            $entriesArray[$employee_number]["RegularHourEntries"][$project_id]['dateEntries'][] = [
+                'entryDate' => $entryDay,
+                'hours' => $entryHours,
+                "location" => $project_location
+            ];
         }
+
 
         if (!array_key_exists("RegularHourEntries", $entriesArray[$employee_number])) {
             $entriesArray[$employee_number]["RegularHourEntries"] = [];

@@ -531,7 +531,7 @@ function getRegularHoursData(projects, otProjects, includeOgp = false) {
           const totalOtEntry = otProjects[curr["entryDate"]]
             ? otProjects[curr["entryDate"]]
             : 0;
-          totalHours[curr["entryDate"]] = curr["hours"] + totalOtEntry;
+          totalHours[curr["entryDate"]] = curr["hours"];
         } else {
           totalHours[curr["entryDate"]] += curr["hours"];
         }

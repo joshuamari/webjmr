@@ -68,13 +68,6 @@ try {
                 } else {
                     $hours = 0;
                 }
-                // if ($currentDay == "2024-06-05") {
-                //     echo $new_in . "new";
-                //     echo $out_time . "out";
-                //     echo $reductions . "red";
-                //     echo $hours . "hrs";
-                // }
-                // die($new_in . " at " . $reductions);
             }
             if ($location == "1") {
                 $amsArray[$empid][$day]["locationName"] = "KDT";
@@ -135,7 +128,7 @@ function getReductions($start, $end, $location, $currentday)
         $location = 1;
         $coreStatement = " AND core_name_id NOT IN(1,3)";
     }
-    $redQ = "SELECT core_name_id, location_id, sd AS start, ed AS end FROM ( SELECT core_name_id, location_id, MIN(CASE WHEN core_start = 1 THEN core_time END) AS sd, MAX(CASE WHEN core_start = 0 THEN core_time END) AS ed FROM coretime WHERE effective_date = ( SELECT MAX(effective_date) FROM coretime WHERE :currentday >= effective_date AND location_id = :location_id  AND core_name_id NOT IN(1,3)) AND location_id = :location_id $coreStatement GROUP BY core_name_id ) AS subquery WHERE subquery.sd < :endTime AND subquery.ed > :startTime";
+    $redQ = "SELECT core_name_id, location_id, sd AS start, ed AS end FROM ( SELECT core_name_id, location_id, MIN(CASE WHEN core_start = 1 THEN core_time END) AS sd, MAX(CASE WHEN core_start = 0 THEN core_time END) AS ed FROM coretime WHERE effective_date = ( SELECT MAX(effective_date) FROM coretime WHERE :currentday >= effective_date AND location_id = :location_id  AND core_name_id NOT IN(1,3)) AND location_id = :location_id $coreStatement GROUP BY core_name_id ) AS subquery WHERE subquery.sd <= :endTime AND subquery.ed >= :startTime";
     $redStmt = $connwebjmr->prepare($redQ);
     $redStmt->execute([":currentday" => $currentday, ":location_id" => $location, ":startTime" => $start, ":endTime" => $end]);
     if ($redStmt->rowCount() > 0) {
@@ -143,20 +136,13 @@ function getReductions($start, $end, $location, $currentday)
         foreach ($redArr as $red) {
             $starttime = $red["start"];
             $endtime = $red["end"];
-            if ($currentday == "2024-05-06") {
-                // echo $starttime . " at " . $endtime;
-                // echo "ito end" . $end;
-            }
             $start_timestamp = strtotime($starttime);
             $end_timestamp = strtotime($endtime);
             if ($end_stamp >= $start_timestamp && $end_stamp <= $end_timestamp) {
                 $diff_in_seconds = $end_stamp - $start_timestamp;
-                // echo "ito day: $currentday XD";
             } else {
                 $diff_in_seconds = max(0, $end_timestamp - $start_timestamp);
             }
-
-            // echo $diff_in_seconds / 60 . "<>";
             $reductions += $diff_in_seconds;
         }
     }
@@ -167,12 +153,6 @@ function checkStart($start, $location, $cur)
     $newStart = $start;
     $start_stamp = strtotime($start);
     $halfstart = getHalfstart($location);
-    // if ($cur == "2024-06-05") {
-    //     echo $location;
-    //     echo "eto half: " . $halfstart;
-    //     echo "eto start: " . $newStart;
-    // }
-
     $halfstart_stamp = strtotime($halfstart);
     $halfend = getHalfend($location);
     $halfend_stamp = strtotime($halfend);
