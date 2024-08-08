@@ -18,13 +18,9 @@ $yearMonth = date("Y-m-01");
 if (!empty($_POST['monthSel'])) {
     $yearMonth = $_POST['monthSel'];
 }
-$cutOff = "0";
-if (isset($_REQUEST['getHalfSel'])) {
-    $cutOff = $_REQUEST['getHalfSel'];
-}
-$firstDay = getFirstday($yearMonth, $cutOff);
-$lastDay = getLastday($yearMonth, $cutOff, $firstDay);
-$dateCompare = " AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
+$firstDay = getFirstday($yearMonth);
+$lastDay = getLastday($yearMonth, $firstDay);
+$dateCompare = " AND fldDate >= '$firstDay' AND fldDate<='$lastDay'";
 $selYearMonth = date("Y-m-01", strtotime($yearMonth));
 $mgaEmpStmt = "";
 $mgaEmpNgBU = "";
@@ -64,7 +60,7 @@ if (!empty($arrVal)) {
     $mgaEmpStmt = "AND ep.fldEmployeeNum IN $mgaEmpNgBU";
 }
 
-$allEmpQ = "SELECT ep.fldEmployeeNum,CONCAT(ep.fldSurname,', ',ep.fldFirstname) AS ename FROM emp_prof AS ep LEFT OUTER JOIN departments AS kdtd ON ep.fldEmployeeNum=kdtd.fldManager WHERE ep.fldNick<>'' AND ep.fldEmployeeNum IN $mgaEmpNgBU ORDER BY CASE WHEN ep.fldDesig='SM' THEN 1 WHEN ep.fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN ep.fldGroup='$groupSel' THEN 1 ELSE ep.fldGroup END,ep.fldEmployeeNum";
+$allEmpQ = "SELECT DISTINCT(ep.fldEmployeeNum),CONCAT(ep.fldSurname,', ',ep.fldFirstname) AS ename FROM emp_prof AS ep LEFT OUTER JOIN departments AS kdtd ON ep.fldEmployeeNum=kdtd.fldManager WHERE ep.fldNick<>'' AND ep.fldEmployeeNum IN $mgaEmpNgBU ORDER BY CASE WHEN ep.fldDesig='SM' THEN 1 WHEN ep.fldDesig='DM' THEN 2 ELSE 3 END,CASE WHEN ep.fldGroup='$groupSel' THEN 1 ELSE ep.fldGroup END,ep.fldEmployeeNum";
 $elStmt = $connkdt->prepare($allEmpQ);
 $elStmt->execute();
 if ($elStmt->rowCount() > 0) {

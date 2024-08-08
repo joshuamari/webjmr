@@ -10,36 +10,20 @@ function stringify($string)
     return $stringRet;
 }
 
-function getFirstday($yearMonthValue, $cutOffValue)
+function getFirstday($yearMonthValue)
 {
     $firstDay = date("Y-m-01", strtotime($yearMonthValue));
-    switch ($cutOffValue) {
-        case "4":
-            $firstDay = date('Y-m-d', strtotime('last week'));
-            break;
-        case "5":
-            $firstDay = date('Y-m-d', strtotime('this week'));
-            break;
+    if (date('D', strtotime($firstDay)) !== 'Mon') {
+        $firstDay = date("Y-m-d", strtotime("last Monday", strtotime($firstDay)));
     }
     return $firstDay;
 }
 
-function getLastday($yearMonthValue, $cutOffValue, $firstd)
+function getLastday($yearMonthValue)
 {
-    $lastDay = date("Y-m-16", strtotime($yearMonthValue));
-    switch ($cutOffValue) {
-        case "3":
-            $lastDay = date('Y-m-d', strtotime($firstd . '+ 1 month'));
-            break;
-        case "4":
-            $lastDay = date('Y-m-d', strtotime('last week +6 days'));
-            break;
-        case "5":
-            $lastDay = date('Y-m-d', strtotime('this week +6 days'));
-            break;
-        default:
-            $lastDay = date("Y-m-t", strtotime($yearMonthValue));
-            break;
+    $lastDay = date("Y-m-t", strtotime($yearMonthValue));
+    if (date('D', strtotime($lastDay)) !== 'Sun') {
+        $lastDay = date("Y-m-d", strtotime("next Sunday", strtotime($lastDay)));
     }
     return $lastDay;
 }

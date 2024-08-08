@@ -189,7 +189,6 @@ function getEmployeeList() {
     {
       monthSel: selDate,
       groupSel: grpSel,
-      getHalfSel: cutOff,
     },
     function (data) {
       _emplist = $.parseJSON(data);
