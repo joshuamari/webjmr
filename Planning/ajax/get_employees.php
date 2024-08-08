@@ -42,7 +42,7 @@ if (!empty($_POST['selectedEmps'])) {
 #endregion
 
 #region main
-$empsQ = "SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup OR fldGroups LIKE :pGroup) AND fldActive=1 AND fldNick<>'' AND fldName LIKE '%$searchEmp%' $exceptList $sharedProjects";
+$empsQ = "SELECT CONCAT(fldSurname,', ',fldFirstName) AS ename,fldEmployeeNum FROM emp_prof WHERE (fldGroup=:projGroup OR fldGroups LIKE :pGroup) AND (fldResignDate IS NULL OR fldResignDate > CURDATE()) AND fldNick<>'' AND fldName LIKE '%$searchEmp%' $exceptList $sharedProjects";
 $empsStmt = $connkdt->prepare($empsQ);
 $empsStmt->execute([":projGroup" => $projGroup, ":pGroup" => "%$projGroup%"]);
 if ($empsStmt->rowCount() > 0) {

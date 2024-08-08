@@ -12,7 +12,6 @@ try {
     $connams = new PDO($dsn, $username, $password, [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
-    $solProjID = $solProjStmt->fetchColumn();
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
