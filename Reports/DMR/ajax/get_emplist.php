@@ -18,13 +18,9 @@ $yearMonth = date("Y-m-01");
 if (!empty($_POST['monthSel'])) {
     $yearMonth = $_POST['monthSel'];
 }
-$cutOff = "0";
-if (isset($_REQUEST['getHalfSel'])) {
-    $cutOff = $_REQUEST['getHalfSel'];
-}
-$firstDay = getFirstday($yearMonth, $cutOff);
-$lastDay = getLastday($yearMonth, $cutOff, $firstDay);
-$dateCompare = " AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
+$firstDay = getFirstday($yearMonth);
+$lastDay = getLastday($yearMonth, $firstDay);
+$dateCompare = " AND fldDate >= '$firstDay' AND fldDate<='$lastDay'";
 $selYearMonth = date("Y-m-01", strtotime($yearMonth));
 $mgaEmpStmt = "";
 $mgaEmpNgBU = "";
