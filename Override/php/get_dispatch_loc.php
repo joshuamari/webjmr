@@ -1,19 +1,26 @@
 <?php
 #region DB Connect
-require_once "../Includes/dbconnectwebjmr.php";
+require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
-#region Initialize Variable
-$output='<option value="" hidden selected>Select Location</option>';
-#endregion
-#region MyGroup Query
-$disLocQ="SELECT * FROM dispatch_locations WHERE fldActive=1";
-$disLocStmt=$connwebjmr->query($disLocQ);
-$disArr=$disLocStmt->fetchAll();
-foreach($disArr AS $locs){
-    $locid=$locs['fldID'];
-    $locName=$locs['fldLocation'];
-    $output.="<option loc-id='$locid'>$locName</option>";
+
+#region main query
+try {
+  $locationQ = "SELECT `fldID` AS `id`, `fldLocation` AS `location` FROM `dispatch_locations`";
+  $locationStmt = $connwebjmr->prepare($locationQ);
+  $locationStmt->execute([]);
+  if($locationStmt->rowCount() > 0){
+    $location = $locationStmt->fetchAll();
+    $msg['result'] = $location;
+    $msg['error'] = "Locations successfully retrieved!";
+    $msg['isSuccess'] = true;
+  }
+  else{
+    $msg['error'] = "No Locations retrieved!";
+    $msg['isSuccess'] = false;
+  }
+} catch (Exception $e) {
+  echo "Connection failed: " . $e->getMessage();
 }
 #endregion
-echo $output;
-?>
+
+echo json_encode($msg);

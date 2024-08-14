@@ -2,7 +2,6 @@
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
 
-checkLogin();
 var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
@@ -39,6 +38,9 @@ const months = [
 
 //#endregion
 
+checkLogin();
+const empNum = empDetails["empNum"];
+
 //#region BINDS
 //#region sidebarshits
 $(document).ready(function () {
@@ -47,6 +49,7 @@ $(document).ready(function () {
   ifSmallScreen();
   initializeDate();
   getMyGroups();
+  // getEmployees();
   getDispatchLoc();
   getTOW();
   getEntries();
@@ -133,9 +136,13 @@ $(document).on("click", "body", function (event) {
     $(".jord").removeClass("active");
   }
 });
+
+// FOR GROUP LIST
 $(document).on("change", "#idGroup", function () {
   //select Group Event
-  getProjects();
+  console.log("group changed to: ", $("#idGroup").val());
+  sequenceValidation();
+  getEmployees();
   $("#p1").text("");
   $(this).removeClass("border-danger");
   $(".iow").removeClass("active");
@@ -147,6 +154,16 @@ $(document).on(
     $(this).removeClass("bg-err");
   }
 );
+
+// FOR EMPLOYEE LIST
+$(document).on("change", "#idEmployee", function () {
+  //select Employee Event
+  console.log("changed employee...");
+  var empID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
+
+  sequenceValidation();
+  getProjects(empID);
+});
 
 // FOR PROJECTS LIST
 $(document).on("change", "#idProject", function () {
@@ -271,8 +288,32 @@ $(document).on("click", "#jrdOptions li", function () {
 //#endregion
 
 //#region FUNCTIONS
+// not sure -> checklogin/access > then(issuccess/error) > doc.ready > make empDetails global / getEmployeeDetails > getgroups > fillgroups > Promise(getEmp,Loc,Proj,IoW,JRD) > fill each promise func > catch error
 function checkAccess() {
   //authentication + authorization
+  // return new Promise((resolve, reject) => {
+  //   $.ajax({
+  //     type: "GET",
+  //     url: "Includes/check_login.php",
+  //     dataType: "json",
+  //     success: function (data) {
+  //       // const acc = data;
+  //       // resolve(acc);
+  //       empDetails = data;
+  //       resolve(empDetails);
+  //     },
+  //     error: function (xhr, status, error) {
+  //       if (xhr.status === 404) {
+  //         reject("Not Found Error: The requested resource was not found.");
+  //       } else if (xhr.status === 500) {
+  //         reject("Internal Server Error: There was a server error.");
+  //       } else {
+  //         reject("An unspecified error occurred while checking login details.");
+  //       }
+  //     },
+  //   });
+  //   // resolve(response);
+  // });
 }
 function checkLogin() {
   //check if user is logged in
@@ -288,6 +329,227 @@ function checkLogin() {
     },
     async: false,
   });
+}
+
+//GROUP FUNCTIONS
+function getMyGroups() {
+  //get Group Selection
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "php/get_my_groups.php",
+  //   {
+  //     empNum: empDetails["empNum"],
+  //   },
+  //   function (data) {
+  //     // $("#idGroup").html(data);
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
+  // console.log("got groups");
+  $.ajax({
+    type: "POST",
+    url: "php/get_my_groups.php",
+    data: {
+      empNum: empDetails["empNum"],
+    },
+    dataType: "json",
+    success: function (response) {
+      const grps = response["result"];
+      const groupIDS = grps.map((obj) => obj.abbreviation);
+      var grpSelect = $("#idGroup");
+      grpSelect.html(`<option value=NULL>Select Group</option>`);
+      // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
+      $.each(grps, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.abbreviation)
+          .attr("grp-id", item.id);
+        grpSelect.append(option);
+      });
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+
+//LOCATION FUNCTIONS
+function getDispatchLoc() {
+  //get Dispatch Location Selection
+  $.ajax({
+    type: "GET",
+    url: "php/get_dispatch_loc.php",
+    dataType: "json",
+    success: function (data) {
+      const locs = data["result"];
+      const locsIDs = locs.map((obj) => obj.location);
+      var locSelect = $("#idLocation");
+      // $("#idLocation").html(locs.location);
+      locSelect.html(`<option value=NULL>Select Location</option>`);
+      // locSelect.html(`<option value='0' hidden>Select Location</option>`);
+      $.each(locs, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.location)
+          .attr("loc-id", item.id);
+        locSelect.append(option);
+      });
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+
+//EMPLOYEE FUNCTIONS
+function getEmployees() {
+  //get EMPLOYEE Selection
+  console.log("start get emp...");
+  console.log("groupID is: ", $("#idGroup").val());
+  var groupID = $("#idGroup").val();
+
+  $.ajax({
+    type: "POST",
+    url: "php/get_member_list.php",
+    data: {
+      grpNum: groupID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log("getEmployees res: ", response);
+      const emps = response["result"];
+      const empsList = emps.map((obj) => obj.fullName);
+      var empSelect = $("#idEmployee");
+      empSelect.html(`<option value=NULL>Select Employee</option>`);
+      // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
+      $.each(emps, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.fullName)
+          .attr("emp-id", item.id);
+        empSelect.append(option);
+      });
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+
+//PROJECT FUNCTIONS
+function getProjects(empID) {
+  //get PROJECT Selection
+  var proj = [];
+  console.log("start get projs...");
+  console.log("empSelect Value is: ", $("#idEmployee").val());
+  var groupID = $("#idGroup").val();
+  // var empID = $("#idEmployee").val();
+  console.log("group project to get: ", groupID);
+  console.log("empNum is: ", empID);
+
+  // $("#projOptions,#idProject").empty();
+  // $("#idProject").html(`<option value='' hidden>Select Project</option>`);
+
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "php/get_projects_prototype.php",
+  //   {
+  //     empGroup: $("#idGroup").val(),
+  //     empNum: empDetails["empNum"],
+  //     empPos: empDetails["empPos"],
+  //   },
+  //   function (data) {
+  //     console.log(data);
+  //     proj = $.parseJSON(data);
+  //     proj.map(fillProj);
+  //     sequenceValidation();
+  //     $("#idProject").val("").change();
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
+  $.ajax({
+    type: "POST",
+    url: "php/get_projects_prototype.php",
+    data: {
+      grpNum: groupID,
+      empNum: empID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log("projects: ", response);
+      const projs = response["result"];
+      return;
+      const projList = projs.map((obj) => obj.fullName);
+      var projSelect = $("#idProject");
+      projSelect.html(`<option value=NULL>Select Project</option>`);
+      // empSelect.html(`<option value='0' hidden>Select Project</option>`);
+      $.each(projs, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.fullName)
+          .attr("proj-id", item.id);
+        projSelect.append(option);
+      });
+    },
+    // error: function (xhr, status, error) {
+    //   if (xhr.status === 404) {
+    //     reject("Not Found Error: The requested resource was not found.");
+    //   } else if (xhr.status === 500) {
+    //     reject("Internal Server Error: There was a server error.");
+    //   } else {
+    //     reject("An unspecified error occurred while fetching groups.");
+    //   }
+    // },
+  });
+  console.log("finished getting projects");
+}
+
+function fillProj(projArrayElement) {
+  var projDeets = projArrayElement;
+  var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
+  var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
+  $(`#projOptions`).append(addString);
+  $(`#idProject`).append(addStringMain);
+}
+
+function getProjSearch() {
+  //get Item Selection
+  var proj = [];
+  var searchProj = $(`#searchproj`).val();
+  $("#projOptions").empty();
+  $.ajaxSetup({ async: false });
+  $.post(
+    "php/get_projects_prototype.php",
+    {
+      empGroup: $("#idGroup").val(),
+      empNum: empDetails["empNum"],
+      empPos: empDetails["empPos"],
+      searchProj: searchProj,
+    },
+    function (data) {
+      proj = $.parseJSON(data);
+      proj.map(fillProj);
+    }
+  );
+  $.ajaxSetup({ async: true });
 }
 
 function ifSmallScreen() {
@@ -311,31 +573,6 @@ function initializeDate() {
       $("#idDRDate").val(response);
     },
     async: false,
-  });
-}
-
-function getMyGroups() {
-  //get Group Selection
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_my_groups.php",
-    {
-      empNum: empDetails["empNum"],
-    },
-    function (data) {
-      $("#idGroup").html(data);
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-
-function getDispatchLoc() {
-  //get Dispatch Location Selection
-  $.ajax({
-    url: "php/get_dispatch_loc.php",
-    success: function (data) {
-      $("#idLocation").html(data);
-    },
   });
 }
 
@@ -437,17 +674,22 @@ function getMHCount() {
 
 function sequenceValidation() {
   //sequence Checking Project->Item->Job
+  $("#idEmployee").prop("disabled", true);
   $("#idProject").prop("disabled", true);
   $("#idItem").prop("disabled", true);
   $("#idJRD").prop("disabled", true);
+
   if ($("#idItem").prop("selectedIndex") > 0) {
     $("#idJRD").prop("disabled", false);
   }
   if ($("#idProject").prop("selectedIndex") > 0) {
     $("#idItem").prop("disabled", false);
   }
-  if ($("#idGroup").prop("selectedIndex") > 0) {
+  if ($("#idEmployee").prop("selectedIndex") > 0) {
     $("#idProject").prop("disabled", false);
+  }
+  if ($("#idGroup").prop("selectedIndex") > 0) {
+    $("#idEmployee").prop("disabled", false);
   }
 }
 
@@ -847,60 +1089,6 @@ function planAccess() {
       }
     }
   );
-}
-
-function getProjects() {
-  //get PROJECT Selection
-  var proj = [];
-  $("#projOptions,#idProject").empty();
-  $("#idProject").html(`<option value='' hidden>Select Project</option>`);
-
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_projects.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-    },
-    function (data) {
-      proj = $.parseJSON(data);
-      proj.map(fillProj);
-      sequenceValidation();
-      $("#idProject").val("").change();
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-
-function fillProj(projArrayElement) {
-  var projDeets = projArrayElement;
-  var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
-  var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
-  $(`#projOptions`).append(addString);
-  $(`#idProject`).append(addStringMain);
-}
-
-function getProjSearch() {
-  //get Item Selection
-  var proj = [];
-  var searchProj = $(`#searchproj`).val();
-  $("#projOptions").empty();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_projects.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      searchProj: searchProj,
-    },
-    function (data) {
-      proj = $.parseJSON(data);
-      proj.map(fillProj);
-    }
-  );
-  $.ajaxSetup({ async: true });
 }
 
 function getItems(projID) {
