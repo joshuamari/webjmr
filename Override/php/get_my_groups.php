@@ -16,7 +16,7 @@ else{
 
 #region main query
 try {
-  $userGroupQ = "SELECT `emplist`.`id` FROM `employee_list` AS `emplist`
+  $userGroupQ = "SELECT `grList`.`id`, `grList`.`abbreviation` FROM `employee_list` AS `emplist`
                 INNER JOIN `employee_group` AS `empgroup` ON `empgroup`.`employee_number` = `emplist`.`id`
                 INNER JOIN `group_list` AS `grList` ON `grList`.`id` = `empgroup`.`group_id`
                 WHERE `emplist`.`id` = :empNum";

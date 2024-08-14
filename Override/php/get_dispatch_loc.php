@@ -6,7 +6,7 @@ require_once "../../dbconn/dbconnectwebjmr.php";
 #region main query
 try {
   $locationQ = "SELECT `fldID` AS `id`, `fldLocation` AS `location` FROM `dispatch_locations`";
-  $locationStmt = $connkdt->prepare($locationQ);
+  $locationStmt = $connwebjmr->prepare($locationQ);
   $locationStmt->execute([]);
   if($locationStmt->rowCount() > 0){
     $location = $locationStmt->fetchAll();
