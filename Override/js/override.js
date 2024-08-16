@@ -143,6 +143,8 @@ $(document).on("change", "#idGroup", function () {
   console.log("group changed to: ", $("#idGroup").val());
   sequenceValidation();
   getEmployees();
+
+  // $("#idJRD, #idItem, #idProject, #idEmployee").val("");
   $("#p1").text("");
   $(this).removeClass("border-danger");
   $(".iow").removeClass("active");
@@ -169,57 +171,59 @@ $(document).on("change", "#idEmployee", function () {
 $(document).on("change", "#idProject", function () {
   //select Project Event
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
-  $("#idJRD").val(""); //clear Job Request Description
-  $("#idItem").val(null).change();
-  if ($("#idItem").val() == null || $("#idItem").val() == "") {
-    $("#idItem")
-      .empty()
-      .append(
-        `<option selected hidden disabled value="">Select Item of Works</option>`
-      );
-  }
-  getItems(projID);
-  isDrawing();
-  getTOW(projID);
-  disableTimeInput(projID);
-  MHValidation();
-  $(".iow").removeClass("active");
-  $("#p5").text("");
-  $(this).removeClass("border-danger");
+  console.log("changed project to: ", projID);
+  sequenceValidation();
+  // $("#idJRD").val(""); //clear Job Request Description
+  // $("#idItem").val(null).change();
+  // if ($("#idItem").val() == null || $("#idItem").val() == "") {
+  //   $("#idItem")
+  //     .empty()
+  //     .append(
+  //       `<option selected hidden disabled value="">Select Item of Works</option>`
+  //     );
+  // }
+  // getItems(projID);
+  // isDrawing();
+  // getTOW(projID);
+  // disableTimeInput(projID);
+  // MHValidation();
+  // $(".iow").removeClass("active");
+  // $("#p5").text("");
+  // $(this).removeClass("border-danger");
 
-  if (projID == leaveID) {
-    $("#itemlbl").html("Leave Type");
-    $("#lbltow").html("Day Type");
-  } else {
-    $("#itemlbl").html("Item of Works");
-    $("#lbltow").html("Type of Work");
-  }
+  // if (projID == leaveID) {
+  //   $("#itemlbl").html("Leave Type");
+  //   $("#lbltow").html("Day Type");
+  // } else {
+  //   $("#itemlbl").html("Item of Works");
+  //   $("#lbltow").html("Type of Work");
+  // }
 
-  getCheckers();
-  $(".trgrp").remove();
+  // getCheckers();
+  // $(".trgrp").remove();
 });
-$(document).on("click", "#idProject", function (event) {
-  event.stopPropagation();
-  $(".proj").toggleClass("active");
-  $(".jord").removeClass("active");
-  $(".iow").removeClass("active");
-  $(this).blur();
-});
-$(document).on("click", "#projOptions li", function () {
-  $(".proj").removeClass("active");
-  var projID = $(this).attr("proj-id");
-  $($("#idProject").find(`option[proj-id=${projID}]`))
-    .prop("selected", true)
-    .change();
-});
-$(document).on("keyup", "#searchproj", function () {
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  getProjSearch();
-});
-$(document).on("search", "#searchproj", function () {
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  getProjSearch();
-});
+// $(document).on("click", "#idProject", function (event) {
+//   event.stopPropagation();
+//   $(".proj").toggleClass("active");
+//   $(".jord").removeClass("active");
+//   $(".iow").removeClass("active");
+//   $(this).blur();
+// });
+// $(document).on("click", "#projOptions li", function () {
+//   $(".proj").removeClass("active");
+//   var projID = $(this).attr("proj-id");
+//   $($("#idProject").find(`option[proj-id=${projID}]`))
+//     .prop("selected", true)
+//     .change();
+// });
+// $(document).on("keyup", "#searchproj", function () {
+//   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+//   getProjSearch();
+// });
+// $(document).on("search", "#searchproj", function () {
+//   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+//   getProjSearch();
+// });
 
 // FOR ITEM OF WORKS LIST
 $(document).on("change", "#idItem", function () {
@@ -357,7 +361,7 @@ function getMyGroups() {
       const grps = response["result"];
       const groupIDS = grps.map((obj) => obj.abbreviation);
       var grpSelect = $("#idGroup");
-      grpSelect.html(`<option value=NULL>Select Group</option>`);
+      grpSelect.html(`<option value=0>Select Group</option>`);
       // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
       $.each(grps, function (index, item) {
         var option = $("<option>")
@@ -378,6 +382,7 @@ function getMyGroups() {
     },
   });
 }
+function fillMyGroups() {}
 
 //LOCATION FUNCTIONS
 function getDispatchLoc() {
@@ -391,7 +396,7 @@ function getDispatchLoc() {
       const locsIDs = locs.map((obj) => obj.location);
       var locSelect = $("#idLocation");
       // $("#idLocation").html(locs.location);
-      locSelect.html(`<option value=NULL>Select Location</option>`);
+      locSelect.html(`<option value=0>Select Location</option>`);
       // locSelect.html(`<option value='0' hidden>Select Location</option>`);
       $.each(locs, function (index, item) {
         var option = $("<option>")
@@ -412,6 +417,7 @@ function getDispatchLoc() {
     },
   });
 }
+function fillDispatchLoc() {}
 
 //EMPLOYEE FUNCTIONS
 function getEmployees() {
@@ -432,7 +438,7 @@ function getEmployees() {
       const emps = response["result"];
       const empsList = emps.map((obj) => obj.fullName);
       var empSelect = $("#idEmployee");
-      empSelect.html(`<option value=NULL>Select Employee</option>`);
+      empSelect.html(`<option value=0>Select Employee</option>`);
       // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
       $.each(emps, function (index, item) {
         var option = $("<option>")
@@ -453,6 +459,7 @@ function getEmployees() {
     },
   });
 }
+function fillEmployees() {}
 
 //PROJECT FUNCTIONS
 function getProjects(empID) {
@@ -461,8 +468,7 @@ function getProjects(empID) {
   console.log("start get projs...");
   console.log("empSelect Value is: ", $("#idEmployee").val());
   var groupID = $("#idGroup").val();
-  // var empID = $("#idEmployee").val();
-  console.log("group project to get: ", groupID);
+  console.log("project to get is from group #: ", groupID);
   console.log("empNum is: ", empID);
 
   // $("#projOptions,#idProject").empty();
@@ -487,7 +493,7 @@ function getProjects(empID) {
   // $.ajaxSetup({ async: true });
   $.ajax({
     type: "POST",
-    url: "php/get_projects_prototype.php",
+    url: "php/get_projects.php",
     data: {
       grpNum: groupID,
       empNum: empID,
@@ -496,18 +502,18 @@ function getProjects(empID) {
     success(response) {
       console.log("projects: ", response);
       const projs = response["result"];
-      return;
-      const projList = projs.map((obj) => obj.fullName);
+      const projList = projs.map((obj) => obj.projName);
       var projSelect = $("#idProject");
-      projSelect.html(`<option value=NULL>Select Project</option>`);
+      projSelect.html(`<option value=0>Select Project</option>`);
       // empSelect.html(`<option value='0' hidden>Select Project</option>`);
       $.each(projs, function (index, item) {
         var option = $("<option>")
-          .attr("value", item.id)
-          .text(item.fullName)
-          .attr("proj-id", item.id);
+          .attr("value", item.projID)
+          .text(item.projName)
+          .attr("proj-id", item.projID);
         projSelect.append(option);
       });
+      console.log("finished getting projects");
     },
     // error: function (xhr, status, error) {
     //   if (xhr.status === 404) {
@@ -519,38 +525,36 @@ function getProjects(empID) {
     //   }
     // },
   });
-  console.log("finished getting projects");
 }
+// function fillProj(projArrayElement) {
+//   var projDeets = projArrayElement;
+//   var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
+//   var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
+//   $(`#projOptions`).append(addString);
+//   $(`#idProject`).append(addStringMain);
+// }
 
-function fillProj(projArrayElement) {
-  var projDeets = projArrayElement;
-  var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
-  var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
-  $(`#projOptions`).append(addString);
-  $(`#idProject`).append(addStringMain);
-}
-
-function getProjSearch() {
-  //get Item Selection
-  var proj = [];
-  var searchProj = $(`#searchproj`).val();
-  $("#projOptions").empty();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_projects_prototype.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      searchProj: searchProj,
-    },
-    function (data) {
-      proj = $.parseJSON(data);
-      proj.map(fillProj);
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
+// function getProjSearch() {
+//   //get Item Selection
+//   var proj = [];
+//   var searchProj = $(`#searchproj`).val();
+//   $("#projOptions").empty();
+//   $.ajaxSetup({ async: false });
+//   $.post(
+//     "php/get_projects.php",
+//     {
+//       empGroup: $("#idGroup").val(),
+//       empNum: empDetails["empNum"],
+//       empPos: empDetails["empPos"],
+//       searchProj: searchProj,
+//     },
+//     function (data) {
+//       proj = $.parseJSON(data);
+//       proj.map(fillProj);
+//     }
+//   );
+//   $.ajaxSetup({ async: true });
+// }
 
 function ifSmallScreen() {
   //responsive
@@ -679,6 +683,7 @@ function sequenceValidation() {
   $("#idItem").prop("disabled", true);
   $("#idJRD").prop("disabled", true);
 
+  // Enabling Selection
   if ($("#idItem").prop("selectedIndex") > 0) {
     $("#idJRD").prop("disabled", false);
   }

@@ -254,6 +254,7 @@
     <!--#endregion-->
     <!--#endregion MODAL END-->
 
+    <!-- SIDEBAR -->
     <div class="sidebar close fixed-top">
       <div
         class="position-relative d-flex justify-content-between align-items-center"
@@ -360,22 +361,27 @@
         </div>
       </div>
     </div>
+
+    <!-- HOME/ACTUAL BODY -->
     <section class="home-section m-0">
       <div class="home-topbar sticky-top" style="z-index: 1230">
         <i class="bx bx-menu position-relative menu-one mx-0 px-0"></i>
 
+        <!-- USER GREETINGS -->
         <div class="topbar d-flex float-end justify-content-center text-center">
           <div class="user-name p-2">
             <h5>Hello, <span class="hello-user">User</span></h5>
           </div>
         </div>
       </div>
+      <!-- HOME HOME -->
       <div class="home-content position-relative p-0 m-0 row" id="home-content">
         <div class="position-relative cont p-2 m-0">
           <div class="maindiv position-relative px-0 py-2 m-0 row">
             <div class="page-title col-12 px-3 pb-3 m-0">
               <h2 class="title ps-2 m-0">JMR Override</h2>
             </div>
+            <!-- LEFT CONTAINER -->
             <div
               class="left col-12 col-xl-4 position-relative d-flex aligns-items-center justify-content-center"
             >
@@ -417,18 +423,25 @@
                   </div>
 
                   <div class="col-12 my-2 emp">
-                    <label for="idEmployee" d="emplbl" class="form-label"
+                    <label for="idEmp" d="emplbl" class="form-label"
                       >Employee</label
                     >
                     <select
                       class="select-btn form-select"
                       id="idEmployee"
-                      title="."
                       required
                     >
+                      <!-- <input list="idEmployee" name="idEmp" id="idEmp" />
+                    <datalist
+                      class="select-btn form-select"
+                      id="idEmployee"
+                      required
+                      hidden
+                    > -->
                       <option selected hidden disabled value="">
                         Select Employee
                       </option>
+                      <!-- </datalist> -->
                     </select>
                     <!-- <div class="input-group">
                       <select class="form-select" id="idEmployee" required>
@@ -480,7 +493,6 @@
                     <select
                       class="select-btn form-select"
                       id="idProject"
-                      title="."
                       required
                     >
                       <option selected hidden disabled value="">
@@ -587,6 +599,7 @@
                     ></span>
                   </div>
 
+                  <!-- ADDITIONAL OPTIONS (FOR SELECTED BUs ONLY) -->
                   <div class="col-12 my-2 d-none" id="id2DDiv">
                     <label for="2d3d" class="form-label">2D/3D</label>
                     <div class="radio-buttons m-0 p-0">
@@ -655,6 +668,7 @@
                     </div>
                   </div>
 
+                  <!-- FOR SELECTED BUs ONLY -->
                   <div class="col-12 col-12 my-2 d-none" id="idRevDiv">
                     <label for="idRev" class="form-label">Revision</label>
                     <div class="input-group switch">
@@ -805,6 +819,7 @@
               </div>
             </div>
 
+            <!-- RIGHT CONTAINER -->
             <div
               class="right col-12 col-xl-8 position-relative d-flex flex-column aligns-items-center justify-content-center"
             >
@@ -835,6 +850,7 @@
                     </div>
                   </div>
 
+                  <!-- TIME CARDS -->
                   <div class="">
                     <div
                       class="row position-relative d-flex align-items-center justify-content-center"
@@ -874,6 +890,7 @@
                     </div>
                   </div>
 
+                  <!-- ENTRY TABLE -->
                   <div
                     class="table-container p-0 overflow-auto rounded-2 bg-body px-2 pb-2"
                     style="box-shadow: 0 0 25px rgb(0 0 0/25%)"
@@ -1160,6 +1177,7 @@
         </div> -->
       </div>
 
+      <!-- FOOTER -->
       <footer
         class="align-items-center text-lg-start fixed-bottom d-flex justify-content-end px-2"
         style="pointer-events: none"
@@ -1173,6 +1191,7 @@
       </footer>
     </section>
 
+    <!-- LOADING ANIMATION -->
     <div class="cs-loader">
       <div class="cs-loader-inner">
         <label>●</label>

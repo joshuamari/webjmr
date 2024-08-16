@@ -7,6 +7,7 @@ require_once "../../Override/php/global.php";
 
 #region Initialize Variable
 $kdtw = $mngStatement = $sharedProjects = '';
+$result = [];
 $KDTWAccess = ['SYS', 'ANA', 'IT'];
 $managementPositions = ['KDTP', 'SM', 'DM', 'AM', 'SSS', 'SSV', 'IT-SV', 'CTE', 'GM'];
 $devs = ['464', '510', '487'];
@@ -48,30 +49,20 @@ if (!empty($msg)) {
 #endregion
 
 #region ADDITIONAL CONDITION
+$grpAbbr = getGroup($grpNum);
 // get employee designation
-$getDesigQ = "SELECT `acronym` FROM `employee_list` AS `el`
-INNER JOIN `designation_list` AS `dl` ON `dl`.`id` = `el`.`designation`
-WHERE `el`.`id` = :empID";
-$getDesigStmt = $connnew->prepare($getDesigQ);
-$getDesigStmt->execute([":empID" => $empID]);
-$empDesig = $getDesigStmt->fetchColumn();
+$empDesig = getEmpPosition($empID);
 
 // Solution Project/s
-$solProjQ = "SELECT fldID FROM projectstable WHERE fldProject = 'Development, Analysis & IT'";
-$solProjStmt = $connwebjmr->prepare($solProjQ);
-$solProjStmt->execute([]);
-$solProjID = $solProjStmt->fetchColumn();
+$solProjID = getSolutionProjects();
 
 // Management Project/s
-$mngProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Management'";
-$mngProjStmt = $connwebjmr->prepare($mngProjQ);
-$mngProjStmt->execute([]);
-$mngProjID = $mngProjStmt->fetchColumn();
+$mngProjID = getManagementProjects();
 
 // Shared Project/s
 $sharedProjects = getSharedProjects($empID);
 
-if(!in_array($grpNum,$KDTWAccess)){
+if(!in_array($grpAbbr,$KDTWAccess)){
   $kdtw = " AND fldID != '$solProjID'";
 }
 if(!in_array($empDesig,$managementPositions) && !in_array($empID,$devs)){
@@ -81,12 +72,27 @@ if(!in_array($empDesig,$managementPositions) && !in_array($empID,$devs)){
 
 #region MAIN QUERY
 try {
-  $projectQ = "SELECT `fldID` AS `id`, `fldProject` AS `projectName` FROM projectstable 
-      WHERE (fldGroup IS NULL OR fldGroup = :grpNum $sharedProjects) AND fldActive = 1 AND fldDelete = 0 $kdtw $mngStatement ORDER BY fldDirect DESC, fldPriority, fldId";
-  $projectStmt = $connnew->prepare($projectQ);
-  $projectStmt->execute([":grpNum" => $grpNum]);
+  $projectQ = "SELECT `fldID` AS `id`, `fldProject` AS `projectName`, `fldGroup` AS `group` FROM projectstable 
+      WHERE (fldGroup IS NULL OR fldGroup = :grpAbbr $sharedProjects) AND fldActive = 1 AND fldDelete = 0 $kdtw $mngStatement ORDER BY fldDirect DESC, fldPriority, fldId";
+  $projectStmt = $connwebjmr->prepare($projectQ);
+  $projectStmt->execute([":grpAbbr" => $grpAbbr]);
   if($projectStmt->rowCount() > 0) {
-    $result = $projectStmt->fetchAll();
+    $partialres = $projectStmt->fetchAll();
+    foreach ($partialres as $proj) {
+      $output = array();
+      $groupAppend = "";
+      $grpProj = $proj['group'];
+      if($proj['group'] != $grpAbbr) {
+        $groupAppend = "(" . $grpProj . ")";
+      }
+        $projName = $proj['projectName'];
+        $projID = $proj['id'];
+
+        $output += ["projID"=>$projID];
+        $output += ["projName"=>$projName];
+        $output += ["groupAppend"=>$groupAppend];
+        array_push($result,$output);
+    }
     $msg['result'] = $result;
     $msg['isSuccess'] = TRUE;
     $msg['error'] = "Successfully retrieved";
@@ -101,7 +107,5 @@ try {
 	$msg['error'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
-
-
 
 echo json_encode($msg);

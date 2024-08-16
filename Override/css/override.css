@@ -562,16 +562,13 @@ footer {
   /* Others */
   /*#ffe6e1*/
 }
-.lefty {
+.lefty,
+.righty {
   overflow: auto;
-  height: calc(100vh - 210px);
+  height: calc(100vh - 220px);
 }
 .lefty::-webkit-scrollbar {
   display: none;
-}
-.righty {
-  height: calc(100vh - 210px) !important;
-  overflow: auto;
 }
 
 /* LEFT CONTENT (FORM) */
@@ -750,11 +747,7 @@ option {
 
   /* BLUE 2 */
   background: var(--bloo);
-  /* background: linear-gradient(
-    45deg,
-    var(--lightbloo) 0%,
-    var(--semidarkbloo) 100%
-  ); */
+  background: linear-gradient(45deg, var(--bloo) 0%, var(--semidarkbloo) 100%);
 
   font-weight: 600;
   color: #fff;
@@ -820,7 +813,7 @@ option {
 
 .left .left-cont .btn-add:hover {
   color: #fff;
-  border: 2px solid var(--darkdarkbloo); /* Change according to theme */
+  border: 2px solid var(--semidarkbloo); /* Change according to theme */
   /* background: rgb(32, 191, 85);
   background: linear-gradient(
     45deg,
@@ -842,7 +835,11 @@ option {
 
   /* BLUE 2 */
   background: var(--bloo);
-  background: linear-gradient(45deg, var(--bloo) 0%, var(--darkdarkbloo) 100%);
+  background: linear-gradient(
+    45deg,
+    var(--semidarkbloo) 0%,
+    var(--darkdarkbloo) 100%
+  );
   transition: all 0.5s ease;
 }
 .btn {
