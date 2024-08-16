@@ -5,7 +5,6 @@ require_once "./global.php";
 #endregion
 
 #region Initialize Variable
-$mngStatement = '';
 if(!empty($_POST['empNum'])) {
   $empID = $_POST['empNum'];
 }
@@ -27,6 +26,7 @@ else{
   $msg['isSuccess'] = FALSE;
   $msg['error'][] = "Group";
 }
+$itemID = !empty($_POST['itemID']) ? $_POST['itemID'] : "";
 #endregion
 
 #region separtion of error
@@ -50,60 +50,31 @@ if (!empty($msg)) {
 #endregion
 
 #region ADDITIONAL CONDITION
-$grpAbbr = getGroup($grpNum);
+$grpAbrrev = getGroup($grpNum);
+$trainProjID = getTrainProjID();
 $sharedProjects = getSharedProjects($empID);
-$mngProjID = getManagementProjects();
-$empDesig = getEmpPosition($empID);
-
-if($projID == $mngProjID){
-    switch($empDesig){
-        case 'SM':
-            $mngStatement = " AND fldID = 1";
-            break;
-        case 'DM':
-            if(in_array($empGroup,$KDTWAccess)){
-                $mngStatement = " AND fldID = 2";
-            }
-            else{
-                $mngStatement = " AND fldID = 3";
-            }
-            break;
-        case 'AM':
-            $mngStatement = " AND fldID = 4";
-            break;
-        case 'CTE':
-            $mngStatement = " AND fldID = 4";
-            break;
-        case 'SSV':
-            $mngStatement = " AND fldID = 5";
-            break;
-        case 'SSS':
-            $mngStatement = " AND fldID = 5";
-            break;
-    }
-}
+$statement = ($projID == $trainProjID) ? " AND fldItem IS NULL" : " AND fldItem = $itemID";
 #endregion
 
 #region MAIN QUERY
-try{
-  $itemQ = "SELECT `fldID` AS `id`, `fldItem` AS `itemName` FROM itemofworkstable 
-            WHERE fldProject = :projID AND fldActive = 1 AND (fldGroup = :empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete = 0 $mngStatement ORDER BY fldPriority";
-  $itemStmt = $connwebjmr->prepare($itemQ);
-  $itemStmt->execute([":projID" => $projID, ":empGroup" => $grpAbbr]);
-  if($itemStmt->rowCount() > 0) {
-    $result = $itemStmt->fetchAll();
-    $msg['result'] = $result;
+try {
+	$jobQ = "SELECT `fldID` AS `id`, `fldJob` AS `jobName` FROM drawingreference WHERE fldProject = :projID $statement AND fldActive = 1 AND (fldGroup = :empGroup OR fldGroup IS NULL $sharedProjects) AND fldDelete = 0 ORDER BY fldPriority";
+	$jobStmt = $connwebjmr->prepare($jobQ);
+	$jobStmt->execute([":projID" => $projID, ":empGroup" => $grpAbrrev]);
+	if($jobStmt->rowCount() > 0) {
+		$result = $jobStmt->fetchAll();
+		$msg['result'] = $result;
     $msg['isSuccess'] = TRUE;
     $msg['error'] = "Successfully retrieved";
-  } else{
-    $msg['isSuccess'] = FALSE;
+	}
+	else{
+		$msg['isSuccess'] = FALSE;
     $msg['error'] = "Failed to retrieve data";
-  }
-  
+	}
 } catch (Exception $e) {
 	$msg["isSuccess"] = false;
 	$msg['error'] =  "Connection failed: " . $e->getMessage();
 }
-
 #endregion
+
 echo json_encode($msg);

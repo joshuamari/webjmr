@@ -6,11 +6,8 @@ require_once "../../Override/php/global.php";
 #endregion
 
 #region Initialize Variable
-$kdtw = $mngStatement = $sharedProjects = '';
+$kdtw = $mngStatement = '';
 $result = [];
-$KDTWAccess = ['SYS', 'ANA', 'IT'];
-$managementPositions = ['KDTP', 'SM', 'DM', 'AM', 'SSS', 'SSV', 'IT-SV', 'CTE', 'GM'];
-$devs = ['464', '510', '487'];
 
 if(!empty($_POST['grpNum'])){
   $grpNum = $_POST['grpNum'];
@@ -81,23 +78,21 @@ try {
     foreach ($partialres as $proj) {
       $output = array();
       $groupAppend = "";
-      $grpProj = $proj['group'];
-      if($proj['group'] != $grpAbbr) {
-        $groupAppend = "(" . $grpProj . ")";
+      if($proj['group'] != $grpAbbr AND $proj['group'] != NULL) {
+        $groupAppend = "(" . $proj['group'] . ")";
       }
         $projName = $proj['projectName'];
         $projID = $proj['id'];
 
-        $output += ["projID"=>$projID];
-        $output += ["projName"=>$projName];
-        $output += ["groupAppend"=>$groupAppend];
+        $output += ["id" => $projID];
+        $output += ["projName" => $projName];
+        $output += ["groupAppend" => $groupAppend];
         array_push($result,$output);
     }
     $msg['result'] = $result;
     $msg['isSuccess'] = TRUE;
     $msg['error'] = "Successfully retrieved";
-  }
-  else{
+  } else{
     $msg['isSuccess'] = FALSE;
     $msg['error'] = "Failed to retrieve data";
   }
