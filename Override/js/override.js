@@ -39,7 +39,7 @@ const months = [
 //#endregion
 
 checkLogin();
-const empNum = empDetails["empNum"];
+const myEmpNum = empDetails["empNum"];
 
 //#region BINDS
 //#region sidebarshits
@@ -51,7 +51,7 @@ $(document).ready(function () {
   getMyGroups();
   // getEmployees();
   getDispatchLoc();
-  getTOW();
+  // getTOW();
   getEntries();
   sequenceValidation();
   // initCalendar();
@@ -161,18 +161,22 @@ $(document).on(
 $(document).on("change", "#idEmployee", function () {
   //select Employee Event
   console.log("changed employee...");
-  var empID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
+  var thisEmpID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
 
   sequenceValidation();
-  getProjects(empID);
+  getProjects(thisEmpID);
 });
 
 // FOR PROJECTS LIST
 $(document).on("change", "#idProject", function () {
   //select Project Event
+  var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   console.log("changed project to: ", projID);
   sequenceValidation();
+  getItems(thisEmpID, projID);
+  isDrawing();
+  getTOW(projID);
   // $("#idJRD").val(""); //clear Job Request Description
   // $("#idItem").val(null).change();
   // if ($("#idItem").val() == null || $("#idItem").val() == "") {
@@ -228,66 +232,95 @@ $(document).on("change", "#idProject", function () {
 // FOR ITEM OF WORKS LIST
 $(document).on("change", "#idItem", function () {
   //select Item Event
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var itemID = $($(this).find("option:selected")).attr("item-id");
-  $(".trgrp").remove();
-  getLabel(itemID);
-  disableInputs(projID, itemID);
-  if (noMoreInputItems.includes(itemID)) {
-    $("#drInstruction").modal("show");
-  }
-  trainingGroup(itemID);
-  getJobs(projID, itemID);
-  $("#p6").text("");
-  $(this).removeClass("border-danger");
+  var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
+
+  var projID = $("#idProject").val(); //get ID of selected Project
+  var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
+  console.log("Item of Works changed to: ", itemID);
+  sequenceValidation();
+  getJobs(thisEmpID, projID, itemID);
+  // $(".trgrp").remove();
+  // getLabel(itemID);
+  // disableInputs(projID, itemID);
+  // if (noMoreInputItems.includes(itemID)) {
+  //   $("#drInstruction").modal("show");
+  // }
+  // trainingGroup(itemID);
+  // getJobs(projID, itemID);
+  // $("#p6").text("");
+  // $(this).removeClass("border-danger");
 });
-$(document).on("click", "#back2Project", function () {
-  $("#drInstruction").modal("hide");
-  $("#idItem").val(null).change();
-});
-$(document).on("click", "#idItem", function (event) {
-  event.stopPropagation();
-  $(".iow").toggleClass("active");
-  $(".proj").removeClass("active");
-  $(".jord").removeClass("active");
-  $(this).blur();
-});
-$(document).on("click", "#itemOptions li", function () {
-  $(".iow").removeClass("active");
-  var itemID = $(this).attr("item-id");
-  $($("#idItem").find(`option[item-id=${itemID}]`))
-    .prop("selected", true)
-    .change();
-});
-$(document).on("keyup", "#searchjrd", function () {
-  var itemID = $($("#idItem").find("option:selected")).attr("item-id");
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  getJRDSearch(projID, itemID);
-});
-$(document).on("search", "#searchjrd", function () {
-  var itemID = $($("#idItem").find("option:selected")).attr("item-id");
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  getJRDSearch(projID, itemID);
-});
+// $(document).on("click", "#back2Project", function () {
+//   $("#drInstruction").modal("hide");
+//   $("#idItem").val(null).change();
+// });
+// $(document).on("click", "#idItem", function (event) {
+//   event.stopPropagation();
+//   $(".iow").toggleClass("active");
+//   $(".proj").removeClass("active");
+//   $(".jord").removeClass("active");
+//   $(this).blur();
+// });
+// $(document).on("click", "#itemOptions li", function () {
+//   $(".iow").removeClass("active");
+//   var itemID = $(this).attr("item-id");
+//   $($("#idItem").find(`option[item-id=${itemID}]`))
+//     .prop("selected", true)
+//     .change();
+// });
+// $(document).on("keyup", "#searchjrd", function () {
+//   var itemID = $($("#idItem").find("option:selected")).attr("item-id");
+//   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+//   getJRDSearch(projID, itemID);
+// });
+// $(document).on("search", "#searchjrd", function () {
+//   var itemID = $($("#idItem").find("option:selected")).attr("item-id");
+//   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+//   getJRDSearch(projID, itemID);
+// });
 
 // FOR JOB REQ DESC LIST
 $(document).on("change", "#idJRD", function () {
+  var jrdID = $($(this).find("option:selected")).attr("job-id");
+  console.log("Job Request Description changed to: ", jrdID);
   $("#p7").text("");
   $(this).removeClass("border-danger");
 });
-$(document).on("click", "#idJRD", function (event) {
-  event.stopPropagation();
-  $(".jord").toggleClass("active");
-  $(".iow").removeClass("active");
-  $(".proj").removeClass("active");
-  $(this).blur();
-});
-$(document).on("click", "#jrdOptions li", function () {
-  $(".jord").removeClass("active");
-  var jrdID = $(this).attr("job-id");
-  $($("#idJRD").find(`option[job-id=${jrdID}]`))
-    .prop("selected", true)
-    .change();
+// $(document).on("click", "#idJRD", function (event) {
+//   event.stopPropagation();
+//   $(".jord").toggleClass("active");
+//   $(".iow").removeClass("active");
+//   $(".proj").removeClass("active");
+//   $(this).blur();
+// });
+// $(document).on("click", "#jrdOptions li", function () {
+//   $(".jord").removeClass("active");
+//   var jrdID = $(this).attr("job-id");
+//   $($("#idJRD").find(`option[job-id=${jrdID}]`))
+//     .prop("selected", true)
+//     .change();
+// });
+$(document).on("change", "#idTOW", function () {
+  //select TOW Event
+  var towID = $($(this).find("option:selected")).attr("tow-id");
+  console.log("Type of Work changed to: ", towID);
+  if (this.value == "Chk - Checker") {
+    $(".checker").removeClass("d-none");
+  } else {
+    $(".checker").addClass("d-none");
+  }
+  $("#idChecking").prop("selectedIndex", 0);
+  var towVal = $($(this).find("option:selected")).attr("tow-id");
+  if (towVal == 10 || towVal == 11) {
+    $("#getHour").val("4");
+  }
+  if (towVal == 12) {
+    $("#getHour").val("8");
+  }
+  getTOWDesc(towVal);
+
+  $("#p11").text("");
+  $(this).removeClass("border-danger");
 });
 //#endregion
 
@@ -337,24 +370,11 @@ function checkLogin() {
 
 //GROUP FUNCTIONS
 function getMyGroups() {
-  //get Group Selection
-  // $.ajaxSetup({ async: false });
-  // $.post(
-  //   "php/get_my_groups.php",
-  //   {
-  //     empNum: empDetails["empNum"],
-  //   },
-  //   function (data) {
-  //     // $("#idGroup").html(data);
-  //   }
-  // );
-  // $.ajaxSetup({ async: true });
-  // console.log("got groups");
   $.ajax({
     type: "POST",
     url: "php/get_my_groups.php",
     data: {
-      empNum: empDetails["empNum"],
+      empNum: myEmpNum,
     },
     dataType: "json",
     success: function (response) {
@@ -423,7 +443,7 @@ function fillDispatchLoc() {}
 function getEmployees() {
   //get EMPLOYEE Selection
   console.log("start get emp...");
-  console.log("groupID is: ", $("#idGroup").val());
+  // console.log("groupID is: ", $("#idGroup").val());
   var groupID = $("#idGroup").val();
 
   $.ajax({
@@ -447,6 +467,7 @@ function getEmployees() {
           .attr("emp-id", item.id);
         empSelect.append(option);
       });
+      console.log("finished getting employees");
     },
     error: function (xhr, status, error) {
       if (xhr.status === 404) {
@@ -462,41 +483,21 @@ function getEmployees() {
 function fillEmployees() {}
 
 //PROJECT FUNCTIONS
-function getProjects(empID) {
+function getProjects(thisEmpID) {
   //get PROJECT Selection
   var proj = [];
   console.log("start get projs...");
-  console.log("empSelect Value is: ", $("#idEmployee").val());
+  // console.log("empSelect Value is: ", $("#idEmployee").val());
   var groupID = $("#idGroup").val();
-  console.log("project to get is from group #: ", groupID);
-  console.log("empNum is: ", empID);
+  // console.log("project to get is from group #: ", groupID);
+  // console.log("chosen employee's ID (thisEmpID) is: ", thisEmpID);
 
-  // $("#projOptions,#idProject").empty();
-  // $("#idProject").html(`<option value='' hidden>Select Project</option>`);
-
-  // $.ajaxSetup({ async: false });
-  // $.post(
-  //   "php/get_projects_prototype.php",
-  //   {
-  //     empGroup: $("#idGroup").val(),
-  //     empNum: empDetails["empNum"],
-  //     empPos: empDetails["empPos"],
-  //   },
-  //   function (data) {
-  //     console.log(data);
-  //     proj = $.parseJSON(data);
-  //     proj.map(fillProj);
-  //     sequenceValidation();
-  //     $("#idProject").val("").change();
-  //   }
-  // );
-  // $.ajaxSetup({ async: true });
   $.ajax({
     type: "POST",
     url: "php/get_projects.php",
     data: {
       grpNum: groupID,
-      empNum: empID,
+      empNum: thisEmpID,
     },
     dataType: "json",
     success(response) {
@@ -508,22 +509,22 @@ function getProjects(empID) {
       // empSelect.html(`<option value='0' hidden>Select Project</option>`);
       $.each(projs, function (index, item) {
         var option = $("<option>")
-          .attr("value", item.projID)
+          .attr("value", item.id)
           .text(item.projName)
-          .attr("proj-id", item.projID);
+          .attr("proj-id", item.id);
         projSelect.append(option);
       });
       console.log("finished getting projects");
     },
-    // error: function (xhr, status, error) {
-    //   if (xhr.status === 404) {
-    //     reject("Not Found Error: The requested resource was not found.");
-    //   } else if (xhr.status === 500) {
-    //     reject("Internal Server Error: There was a server error.");
-    //   } else {
-    //     reject("An unspecified error occurred while fetching groups.");
-    //   }
-    // },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
   });
 }
 // function fillProj(projArrayElement) {
@@ -555,6 +556,283 @@ function getProjects(empID) {
 //   );
 //   $.ajaxSetup({ async: true });
 // }
+function fillProjects() {}
+
+//ITEM of WORKS FUNCTIONS
+function getItems(thisEmpID, projID) {
+  //get Item Selection
+  var itms = [];
+
+  var groupID = $("#idGroup").val();
+  console.log("start get Items...");
+  // console.log("project to get is from group #: ", groupID);
+  // console.log("project ID is: ", projID);
+  $.ajax({
+    type: "POST",
+    url: "php/get_items.php",
+    data: {
+      empNum: thisEmpID,
+      projID: projID,
+      grpNum: groupID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log("items: ", response);
+      const items = response["result"];
+      const itemList = items.map((obj) => obj.itemName);
+      var itemSelect = $("#idItem");
+      itemSelect.html(`<option value=0>Select Item of Works</option>`);
+      // empSelect.html(`<option value='0' hidden>Select Item of Works</option>`);
+      $.each(items, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.itemName)
+          .attr("item-id", item.id);
+        itemSelect.append(option);
+      });
+      console.log("finished getting items");
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+
+// function fillItem(itemArrayElement) {
+//   var itemDeets = itemArrayElement;
+//   var addString = `<li item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</li>`;
+//   var addStringMain = `<option hidden item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</option>`;
+//   $(`#itemOptions`).append(addString);
+//   $(`#idItem`).append(addStringMain);
+// }
+// function getItemSearch(projID) {
+//   //get Item Selection
+//   var itms = [];
+//   var searchIOW = $(`#searchitem`).val();
+//   $("#itemOptions").empty();
+//   $.ajaxSetup({ async: false });
+//   $.post(
+//     "php/get_items.php",
+//     {
+//       empGroup: $("#idGroup").val(),
+//       empNum: empDetails["empNum"],
+//       empPos: empDetails["empPos"],
+//       projID: projID,
+//       searchIOW: searchIOW,
+//     },
+//     function (data) {
+//       itms = $.parseJSON(data);
+//       itms.map(fillItem);
+//     }
+//   );
+//   $.ajaxSetup({ async: true });
+// }
+function fillItems() {}
+
+//JRD FUNCTIONS
+function getJobs(thisEmpID, projID, itemID) {
+  //get JRD Selection
+  var jobs = [];
+  var groupID = $("#idGroup").val();
+  console.log("start get Jobs...");
+  // console.log("project to get is from group #: ", groupID);
+  // console.log("project ID is: ", projID);
+  // console.log("item is: ", itemID);
+  $.ajax({
+    type: "POST",
+    url: "php/get_jobs.php",
+    data: {
+      empNum: thisEmpID,
+      projID: projID,
+      grpNum: groupID,
+      itemID: itemID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log("jrd: ", response);
+      const jobs = response["result"];
+      const jobList = jobs.map((obj) => obj.jobName);
+      var jobSelect = $("#idJRD");
+      jobSelect.html(`<option value=0>Select Job Request Description</option>`);
+      // empSelect.html(`<option value='0' hidden>Select Job Request Description</option>`);
+      $.each(jobs, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.jobName)
+          .attr("job-id", item.id);
+        jobSelect.append(option);
+      });
+      console.log("finished getting jrd");
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+// function fillJobs(jobArrayElement) {
+//   var jrdDeets = jobArrayElement;
+//   var addString = `<li job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</li>`;
+//   var addStringMain = `<option hidden job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</option>`;
+//   $(`#jrdOptions`).append(addString);
+//   $(`#idJRD`).append(addStringMain);
+// }
+// function getJRDSearch(projID, itemID) {
+//   //get Item Selection
+//   var jrd = [];
+//   var searchjrd = $(`#searchjrd`).val();
+//   $("#jrdOptions").empty();
+//   $.ajaxSetup({ async: false });
+//   $.post(
+//     "php/get_jobs.php",
+//     {
+//       empGroup: $("#idGroup").val(),
+//       empNum: empDetails["empNum"],
+//       empPos: empDetails["empPos"],
+//       projID: projID,
+//       itemID: itemID,
+//       searchjrd: searchjrd,
+//     },
+//     function (data) {
+//       jrd = $.parseJSON(data);
+//       jrd.map(fillJobs);
+//     }
+//   );
+//   $.ajaxSetup({ async: true });
+// }
+function fillJobs() {}
+
+//Types of Work FUNCTIONS
+function getTOW(projID) {
+  //get Types of Work Selection
+  console.log("start get ToW...");
+  $.ajax({
+    type: "POST",
+    url: "php/get_tow.php",
+    data: {
+      projID: projID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log("ToW: ", response);
+      const tow = response["result"];
+      const towList = tow.map((obj) => obj.itemName);
+      var towSelect = $("#idTOW");
+      towSelect.html(`<option value=0>Select Type of Work</option>`);
+      // empSelect.html(`<option value='0' hidden>Select ToW</option>`);
+      $.each(tow, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.itemName)
+          .attr("tow-id", item.id);
+        towSelect.append(option);
+      });
+      console.log("finished getting ToW");
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+}
+function getTOWDesc(typesOfWorkID) {
+  //get TOW Description Selection
+  console.log("towDesc: ", typesOfWorkID);
+  $.ajax({
+    type: "POST",
+    url: "php/get_tow_desc.php",
+    data: {
+      towID: typesOfWorkID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log(response);
+      const towDesc = response["result"];
+      // const towDescList = towDesc.map((obj) => obj.itemName);
+      var towDescSelect = $("#towDesc");
+      towDescSelect.html(towDesc);
+      // $("#towDesc").html(data.trim());
+    },
+  });
+}
+function isDrawing() {
+  //enable/disable engineering selections
+  console.log("isDrawing here");
+  isEngineering();
+  hasJRD();
+  hasTOW();
+}
+
+function isEngineering() {
+  console.log("isEngineering here");
+  var isDrawing = true;
+  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+  var selGroup = $("#idGroup").val();
+  isDrawing =
+    !defaults.includes(projID) &&
+    selGroup != 16 && //System Group
+    selGroup != 10 && //IT Group
+    projID;
+  // return isDrawing;
+  if (isDrawing) {
+    $("#id2DDiv").removeClass("d-none");
+    $("#idRevDiv").removeClass("d-none");
+  } else {
+    $("#id2DDiv").addClass("d-none");
+    $("#idRevDiv").addClass("d-none");
+  }
+}
+
+function hasJRD() {
+  console.log("hasJRD here");
+  var isDrawing = true;
+  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+  var selGroup = $("#idGroup").val();
+  isDrawing = projID != leaveID && projID != otherID;
+  if (isDrawing) {
+    $("#idJRDDiv").removeClass("d-none");
+  } else {
+    $("#idJRDDiv").addClass("d-none");
+  }
+}
+
+function hasTOW() {
+  console.log("hasTOW here");
+  var isDrawing = true;
+  var projID = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
+  console.log("tow projID", projID);
+  var selGroup = $("#idGroup").val();
+  isDrawing = !defaults.includes(projID) && projID;
+  if (isDrawing) {
+    $("#idTowDiv").removeClass("d-none");
+    $("#idTowDescDiv").removeClass("d-none");
+  } else {
+    $("#idTowDiv").addClass("d-none");
+    $("#idTowDescDiv").addClass("d-none");
+  }
+  if (projID == leaveID) {
+    $("#idTowDiv").removeClass("d-none");
+    $("#idTowDescDiv").removeClass("d-none");
+  }
+}
 
 function ifSmallScreen() {
   //responsive
@@ -578,25 +856,6 @@ function initializeDate() {
     },
     async: false,
   });
-}
-
-function getTOW(projID) {
-  //get Types of Work Selection
-  $.ajaxSetup({ async: false });
-  $("#idTOW").prop("selectedIndex", 0);
-  $("#idChecking").prop("selectedIndex", 0);
-  $("#forChecking").hide();
-  $.post(
-    "php/get_tow.php",
-    {
-      projID: projID,
-    },
-    function (data) {
-      $("#idTOW").html(data);
-      $("#idTOW").val("").change();
-    }
-  );
-  $.ajaxSetup({ async: true });
 }
 
 function getEntries() {
@@ -1096,122 +1355,6 @@ function planAccess() {
   );
 }
 
-function getItems(projID) {
-  //get Item Selection
-  var itms = [];
-  $("#itemOptions").empty();
-  $("#idItem").html(`<option value='' hidden>Select Item of Works</option>`);
-  $("#labell").remove();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_items.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-    },
-    function (data) {
-      itms = $.parseJSON(data);
-      itms.map(fillItem);
-      sequenceValidation();
-      if (projID == mngID) {
-        $($("#idItem").children()[1]).prop("selected", true).change();
-      }
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-
-function fillItem(itemArrayElement) {
-  var itemDeets = itemArrayElement;
-  var addString = `<li item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</li>`;
-  var addStringMain = `<option hidden item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</option>`;
-  $(`#itemOptions`).append(addString);
-  $(`#idItem`).append(addStringMain);
-}
-function getItemSearch(projID) {
-  //get Item Selection
-  var itms = [];
-  var searchIOW = $(`#searchitem`).val();
-  $("#itemOptions").empty();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_items.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-      searchIOW: searchIOW,
-    },
-    function (data) {
-      itms = $.parseJSON(data);
-      itms.map(fillItem);
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-
-function getJobs(projID, itemID) {
-  //get Item Selection
-  var jobs = [];
-  $("#jrdOptions").empty();
-  $("#idJRD").html(
-    `<option value='' hidden>Select Job Request Description</option>`
-  );
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_jobs.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-      itemID: itemID,
-    },
-    function (data) {
-      jobs = $.parseJSON(data);
-      jobs.map(fillJobs);
-      sequenceValidation();
-      if (projID == mngID || projID == kiaID) {
-        $($("#idJRD").children()[1]).prop("selected", true).change();
-      }
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-function fillJobs(jobArrayElement) {
-  var jrdDeets = jobArrayElement;
-  var addString = `<li job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</li>`;
-  var addStringMain = `<option hidden job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</option>`;
-  $(`#jrdOptions`).append(addString);
-  $(`#idJRD`).append(addStringMain);
-}
-function getJRDSearch(projID, itemID) {
-  //get Item Selection
-  var jrd = [];
-  var searchjrd = $(`#searchjrd`).val();
-  $("#jrdOptions").empty();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_jobs.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-      itemID: itemID,
-      searchjrd: searchjrd,
-    },
-    function (data) {
-      jrd = $.parseJSON(data);
-      jrd.map(fillJobs);
-    }
-  );
-  $.ajaxSetup({ async: true });
-}
-
 function resetEntry() {
   //reset Inputs
   $(
@@ -1419,64 +1562,6 @@ function disableTimeInput(projID) {
   if (projID == leaveID) {
     $("#getHour").prop("disabled", true);
     $("#getMin").prop("disabled", true);
-  }
-}
-
-function isDrawing() {
-  //enable/disable engineering selections
-  isEngineering();
-  hasJRD();
-  hasTOW();
-}
-
-function isEngineering() {
-  var isDrawing = true;
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var selGroup = $("#idGroup").val();
-  isDrawing =
-    !defaults.includes(projID) &&
-    selGroup != "SYS" &&
-    selGroup != "IT" &&
-    projID;
-  // return isDrawing;
-  if (isDrawing) {
-    $("#id2DDiv").removeClass("d-none");
-    $("#idRevDiv").removeClass("d-none");
-  } else {
-    $("#id2DDiv").addClass("d-none");
-    $("#idRevDiv").addClass("d-none");
-  }
-}
-
-function hasJRD() {
-  var isDrawing = true;
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var selGroup = $("#idGroup").val();
-  isDrawing = projID != leaveID && projID != otherID;
-  if (isDrawing) {
-    $("#idJRDDiv").removeClass("d-none");
-  } else {
-    $("#idJRDDiv").addClass("d-none");
-  }
-}
-
-function hasTOW() {
-  var isDrawing = true;
-  var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
-  );
-  var selGroup = $("#idGroup").val();
-  isDrawing = !defaults.includes(projID) && projID;
-  if (isDrawing) {
-    $("#idTowDiv").removeClass("d-none");
-    $("#idTowDescDiv").removeClass("d-none");
-  } else {
-    $("#idTowDiv").addClass("d-none");
-    $("#idTowDescDiv").addClass("d-none");
-  }
-  if (projID == leaveID) {
-    $("#idTowDiv").removeClass("d-none");
-    $("#idTowDescDiv").removeClass("d-none");
   }
 }
 

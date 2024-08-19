@@ -1,20 +1,32 @@
 <?php
 #region DB Connect
-require_once "../Includes/dbconnectwebjmr.php";
+require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
+
 #region Initialize Variable
-$output="";
-$itemID='';
-if(!empty($_REQUEST['itemID'])){
-    $itemID=$_REQUEST['itemID'];
+if(!empty($_POST['itemID'])){
+    $itemID = $_POST['itemID'];
+}
+else{
+  $msg['isSuccess'] = FALSE;
+  $msg['error'] = "Item ID Missing";
+  die(json_encode($msg));
 }
 #endregion
-#region MyGroup Query
-$labelQ="SELECT fldLabel FROM itemlabels WHERE fldItem='$itemID'";
-$labelStmt=$connwebjmr->query($labelQ);
-if($labelStmt->rowCount()>0){
-    $output=$labelStmt->fetchColumn();
+
+#region MAIN QUERY
+try {
+  $labelQ = "SELECT fldLabel FROM itemlabels WHERE fldItem = :itemID";
+  $labelStmt = $connwebjmr->prepare($labelQ);
+  $labelStmt->execute([":itemID" => $itemID]);
+  $result = ($labelStmt->rowCount() > 0) ? $labelStmt->fetchColumn() : "";
+  $msg['result'] = $result;
+  $msg['isSuccess'] = TRUE;
+  $msg['error'] = "Successfully retrieved";
+} catch (Exception $e) {
+	$msg["isSuccess"] = false;
+	$msg['error'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
-echo $output;
-?>
+
+echo json_encode($msg);

@@ -4,6 +4,11 @@ require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "../../dbconn/dbconnectnew.php";
 #endregion
 
+// Default Values
+$KDTWAccess = ['SYS', 'ANA', 'IT'];
+$managementPositions = ['KDTP', 'SM', 'DM', 'AM', 'SSS', 'SSV', 'IT-SV', 'CTE', 'GM'];
+$devs = ['464', '510', '487'];
+
 // Employee Position
 function getEmpPosition($empID) {
   global $connnew;
@@ -59,4 +64,20 @@ function getGroup($grpNum) {
   $getGroupStmt->execute([":grpNum" => $grpNum]);
   $grpAbbr = $getGroupStmt->fetchColumn();
   return $grpAbbr;
+}
+
+function getTrainProjID() {
+  global $connwebjmr;
+  $trainProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Training'";
+  $trainProjStmt = $connwebjmr->query($trainProjQ);
+  $trainProjID = $trainProjStmt->fetchColumn();
+  return $trainProjID;
+}
+
+function getLeaveID() {
+  global $connwebjmr;
+  $leaveQ = "SELECT fldID FROM projectstable WHERE fldProject='Leave'";
+  $leaveStmt = $connwebjmr->query($leaveQ);
+  $leaveID = $leaveStmt->fetchColumn();
+  return $leaveID;
 }
