@@ -12,6 +12,7 @@ switch (document.location.hostname) {
 }
 var empDetails = [];
 checkLogin();
+// console.log(empDetails);
 var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
@@ -423,6 +424,7 @@ function checkLogin() {
   $.ajax({
     url: "Includes/check_login.php",
     success: function (data) {
+      console.log(data);
       //ajax to check 9 is logged in
       empDetails = $.parseJSON(data);
       if (Object.keys(empDetails).length < 1) {

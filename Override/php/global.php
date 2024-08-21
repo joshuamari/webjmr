@@ -69,7 +69,8 @@ function getGroup($grpNum) {
 function getTrainProjID() {
   global $connwebjmr;
   $trainProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Training'";
-  $trainProjStmt = $connwebjmr->query($trainProjQ);
+  $trainProjStmt = $connwebjmr->prepare($trainProjQ);
+  $trainProjStmt->execute([]);
   $trainProjID = $trainProjStmt->fetchColumn();
   return $trainProjID;
 }
@@ -77,7 +78,21 @@ function getTrainProjID() {
 function getLeaveID() {
   global $connwebjmr;
   $leaveQ = "SELECT fldID FROM projectstable WHERE fldProject='Leave'";
-  $leaveStmt = $connwebjmr->query($leaveQ);
+  $leaveStmt = $connwebjmr->prepare($leaveQ);
+  $leaveStmt->execute([]);
   $leaveID = $leaveStmt->fetchColumn();
   return $leaveID;
+}
+
+function getDefaults() {
+  global $connwebjmr;
+  $defaults = array();
+  $defaultsQ = "SELECT `fldId` FROM `projectstable` WHERE fldDirect = 0 AND fldDelete = 0";
+  $defaultStmt = $connwebjmr->prepare($defaultsQ);
+  $defaultStmt->execute([]);
+  $arrResult = $defaultStmt->fetchAll();
+    foreach($arrResult as $res) {
+      $defaults[] = (int)$res['fldId'];
+    }
+  return $defaults;
 }

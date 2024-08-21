@@ -15,11 +15,12 @@ try {
     $msg['isSuccess'] = true;
   }
   else{
-    $msg['error'] = "No Locationsretrieved!";
+    $msg['error'] = "No Locations retrieved!";
     $msg['isSuccess'] = false;
   }
 } catch (Exception $e) {
-  echo "Connection failed: " . $e->getMessage();
+	$msg["isSuccess"] = false;
+	$msg['error'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
