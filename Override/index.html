@@ -32,7 +32,7 @@
   <body>
     <!--#region MODAL START-->
     <!--#region Notice to be Described in jmr MODAL -->
-    <!-- <div
+    <div
       class="modal fade"
       id="drInstruction"
       data-bs-backdrop="static"
@@ -43,12 +43,11 @@
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header" style="background-color: #3980c7">
-            <h1
-              class="modal-title fs-2 text-light text-center"
-              id="staticBackdropLabel2"
-            >
-              <i class="bx bxs-info-circle text-light px-2"></i>JMR Information
+          <div class="modal-header">
+            <!-- include in class (text-light text-center) -->
+            <h1 class="modal-title fs-2" id="staticBackdropLabel2">
+              <!-- include in i class (text-light) -->
+              <i class="bx bxs-info-circle px-2"></i>JMR Information
             </h1>
             <button
               type="button"
@@ -63,22 +62,15 @@
           <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-primary border-0"
+              class="btn btn-primary btn-ok border-0"
               id="back2Project"
-              style="
-                background: linear-gradient(
-                  45deg,
-                  rgba(32, 191, 85, 1) 0%,
-                  rgba(1, 186, 239, 1) 100%
-                );
-              "
             >
-              Got it
+              Go Back
             </button>
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
     <!--#endregion-->
 
     <!--#region Planning Modal -->
@@ -422,6 +414,22 @@
                     ></span>
                   </div>
 
+                  <div class="col-12 my-2 loc">
+                    <label for="idLocation" class="form-label">Location</label>
+                    <div class="input-group">
+                      <select class="form-select" id="idLocation" required>
+                        <option value="" disabled selected>
+                          Select Location
+                        </option>
+                      </select>
+                    </div>
+                    <span
+                      class="col-12 mt-1 alert-danger text-danger"
+                      id="p3"
+                      role="alert"
+                    ></span>
+                  </div>
+
                   <div class="col-12 my-2 emp">
                     <label for="idEmp" d="emplbl" class="form-label"
                       >Employee</label
@@ -462,22 +470,6 @@
                         />
                       </div>
                       <ul id="empOptions" class="options p-0"></ul>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p3"
-                      role="alert"
-                    ></span>
-                  </div>
-
-                  <div class="col-12 my-2 loc">
-                    <label for="idLocation" class="form-label">Location</label>
-                    <div class="input-group">
-                      <select class="form-select" id="idLocation" required>
-                        <option value="" disabled selected>
-                          Select Location
-                        </option>
-                      </select>
                     </div>
                     <span
                       class="col-12 mt-1 alert-danger text-danger"

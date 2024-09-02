@@ -1,16 +1,30 @@
 <?php
-#region Database Connection
-require_once "../Includes/dbconnectwebjmr.php";
+#region DB Connect
+require_once "../../dbconn/dbconnectwebjmr.php";
+require_once "./global.php";
 #endregion
-#region Initialize Variable
-$defaults = array();
-#endregion
-#region Defaults Query
-$defaultsQ = "SELECT * FROM projectstable WHERE fldDirect=0 AND fldDelete=0";
-$defaultsStmt = $connwebjmr->query($defaultsQ);
-$defArr = $defaultsStmt->fetchAll();
-foreach ($defArr as $dflts) {
-    array_push($defaults, (int)$dflts['fldID']);
+
+#region MAIN QUERY
+try{
+  $defaultsQ = "SELECT `fldId` FROM `projectstable` WHERE fldDirect = 0 AND fldDelete = 0";
+  $defaultStmt = $connwebjmr->prepare($defaultsQ);
+  $defaultStmt->execute([]);
+  if ($defaultStmt->rowCount() > 0) {
+    $arrResult = $defaultStmt->fetchAll();
+    foreach($arrResult as $res) {
+      $msg['result'][] = (int)$res['fldId'];
+    }
+    $msg['isSuccess'] = true;
+    $msg['error'] = "Successfully retrieved";
+  }
+  else{
+    $msg['isSuccess'] = false;
+    $msg['error'] = "Failed to retrieve data";
+  }
+} catch (Exception $e) {
+	$msg["isSuccess"] = false;
+	$msg['error'] =  "Connection failed: " . $e->getMessage();
 }
-echo json_encode($defaults);
 #endregion
+
+echo json_encode($msg);

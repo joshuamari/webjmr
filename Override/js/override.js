@@ -1,7 +1,7 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
-
+// var myEmpNum = "";
 var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
@@ -37,84 +37,132 @@ const months = [
 ];
 
 //#endregion
-
-checkLogin();
-const myEmpNum = empDetails["empNum"];
+// checkLogin();
+// const myEmpNum = empDetails["empNum"];
+checkAccess()
+  .then((emp) => {
+    console.log("emp", emp);
+    if (emp.isSuccess) {
+      empDetails = emp.result;
+      console.log("result", empDetails[0]);
+      // console.log(empDetails);
+      $(".hello-user").text(empDetails["empFName"]);
+      // console.log("id", empDetails["empID"]);
+      var myEmpNum = empDetails["empID"];
+      console.log("empNum", myEmpNum);
+      $(document).ready(function () {
+        getMyGroups(myEmpNum)
+          .then((grps) => {
+            console.log("one", grps[0]);
+            fillMyGroups(grps[0]);
+            Promise.all([
+              console.log("yawa"),
+              getDispatchLoc(),
+              // getEmployees(),
+              // getProjects(),
+              // getItems(),
+              // getJobs(),
+              // getTOW(),
+            ])
+              .then(([locs, emps, projs, items, jobs, tows]) => {
+                // console.log(locs);
+                fillDispatchLoc(locs);
+                // fillEmployees(emps);
+                // fillProjects(projs);
+                // fillItems(items);
+                // fillJobs(jobs);
+                // fillTOW(tows);
+                $(".cs-loader").fadeOut(1000);
+              })
+              .catch((error) => {
+                alert(`${error}`);
+              });
+          })
+          .catch(() => {});
+      });
+    } else {
+      alert(emp.message);
+      window.location.href = `${rootFolder}/webJMR/`;
+    }
+  })
+  .catch((error) => {
+    alert(`${error}`);
+  });
 
 //#region BINDS
-//#region sidebarshits
-$(document).ready(function () {
-  //page Initialize Event
-  $(".hello-user").text(empDetails["empFName"]);
-  ifSmallScreen();
-  initializeDate();
-  getMyGroups();
-  // getEmployees();
-  getDispatchLoc();
-  // getTOW();
-  getEntries();
-  sequenceValidation();
-  // initCalendar();
-  getPlans();
-  planAccess();
-  //#region sidebarshits
-  let arrow = document.querySelectorAll(".arrow");
+// $(document).ready(function () {
+//   //page Initialize Event
+//   $(".hello-user").text(empDetails["empFName"]);
+//   console.log("ready", empDetails);
+//   ifSmallScreen();
+//   initializeDate();
+//   getMyGroups();
+//   // getEmployees();
+//   getDispatchLoc();
+//   // getTOW();
+//   getEntries();
+//   sequenceValidation();
+//   // initCalendar();
+//   // getPlans();
+//   // planAccess();
+//   //#region sidebarshits
+//   let arrow = document.querySelectorAll(".arrow");
 
-  for (var i = 0; i < arrow.length; i++) {
-    arrow[i].addEventListener("click", (e) => {
-      let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
-      arrowParent.classList.toggle("showMenu");
-    });
-  }
-  let ey = document.querySelectorAll(".ey");
+//   for (var i = 0; i < arrow.length; i++) {
+//     arrow[i].addEventListener("click", (e) => {
+//       let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
+//       arrowParent.classList.toggle("showMenu");
+//     });
+//   }
+//   let ey = document.querySelectorAll(".ey");
 
-  for (var i = 0; i < ey.length; i++) {
-    ey[i].addEventListener("click", (e) => {
-      let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
-      aey.classList.toggle("showMenu");
-    });
-  }
+//   for (var i = 0; i < ey.length; i++) {
+//     ey[i].addEventListener("click", (e) => {
+//       let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
+//       aey.classList.toggle("showMenu");
+//     });
+//   }
 
-  let sidebar = document.querySelector(".sidebar");
-  let sidebarBtn = document.querySelector(".menu-one");
-  let sidebarBtn2 = document.querySelector(".menu-two");
-  sidebarBtn.addEventListener("click", () => {
-    $(".sidebar").toggleClass("close");
-  });
-  sidebarBtn2.addEventListener("click", () => {
-    $(".sidebar").addClass("close");
-  });
-  //#endregion
-  //#region input time validation
-  var inputHour = document.getElementById("getHour");
+//   let sidebar = document.querySelector(".sidebar");
+//   let sidebarBtn = document.querySelector(".menu-one");
+//   let sidebarBtn2 = document.querySelector(".menu-two");
+//   sidebarBtn.addEventListener("click", () => {
+//     $(".sidebar").toggleClass("close");
+//   });
+//   sidebarBtn2.addEventListener("click", () => {
+//     $(".sidebar").addClass("close");
+//   });
+//   //#endregion
+//   //#region input time validation
+//   var inputHour = document.getElementById("getHour");
 
-  var invalidChars = ["-", "+", "e", "."];
+//   var invalidChars = ["-", "+", "e", "."];
 
-  inputHour.addEventListener("input", function () {
-    this.value = this.value.replace(/[e\+\-\.]/gi, "");
-  });
+//   inputHour.addEventListener("input", function () {
+//     this.value = this.value.replace(/[e\+\-\.]/gi, "");
+//   });
 
-  inputHour.addEventListener("keydown", function (e) {
-    if (invalidChars.includes(e.key)) {
-      e.preventDefault();
-    }
-  });
-  var inputMin = document.getElementById("getMin");
+//   inputHour.addEventListener("keydown", function (e) {
+//     if (invalidChars.includes(e.key)) {
+//       e.preventDefault();
+//     }
+//   });
+//   var inputMin = document.getElementById("getMin");
 
-  var invalidChars = ["-", "+", "e", "."];
+//   var invalidChars = ["-", "+", "e", "."];
 
-  inputMin.addEventListener("input", function () {
-    this.value = this.value.replace(/[e\+\-\.]/gi, "");
-  });
+//   inputMin.addEventListener("input", function () {
+//     this.value = this.value.replace(/[e\+\-\.]/gi, "");
+//   });
 
-  inputMin.addEventListener("keydown", function (e) {
-    if (invalidChars.includes(e.key)) {
-      e.preventDefault();
-    }
-  });
-  //#endregion
-  $(".cs-loader").fadeOut(1000);
-});
+//   inputMin.addEventListener("keydown", function (e) {
+//     if (invalidChars.includes(e.key)) {
+//       e.preventDefault();
+//     }
+//   });
+//   //#endregion
+//   $(".cs-loader").fadeOut(1000);
+// });
 
 $(document).on("click", "body", function (event) {
   if (
@@ -136,6 +184,25 @@ $(document).on("click", "body", function (event) {
     $(".jord").removeClass("active");
   }
 });
+// MODAL
+$(document).on("click", "#back2Project", function () {
+  $("#drInstruction").modal("hide");
+  $("#idItem").val(0).change();
+  // $("#labell").remove();
+});
+$(document).on("click", "#drInstruction .btn-close", function () {
+  $("#back2Project").click();
+});
+
+//Remove Red Borders Errors
+$(document).on(
+  "click",
+  "#idGroup, #idDRDate, #idLocation, #idEmp, #idProject, #idItem, #idJRD, #idTOW, #idMH, #idRemarks, #trGroup, #getHour, #getMin",
+  function () {
+    $(this).removeClass("bg-err");
+    $(this).removeClass("border border-danger");
+  }
+);
 
 // FOR GROUP LIST
 $(document).on("change", "#idGroup", function () {
@@ -147,15 +214,16 @@ $(document).on("change", "#idGroup", function () {
   // $("#idJRD, #idItem, #idProject, #idEmployee").val("");
   $("#p1").text("");
   $(this).removeClass("border-danger");
-  $(".iow").removeClass("active");
+  // $(".iow").removeClass("active");
 });
-$(document).on(
-  "click",
-  "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
-  function () {
-    $(this).removeClass("bg-err");
-  }
-);
+
+// FOR LOCATION LIST
+$(document).on("change", "#idLocation", function () {
+  //select Location Event
+  MHValidation();
+  $("#p3").text("");
+  $(this).removeClass("border-danger");
+});
 
 // FOR EMPLOYEE LIST
 $(document).on("change", "#idEmployee", function () {
@@ -189,19 +257,19 @@ $(document).on("change", "#idProject", function () {
   // getItems(projID);
   // isDrawing();
   // getTOW(projID);
-  // disableTimeInput(projID);
-  // MHValidation();
+  disableTimeInput(projID);
+  MHValidation();
   // $(".iow").removeClass("active");
   // $("#p5").text("");
   // $(this).removeClass("border-danger");
 
-  // if (projID == leaveID) {
-  //   $("#itemlbl").html("Leave Type");
-  //   $("#lbltow").html("Day Type");
-  // } else {
-  //   $("#itemlbl").html("Item of Works");
-  //   $("#lbltow").html("Type of Work");
-  // }
+  if (projID == leaveID) {
+    $("#itemlbl").html("Leave Type");
+    $("#lbltow").html("Day Type");
+  } else {
+    $("#itemlbl").html("Item of Works");
+    $("#lbltow").html("Type of Work");
+  }
 
   // getCheckers();
   // $(".trgrp").remove();
@@ -237,14 +305,18 @@ $(document).on("change", "#idItem", function () {
   var projID = $("#idProject").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   console.log("Item of Works changed to: ", itemID);
+  var checkItemID = noMoreInputItems.includes(itemID);
+  console.log("check item ID: ", checkItemID);
   sequenceValidation();
-  getJobs(thisEmpID, projID, itemID);
+  if (itemID != 0) {
+    getJobs(thisEmpID, projID, itemID);
+    getLabel(itemID);
+  }
   // $(".trgrp").remove();
-  // getLabel(itemID);
   // disableInputs(projID, itemID);
-  // if (noMoreInputItems.includes(itemID)) {
-  //   $("#drInstruction").modal("show");
-  // }
+  if (checkItemID) {
+    $("#drInstruction").modal("show");
+  }
   // trainingGroup(itemID);
   // getJobs(projID, itemID);
   // $("#p6").text("");
@@ -322,35 +394,57 @@ $(document).on("change", "#idTOW", function () {
   $("#p11").text("");
   $(this).removeClass("border-danger");
 });
-//#endregion
 
+// Add / Clear / Save Changes / Cancel Buttons
+$(document).on("click", "#idReset", function () {
+  //click Reset Event
+  console.log($(this).text().trim());
+  if ($(this).text().trim() == "Clear") {
+    resetEntry();
+  } else {
+    cancelEditFunction();
+  }
+});
+$(document).on("click", "#idAdd", function () {
+  //click Add Event
+  switch ($(this).text().trim()) {
+    case "Add":
+      addEntries(0);
+      break;
+    case "Save Changes":
+      saveFunction();
+      break;
+  }
+});
+
+//#endregion
+// console.log("labas", myEmpNum);
 //#region FUNCTIONS
-// not sure -> checklogin/access > then(issuccess/error) > doc.ready > make empDetails global / getEmployeeDetails > getgroups > fillgroups > Promise(getEmp,Loc,Proj,IoW,JRD) > fill each promise func > catch error
+
 function checkAccess() {
   //authentication + authorization
-  // return new Promise((resolve, reject) => {
-  //   $.ajax({
-  //     type: "GET",
-  //     url: "Includes/check_login.php",
-  //     dataType: "json",
-  //     success: function (data) {
-  //       // const acc = data;
-  //       // resolve(acc);
-  //       empDetails = data;
-  //       resolve(empDetails);
-  //     },
-  //     error: function (xhr, status, error) {
-  //       if (xhr.status === 404) {
-  //         reject("Not Found Error: The requested resource was not found.");
-  //       } else if (xhr.status === 500) {
-  //         reject("Internal Server Error: There was a server error.");
-  //       } else {
-  //         reject("An unspecified error occurred while checking login details.");
-  //       }
-  //     },
-  //   });
-  //   // resolve(response);
-  // });
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/check_login.php",
+      dataType: "json",
+      success: function (data) {
+        console.log("checkAccess data: ", data);
+        const empDetails = data;
+        resolve(empDetails);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while checking login details.");
+        }
+      },
+    });
+    // resolve(response);
+  });
 }
 function checkLogin() {
   //check if user is logged in
@@ -358,6 +452,7 @@ function checkLogin() {
     url: "Includes/check_login.php",
     success: function (data) {
       //ajax to check 9 is logged in
+      console.log(data);
       empDetails = $.parseJSON(data);
       if (Object.keys(empDetails).length < 1) {
         //if result is 0, redirect to log in page
@@ -369,40 +464,56 @@ function checkLogin() {
 }
 
 //GROUP FUNCTIONS
-function getMyGroups() {
-  $.ajax({
-    type: "POST",
-    url: "php/get_my_groups.php",
-    data: {
-      empNum: myEmpNum,
-    },
-    dataType: "json",
-    success: function (response) {
-      const grps = response["result"];
-      const groupIDS = grps.map((obj) => obj.abbreviation);
-      var grpSelect = $("#idGroup");
-      grpSelect.html(`<option value=0>Select Group</option>`);
-      // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
-      $.each(grps, function (index, item) {
-        var option = $("<option>")
-          .attr("value", item.id)
-          .text(item.abbreviation)
-          .attr("grp-id", item.id);
-        grpSelect.append(option);
-      });
-    },
-    error: function (xhr, status, error) {
-      if (xhr.status === 404) {
-        reject("Not Found Error: The requested resource was not found.");
-      } else if (xhr.status === 500) {
-        reject("Internal Server Error: There was a server error.");
-      } else {
-        reject("An unspecified error occurred while fetching groups.");
-      }
-    },
+function getMyGroups(myEmpNum) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_my_groups.php",
+      data: {
+        empNum: myEmpNum,
+      },
+      dataType: "json",
+      success: function (response) {
+        const grps = response["result"];
+        console.log("grps", response);
+        resolve(grps);
+        // const groupIDS = grps.map((obj) => obj.abbreviation);
+        // var grpSelect = $("#idGroup");
+        // grpSelect.html(`<option value=0 grp-id=0>Select Group</option>`);
+        // // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
+        // $.each(grps, function (index, item) {
+        //   var option = $("<option>")
+        //     .attr("value", item.id)
+        //     .text(item.abbreviation)
+        //     .attr("grp-id", item.id);
+        //   grpSelect.append(option);
+        // });
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching groups.");
+        }
+      },
+    });
   });
 }
-function fillMyGroups() {}
+function fillMyGroups(grps) {
+  var grpSelect = $("#idGroup");
+  console.log("allgrps", grps);
+  grpSelect.html(`<option value=0 grp-id=0>Select Group</option>`);
+  // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
+  $.each(grps, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.abbreviation)
+      .attr("grp-id", item.id);
+    grpSelect.append(option);
+  });
+}
 
 //LOCATION FUNCTIONS
 function getDispatchLoc() {
@@ -413,10 +524,11 @@ function getDispatchLoc() {
     dataType: "json",
     success: function (data) {
       const locs = data["result"];
+      // resolve(locs);
       const locsIDs = locs.map((obj) => obj.location);
       var locSelect = $("#idLocation");
       // $("#idLocation").html(locs.location);
-      locSelect.html(`<option value=0>Select Location</option>`);
+      locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
       // locSelect.html(`<option value='0' hidden>Select Location</option>`);
       $.each(locs, function (index, item) {
         var option = $("<option>")
@@ -437,7 +549,18 @@ function getDispatchLoc() {
     },
   });
 }
-function fillDispatchLoc() {}
+function fillDispatchLoc(locs) {
+  var locSelect = $("#idLocation");
+  locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
+  // locSelect.html(`<option value='0' hidden>Select Location</option>`);
+  $.each(locs, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.location)
+      .attr("loc-id", item.id);
+    locSelect.append(option);
+  });
+}
 
 //EMPLOYEE FUNCTIONS
 function getEmployees() {
@@ -445,6 +568,7 @@ function getEmployees() {
   console.log("start get emp...");
   // console.log("groupID is: ", $("#idGroup").val());
   var groupID = $("#idGroup").val();
+  console.log("grpID", groupID);
 
   $.ajax({
     type: "POST",
@@ -456,18 +580,19 @@ function getEmployees() {
     success(response) {
       console.log("getEmployees res: ", response);
       const emps = response["result"];
-      const empsList = emps.map((obj) => obj.fullName);
-      var empSelect = $("#idEmployee");
-      empSelect.html(`<option value=0>Select Employee</option>`);
-      // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
-      $.each(emps, function (index, item) {
-        var option = $("<option>")
-          .attr("value", item.id)
-          .text(item.fullName)
-          .attr("emp-id", item.id);
-        empSelect.append(option);
-      });
-      console.log("finished getting employees");
+      resolve(emps);
+      // const empsList = emps.map((obj) => obj.fullName);
+      // var empSelect = $("#idEmployee");
+      // empSelect.html(`<option value=0 emp-id=0>Select Employee</option>`);
+      // // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
+      // $.each(emps, function (index, item) {
+      //   var option = $("<option>")
+      //     .attr("value", item.id)
+      //     .text(item.fullName)
+      //     .attr("emp-id", item.id);
+      //   empSelect.append(option);
+      // });
+      // console.log("finished getting employees");
     },
     error: function (xhr, status, error) {
       if (xhr.status === 404) {
@@ -480,7 +605,18 @@ function getEmployees() {
     },
   });
 }
-function fillEmployees() {}
+function fillEmployees(emps) {
+  var empSelect = $("#idEmployee");
+  empSelect.html(`<option value=0 emp-id=0>Select Employee</option>`);
+  // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
+  $.each(emps, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.fullName)
+      .attr("emp-id", item.id);
+    empSelect.append(option);
+  });
+}
 
 //PROJECT FUNCTIONS
 function getProjects(thisEmpID) {
@@ -503,9 +639,10 @@ function getProjects(thisEmpID) {
     success(response) {
       console.log("projects: ", response);
       const projs = response["result"];
+      // resolve(projs);
       const projList = projs.map((obj) => obj.projName);
       var projSelect = $("#idProject");
-      projSelect.html(`<option value=0>Select Project</option>`);
+      projSelect.html(`<option value=0 proj-id=0>Select Project</option>`);
       // empSelect.html(`<option value='0' hidden>Select Project</option>`);
       $.each(projs, function (index, item) {
         var option = $("<option>")
@@ -556,13 +693,63 @@ function getProjects(thisEmpID) {
 //   );
 //   $.ajaxSetup({ async: true });
 // }
-function fillProjects() {}
+function fillProjects(projs) {
+  var projSelect = $("#idProject");
+  projSelect.html(`<option value=0 proj-id=0>Select Project</option>`);
+  // empSelect.html(`<option value='0' hidden>Select Project</option>`);
+  $.each(projs, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.projName)
+      .attr("proj-id", item.id);
+    projSelect.append(option);
+  });
+}
 
+// Check if ProjID is for LEAVE
+function disableTimeInput(projID) {
+  //disable Time Input
+  $("#getHour").prop("disabled", false);
+  $("#getMin").prop("disabled", false);
+  if (projID == leaveID) {
+    $("#getHour").prop("disabled", true);
+    $("#getMin").prop("disabled", true);
+  }
+}
+
+function MHValidation() {
+  //enable/disable manhour type selection
+  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+  var selLoc = "KDT";
+
+  if ($("#idLocation").val()) {
+    selLoc = $("#idLocation").val();
+  }
+  if (projID != leaveID) {
+    //if Project selected is not LEAVE
+    $("#idMH").prop("disabled", false);
+    if (!isWorkDay(selLoc)) {
+      $("#idMH").val("Overtime");
+      $("#idMH").prop("disabled", true);
+    }
+    if (selLoc == "WFH") {
+      $("#idMH").val("Regular");
+      $("#idMH").prop("disabled", true);
+    }
+  } else {
+    $("#idMH").prop("disabled", true);
+    $("#idMH").val("");
+    if (!isWorkDay(selLoc)) {
+      alert("Leave disabled on holidays/weekends");
+      $("#idProject").val("").change();
+    }
+  }
+}
 //ITEM of WORKS FUNCTIONS
 function getItems(thisEmpID, projID) {
   //get Item Selection
   var itms = [];
-
+  $("#labell").remove();
   var groupID = $("#idGroup").val();
   console.log("start get Items...");
   // console.log("project to get is from group #: ", groupID);
@@ -579,9 +766,12 @@ function getItems(thisEmpID, projID) {
     success(response) {
       console.log("items: ", response);
       const items = response["result"];
+      // resolve(items);
       const itemList = items.map((obj) => obj.itemName);
       var itemSelect = $("#idItem");
-      itemSelect.html(`<option value=0>Select Item of Works</option>`);
+      itemSelect.html(
+        `<option value=0 item-id=0>Select Item of Works</option>`
+      );
       // empSelect.html(`<option value='0' hidden>Select Item of Works</option>`);
       $.each(items, function (index, item) {
         var option = $("<option>")
@@ -633,8 +823,39 @@ function getItems(thisEmpID, projID) {
 //   );
 //   $.ajaxSetup({ async: true });
 // }
-function fillItems() {}
+function fillItems(items) {
+  var itemSelect = $("#idItem");
+  itemSelect.html(`<option value=0 item-id=0>Select Item of Works</option>`);
+  // empSelect.html(`<option value='0' hidden>Select Item of Works</option>`);
+  $.each(items, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.itemName)
+      .attr("item-id", item.id);
+    itemSelect.append(option);
+  });
+}
 
+function getLabel(itemID) {
+  //display label of selected item of work
+  $.ajax({
+    type: "POST",
+    url: "php/get_label.php",
+    data: {
+      itemID: itemID,
+    },
+    dataType: "json",
+    success(response) {
+      console.log(response);
+      const msg = response["result"];
+      console.log(msg);
+      $("#labell").remove();
+      $("#p6").after(`
+        <span class="col-12 alert-primary text-primary" id="labell" role="alert">${msg}</span>
+        `);
+    },
+  });
+}
 //JRD FUNCTIONS
 function getJobs(thisEmpID, projID, itemID) {
   //get JRD Selection
@@ -657,9 +878,12 @@ function getJobs(thisEmpID, projID, itemID) {
     success(response) {
       console.log("jrd: ", response);
       const jobs = response["result"];
+      // resolve(jobs);
       const jobList = jobs.map((obj) => obj.jobName);
       var jobSelect = $("#idJRD");
-      jobSelect.html(`<option value=0>Select Job Request Description</option>`);
+      jobSelect.html(
+        `<option value=0 job-id=0>Select Job Request Description</option>`
+      );
       // empSelect.html(`<option value='0' hidden>Select Job Request Description</option>`);
       $.each(jobs, function (index, item) {
         var option = $("<option>")
@@ -711,7 +935,20 @@ function getJobs(thisEmpID, projID, itemID) {
 //   );
 //   $.ajaxSetup({ async: true });
 // }
-function fillJobs() {}
+function fillJobs(jobs) {
+  var jobSelect = $("#idJRD");
+  jobSelect.html(
+    `<option value=0 job-id=0>Select Job Request Description</option>`
+  );
+  // empSelect.html(`<option value='0' hidden>Select Job Request Description</option>`);
+  $.each(jobs, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.jobName)
+      .attr("job-id", item.id);
+    jobSelect.append(option);
+  });
+}
 
 //Types of Work FUNCTIONS
 function getTOW(projID) {
@@ -727,9 +964,10 @@ function getTOW(projID) {
     success(response) {
       console.log("ToW: ", response);
       const tow = response["result"];
+      // resolve(tow);
       const towList = tow.map((obj) => obj.itemName);
       var towSelect = $("#idTOW");
-      towSelect.html(`<option value=0>Select Type of Work</option>`);
+      towSelect.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
       // empSelect.html(`<option value='0' hidden>Select ToW</option>`);
       $.each(tow, function (index, item) {
         var option = $("<option>")
@@ -751,6 +989,19 @@ function getTOW(projID) {
     },
   });
 }
+function fillTOW(tows) {
+  var towSelect = $("#idTOW");
+  towSelect.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
+  // empSelect.html(`<option value='0' hidden>Select ToW</option>`);
+  $.each(tows, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.itemName)
+      .attr("tow-id", item.id);
+    towSelect.append(option);
+  });
+}
+
 function getTOWDesc(typesOfWorkID) {
   //get TOW Description Selection
   console.log("towDesc: ", typesOfWorkID);
@@ -771,6 +1022,7 @@ function getTOWDesc(typesOfWorkID) {
     },
   });
 }
+
 function isDrawing() {
   //enable/disable engineering selections
   console.log("isDrawing here");
@@ -833,6 +1085,203 @@ function hasTOW() {
     $("#idTowDescDiv").removeClass("d-none");
   }
 }
+
+// Button Functions
+function resetEntry() {
+  //reset Inputs
+  $("#getHour,#getMin,#idRemarks").val("").change();
+  $(
+    "#idGroup,#idEmployee,#idLocation,#idProject,#idItem,#idJRD,#idTOW,#idMH,#towDesc,#trGroup"
+  )
+    .val(0)
+    .change();
+  $("#one").click();
+  $("#idRev").prop("checked", false);
+  $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12,#p13").text("");
+  $(
+    "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
+  )
+    .removeClass("border border-danger")
+    .removeClass("bg-err");
+  $(".checker").addClass("d-none");
+  sequenceValidation();
+}
+function cancelEditFunction() {
+  //cancel editables
+  $("#idAdd").text("Add");
+  $("#idReset").text("Clear");
+  resetEntry();
+}
+function saveFunction() {
+  //update database entry
+  addEntries(editID);
+}
+//need fix tow, revision, check, mhtype,
+function addEntries(addMode) {
+  //add Entries to Database
+  var tutri = $('input[name="radio"]:checked').val();
+  var grp = $("#idGroup").val();
+  var date = $("#idDRDate").val();
+  var loc = $($("#idLocation").find("option:selected")).attr("loc-id");
+  var emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
+  var proj = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
+  var item = $($("#idItem").find("option:selected")).attr("item-id");
+  var trgrp = $($("#trGroup").find("option:selected")).val() || "";
+  var jobreq = $($("#idJRD").find("option:selected")).attr("job-id") || "";
+  var tow = $($("#idTOW").find("option:selected")).attr("tow-id");
+  var hour = $("#getHour").val() * 60 || "0";
+  var mins = $("#getMin").val() || "0";
+  var getDuration = `${parseFloat(hour) + parseFloat(mins)}`;
+  var revision = "";
+  var mhtype = $($("#idMH").find("option:selected")).attr("mhid");
+  var remarks = $("#idRemarks").val();
+  var checker =
+    $($("#idChecking").find("option:selected")).attr("dataid") || "";
+  var mgaKulang = [];
+
+  if ($("#id2DDiv").hasClass("d-none")) {
+    tutri = "";
+  }
+  if (!grp || grp == 0) {
+    $("#p1").text("Please Select Group");
+    $("#idGroup").addClass("border border-danger ").addClass("bg-err");
+    mgaKulang.push("GROUP");
+  }
+  if (!date) {
+    $("#p2").text("Please Select Date");
+    $("#idDRDate").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("DATE");
+  }
+  if (!loc || loc == 0) {
+    $("#p3").text("Please Select Location");
+    $("#idLocation").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("LOCATION");
+  }
+  if (!emp || emp == 0) {
+    $("#p4").text("Please Select Employee");
+    $("#idEmployee").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("EMPLOYEE");
+  }
+  if (!proj || proj == 0) {
+    $("#p5").text("Please Select Project");
+    $("#idProject").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("PROJECT");
+  }
+  if (!item || item == 0) {
+    $("#p6").text("Please Select Item of Works");
+    $("#idItem").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ITEM");
+  }
+  if ((!jobreq && proj != leaveID && proj != otherID) || jobreq == 0) {
+    $("#p7").text("Please Select Job Request Description");
+    $("#idJRD").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("JRD");
+  }
+  if ($("#idRev").is(":checked") && !$("#idRevDiv").hasClass("d-none")) {
+    revision = 1;
+  } else {
+    revision = 0;
+  }
+  if (!tow && (!defaults.includes(proj) || proj == leaveID)) {
+    if (proj == leaveID) {
+      $("#p12").text("Please Select Day Type");
+    } else {
+      $("#p12").text("Please Select Type of Work");
+    }
+    $("#idTOW").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("TOW");
+  }
+  if (tow == 3) {
+    //If checker
+    if (!checker) {
+      $("#p9").text("Please Select Member");
+      $("#idChecking").addClass("border border-danger").addClass("bg-err");
+      mgaKulang.push("CHECKER");
+    }
+  }
+  if (hour > 1200 || hour < 0 || hour == 0) {
+    //hour*60
+    $("#p10").text("Please Input Valid Time");
+    $("#getHour").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if (mins > 59 || mins < 0) {
+    $("#p10").text("Please Input Valid Time");
+    $("#getMin").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if ((hour == "" && mins == "") || (hour == 0 && mins == 0)) {
+    $("#p10").text("Please Input Valid Time");
+    $("#getHour").addClass("border border-danger").addClass("bg-err");
+    $("#getMin").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if (!mhtype && proj != leaveID) {
+    $("#p11").text("Please Select Manhour Type");
+    $("#idMH").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("MHTYPE");
+  }
+  if (proj == leaveID) {
+    //IF LEAVE
+    mhtype = 2;
+  }
+  if (item == oneBUTrainerID) {
+    if (!trgrp) {
+      $("#p13").text("Please Select Group To Train");
+      $("#trGroup").addClass("border border-danger").addClass("bg-err");
+      mgaKulang.push("TRGROUP");
+    }
+  }
+  //change needs to be individual and called and stored individually to ajax
+  var fd = new FormData();
+  fd.append("getTwoThree", tutri);
+  fd.append("getGroup", grp);
+  fd.append("getDate", date);
+  fd.append("getLocation", loc);
+  fd.append("getProject", proj);
+  fd.append("getItem", item);
+  fd.append("getTrGrp", trgrp);
+  fd.append("getDescription", jobreq);
+  fd.append("getType", tow);
+  fd.append("getRev", revision);
+  fd.append("getDuration", getDuration);
+  fd.append("getMHType", mhtype);
+  fd.append("getRemarks", remarks);
+  fd.append("getChecking", checker);
+  fd.append("addType", addMode);
+  fd.append("empNum", empDetails["empNum"]);
+  if (mgaKulang.length > 0) {
+    console.log(mgaKulang);
+    return;
+  } else {
+    //for (var pair of fd.entries()) {
+    //   console.log(pair[0]+ ', ' + pair[1]);
+    //}
+    // return;
+    // $.ajax({
+    //   type: "POST",
+    //   url: "ajax/add_entries.php",
+    //   data: fd,
+    //   contentType: false,
+    //   cache: false,
+    //   processData: false,
+    //   success: function (data) {
+    //     getEntries();
+    //     resetEntry();
+    //     if ($("#idAdd").text() != "Add") {
+    //       $("#idAdd").text("Add");
+    //       $("#idReset").text("Reset");
+    //     }
+    //     isDrawing();
+    //     initCalendar();
+    //     getPlans();
+    //   },
+    // });
+  }
+}
+//
 
 function ifSmallScreen() {
   //responsive
@@ -1355,25 +1804,6 @@ function planAccess() {
   );
 }
 
-function resetEntry() {
-  //reset Inputs
-  $(
-    "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc,#trGroup"
-  )
-    .val("")
-    .change();
-  $("#one").click();
-  $("#idRev").prop("checked", false);
-  $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12,#p13").text("");
-  $(
-    "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
-  )
-    .removeClass("border border-danger")
-    .removeClass("bg-err");
-  $(".checker").addClass("d-none");
-  sequenceValidation();
-}
-
 function getCheckers() {
   //get Checkers Selection
   $.ajaxSetup({ async: false });
@@ -1391,24 +1821,6 @@ function getCheckers() {
     }
   );
   $.ajaxSetup({ async: true });
-}
-
-function getLabel(itemOfWorkID) {
-  //display label of selected item of work
-  $.post(
-    "php/get_label.php",
-    {
-      itemID: itemOfWorkID,
-    },
-    function (data) {
-      if (data.trim()) {
-        $("#labell").remove();
-        $("#p6").after(`
-                <span class="col-12 alert-primary text-primary" id="labell" role="alert">${data}</span>
-                `);
-      }
-    }
-  );
 }
 
 function disableInputs(projID, itemID) {
@@ -1479,6 +1891,7 @@ function getMngID() {
     url: "php/get_mng_id.php",
     success: function (data) {
       mngID = data.trim();
+      // console.log("mngID: ", mngID);
     },
     async: false,
   });
@@ -1492,12 +1905,14 @@ function getKiaID() {
     url: "php/get_kia_id.php",
     success: function (data) {
       kiaID = data.trim();
+      // console.log("kiaID: ", kiaID);
     },
     async: false,
   });
   return kiaID;
 }
 
+//items that triggers JMR Modal
 function getNoMoreInputItems() {
   //get ids of no more input
   var nmiIDs = [];
@@ -1553,45 +1968,6 @@ function getTRGroups() {
     },
     async: false,
   });
-}
-
-function disableTimeInput(projID) {
-  //disable Time Input
-  $("#getHour").prop("disabled", false);
-  $("#getMin").prop("disabled", false);
-  if (projID == leaveID) {
-    $("#getHour").prop("disabled", true);
-    $("#getMin").prop("disabled", true);
-  }
-}
-
-function MHValidation() {
-  //enable/disable manhour type selection
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var selLoc = "KDT";
-
-  if ($("#idLocation").val()) {
-    selLoc = $("#idLocation").val();
-  }
-  if (projID != leaveID) {
-    //if Project selected is not LEAVE
-    $("#idMH").prop("disabled", false);
-    if (!isWorkDay(selLoc)) {
-      $("#idMH").val("Overtime");
-      $("#idMH").prop("disabled", true);
-    }
-    if (selLoc == "WFH") {
-      $("#idMH").val("Regular");
-      $("#idMH").prop("disabled", true);
-    }
-  } else {
-    $("#idMH").prop("disabled", true);
-    $("#idMH").val("");
-    if (!isWorkDay(selLoc)) {
-      alert("Leave disabled on holidays/weekends");
-      $("#idProject").val("").change();
-    }
-  }
 }
 
 // Adding JMR

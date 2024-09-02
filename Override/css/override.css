@@ -80,8 +80,50 @@ body {
   --semidarkbloo: #3282b8;
   --darkbloo: #0f4c75;
   --darkdarkbloo: #112d4e;
+  /* Try Colors */
+  --walnutbrown: #6b6054;
+  --chamoisee: #b08157;
+  --sandybrown: #ffa552;
+  --lightorange: #f3d0ac;
+  --azure: #f2fdff;
+  --lightcyan: #c6e9eb;
+  --tiffanyblue: #9ad4d6;
+  --paynegray: #557786;
+  --oxfordblue: #101935;
+  --aliceblue: #d6e1e6;
 }
-
+/* MODAL */
+.modal-header {
+  background-color: var(--lightorange);
+  background: linear-gradient(
+    135deg,
+    var(--oxfordblue) 1%,
+    var(--walnutbrown) 50%,
+    var(--chamoisee) 100%
+  );
+}
+.modal-header h1 {
+  color: var(--azure);
+}
+.btn-ok {
+  font-weight: 500;
+  color: var(--azure);
+  background: var(--lightorange);
+  background: linear-gradient(
+    135deg,
+    var(--lightorange) 1%,
+    var(--sandybrown) 100%
+  );
+}
+.btn-ok:hover {
+  color: var(--chamoisee);
+  background: var(--sandybrown);
+  background: linear-gradient(
+    135deg,
+    var(--sandybrown) 1%,
+    var(--lightorange) 100%
+  );
+}
 /* sidebar */
 
 .sidebar {
@@ -108,7 +150,15 @@ body {
   ); */
 
   /* BLUE 2 */
-  background: linear-gradient(180deg, var(--bloo) 0%, var(--darkbloo) 100%);
+  /* background: linear-gradient(180deg, var(--bloo) 0%, var(--darkbloo) 100%); */
+
+  /* try */
+  background: linear-gradient(
+    180deg,
+    var(--walnutbrown) 0%,
+    var(--oxfordblue) 100%
+  );
+
   z-index: 10000;
   transition: all 0.5s ease;
 }
@@ -172,7 +222,10 @@ body {
   /* background: var(--darkdarklavender);  */
 
   /* BLUE 2 */
-  background: var(--darkbloo);
+  /* background: var(--darkbloo); */
+
+  /* try */
+  background: var(--sandybrown);
 
   /* Others */
   /* #49180d  var(--tertiary-blue) */
@@ -222,6 +275,14 @@ body {
   color: #ffff;
   transition: all 0.4s ease;
 }
+.sidebar .nav-links li a .link_name:hover {
+  font-size: 18px;
+  font-weight: 400;
+  /* color: #ffff; */
+  /* try */
+  color: var(--walnutbrown);
+  transition: all 0.4s ease;
+}
 
 .sidebar .logo_name {
   font-size: 25px;
@@ -250,7 +311,10 @@ body {
   /* background: var(--darkdarklavender);  */
 
   /* BLUE 2 */
-  background: var(--darkbloo);
+  /* background: var(--darkbloo); */
+
+  /* try */
+  background: var(--sandybrown);
 
   /* Others */
   /*#49180d var(--tertiary-blue)*/
@@ -263,7 +327,13 @@ body {
 
 .sidebar .nav-links li .sub-menu a {
   /* color: #ffff; */ /* <-- all other colors except blue2 */
-  color: var(--white);
+  /* BLUE 2 */
+  /* color: var(--white); */
+
+  /* try */
+  color: var(--walnutbrown);
+
+  font-weight: 600;
   font-size: 15px;
   padding: 5px 0;
   white-space: nowrap;
@@ -343,7 +413,7 @@ body {
   /* color: var(--darklavender);  */
 
   /* BLUE 2 */
-  color: var(--darkgray);
+  color: var(--oxfordblue);
 
   /* Others */
   /*#ffe6e1  #757575*/
@@ -357,7 +427,7 @@ body {
   /* color: var(--darkdarklavender);  */
 
   /* BLUE 2 */
-  color: var(--bloo);
+  color: var(--lightorange);
 
   /* Others */
   /*#fea16f  var(--main-blue)*/
@@ -375,7 +445,10 @@ footer {
   /* background: var(--darkerlavender); */
 
   /* BLUE 2 */
-  background: var(--gray);
+  /* background: var(--gray); */
+
+  /* try */
+  background: var(--paynegray);
 
   /* Others */
   /*rgba(236, 235, 235, 0.3)*/
@@ -388,13 +461,17 @@ footer {
   /* color: var(--whitelavender); */
 
   /* BLUE 2 */
-  color: var(--bloo);
+  /* color: var(--bloo); */
+
+  /* try */
+  color: var(--azure);
 
   font-size: 11px;
 }
 .footer-text a {
   font-weight: 600;
-  color: var(--darkdarkbloo);
+  /* color: var(--darkdarkbloo); */
+  color: var(--tiffanyblue);
 }
 
 /* home */
@@ -470,7 +547,10 @@ footer {
   /* background: var(--whitelavender);  */
 
   /* BLUE 2 */
-  background: var(--offwhite);
+  /* background: var(--offwhite); */
+
+  /* try */
+  background: var(--chamoisee);
 
   /* Others */
   /*#fff #49180d*/
@@ -485,7 +565,10 @@ footer {
   /* color: var(--darklavender); */
 
   /* BLUE 2 */
-  color: var(--darkbloo);
+  /* color: var(--darkbloo); */
+
+  /* try */
+  color: var(--oxfordblue);
 
   /* Others */
   /*#ffe6e1  #11101d*/
@@ -535,7 +618,15 @@ footer {
   ); */
 
   /* BLUE 2 */
-  background: linear-gradient(45deg, var(--bloo) 20%, var(--lightbloo) 100%);
+  /* background: linear-gradient(45deg, var(--bloo) 20%, var(--lightbloo) 100%); */
+
+  /* try */
+  background: linear-gradient(
+    135deg,
+    var(--oxfordblue) 1%,
+    var(--walnutbrown) 50%,
+    var(--chamoisee) 100%
+  );
   opacity: 1;
   color: #fff;
 }
@@ -557,7 +648,16 @@ footer {
   /* background-color: var(--darkdarklavender);  */
 
   /* BLUE 2 */
-  background-color: var(--darkdarkbloo);
+  /* background-color: var(--darkdarkbloo); */
+
+  /* try */
+  background: linear-gradient(
+    180deg,
+    var(--sandybrown) 0%,
+    var(--lightorange) 33%,
+    var(--lightcyan) 66%,
+    var(--tiffanyblue) 100%
+  );
 
   /* Others */
   /*#ffe6e1*/
@@ -611,7 +711,9 @@ option {
   /* LAVENDER */
   /* background-color: var(--darklavender); */
   /* BLUE 2 */
-  background-color: var(--bloo);
+  /* background-color: var(--bloo); */
+  /* try */
+  background-color: var(--paynegray);
 
   font-size: 15px;
   position: absolute;
@@ -638,7 +740,9 @@ option {
   /* LAVENDER */
   /* color: var(--lavender2); */
   /* BLUE 2 */
-  color: var(--semidarkbloo);
+  /* color: var(--semidarkbloo); */
+  /* try */
+  color: var(--paynegray);
 
   font-weight: 600;
 }
@@ -650,7 +754,10 @@ option {
   /* LAVENDER */
   /* border: 3px solid var(--darklavender); */
   /* BLUE 2 */
-  border: 3px solid var(--bloo);
+  /* border: 3px solid var(--bloo); */
+  /* try */
+  background-color: var(--tiffanyblue);
+  color: var(--azure);
 }
 .radio-buttons .custom-radio input:checked + .radio-btn > i {
   opacity: 1;
@@ -707,7 +814,10 @@ option {
   /* background-color: var(--lavender); */
 
   /* BLUE 2 */
-  background-color: var(--semidarkbloo);
+  /* background-color: var(--semidarkbloo); */
+
+  /* try */
+  background-color: var(--tiffanyblue);
 }
 .left .left-cont .checkbox:checked::after {
   left: 75%;
@@ -746,12 +856,24 @@ option {
   ); */
 
   /* BLUE 2 */
-  background: var(--bloo);
-  background: linear-gradient(45deg, var(--bloo) 0%, var(--semidarkbloo) 100%);
+  /* background: var(--bloo);
+  background: linear-gradient(45deg, var(--bloo) 0%, var(--semidarkbloo) 100%); */
+
+  /* try */
+  background: var(--tiffanyblue);
+  /* background: linear-gradient(
+    45deg,
+    var(--tiffanyblue) 0%,
+    var(--paynegray) 100%
+  ); */
 
   font-weight: 600;
   color: #fff;
-  border: 2px solid var(--bloo); /* Change according to theme */
+  /* BLUE 2 */
+  /* border: 2px solid var(--bloo); */
+
+  /* try */
+  border: 3px solid var(--tiffanyblue);
 }
 .left .radio-buttons .radio-btn .radio-content .top {
   margin-top: 10px;
@@ -766,7 +888,9 @@ option {
   /* LAVENDER */
   /* border: 3px solid var(--darkdarklavender); */
   /* BLUE 2 */
-  border: 3px solid var(--darkdarkbloo);
+  /* border: 3px solid var(--darkdarkbloo); */
+  /* try */
+  border: 3px solid var(--paynegray);
   /* Others */
   /*var(--red-color)*/
 
@@ -775,7 +899,9 @@ option {
   /* LAVENDER */
   /* color: var(--darkdarklavender); */
   /* BLUE 2 */
-  color: var(--darkdarkbloo);
+  /* color: var(--darkdarkbloo); */
+  /* try */
+  color: var(--paynegray);
   /* Others */
   /*var(--red-color)*/
   font-weight: 500;
@@ -790,7 +916,7 @@ option {
   color: #dab871;
 }
 .left .left-cont .btn-reset:hover {
-  border: 3px solid transparent;
+  border: 3px solid var(--paynegray); /* change depending on chosen color */
   /* BLUE */
   /* background: var(--darkdarkblue); */
 
@@ -798,7 +924,10 @@ option {
   /* background: var(--darkdarklavender);  */
 
   /* BLUE 2 */
-  background: var(--darkdarkbloo);
+  /* background: var(--darkdarkbloo); */
+
+  /* try */
+  background: var(--paynegray);
 
   /* Others */
   /*var(--red-color)*/
@@ -813,7 +942,12 @@ option {
 
 .left .left-cont .btn-add:hover {
   color: #fff;
-  border: 2px solid var(--semidarkbloo); /* Change according to theme */
+  /* BLUE 2 */
+  /* border: 2px solid var(--semidarkbloo); */
+
+  /* try */
+  border: 3px solid var(--tiffanyblue);
+
   /* background: rgb(32, 191, 85);
   background: linear-gradient(
     45deg,
@@ -834,11 +968,19 @@ option {
   ); */
 
   /* BLUE 2 */
-  background: var(--bloo);
+  /* background: var(--bloo);
   background: linear-gradient(
     45deg,
     var(--semidarkbloo) 0%,
     var(--darkdarkbloo) 100%
+  ); */
+
+  /* try */
+  background: var(--tiffanyblue);
+  background: linear-gradient(
+    45deg,
+    var(--tiffanyblue) 0%,
+    var(--paynegray) 100%
   );
   transition: all 0.5s ease;
 }
@@ -896,12 +1038,21 @@ option {
   ); */
 
   /* BLUE 2 */
-  background: var(--bloo);
+  /* background: var(--bloo);
   background: linear-gradient(
     45deg,
     var(--semidarkbloo) 20%,
     var(--lightbloo) 100%
+  ); */
+
+  /* try */
+  background: var(--sandybrown);
+  background: linear-gradient(
+    45deg,
+    var(--lightorange) 5%,
+    var(--lightcyan) 100%
   );
+
   content: "";
   position: absolute;
   top: 0;
@@ -925,7 +1076,8 @@ option {
   font-size: 50px;
 }
 .right .card:hover .content p {
-  color: #fff;
+  /* color: #fff; */
+  color: var(--walnutbrown);
 }
 .right .right-cont .btn-copy {
   /* BLUE */
@@ -935,7 +1087,10 @@ option {
   /* background: var(--lavender2);  */
 
   /* BLUE 2 */
-  background: var(--bloo);
+  /* background: var(--bloo); */
+
+  /* try */
+  background: var(--sandybrown);
 
   /* Others */
   /*var(--lightblue) */
@@ -950,7 +1105,10 @@ option {
   /* background: var(--darkerlavender);  */
 
   /* BLUE 2 */
-  background: var(--darkbloo);
+  /* background: var(--darkbloo); */
+
+  /* try */
+  background: var(--chamoisee);
 
   /* Others */
   /*var(--blue) */
@@ -962,7 +1120,10 @@ option {
   /* LAVENDER */
 
   /* BLUE 2 */
-  background: var(--bloo);
+  /* background: var(--bloo); */
+
+  /* try */
+  background: var(--sandybrown);
   color: #fff;
 }
 
@@ -976,7 +1137,7 @@ option {
   justify-content: center;
 }
 .right .card .circle .card-title {
-  color: #fff;
+  color: var(--walnutbrown);
   padding: 8px;
   margin: 0;
   font-size: 40px;
@@ -1010,7 +1171,10 @@ option {
   /* background-color: var(--lightlavender); */
 
   /* BLUE 2 */
-  background-color: var(--offwhite);
+  /* background-color: var(--offwhite); */
+
+  /* try */
+  background: var(--lightorange);
 
   /* Others */
   /*#ffe6e1 var(--main-blue)*/
@@ -1023,7 +1187,10 @@ option {
   /* color: var(--whitelavender); */
 
   /* BLUE 2 */
-  color: var(--bloo);
+  /* color: var(--bloo); */
+
+  /* try */
+  color: var(--walnutbrown);
 
   /* Others */
   /*#49180d*/
@@ -1423,7 +1590,7 @@ option {
   background-color: #ff6b6b3e;
 }
 .right-cont .table-container {
-  height: calc(100% - 248px);
+  height: calc(100% - 208px);
 }
 
 @media screen and (max-width: 800px) {
