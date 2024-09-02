@@ -1,10 +1,9 @@
 <?php 
 $config = [
-  'host' => 'localhost',
-  'port' => 3306,
+  'host' => 'kdt-admin',
+  'port' => 3000,
   'dbname' => 'kdtphdb',
-  'charset' => 'utf8mb4',
-  'port' => 3000
+  'charset' => 'utf8mb4'
 ];
 $username = 'dev';
 $password = 'dev';

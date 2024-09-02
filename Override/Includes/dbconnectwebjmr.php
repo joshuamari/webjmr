@@ -1,7 +1,7 @@
 <?php
 $config = [
-  'host' => 'localhost',
-  'port' => 3306,
+  'host' => 'kdt-admin',
+  'port' => 3000,
   'dbname' => 'webjmrdb',
   'charset' => 'utf8mb4'
 ];
