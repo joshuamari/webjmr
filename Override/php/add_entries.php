@@ -3,6 +3,10 @@
 require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
 
+#region set timezone
+date_default_timezone_set('Asia/Manila');
+#endregion
+
 #region Initialize Variable
 if(!empty($_POST['grpNum'])){
   $grpNum = $_POST['grpNum'];
