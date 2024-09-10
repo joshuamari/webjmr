@@ -43,6 +43,7 @@ checkAccess()
   .then((emp) => {
     if (emp.isSuccess) {
       empDetails = emp.result[0];
+      console.log(empDetails);
       $(".hello-user").text(empDetails["empFName"]);
       ifSmallScreen();
       initializeDate();
@@ -52,21 +53,10 @@ checkAccess()
         getMyGroups(myEmpNum)
           .then((grps) => {
             fillMyGroups(grps);
-            Promise.all([
-              getDispatchLoc(),
-              // getEmployees(),
-              // getProjects(),
-              // getItems(),
-              // getJobs(),
-              // getTOW(),
-            ])
-              .then(([locs, emps, projs, items, jobs, tows]) => {
+            Promise.all([getDispatchLoc()])
+              .then(([locs]) => {
                 fillDispatchLoc(locs);
-                // fillEmployees(emps);
-                // fillProjects(projs);
-                // fillItems(items);
-                // fillJobs(jobs);
-                // fillTOW(tows);
+                getEntries();
                 $(".cs-loader").fadeOut(1000);
               })
               .catch((error) => {
@@ -236,12 +226,11 @@ $(document).on("change", "#idLocation", function () {
 $(document).on("change", "#idEmployee", function () {
   //select Employee Event
   var thisEmpID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
-
   sequenceValidation();
   getProjects(thisEmpID)
     .then((projs) => {
+      resetSelection(1);
       fillProjects(projs);
-      resetSelection();
     })
     .catch((error) => {
       alert(`${error}`);
@@ -258,13 +247,19 @@ $(document).on("change", "#idProject", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   sequenceValidation();
-  Promise.all([getItems(thisEmpID, projID), getTOW(projID), isDrawing()])
-    .then(([items, tows]) => {
+  Promise.all([
+    getItems(thisEmpID, projID),
+    getTOW(projID),
+    getCheckers(projID),
+    isDrawing(),
+  ])
+    .then(([items, tows, checks]) => {
+      resetSelection(2);
       fillItems(items);
       fillTOW(tows);
       disableTimeInput(projID);
       MHValidation();
-      resetSelection();
+      fillCheckers(checks);
     })
     .catch((error) => {
       alert(`${error}`);
@@ -294,7 +289,6 @@ $(document).on("change", "#idProject", function () {
     $("#lbltow").html("Type of Work");
   }
 
-  getCheckers();
   $(".trgrp").remove();
 });
 // $(document).on("click", "#idProject", function (event) {
@@ -332,9 +326,9 @@ $(document).on("change", "#idItem", function () {
   if (itemID != 0) {
     getJobs(thisEmpID, projID, itemID)
       .then((jobs) => {
+        resetSelection(3);
         fillJobs(jobs);
         getLabel(itemID);
-        resetSelection();
       })
       .catch((error) => {
         alert(`${error}`);
@@ -405,10 +399,12 @@ $(document).on("change", "#idJRD", function () {
 $(document).on("change", "#idTOW", function () {
   //select TOW Event
   var towID = $($(this).find("option:selected")).attr("tow-id");
-  console.log("towowowow", this.value);
   if (this.value == 3) {
     $(".checker").removeClass("d-none");
   } else {
+    $(".checker").addClass("d-none");
+  }
+  if (this.value == 0) {
     $(".checker").addClass("d-none");
   }
   $("#idChecking").prop("selectedIndex", 0);
@@ -437,6 +433,11 @@ $(document).on("click", "#getHour, #getMin", function () {
   $("#p10").text("");
   $(this).removeClass("border-danger");
 });
+//ManHour Type
+$(document).on("change", "#idMH", function () {
+  $("#p11").text("");
+  $(this).removeClass("border-danger");
+});
 // Add / Clear / Save Changes / Cancel Buttons
 $(document).on("click", "#idReset", function () {
   //click Reset Event
@@ -457,7 +458,15 @@ $(document).on("click", "#idAdd", function () {
       break;
   }
 });
-//last edit
+
+//disabling inputs as per sequence
+$(document).on("change", "#idEmployee", function () {
+  $("#idProject").prop("disabled", true);
+  $("#idItem").prop("disabled", true);
+  $("#idJRD").prop("disabled", true);
+  sequenceValidation();
+});
+
 //#endregion
 //#region FUNCTIONS
 
@@ -555,35 +564,36 @@ function fillMyGroups(grps) {
 //LOCATION FUNCTIONS
 function getDispatchLoc() {
   //get Dispatch Location Selection
-  $.ajax({
-    type: "GET",
-    url: "php/get_dispatch_loc.php",
-    dataType: "json",
-    success: function (data) {
-      const locs = data["result"];
-      // resolve(locs);
-      const locsIDs = locs.map((obj) => obj.location);
-      var locSelect = $("#idLocation");
-      // $("#idLocation").html(locs.location);
-      locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
-      // locSelect.html(`<option value='0' hidden>Select Location</option>`);
-      $.each(locs, function (index, item) {
-        var option = $("<option>")
-          .attr("value", item.id)
-          .text(item.location)
-          .attr("loc-id", item.id);
-        locSelect.append(option);
-      });
-    },
-    error: function (xhr, status, error) {
-      if (xhr.status === 404) {
-        reject("Not Found Error: The requested resource was not found.");
-      } else if (xhr.status === 500) {
-        reject("Internal Server Error: There was a server error.");
-      } else {
-        reject("An unspecified error occurred while fetching groups.");
-      }
-    },
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_dispatch_loc.php",
+      dataType: "json",
+      success: function (response) {
+        const locs = response["result"];
+        resolve(locs);
+        // const locsIDs = locs.map((obj) => obj.location);
+        // var locSelect = $("#idLocation");
+        // locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
+        // // locSelect.html(`<option value='0' hidden>Select Location</option>`);
+        // $.each(locs, function (index, item) {
+        //   var option = $("<option>")
+        //     .attr("value", item.id)
+        //     .text(item.location)
+        //     .attr("loc-id", item.id);
+        //   locSelect.append(option);
+        // });
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching locations.");
+        }
+      },
+    });
   });
 }
 function fillDispatchLoc(locs) {
@@ -633,7 +643,7 @@ function getEmployees() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching groups.");
+          reject("An unspecified error occurred while fetching employees.");
         }
       },
     });
@@ -688,7 +698,7 @@ function getProjects(thisEmpID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching groups.");
+          reject("An unspecified error occurred while fetching projects.");
         }
       },
     });
@@ -786,7 +796,7 @@ function getItems(thisEmpID, projID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching groups.");
+          reject("An unspecified error occurred while fetching items.");
         }
       },
     });
@@ -806,6 +816,9 @@ function fillItems(items) {
 }
 function getLabel(itemID) {
   //display label of selected item of work
+  if (itemID == undefined) {
+    return; //if there's no IoW selected
+  }
   $.ajax({
     type: "POST",
     url: "php/get_label.php",
@@ -819,6 +832,15 @@ function getLabel(itemID) {
       $("#p6").after(`
         <span class="col-12 alert-primary text-primary" id="labell" role="alert">${msg}</span>
         `);
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching labels.");
+      }
     },
   });
 }
@@ -863,7 +885,7 @@ function getJobs(thisEmpID, projID, itemID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching groups.");
+          reject("An unspecified error occurred while fetching jobs.");
         }
       },
     });
@@ -918,7 +940,7 @@ function getTOW(projID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching groups.");
+          reject("An unspecified error occurred while fetching ToW.");
         }
       },
     });
@@ -955,43 +977,66 @@ function getTOWDesc(typesOfWorkID) {
       towDescSelect.html(towDesc);
       // $("#towDesc").html(data.trim());
     },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching ToW Descs.");
+      }
+    },
   });
 }
 
 //for checking ToW
-function getCheckers() {
+function getCheckers(projID) {
   //get Checkers Selection
-  $.ajaxSetup({ async: false });
   var empGrp = $("#idGroup").val();
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id") || "";
-  console.log("grp", empGrp, "projID", projID, "empNum", empDetails["empID"]);
-  $.post(
-    "php/get_checkers.php",
-    {
-      empGrp: empGrp,
-      empNum: empDetails["empID"],
-      projID: projID,
-    },
-    function (data) {
-      $("#idChecking").html(data);
-    }
-  );
-  $.ajaxSetup({ async: true });
+  console.log("projID: ", projID);
+  if (projID == 0) {
+    $(".checker").addClass("d-none");
+    return;
+  }
 
-  // $.ajax({
-  //   type: "POST",
-  //   url: "php/",
-  //   data: {
-  //     empGrp: empGrp,
-  //     empNum: empNum,
-  //     projID: projID,
-  //   },
-  //   dataType: "json",
-  //   success(response) {
-  //     console.log(response);
-  //     // $("#idChecking").html(response);
-  //   },
-  // });
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_checkers.php",
+      data: {
+        grpNum: empGrp,
+        empNum: empDetails["empID"],
+        projID: projID,
+      },
+      dataType: "json",
+      success(response) {
+        const checklist = response["result"];
+        resolve(checklist);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching checkers.");
+        }
+      },
+    });
+  });
+}
+
+function fillCheckers(checks) {
+  var checkSelect = $("#idChecking");
+  checkSelect.html(`<option value=0 chk-id=0>Select Employee</option>`);
+  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
+  $.each(checks, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.name)
+      .attr("chk-id", item.id);
+    checkSelect.append(option);
+  });
 }
 
 //if Engineering Section
@@ -1083,7 +1128,7 @@ function saveFunction() {
   //update database entry
   addEntries(editID);
 }
-//need fix tow, revision, check, mhtype,
+//need fix tow, revision, check, mhtype, emp
 function addEntries(addMode) {
   //add Entries to Database
   var tutri = $('input[name="radio"]:checked').val();
@@ -1091,9 +1136,10 @@ function addEntries(addMode) {
   var date = $("#idDRDate").val();
   var loc = $($("#idLocation").find("option:selected")).attr("loc-id");
   var emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
-  var proj = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
-  );
+  // var proj = parseInt(
+  //   $($("#idProject").find("option:selected")).attr("proj-id")
+  // );
+  var proj = $($("#idProject").find("option:selected")).attr("proj-id");
   var item = $($("#idItem").find("option:selected")).attr("item-id");
   var trgrp = $($("#trGroup").find("option:selected")).val() || "";
   var jobreq = $($("#idJRD").find("option:selected")).attr("job-id") || "";
@@ -1105,7 +1151,7 @@ function addEntries(addMode) {
   var mhtype = $($("#idMH").find("option:selected")).attr("mhid");
   var remarks = $("#idRemarks").val();
   var checker =
-    $($("#idChecking").find("option:selected")).attr("dataid") || "";
+    $($("#idChecking").find("option:selected")).attr("chk-id") || "";
   var mgaKulang = [];
 
   if ($("#id2DDiv").hasClass("d-none")) {
@@ -1201,24 +1247,7 @@ function addEntries(addMode) {
       mgaKulang.push("TRGROUP");
     }
   }
-  //change needs to be individual and called and stored individually to ajax
-  var fd = new FormData();
-  fd.append("getTwoThree", tutri);
-  fd.append("getGroup", grp);
-  fd.append("getDate", date);
-  fd.append("getLocation", loc);
-  fd.append("getProject", proj);
-  fd.append("getItem", item);
-  fd.append("getTrGrp", trgrp);
-  fd.append("getDescription", jobreq);
-  fd.append("getType", tow);
-  fd.append("getRev", revision);
-  fd.append("getDuration", getDuration);
-  fd.append("getMHType", mhtype);
-  fd.append("getRemarks", remarks);
-  fd.append("getChecking", checker);
-  fd.append("addType", addMode);
-  fd.append("empNum", empDetails["empNum"]);
+
   if (mgaKulang.length > 0) {
     console.log(mgaKulang);
     return;
@@ -1246,10 +1275,52 @@ function addEntries(addMode) {
     //     getPlans();
     //   },
     // });
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        type: "POST",
+        url: "php/add_entries.php",
+        data: {
+          tutri: tutri,
+          grpNum: grp,
+          selDate: date,
+          locID: loc,
+          empID: emp,
+          projID: proj,
+          itemID: item,
+          trGrp: trgrp,
+          towID: tow,
+          revision: revision,
+          duration: getDuration,
+          mhType: mhtype,
+          remarks: remarks,
+          checking: checker,
+          addType: addMode, // might remove
+          empNum: empDetails["empID"],
+        },
+        dataType: "json",
+        success(response) {
+          console.log("add entry success response: ", response);
+          getEntries();
+          resetEntry();
+          console.log("okay");
+          resolve(response);
+        },
+        error: function (xhr, status, error) {
+          console.log("error");
+          if (xhr.status === 404) {
+            reject("Not Found Error: The requested resources are not found.");
+          } else if (xhr.status === 500) {
+            reject("Internal Server Error: There was a server error.");
+          } else {
+            reject(error);
+          }
+        },
+      });
+    });
   }
 }
-//
 
+//for sidebar
 function ifSmallScreen() {
   //responsive
   if ($(window).width() < 550) {
@@ -1265,13 +1336,31 @@ function ifSmallScreen() {
 
 function initializeDate() {
   //Initialize Selected Date
-  $.ajax({
-    url: "php/get_date.php",
-    success: function (response) {
-      $("#idDRDate").val(response);
-    },
-    async: false,
-  });
+  // $.ajax({
+  //   url: "php/get_date.php",
+  //   success: function (response) {
+  //     $("#idDRDate").val(response);
+  //     console.log("date response: ", response);
+  //   },
+  //   async: false,
+  // });
+
+  // var datedate = new Date().toDateString();
+  // console.log("toDate: ", datedate);
+  // var currentDate = new Date().toISOString();
+  // console.log("current ISO Date is: ", currentDate);
+  // var currDate = currentDate.split("T")[0];
+  // console.log("split date is: ", currDate);
+
+  //test date
+  var getDate = new Date();
+  var offsetDate = getDate.getTimezoneOffset() * 60 * 1000;
+  var localTime = getDate - offsetDate;
+  var localTime = new Date(localTime);
+  var iso = localTime.toISOString();
+  var ISOFormatDate = iso.split("T")[0];
+  console.log("test Date: ", ISOFormatDate);
+  $("#idDRDate").val(ISOFormatDate);
 }
 
 function getEntries() {
@@ -1291,7 +1380,7 @@ function getEntries() {
       if (entries.length > 0) {
         entries.map(addRow);
       } else {
-        var addString = `<tr ><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
+        var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
         $("#drEntries").append(addString);
       }
       getMHCount();
@@ -1349,6 +1438,9 @@ function getMHCount() {
       }
     }
   }
+  console.log("reg: ", $("#regCount").val());
+  console.log("ot: ", $("#otCount").val());
+  console.log("leave: ", $("#lvCount").val());
 }
 
 function sequenceValidation() {
@@ -1357,19 +1449,6 @@ function sequenceValidation() {
   $("#idProject").prop("disabled", true);
   $("#idItem").prop("disabled", true);
   $("#idJRD").prop("disabled", true);
-
-  if ($("#idEmployee").val() == 0) {
-    $("#idProject").prop("disabled", true);
-    $("#idItem").prop("disabled", true);
-    $("#idJRD").prop("disabled", true);
-  }
-  if ($("#idProject").val() == 0) {
-    $("#idItem").prop("disabled", true);
-    $("#idJRD").prop("disabled", true);
-  }
-  if ($("#idItem").val() == 0) {
-    $("#idJRD").prop("disabled", true);
-  }
 
   // Enabling Selection
   if ($("#idItem").val() > 0) {
@@ -1386,18 +1465,25 @@ function sequenceValidation() {
   }
 }
 
-function resetSelection() {
-  if ($("#idEmployee").val() == 0) {
-    $("#idProject").val(0);
-    $("#idItem").val(0);
-    $("#idJRD").val(0);
-  }
-  if ($("#idProject").val() == 0) {
-    $("#idItem").val(0);
-    $("#idJRD").val(0);
-  }
-  if ($("#idItem").val() == 0) {
-    $("#idJRD").val(0);
+function resetSelection(num) {
+  var proj = $("#idProject"); //get Project selection
+  var iow = $("#idItem"); // get IoW selection
+  var jrd = $("#idJRD"); // get JRD selection
+  var tow = $("#idTOW"); //get TOW selection
+
+  if (num == 1) {
+    proj.val(0).change();
+    iow.val(0).change();
+    jrd.val(0).change();
+    console.log("reset 1");
+  } else if (num == 2) {
+    jrd.val(0).change();
+    iow.val(0).change();
+    tow.val(0).change();
+    console.log("reset 2");
+  } else if (num == 3) {
+    jrd.val(0).change();
+    console.log("reset 3");
   }
 }
 
@@ -1422,7 +1508,29 @@ function isWorkDay(location) {
   );
   $.ajaxSetup({ async: true });
   return isWorkDay;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/check_workday.php",
+      dataType: "json",
+      success(data) {
+        isWorkDay = data["result"];
+        resolve(isWorkDay);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Work Days.");
+        }
+      },
+    });
+  });
 }
+
+//calendar functions
 
 function formatDate(rawDate) {
   var d = new Date(rawDate),
@@ -1636,119 +1744,120 @@ function getDayta(rawDate) {
   );
 }
 
-function addColors(currentMonth) {
-  var greenDates = [];
-  var redDates = [];
-  var holidates = [];
-  var allDates = [];
-  $.ajaxSetup({ async: false });
-  $.post(
-    "php/get_date_colors.php",
-    {
-      curMonth: currentMonth,
-      empNum: empDetails["empNum"],
-    },
-    function (data) {
-      allDates = $.parseJSON(data);
-      greenDates = allDates[0];
-      redDates = allDates[1];
-      holidates = allDates[2];
-    }
-  );
-  $.ajaxSetup({ async: true });
-  greenDates.forEach((element) => {
-    var spl = element.split("-");
+// function addColors(currentMonth) {
+//   var greenDates = [];
+//   var redDates = [];
+//   var holidates = [];
+//   var allDates = [];
+//   $.ajaxSetup({ async: false });
+//   $.post(
+//     "php/get_date_colors.php",
+//     {
+//       curMonth: currentMonth,
+//       empNum: empDetails["empNum"],
+//     },
+//     function (data) {
+//       allDates = $.parseJSON(data);
+//       greenDates = allDates[0];
+//       redDates = allDates[1];
+//       holidates = allDates[2];
+//     }
+//   );
+//   $.ajaxSetup({ async: true });
+//   greenDates.forEach((element) => {
+//     var spl = element.split("-");
 
-    var m = spl[1];
-    var da = spl[2];
-    var d = new Date(currentMonth);
-    var nowm = d.getMonth() + 1;
-    if (m > nowm) {
-      $(`.day.next-date:contains(${parseInt(da)})`)
-        .addClass("green")
-        .removeClass("red");
-    } else if (m < nowm) {
-      $(`.day.prev-date:contains(${parseInt(da)})`)
-        .addClass("green")
-        .removeClass("red");
-    } else {
-      $(".day")
-        .not(".next-date")
-        .not(".prev-date")
-        .filter(function () {
-          return $(this).text() === `${parseInt(da)}`;
-        })
-        .addClass("green")
-        .removeClass("red");
-    }
-  });
-  redDates.forEach((element) => {
-    var spl = element.split("-");
+//     var m = spl[1];
+//     var da = spl[2];
+//     var d = new Date(currentMonth);
+//     var nowm = d.getMonth() + 1;
+//     if (m > nowm) {
+//       $(`.day.next-date:contains(${parseInt(da)})`)
+//         .addClass("green")
+//         .removeClass("red");
+//     } else if (m < nowm) {
+//       $(`.day.prev-date:contains(${parseInt(da)})`)
+//         .addClass("green")
+//         .removeClass("red");
+//     } else {
+//       $(".day")
+//         .not(".next-date")
+//         .not(".prev-date")
+//         .filter(function () {
+//           return $(this).text() === `${parseInt(da)}`;
+//         })
+//         .addClass("green")
+//         .removeClass("red");
+//     }
+//   });
+//   redDates.forEach((element) => {
+//     var spl = element.split("-");
 
-    var mm = spl[1];
-    var daa = spl[2];
-    var d = new Date(currentMonth);
-    var nowmm = d.getMonth() + 1;
+//     var mm = spl[1];
+//     var daa = spl[2];
+//     var d = new Date(currentMonth);
+//     var nowmm = d.getMonth() + 1;
 
-    if (mm > nowmm) {
-      $(`.day.next-date:contains(${parseInt(daa)})`)
-        .addClass("red")
-        .removeClass("green");
-    } else if (mm < nowmm) {
-      $(`.day.prev-date:contains(${parseInt(daa)})`)
-        .addClass("red")
-        .removeClass("green");
-    } else {
-      $(".day")
-        .not(".next-date")
-        .not(".prev-date")
-        .filter(function () {
-          return $(this).text() === `${parseInt(daa)}`;
-        })
-        .addClass("red")
-        .removeClass("green");
-    }
-  });
-  holidates.forEach((element) => {
-    var rawHoliday = element.split("||");
-    var spl = rawHoliday[0].split("-");
+//     if (mm > nowmm) {
+//       $(`.day.next-date:contains(${parseInt(daa)})`)
+//         .addClass("red")
+//         .removeClass("green");
+//     } else if (mm < nowmm) {
+//       $(`.day.prev-date:contains(${parseInt(daa)})`)
+//         .addClass("red")
+//         .removeClass("green");
+//     } else {
+//       $(".day")
+//         .not(".next-date")
+//         .not(".prev-date")
+//         .filter(function () {
+//           return $(this).text() === `${parseInt(daa)}`;
+//         })
+//         .addClass("red")
+//         .removeClass("green");
+//     }
+//   });
+//   holidates.forEach((element) => {
+//     var rawHoliday = element.split("||");
+//     var spl = rawHoliday[0].split("-");
 
-    var mm = spl[1];
-    var daa = spl[2];
-    var d = new Date(currentMonth);
-    var nowmm = d.getMonth() + 1;
+//     var mm = spl[1];
+//     var daa = spl[2];
+//     var d = new Date(currentMonth);
+//     var nowmm = d.getMonth() + 1;
 
-    if (mm > nowmm) {
-      $(`.day.next-date:contains(${parseInt(daa)})`).addClass("holiday");
-      $(`.day.next-date:contains(${parseInt(daa)})`).prop(
-        "title",
-        `${rawHoliday[1]}`
-      );
-    } else if (mm < nowmm) {
-      $(`.day.prev-date:contains(${parseInt(daa)})`).addClass("holiday");
-      $(`.day.prev-date:contains(${parseInt(daa)})`).prop(
-        "title",
-        `${rawHoliday[1]}`
-      );
-    } else {
-      $(".day")
-        .not(".next-date")
-        .not(".prev-date")
-        .filter(function () {
-          return $(this).text() === `${parseInt(daa)}`;
-        })
-        .addClass("holiday");
-      $(".day")
-        .not(".next-date")
-        .not(".prev-date")
-        .filter(function () {
-          return $(this).text() === `${parseInt(daa)}`;
-        })
-        .prop("title", `${rawHoliday[1]}`);
-    }
-  });
-}
+//     if (mm > nowmm) {
+//       $(`.day.next-date:contains(${parseInt(daa)})`).addClass("holiday");
+//       $(`.day.next-date:contains(${parseInt(daa)})`).prop(
+//         "title",
+//         `${rawHoliday[1]}`
+//       );
+//     } else if (mm < nowmm) {
+//       $(`.day.prev-date:contains(${parseInt(daa)})`).addClass("holiday");
+//       $(`.day.prev-date:contains(${parseInt(daa)})`).prop(
+//         "title",
+//         `${rawHoliday[1]}`
+//       );
+//     } else {
+//       $(".day")
+//         .not(".next-date")
+//         .not(".prev-date")
+//         .filter(function () {
+//           return $(this).text() === `${parseInt(daa)}`;
+//         })
+//         .addClass("holiday");
+//       $(".day")
+//         .not(".next-date")
+//         .not(".prev-date")
+//         .filter(function () {
+//           return $(this).text() === `${parseInt(daa)}`;
+//         })
+//         .prop("title", `${rawHoliday[1]}`);
+//     }
+//   });
+// }
 
+//plan functions
 function getPlans() {
   var plans = [];
   var selDate = $("#idDRDate").val();
@@ -1846,6 +1955,26 @@ function getLeaveID() {
     async: false,
   });
   return lvID;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_leave_id.php",
+      dataType: "json",
+      success(data) {
+        lvID = data["result"];
+        resolve(lvID);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Leave ID.");
+        }
+      },
+    });
+  });
 }
 
 function getOtherID() {
@@ -1859,6 +1988,26 @@ function getOtherID() {
     async: false,
   });
   return oID;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_other_id.php",
+      dataType: "json",
+      success(data) {
+        oID = data["result"];
+        resolve(oID);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Other ID.");
+        }
+      },
+    });
+  });
 }
 
 function getMngID() {
@@ -1872,6 +2021,26 @@ function getMngID() {
     async: false,
   });
   return mngID;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_mng_id.php",
+      dataType: "json",
+      success(data) {
+        mngID = data["result"];
+        resolve(mngID);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Mng ID.");
+        }
+      },
+    });
+  });
 }
 
 function getKiaID() {
@@ -1885,6 +2054,26 @@ function getKiaID() {
     async: false,
   });
   return kiaID;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_kia_id.php",
+      dataType: "json",
+      success(data) {
+        kiaID = data["result"];
+        resolve(kiaID);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Kia ID.");
+        }
+      },
+    });
+  });
 }
 
 //items that triggers JMR Modal
@@ -1899,6 +2088,28 @@ function getNoMoreInputItems() {
     async: false,
   });
   return nmiIDs;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_nomoreinput_items.php",
+      dataType: "json",
+      success(data) {
+        var nmIDs = data["result"];
+        resolve(nmIDs);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(
+            "An unspecified error occurred while fetching NoMoreInputItems."
+          );
+        }
+      },
+    });
+  });
 }
 
 function getOneBUTrainerID() {

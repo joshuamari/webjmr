@@ -81,7 +81,7 @@ body {
   --darkbloo: #0f4c75;
   --darkdarkbloo: #112d4e;
   /* Try Colors */
-  --walnutbrown: #6b6054;
+  /* --walnutbrown: #6b6054;
   --chamoisee: #b08157;
   --sandybrown: #ffa552;
   --lightorange: #f3d0ac;
@@ -90,39 +90,61 @@ body {
   --tiffanyblue: #9ad4d6;
   --paynegray: #557786;
   --oxfordblue: #101935;
-  --aliceblue: #d6e1e6;
+  --aliceblue: #d6e1e6; */
+
+  /* NEW */
+  --magnolia: #fcf7ff;
+  --whitegray: #ededed;
+  --black1: #171717;
+  --black2: #100808;
+  --metal: #22333b;
+  --silver: #838996;
+  --arsenic: #3b444b;
+
+  --red1: #e4002b;
+  --red2: #da0037;
+  --red3: #bd1616;
+  --red4: #950101;
+  --red5: #3d0000;
+  --gray1: #cccccc;
+  --gray2: #666666;
+  --blue1: #80aff0;
+  --blue2: #33425b;
+  --yelo: #fff600;
+  --mint: #83ffe6;
+  --mint2: #bff4ed;
 }
 /* MODAL */
 .modal-header {
-  background-color: var(--lightorange);
+  background-color: var(--arsenic);
   background: linear-gradient(
     135deg,
-    var(--oxfordblue) 1%,
-    var(--walnutbrown) 50%,
-    var(--chamoisee) 100%
+    var(--black1) 1%,
+    var(--arsenic) 50%,
+    var(--silver) 100%
   );
+  /* background-color: var(--red3);
+  background: linear-gradient(
+    135deg,
+    var(--black1) 1%,
+    var(--red4) 50%,
+    var(--red1) 100%
+  ); */
+  color: var(--magnolia);
 }
 .modal-header h1 {
   color: var(--azure);
 }
 .btn-ok {
   font-weight: 500;
-  color: var(--azure);
-  background: var(--lightorange);
-  background: linear-gradient(
-    135deg,
-    var(--lightorange) 1%,
-    var(--sandybrown) 100%
-  );
+  color: var(--magnolia);
+  background: var(--red3);
+  background: linear-gradient(135deg, var(--red3) 1%, var(--red5) 100%);
 }
 .btn-ok:hover {
-  color: var(--chamoisee);
-  background: var(--sandybrown);
-  background: linear-gradient(
-    135deg,
-    var(--sandybrown) 1%,
-    var(--lightorange) 100%
-  );
+  color: var(--magnolia);
+  background: var(--red1);
+  background: linear-gradient(135deg, var(--red5) 1%, var(--red1) 100%);
 }
 /* sidebar */
 
@@ -132,32 +154,12 @@ body {
   left: 0;
   height: 100%;
   width: 260px;
-  /* background: var(--main-blue); */
+  background: var(--black2);
   /* background: linear-gradient(
     180deg,
-    rgba(253, 193, 104, 1) 0%,
-    rgba(254, 161, 111, 1) 100%
+    var(--paynegray) 0%,
+    var(--) 100%
   ); */
-
-  /* BLUE */
-  /* background: linear-gradient(180deg, var(--blue) 0%, var(--darkblue) 100%); */
-
-  /* LAVENDER */
-  /* background: linear-gradient(
-    180deg,
-    var(--lavender) 0%,
-    var(--darklavender) 100%
-  ); */
-
-  /* BLUE 2 */
-  /* background: linear-gradient(180deg, var(--bloo) 0%, var(--darkbloo) 100%); */
-
-  /* try */
-  background: linear-gradient(
-    180deg,
-    var(--walnutbrown) 0%,
-    var(--oxfordblue) 100%
-  );
 
   z-index: 10000;
   transition: all 0.5s ease;
@@ -215,20 +217,7 @@ body {
 }
 
 .sidebar .nav-links li:hover {
-  /* BLUE */
-  /* background: var(--darkdarkblue); */
-
-  /* LAVENDER */
-  /* background: var(--darkdarklavender);  */
-
-  /* BLUE 2 */
-  /* background: var(--darkbloo); */
-
-  /* try */
-  background: var(--sandybrown);
-
-  /* Others */
-  /* #49180d  var(--tertiary-blue) */
+  background: var(--red4);
 }
 .sidebar .nav-links li i:hover {
   color: var(--white);
@@ -302,20 +291,7 @@ body {
 .sidebar .nav-links li .sub-menu {
   padding: 6px 6px 14px 50px;
   margin-top: -10px;
-  /* BLUE */
-  /* background: var(--darkdarkblue); */
-
-  /* LAVENDER */
-  /* background: var(--darkdarklavender);  */
-
-  /* BLUE 2 */
-  /* background: var(--darkbloo); */
-
-  /* try */
-  background: var(--sandybrown);
-
-  /* Others */
-  /*#49180d var(--tertiary-blue)*/
+  background: var(--red4);
   display: none;
 }
 
@@ -324,12 +300,7 @@ body {
 }
 
 .sidebar .nav-links li .sub-menu a {
-  /* color: #ffff; */ /* <-- all other colors except blue2 */
-  /* BLUE 2 */
-  /* color: var(--white); */
-
-  /* try */
-  color: var(--white);
+  color: var(--magnolia);
 
   /* font-weight: 600; */
   font-size: 15px;
@@ -404,31 +375,11 @@ body {
 
 .user-name h5 {
   margin-bottom: 0;
-  /* BLUE */
-  /* color: var(--blue); */
-
-  /* LAVENDER */
-  /* color: var(--darklavender);  */
-
-  /* BLUE 2 */
-  color: var(--oxfordblue);
-
-  /* Others */
-  /*#ffe6e1  #757575*/
+  color: var(--magnolia);
 }
 
 .user-name h5 span {
-  /* BLUE */
-  /* color: var(--darkdarkblue); */
-
-  /* LAVENDER */
-  /* color: var(--darkdarklavender);  */
-
-  /* BLUE 2 */
-  color: var(--lightorange);
-
-  /* Others */
-  /*#fea16f  var(--main-blue)*/
+  color: var(--red1);
 }
 
 .user img {
@@ -436,40 +387,16 @@ body {
 }
 
 footer {
-  /* BLUE */
-  /* background: var(--blue); */
-
-  /* LAVENDER */
-  /* background: var(--darkerlavender); */
-
-  /* BLUE 2 */
-  /* background: var(--gray); */
-
-  /* try */
-  background: var(--paynegray);
-
-  /* Others */
-  /*rgba(236, 235, 235, 0.3)*/
+  background: var(--black1);
 }
 .footer-text {
-  /* BLUE */
-  /* color: var(--whiteblue); */
-
-  /* LAVENDER */
-  /* color: var(--whitelavender); */
-
-  /* BLUE 2 */
-  /* color: var(--bloo); */
-
-  /* try */
-  color: var(--azure);
+  color: var(--magnolia);
 
   font-size: 11px;
 }
 .footer-text a {
   font-weight: 600;
-  /* color: var(--darkdarkbloo); */
-  color: var(--tiffanyblue);
+  color: var(--red1);
 }
 
 /* home */
@@ -507,7 +434,7 @@ footer {
 } */
 
 .home-section .home-content {
-  background-color: #16334f;
+  background-color: #eeeded;
   align-items: center;
   width: 100%;
   overflow-x: hidden;
@@ -536,40 +463,13 @@ footer {
   width: 100%;
   justify-content: space-between;
   padding: 0 20px 0 20px;
-  /* background: #ffff; */
-
-  /* BLUE */
-  /* background: var(--whiteblue); */
-
-  /* LAVENDER */
-  /* background: var(--whitelavender);  */
-
-  /* BLUE 2 */
-  /* background: var(--offwhite); */
-
-  /* try */
-  background: var(--chamoisee);
-
-  /* Others */
-  /*#fff #49180d*/
+  background: var(--metal);
+  /* background: linear-gradient(45deg, var(--silver) 0%, var(--metal) 100%); */
 }
 
 .home-section .home-topbar .bx-menu,
 .home-section .home-topbar .text {
-  /* BLUE */
-  /* color: var(--blue); */
-
-  /* LAVENDER */
-  /* color: var(--darklavender); */
-
-  /* BLUE 2 */
-  /* color: var(--darkbloo); */
-
-  /* try */
-  color: var(--oxfordblue);
-
-  /* Others */
-  /*#ffe6e1  #11101d*/
+  color: var(--magnolia);
   font-size: 35px;
 }
 
@@ -588,46 +488,56 @@ footer {
   color: #fff;
   letter-spacing: 2px;
 }
+
 .page-title .title {
   font-size: 55px;
-  width: 430px;
-  height: 75px;
+  /* width: 430px;
+  height: 75px; */
+  width: 98%;
+  height: 93%;
   -webkit-clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
-  background: var(--card-color);
+  /* -webkit-clip-path: polygon(1% 1%, 99% 1%, 79% 99%, 1% 99%);
+  clip-path: polygon(1% 1%, 99% 1%, 89% 99%, 1% 99%); */
+
+  /* background: var(--card-color); */
   /* background: linear-gradient(
     45deg,
     rgba(254, 161, 111, 1) 0%,
     rgba(253, 193, 104, 1) 100%
   ); */
-
-  /* BLUE */
-  /* background: linear-gradient(
-    45deg,
-    var(--darkdarkblue) 0%,
-    var(--lightestblue) 100%
-  ); */
-
-  /* LAVENDER */
-  /* background: linear-gradient(
-    45deg,
-    var(--darklavender) 0%,
-    var(--lightlavender) 100%
-  ); */
-
-  /* BLUE 2 */
-  /* background: linear-gradient(45deg, var(--bloo) 20%, var(--lightbloo) 100%); */
-
-  /* try */
+  /* background: var(--red3); */
+  /* background: var(--arsenic); */
   background: linear-gradient(
-    135deg,
-    var(--oxfordblue) 1%,
-    var(--walnutbrown) 50%,
-    var(--chamoisee) 100%
+    45deg,
+    var(--red1) 1%,
+    var(--red4) 45%,
+    var(--red5) 80%,
+    var(--black1) 100%
   );
+  /* background: linear-gradient(
+    45deg,
+    var(--black1) 1%,
+    var(--red5) 25%,
+    var(--red4) 60%,
+    var(--red1) 100%
+  ); */
   opacity: 1;
   color: #fff;
 }
+
+.page-title .pg-title-inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 430px;
+  height: 75px;
+  -webkit-clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
+
+  /* background: var(--red1); */
+}
+
 .page-title {
   align-self: start;
 }
@@ -639,26 +549,14 @@ footer {
 .cont {
   height: calc(100vh - 60px);
   justify-content: center;
-  /* BLUE */
-  /* background-color: var(--darkdarkblue); */
-
-  /* LAVENDER */
-  /* background-color: var(--darkdarklavender);  */
-
-  /* BLUE 2 */
-  /* background-color: var(--darkdarkbloo); */
-
-  /* try */
-  background: linear-gradient(
+  background: var(--arsenic);
+  /* background: linear-gradient(
     180deg,
-    var(--sandybrown) 0%,
-    var(--lightorange) 33%,
-    var(--lightcyan) 66%,
+    var(--charcoal) 1%,
+    var(--paynegray) 50%,
+    var(--silver) 100%,
     var(--tiffanyblue) 100%
-  );
-
-  /* Others */
-  /*#ffe6e1*/
+  ); */
 }
 .lefty,
 .righty {
@@ -702,16 +600,8 @@ option {
 }
 .custom-radio .radio-btn > i {
   color: #fff;
-  /* Original */
-  /* background-color: var(--main-blue); */
-  /* BLUE */
-  /* background-color: var(--darkblue); */
-  /* LAVENDER */
-  /* background-color: var(--darklavender); */
-  /* BLUE 2 */
-  /* background-color: var(--bloo); */
-  /* try */
-  background-color: var(--paynegray);
+  /* background-color: var(--paynegray); */
+  background: linear-gradient(45deg, var(--red5) 0%, var(--red1) 100%);
 
   font-size: 15px;
   position: absolute;
@@ -731,31 +621,15 @@ option {
   transform: translate(-50%, -50%);
 }
 .radio-btn .radio-content small {
-  /* Original */
-  /* color: var(--secondary-blue); */
-  /* BLUE */
-  /* color: var(--lightblue); */
-  /* LAVENDER */
-  /* color: var(--lavender2); */
-  /* BLUE 2 */
-  /* color: var(--semidarkbloo); */
-  /* try */
-  color: var(--paynegray);
+  color: var(--red3);
 
   font-weight: 600;
 }
 .radio-buttons .custom-radio input:checked + .radio-btn {
-  /* Original */
-  /* border: 3px solid var(--main-blue); */
-  /* BLUE */
-  /* border: 3px solid var(--darkblue); */
-  /* LAVENDER */
-  /* border: 3px solid var(--darklavender); */
-  /* BLUE 2 */
-  /* border: 3px solid var(--bloo); */
-  /* try */
-  background-color: var(--tiffanyblue);
-  color: var(--azure);
+  /* background-color: var(--gray1); */
+  /* background: linear-gradient(45deg, var(--red5) 0%, var(--red1) 100%); */
+  border: 2px solid var(--arsenic);
+  /* color: var(--metal); */
 }
 .radio-buttons .custom-radio input:checked + .radio-btn > i {
   opacity: 1;
@@ -802,34 +676,13 @@ option {
   transition: left 0.3s;
 }
 .left .left-cont .checkbox:checked {
-  /* Original */
-  /* background-color: var(--main-blue); */
-
-  /* BLUE */
-  /* background-color: var(--blue); */
-
-  /* LAVENDER */
-  /* background-color: var(--lavender); */
-
-  /* BLUE 2 */
-  /* background-color: var(--semidarkbloo); */
-
-  /* try */
-  background-color: var(--tiffanyblue);
+  /* background-color: var(--tiffanyblue); */
+  background: linear-gradient(45deg, var(--arsenic) 0%, var(--gray1) 100%);
 }
 .left .left-cont .checkbox:checked::after {
   left: 75%;
   content: "\2713";
-  /* Original */
   color: #11101d;
-
-  /* Blue */
-  /* color: var(--blue); */
-
-  /* Lavender */
-  /* color: var(--lavender); */
-
-  /* BLUE 2 */
   color: var(--black);
 }
 .left .left-cont .btn-add {
@@ -841,37 +694,13 @@ option {
     rgba(1, 186, 239, 1) 100%
   ); */
 
-  /* BLUE */
-  /* background: var(--blue);
-  background: linear-gradient(45deg, var(--lightblue) 0%, var(--blue) 100%); */
-
-  /* LAVENDER */
-  /* background: var(--lavender);
-  background: linear-gradient(
-    45deg,
-    var(--lightlavender) 0%,
-    var(--lavender2) 100%
-  ); */
-
-  /* BLUE 2 */
-  /* background: var(--bloo);
-  background: linear-gradient(45deg, var(--bloo) 0%, var(--semidarkbloo) 100%); */
-
-  /* try */
-  background: var(--tiffanyblue);
-  /* background: linear-gradient(
-    45deg,
-    var(--tiffanyblue) 0%,
-    var(--paynegray) 100%
-  ); */
+  background: var(--blue1);
+  background: linear-gradient(45deg, var(--blue1) 0%, var(--blue2) 100%);
 
   font-weight: 600;
-  color: #fff;
-  /* BLUE 2 */
-  /* border: 2px solid var(--bloo); */
-
-  /* try */
-  border: 3px solid var(--tiffanyblue);
+  /* color: #fff; */
+  color: var(--magnolia);
+  border: 3px solid var(--blue1);
 }
 .left .radio-buttons .radio-btn .radio-content .top {
   margin-top: 10px;
@@ -881,27 +710,8 @@ option {
   font-size: 12px;
 }
 .left .left-cont .btn-reset {
-  /* BLUE */
-  /* border: 3px solid var(--darkdarkblue); */
-  /* LAVENDER */
-  /* border: 3px solid var(--darkdarklavender); */
-  /* BLUE 2 */
-  /* border: 3px solid var(--darkdarkbloo); */
-  /* try */
-  border: 3px solid var(--paynegray);
-  /* Others */
-  /*var(--red-color)*/
-
-  /* BLUE */
-  /* color: var(--darkdarkblue); */
-  /* LAVENDER */
-  /* color: var(--darkdarklavender); */
-  /* BLUE 2 */
-  /* color: var(--darkdarkbloo); */
-  /* try */
-  color: var(--paynegray);
-  /* Others */
-  /*var(--red-color)*/
+  border: 3px solid var(--red2);
+  color: var(--red2);
   font-weight: 500;
 }
 .left .left-cont .btn-edit {
@@ -914,21 +724,9 @@ option {
   color: #dab871;
 }
 .left .left-cont .btn-reset:hover {
-  border: 3px solid var(--paynegray); /* change depending on chosen color */
-  /* BLUE */
-  /* background: var(--darkdarkblue); */
-
-  /* LAVENDER */
-  /* background: var(--darkdarklavender);  */
-
-  /* BLUE 2 */
-  /* background: var(--darkdarkbloo); */
-
-  /* try */
-  background: var(--paynegray);
-
-  /* Others */
-  /*var(--red-color)*/
+  border: 3px solid var(--red4); /* change depending on chosen color */
+  background: var(--red4);
+  background: linear-gradient(45deg, var(--red5) 0%, var(--red2) 100%);
   color: #fff;
 }
 
@@ -939,47 +737,12 @@ option {
 }
 
 .left .left-cont .btn-add:hover {
-  color: #fff;
-  /* BLUE 2 */
-  /* border: 2px solid var(--semidarkbloo); */
-
-  /* try */
-  border: 3px solid var(--tiffanyblue);
-
-  /* background: rgb(32, 191, 85);
-  background: linear-gradient(
-    45deg,
-    rgb(45, 143, 78) 0%,
-    rgb(10, 151, 190) 100%
-  ); */
-
-  /* BLUE */
-  /* background: var(--blue);
-  background: linear-gradient(45deg, var(--blue) 0%, var(--darkblue) 100%); */
-
-  /* LAVENDER */
-  /* background: var(--lavender2);
-  background: linear-gradient(
-    45deg,
-    var(--lavender) 0%,
-    var(--darklavender) 100%
-  ); */
-
-  /* BLUE 2 */
-  /* background: var(--bloo);
-  background: linear-gradient(
-    45deg,
-    var(--semidarkbloo) 0%,
-    var(--darkdarkbloo) 100%
-  ); */
-
-  /* try */
-  background: var(--tiffanyblue);
-  background: linear-gradient(
-    45deg,
-    var(--tiffanyblue) 0%,
-    var(--paynegray) 100%
-  );
+  /* color: #fff; */
+  color: var(--magnolia);
+  border: 3px solid var(--blue2);
+  background: var(--blue2);
+  /* background: linear-gradient(45deg, var(--silver) 0%, var(--arsenic) 100%); */
+  background: linear-gradient(45deg, var(--blue2) 0%, var(--blue1) 100%);
   transition: all 0.5s ease;
 }
 .btn {
@@ -1006,51 +769,14 @@ option {
 .right .card::after {
   width: 100%;
   height: 100%;
-  /* background: rgb(57, 164, 199);
+  background: var(--red1);
   background: linear-gradient(
     45deg,
-    rgb(52, 183, 226) 20%,
-    rgba(57, 128, 199, 1) 100%
-  ); */
-  /* background: rgb(254, 148, 125);
-  background: linear-gradient(
-    45deg,
-    rgb(253, 183, 104) 20%,
-    rgba(254, 154, 118, 1) 100%
-  ); */
-
-  /* BLUE */
-  /* background: var(--blue);
-  background: linear-gradient(
-    45deg,
-    var(--lightblue) 20%,
-    var(--darkblue) 100%
-  ); */
-
-  /* LAVENDER */
-  /* background: var(--lavender);
-  background: linear-gradient(
-    45deg,
-    var(--lavender2) 20%,
-    var(--lightestlavender) 100%
-  ); */
-
-  /* BLUE 2 */
-  /* background: var(--bloo);
-  background: linear-gradient(
-    45deg,
-    var(--semidarkbloo) 20%,
-    var(--lightbloo) 100%
-  ); */
-
-  /* try */
-  background: var(--sandybrown);
-  background: linear-gradient(
-    45deg,
-    var(--lightorange) 5%,
-    var(--lightcyan) 100%
+    var(--red1) 1%,
+    var(--red4) 45%,
+    var(--red5) 80%,
+    var(--black1) 100%
   );
-
   content: "";
   position: absolute;
   top: 0;
@@ -1073,55 +799,28 @@ option {
 .right .card:hover .card-title {
   font-size: 50px;
 }
+.right .card .content p {
+  font-weight: 800;
+  color: var(--yelo);
+}
 .right .card:hover .content p {
   /* color: #fff; */
-  color: var(--walnutbrown);
+  color: var(--magnolia);
+  font-weight: 600;
 }
 .right .right-cont .btn-copy {
-  /* BLUE */
-  /* background: var(--lightblue); */
-
-  /* LAVENDER */
-  /* background: var(--lavender2);  */
-
-  /* BLUE 2 */
-  /* background: var(--bloo); */
-
-  /* try */
-  background: var(--sandybrown);
-
-  /* Others */
-  /*var(--lightblue) */
+  /* background: var(--arsenic); */
+  background: linear-gradient(45deg, var(--silver) 0%, var(--arsenic) 100%);
   border: none;
   color: #fff;
 }
 .right .right-cont .btn-copy:hover {
-  /* BLUE */
-  /* background: var(--blue); */
-
-  /* LAVENDER */
-  /* background: var(--darkerlavender);  */
-
-  /* BLUE 2 */
-  /* background: var(--darkbloo); */
-
-  /* try */
-  background: var(--chamoisee);
-
-  /* Others */
-  /*var(--blue) */
+  background: var(--silver);
+  background: linear-gradient(45deg, var(--arsenic) 0%, var(--silver) 100%);
   color: #fff;
 }
 .right .right-cont .btn-copy:active {
-  /* BLUE */
-
-  /* LAVENDER */
-
-  /* BLUE 2 */
-  /* background: var(--bloo); */
-
-  /* try */
-  background: var(--sandybrown);
+  background: var(--arsenic);
   color: #fff;
 }
 
@@ -1135,7 +834,7 @@ option {
   justify-content: center;
 }
 .right .card .circle .card-title {
-  color: var(--walnutbrown);
+  color: var(--magnolia);
   padding: 8px;
   margin: 0;
   font-size: 40px;
@@ -1162,36 +861,10 @@ option {
   color: var(--main-blue);
 }
 .right .table-container .table tbody tr:hover {
-  /* BLUE */
-  /* background-color: var(--whiteblue); */
-
-  /* LAVENDER */
-  /* background-color: var(--lightlavender); */
-
-  /* BLUE 2 */
-  /* background-color: var(--offwhite); */
-
-  /* try */
-  background: var(--lightorange);
-
-  /* Others */
-  /*#ffe6e1 var(--main-blue)*/
+  background: var(--whitegray);
 }
 .right .table-container .table tbody tr:hover td {
-  /* BLUE */
-  /* color: var(--darkblue); */
-
-  /* LAVENDER */
-  /* color: var(--whitelavender); */
-
-  /* BLUE 2 */
-  /* color: var(--bloo); */
-
-  /* try */
-  color: var(--walnutbrown);
-
-  /* Others */
-  /*#49180d*/
+  color: var(--metal);
 }
 .right .table-container .table tbody tr td:last-child {
   white-space: nowrap;
