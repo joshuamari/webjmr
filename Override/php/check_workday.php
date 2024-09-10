@@ -1,34 +1,52 @@
 <?php
-#region Database Connection
-require_once "../Includes/dbconnectkdtph.php";
+#region DB Connect
+require_once "../../dbconn/dbconnectkdtph.php";
+require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
+
 #region Initialize Variable
-$isWorkday=TRUE;
-$selDate=date("Y-m-d");
-if(isset($_REQUEST['selDate'])){
-    $selDate=$_REQUEST['selDate'];
-}
+// $selDate = date("Y-m-d");
+$selDate = (!empty($_POST['selDate'])) ? $_POST['selDate'] : date("Y-m-d");
 if(date('N', strtotime($selDate)) >= 6){
-    $isWorkday=FALSE;
+  $isWorkday = FALSE;
 }
-$selLoc="KDT";
-if(!empty($_REQUEST['selLoc'])){
-    $selLoc=$_REQUEST['selLoc'];
-}
+$selLoc = (!empty($_POST['selLoc'])) ? $_POST['selLoc'] : 1;
 #endregion
-#region WorkDay Query
-$workDayQ="SELECT fldHolidayType FROM kdtholiday WHERE fldDate=:selDate AND fldLocation=:selLoc";
-$workDayStmt=$connkdt->prepare($workDayQ);
-$workDayStmt->execute([":selDate"=>$selDate,":selLoc"=>$selLoc]);
-$workDayType=$workDayStmt->fetchColumn();
-if($workDayStmt->rowCount()>0){
-    if($workDayType!="2"){
-        $isWorkday=FALSE;
+
+#region Additional Conditions
+$getLocQ = "SELECT `fldLocation` from `dispatch_locations` WHERE `fldID` = :locID";
+$getLocStmt = $connwebjmr->prepare($getLocQ);
+$getLocStmt->execute([":locID" => $selLoc]);
+$selLoc = $getLocStmt->fetchColumn();
+#endregion
+
+#region Main Query
+try {
+  $workDayQ = "SELECT `fldHolidayType` 
+               FROM `kdtholiday` 
+               WHERE `fldDate` = :selDate AND `fldLocation` = :selLoc";
+  $workDayStmt = $connkdt->prepare($workDayQ);
+  $workDayStmt->execute([":selDate" => $selDate, ":selLoc" => $selLoc]);
+  $workDayType = $workDayStmt->fetchColumn();
+  if($workDayStmt->rowCount() > 0) {
+    if($workDayType != 2) {
+      $isWorkday = FALSE;
     }
     else{
-        $isWorkday=TRUE;
+      $isWorkday = TRUE;
     }
+    $result['result'] = $isWorkday;
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
+  } else{
+    $result['result'] = TRUE;
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Failed to retrieve!";
+  }
+} catch (Exception $e) {
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
-echo json_encode($isWorkday);
 #endregion
-?>
+
+echo json_encode($result);

@@ -8,6 +8,7 @@ require_once "../../dbconn/dbconnectnew.php";
 $KDTWAccess = ['SYS', 'ANA', 'IT'];
 $managementPositions = ['KDTP', 'SM', 'DM', 'AM', 'SSS', 'SSV', 'IT-SV', 'CTE', 'GM'];
 $devs = ['464', '510', '487'];
+$noMoreInputItemOfWorks = ['6', '10', '15', '17', '19', '21'];
 
 // Employee Position
 function getEmpPosition($empID) {
@@ -96,3 +97,32 @@ function getDefaults() {
     }
   return $defaults;
 }
+
+function getkiaProjID() {
+  global $connwebjmr;
+  $kiaProjQ = "SELECT fldID FROM projectstable WHERE fldProject = 'KDT Internal Activities'";
+  $kiaProjStmt = $connwebjmr->prepare($kiaProjQ);
+  $kiaProjStmt->execute([]);
+  $kiaProjID = $kiaProjStmt->fetchColumn();
+  return $kiaProjID;
+}
+
+function getOneBUTrainerID() {
+  global $connwebjmr;
+  $obuTrainQ = "SELECT fldID FROM itemofworkstable WHERE fldItem='Trainer for One BU Participants'";
+  $obuTrainStmt = $connwebjmr->prepare($obuTrainQ);
+  $obuTrainStmt->execute([]);
+  $oneBUTrainerID = $obuTrainStmt->fetchColumn();
+  return $oneBUTrainerID;
+}
+
+function getOtherProjID() {
+  global $connwebjmr;
+  $otherProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Business Trip & Other'";
+  $otherProjStmt = $connwebjmr->prepare($otherProjQ);
+  $otherProjStmt->execute([]);
+  $otherProjID = $otherProjStmt->fetchColumn();
+  return $otherProjID;
+}
+
+// echo json_encode($global_var);
