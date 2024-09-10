@@ -5,7 +5,6 @@ require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
 
 #region Initialize Variable
-// $selDate = date("Y-m-d");
 $selDate = (!empty($_POST['selDate'])) ? $_POST['selDate'] : date("Y-m-d");
 if(date('N', strtotime($selDate)) >= 6){
   $isWorkday = FALSE;
