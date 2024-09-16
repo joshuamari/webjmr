@@ -71,6 +71,309 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="modal fade"
+      id="editEntry"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">
+              Edit [Employee Name]'s Entry
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body px-3">
+            <div class="form-container d-grid">
+              <div class="row mb-2">
+                <label
+                  for="edit-selLoc"
+                  class="col-form-label col-form-label-sm"
+                  >Select Location</label
+                >
+                <div>
+                  <select
+                    class="form-select"
+                    id="edit-selLoc"
+                    placeholder="Select Location"
+                    required
+                  ></select>
+                </div>
+              </div>
+              <small class="editLocError">Please Complete the Field</small>
+
+              <div class="row mb-2">
+                <label
+                  for="edit-selProj"
+                  class="col-form-label col-form-label-sm"
+                  >Select Project</label
+                >
+                <div>
+                  <select
+                    class="form-select"
+                    id="edit-selProj"
+                    placeholder="Select Project"
+                    required
+                  ></select>
+                </div>
+              </div>
+              <small class="editProjError">Please Complete the Field</small>
+
+              <div class="row mb-2">
+                <label
+                  for="edit-selIOW"
+                  id="edit-itemlbl"
+                  class="col-form-label col-form-label-sm"
+                  >Select Item of Works</label
+                >
+                <div>
+                  <select
+                    class="form-select"
+                    id="edit-selIOW"
+                    placeholder="Select Item of Works"
+                    required
+                  ></select>
+                </div>
+              </div>
+              <small class="editIOWError">Please Complete the Field</small>
+
+              <div class="row mb-2" id="edit-JRDDiv">
+                <label
+                  for="edit-selJRD"
+                  class="col-form-label col-form-label-sm"
+                  >Select Job Request Description</label
+                >
+                <div>
+                  <select
+                    class="form-select"
+                    id="edit-selJRD"
+                    placeholder="Select Job Request Description"
+                    required
+                  ></select>
+                </div>
+              </div>
+              <small class="editJRDError">Please Complete the Field</small>
+
+              <div class="row mb-2" id="edit-2D3DDiv">
+                <label for="edit-2d3d" class="form-label">2D/3D</label>
+                <div class="radio-buttons m-0 p-0">
+                  <label class="custom-radio">
+                    <input
+                      type="radio"
+                      name="radio"
+                      id="2D"
+                      value="2D"
+                      checked
+                    />
+                    <span class="radio-btn"
+                      ><i class="bx bx-check"></i>
+                      <div class="radio-content">
+                        <h5 class="top mb-0">2D</h5>
+                        <small>AutoCad</small>
+                      </div>
+                    </span>
+                  </label>
+                  <label class="custom-radio">
+                    <input type="radio" name="radio" id="3D" value="3D" />
+                    <span class="radio-btn"
+                      ><i class="bx bx-check"></i>
+                      <div class="radio-content">
+                        <h5 class="top mb-0">3D</h5>
+                        <small style="white-space: nowrap">Navis, Video</small>
+                      </div>
+                    </span>
+                  </label>
+                  <label class="custom-radio">
+                    <input type="radio" name="radio" id="2D3D" value="2D3D" />
+                    <span class="radio-btn"
+                      ><i class="bx bx-check"></i>
+                      <div class="radio-content">
+                        <h5 class="top mb-0" style="display: inline-flex">
+                          3D<i class="bx bx-right-arrow-alt fs-5"></i>2D
+                        </h5>
+                        <small style="white-space: nowrap"></small>
+                      </div>
+                    </span>
+                  </label>
+                  <label class="custom-radio">
+                    <input type="radio" name="radio" id="3D2D" value="3D2D" />
+                    <span class="radio-btn"
+                      ><i class="bx bx-check"></i>
+                      <div class="radio-content">
+                        <h5 class="top mb-0" style="display: inline-flex">
+                          2D<i class="bx bx-right-arrow-alt fs-5"></i>3D
+                        </h5>
+                        <small></small>
+                      </div>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <small class="edit2D3DError">Please Complete the Field</small>
+
+              <div class="row mb-2" id="edit-RevDiv">
+                <label for="idRev" class="form-label">Revision</label>
+                <div class="input-group switch">
+                  <input type="checkbox" class="checkbox" id="idRev" />
+                </div>
+                <span
+                  class="col-12 mt-1 alert-danger text-danger"
+                  id="p8"
+                  role="alert"
+                ></span>
+              </div>
+              <small class="editRevError">Please Complete the Field</small>
+
+              <div class="mb-2 d-flex flex-row" id="edit-TOWDiv">
+                <div class="col-sm-6">
+                  <label
+                    for="edit-selTOW"
+                    id="edit-lbltow"
+                    class="col-form-label col-form-label-sm"
+                    >Type of Work</label
+                  >
+                  <div>
+                    <select
+                      class="select"
+                      id="edit-selTOW"
+                      placeholder="Select Type of Works"
+                      required
+                    ></select>
+                  </div>
+                </div>
+                <div class="col-sm-6 edit-check">
+                  <label
+                    for="edit-selCheck"
+                    class="col-form-label col-form-label-sm"
+                    >Checking</label
+                  >
+                  <div>
+                    <select
+                      class="select"
+                      id="edit-selCheck"
+                      placeholder="Select Name"
+                      required
+                    ></select>
+                  </div>
+                </div>
+              </div>
+              <small class="editTOWError">Please Complete the Field</small>
+
+              <div class="row mb-2" id="edit-TOWDescDiv">
+                <textarea
+                  aria-label="text"
+                  class="form-control areaText"
+                  id="edit-towDesc"
+                  rows="2"
+                  disabled
+                ></textarea>
+              </div>
+
+              <div class="row mb-2">
+                <div class="col-sm-6">
+                  <label
+                    for="edit-duration"
+                    class="col-form-label col-form-label-sm"
+                    >No. of Hours</label
+                  >
+                  <div class="d-flex justify-content-start">
+                    <input
+                      type="number"
+                      placeholder="HH"
+                      class="form-control"
+                      min="0"
+                      max="20"
+                      id="edit-newHour"
+                      style="width: 50%"
+                      required
+                    />
+                    <p class="mx-3 my-0">:</p>
+                    <input
+                      type="number"
+                      placeholder="MM"
+                      class="form-control"
+                      min="0"
+                      max="59"
+                      id="edit-newMin"
+                      style="width: 50%"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label
+                    for="edit-selMHType"
+                    class="col-form-label col-form-label-sm"
+                    >Select Manhour Type</label
+                  >
+                  <div class="input-group">
+                    <select class="form-select" id="edit-selMHType" required>
+                      <option value="" hidden selected>
+                        Select Manhour Type
+                      </option>
+                      <option mhid="0">Regular</option>
+                      <option mhid="1">Overtime</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <small class="editDurationError">Please Complete the Field</small>
+
+              <div
+                class="row mb-2 flex align-items-center justify-content-center"
+              >
+                <label
+                  for="edit-newRemarks"
+                  class="col-form-label col-form-label-sm"
+                  >Remarks</label
+                >
+                <textarea
+                  class="form-control areaText"
+                  id="edit-newRemarks"
+                  rows="2"
+                ></textarea>
+              </div>
+              <small class="editRemarksError">Please Complete the Field</small>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-wh-cancel">Cancel</button>
+            <button
+              type="button"
+              class="btn btn-wh-edit"
+              id="btn-updateWorkEntry"
+              e-wh-id="0"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="deleteWarning"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel2"
+      aria-hidden="true"
+    >
+      <div class=""></div>
+    </div>
     <!--#endregion-->
 
     <!--#region Planning Modal -->
@@ -243,6 +546,7 @@
         </div>
       </div>
     </div> -->
+
     <!--#endregion-->
     <!--#endregion MODAL END-->
 

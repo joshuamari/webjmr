@@ -2209,7 +2209,7 @@ textarea.form-control-lg {
 .form-select:focus {
   border-color: #86b7fe;
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(128, 175, 240, 0.2);
 }
 .form-select[multiple],
 .form-select[size]:not([size="1"]) {
@@ -5292,7 +5292,7 @@ fieldset:disabled .btn {
 }
 .modal {
   --bs-modal-zindex: 1055;
-  --bs-modal-width: 500px;
+  --bs-modal-width: 600px;
   --bs-modal-padding: 1rem;
   --bs-modal-margin: 0.5rem;
   --bs-modal-color: ;
