@@ -2920,7 +2920,8 @@ textarea.form-control.is-invalid {
 .btn.active,
 .btn.show,
 .btn:first-child:active,
-:not(.btn-check) + .btn:active {
+:not(.btn-check) + .btn:active,
+:not(.btn-Ecancel) + .btn:active {
   color: var(--bs-btn-active-color);
   background-color: var(--bs-btn-active-bg);
   border-color: var(--bs-btn-active-border-color);

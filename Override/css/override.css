@@ -146,7 +146,7 @@ body {
   background: transparent;
 }
 
-.editLocError,
+/* .editLocError,
 .editProjError,
 .editIOWError,
 .editJRDError,
@@ -156,10 +156,41 @@ body {
 .editDurationError,
 .editRemarksError {
   display: none;
-}
+} */
 
 .areaText {
   width: 95%;
+}
+
+.btn-Ecancel {
+  border: 1px solid var(--red3);
+  color: var(--red3);
+}
+.btn-Ecancel:hover {
+  border: 1px solid var(--red2);
+  background: var(--red2);
+  color: var(--magnolia);
+}
+.btn-Ecancel:active {
+  border: 1px solid var(--red4);
+  background: var(--red4);
+  color: var(--magnolia);
+}
+.btn-Eupdate {
+  background: var(--blue2);
+  color: var(--magnolia);
+  border: 1px solid var(--blue2);
+}
+.btn-Eupdate:hover {
+  color: var(--magnolia);
+  border: 1px solid var(--blue3);
+  background: var(--blue3);
+  /* transition: all 0.5s ease; */
+}
+.modal .modal-footer .btn-Eupdate:active {
+  background: var(--blue2);
+  color: var(--magnolia);
+  border: 1px solid var(--blue2);
 }
 
 .radio-buttons {

@@ -12,7 +12,7 @@ const otherID = getOtherID();
 const mngID = getMngID();
 const kiaID = getKiaID();
 const noMoreInputItems = getNoMoreInputItems();
-const oneBUTrainerID = getOneBUTrainerID();
+// const oneBUTrainerID = getOneBUTrainerID();
 
 const calendar = document.querySelector(".calendar");
 
@@ -191,7 +191,7 @@ $(document).on("click", ".btn-close", function () {
   // clearAddWorkInputs();
   // removeOutline();
 });
-$(document).on("click", ".btn-wh-cancel", function () {
+$(document).on("click", ".btn-Ecancel", function () {
   $(this).closest(".modal").find(".btn-close").click();
 });
 
@@ -308,7 +308,7 @@ $(document).on("change", "#idProject", function () {
     $("#itemlbl").html("Leave Type");
     $("#lbltow").html("Day Type");
   } else {
-    $("#itemlbl").html("Item of Works");
+    $("#itemlbl").html("Select Item of Works");
     $("#lbltow").html("Type of Work");
   }
   $(".trgrp").remove();
@@ -347,7 +347,7 @@ $(document).on("change", "#edit-selProj", function () {
     $("#edit-itemlbl").html("Leave Type");
     $("#edit-lbltow").html("Day Type");
   } else {
-    $("#edit-itemlbl").html("Item of Works");
+    $("#edit-itemlbl").html("Select Item of Works");
     $("#edit-lbltow").html("Type of Work");
   }
   $(".trgrp").remove();
@@ -363,11 +363,12 @@ $(document).on("change", "#idItem", function () {
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
   if (itemID != 0) {
-    getJobs(thisEmpID, projID, itemID)
-      .then((jobs) => {
+    Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
+      .then(([jobs, allgrps]) => {
         resetSelection(3, 0);
         fillJobs(jobs, 0);
         getLabel(itemID, 0);
+        trainingGroup(itemID, allgrps, 0);
       })
       .catch((error) => {
         alert(`${error}`);
@@ -379,7 +380,6 @@ $(document).on("change", "#idItem", function () {
   if (checkItemID) {
     $("#drInstruction").modal("show");
   }
-  // trainingGroup(itemID);
   // getJobs(projID, itemID);
   $("#p6").text("");
   $(this).removeClass("border-danger");
@@ -398,6 +398,7 @@ $(document).on("change", "#edit-selIOW", function () {
         resetSelection(3, 1);
         fillJobs(jobs, 1);
         getLabel(itemID, 1);
+        // trainingGroup(itemID, 1);
       })
       .catch((error) => {
         alert(`${error}`);
@@ -409,7 +410,6 @@ $(document).on("change", "#edit-selIOW", function () {
   if (checkItemID) {
     $("#drInstruction").modal("show");
   }
-  // trainingGroup(itemID);
   // getJobs(projID, itemID);
   $("#p6").text("");
   $(this).removeClass("border-danger");
@@ -824,11 +824,12 @@ function disableTimeInput(projID, type) {
       $("#getMin").prop("disabled", true);
     }
   } else {
+    console.log("edit HourMin Disable");
     $("#edit-newHour").prop("disabled", false);
     $("#edit-newMin").prop("disabled", false);
     if (projID == leaveID) {
-      $("#edit-newHour").prop("disabled", false);
-      $("#edit-newMin").prop("disabled", false);
+      $("#edit-newHour").prop("disabled", true);
+      $("#edit-newMin").prop("disabled", true);
     }
   }
 }
@@ -2530,7 +2531,7 @@ function getKiaID() {
   });
 }
 
-//items that triggers JMR Modal
+//items that triggers JMR Modal Instruction
 function getNoMoreInputItems() {
   //get ids of no more input
   var nmiIDs = [];
@@ -2566,34 +2567,51 @@ function getNoMoreInputItems() {
   });
 }
 
-function getOneBUTrainerID() {
-  //get databse id of one bu train itemofworks
-  var obutrainID = ``;
-  $.ajax({
-    url: "php/get_onebutrainer_id.php",
-    success: function (data) {
-      obutrainID = data.trim();
-    },
-    async: false,
-  });
-  return obutrainID;
-}
+// function getOneBUTrainerID() {
+//   //get databse id of one bu train itemofworks
+//   var obutrainID = ``;
+//   $.ajax({
+//     url: "php/get_onebutrainer_id.php",
+//     success: function (data) {
+//       obutrainID = data.trim();
+//     },
+//     async: false,
+//   });
+//   return obutrainID;
+// }
 
-function trainingGroup(itemID) {
+function trainingGroup(itemID, allgrps, type) {
   //check if item of work is for training for one bu
   if (itemID == oneBUTrainerID) {
-    $(".iow").after(`
-    <div class="col-12 my-2 trgrp">
-                  <label for="trGroup" class="form-label">Group of Trainees</label>
-                  <div class="input-group">
-                    <select class="form-select" id="trGroup" required>
-                      <option value="" selected hidden>Select Group to Train</option>
-                    </select>
-                  </div>
-                  <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
-                </div>
-    `);
-    getTRGroups();
+    if (type == 0) {
+      $(".iow").after(`
+      <div class="col-12 my-2 trgrp">
+        <label for="trGroup" class="form-label">Group of Trainees</label>
+        <div class="input-group">
+          <select class="form-select" id="trGroup" required>
+          <option value="" selected hidden>Select Group to Train</option>
+          </select>
+        </div>
+        <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
+      </div>
+      `);
+      // getTRGroups();
+      $("#trGroup").html(allgrps);
+    } else {
+      $(".iow").after(`
+      <div class="col-12 my-2 trgrp">
+        <label for="trGroup" class="form-label">Group of Trainees</label>
+        <div class="input-group">
+          <select class="form-select" id="edit-trGroup" required>
+          <option value="" selected hidden>Select Group to Train</option>
+          </select>
+        </div>
+        <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
+      </div>
+      `);
+      // getTRGroups();
+      $("#edit-trGroup").html(allgrps);
+    }
   } else {
     $(".trgrp").remove();
   }
@@ -2601,12 +2619,35 @@ function trainingGroup(itemID) {
 
 function getTRGroups() {
   //get groups for training group selection
-  $.ajax({
-    url: "php/get_groups.php",
-    success: function (response) {
-      $("#trGroup").html(response);
-    },
-    async: false,
+  // $.ajax({
+  //   url: "php/get_groups.php",
+  //   success: function (response) {
+  //     $("#trGroup").html(response);
+  //   },
+  //   async: false,
+  // });
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_groups.php",
+      dataType: "json",
+      success: function (data) {
+        console.log(data);
+        var allGroups = data;
+        resolve(allGroups);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(
+            "An unspecified error occurred while fetching Training Groups."
+          );
+        }
+      },
+    });
   });
 }
 

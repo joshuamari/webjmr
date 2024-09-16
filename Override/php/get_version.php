@@ -7,6 +7,8 @@ $headString="<title>$titleName</title>
   <link rel='stylesheet' type='text/css' href='css/font-awesome.css'>
   <link rel='stylesheet' href='css/bootstrap.min.css'>
   <link rel='stylesheet' href='css/boxicons.css' />
+  <link rel='stylesheet' type='text/css' href='tailwindcss.min.css'>
+  <script src='tailwindcss.js'></script>
   <script src='js/jspdf.js'></script>
   <script src='js/jquery.js'></script>
   <script src='js/bootstrap.min.js'></script>

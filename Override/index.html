@@ -111,7 +111,9 @@
                   ></select>
                 </div>
               </div>
-              <small class="editLocError">Please Complete the Field</small>
+              <small class="editLocError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="row mb-2">
                 <label
@@ -128,7 +130,9 @@
                   ></select>
                 </div>
               </div>
-              <small class="editProjError">Please Complete the Field</small>
+              <small class="editProjError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="row mb-2">
                 <label
@@ -146,7 +150,9 @@
                   ></select>
                 </div>
               </div>
-              <small class="editIOWError">Please Complete the Field</small>
+              <small class="editIOWError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="row mb-2" id="edit-JRDDiv">
                 <label
@@ -163,7 +169,9 @@
                   ></select>
                 </div>
               </div>
-              <small class="editJRDError">Please Complete the Field</small>
+              <small class="editJRDError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="row mb-2" id="edit-2D3DDiv">
                 <label for="edit-2d3d" class="form-label">2D/3D</label>
@@ -220,7 +228,9 @@
                   </label>
                 </div>
               </div>
-              <small class="edit2D3DError">Please Complete the Field</small>
+              <small class="edit2D3DError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="row mb-2" id="edit-RevDiv">
                 <label for="idRev" class="form-label">Revision</label>
@@ -233,7 +243,9 @@
                   role="alert"
                 ></span>
               </div>
-              <small class="editRevError">Please Complete the Field</small>
+              <small class="editRevError hidden"
+                >Please Complete the Field</small
+              >
 
               <div class="mb-2 d-flex flex-row" id="edit-TOWDiv">
                 <div class="col-sm-6">
@@ -268,9 +280,14 @@
                   </div>
                 </div>
               </div>
-              <small class="editTOWError">Please Complete the Field</small>
+              <small class="editTOWError hidden"
+                >Please Complete the Field</small
+              >
 
-              <div class="row mb-2" id="edit-TOWDescDiv">
+              <div
+                class="row mb-2 flex align-items-center justify-content-center"
+                id="edit-TOWDescDiv"
+              >
                 <textarea
                   aria-label="text"
                   class="form-control areaText"
@@ -328,7 +345,9 @@
                   </div>
                 </div>
               </div>
-              <small class="editDurationError">Please Complete the Field</small>
+              <small class="editDurationError hidden"
+                >Please Complete the Field</small
+              >
 
               <div
                 class="row mb-2 flex align-items-center justify-content-center"
@@ -344,18 +363,15 @@
                   rows="2"
                 ></textarea>
               </div>
-              <small class="editRemarksError">Please Complete the Field</small>
+              <small class="editRemarksError hidden"
+                >Please Complete the Field</small
+              >
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-wh-cancel">Cancel</button>
-            <button
-              type="button"
-              class="btn btn-wh-edit"
-              id="btn-updateWorkEntry"
-              e-wh-id="0"
-            >
+            <button type="button" class="btn btn-Ecancel">Cancel</button>
+            <button type="button" class="btn btn-Eupdate" id="btn-updateEntry">
               Save Changes
             </button>
           </div>
