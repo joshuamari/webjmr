@@ -1,28 +1,26 @@
 <?php
-#region Require Database Connections
-require_once '../Includes/dbconnectkdtph.php';
+#region DB Connect
+require_once "../../dbconn/dbconnectnew.php";
 #endregion
 
-#region set timezone
-date_default_timezone_set('Asia/Manila');
-#endregion
-
-#region initialize variables
-$output='<option value="" hidden selected>Select BU</option>';
-#endregion
-
-#region main
-
-$groupsQuery= "SELECT * FROM kdtbu WHERE fldDepartment<>'' ORDER BY fldBU";
-$groupsStmt = $connkdt->query($groupsQuery);
-while($rowgrp = $groupsStmt->fetch()){
-    $grp=$rowgrp['fldBU'];
-    $output.='<option>'.$rowgrp['fldBU'].'</option>';
+#region Main Query
+try {
+  $groupsQ = "SELECT * FROM group_list";
+  $groupsStmt = $connnew->prepare($groupsQ);
+  $groupsStmt->execute([]);
+  if($groupsStmt->rowCount() > 0) {
+    $result['result'] = $groupsStmt->fetchAll();
+    $result['isSuccess'] = true;
+    $result['message'] = "Successfully Retrieved!";
+  }
+  else{
+    $result['isSuccess'] = false;
+    $result['message'] = "Failed to retrieve";
+  }
+} catch (Exception $e) {
+  $result["isSuccess"] = false;
+  $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-#region function
-
-#endregion
-echo $output;
-?>
+echo json_encode($result);

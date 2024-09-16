@@ -362,13 +362,14 @@ $(document).on("change", "#idItem", function () {
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
+  console.log("oneBU ", itemID);
   if (itemID != 0) {
     Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
       .then(([jobs, allgrps]) => {
         resetSelection(3, 0);
         fillJobs(jobs, 0);
         getLabel(itemID, 0);
-        trainingGroup(itemID, allgrps, 0);
+        createTRGroupDiv(itemID, allgrps, 0);
       })
       .catch((error) => {
         alert(`${error}`);
@@ -398,7 +399,7 @@ $(document).on("change", "#edit-selIOW", function () {
         resetSelection(3, 1);
         fillJobs(jobs, 1);
         getLabel(itemID, 1);
-        // trainingGroup(itemID, 1);
+        // createTRGroupDiv(itemID, 1);
       })
       .catch((error) => {
         alert(`${error}`);
@@ -1575,13 +1576,13 @@ function addEntries(addMode) {
     //IF LEAVE
     mhtype = 2;
   }
-  if (item == oneBUTrainerID) {
-    if (!trgrp) {
-      $("#p13").text("Please Select Group To Train");
-      $("#trGroup").addClass("border border-danger").addClass("bg-err");
-      mgaKulang.push("TRGROUP");
-    }
-  }
+  // if (item == oneBUTrainerID) {
+  //   if (!trgrp) {
+  //     $("#p13").text("Please Select Group To Train");
+  //     $("#trGroup").addClass("border border-danger").addClass("bg-err");
+  //     mgaKulang.push("TRGROUP");
+  //   }
+  // }
 
   if (mgaKulang.length > 0) {
     console.log(mgaKulang);
@@ -2580,10 +2581,11 @@ function getNoMoreInputItems() {
 //   return obutrainID;
 // }
 
-function trainingGroup(itemID, allgrps, type) {
+function createTRGroupDiv(itemID, allgrps, type) {
   //check if item of work is for training for one bu
-  if (itemID == oneBUTrainerID) {
+  if (itemID == 14) {
     if (type == 0) {
+      console.log("type 0: ");
       $(".iow").after(`
       <div class="col-12 my-2 trgrp">
         <label for="trGroup" class="form-label">Group of Trainees</label>
@@ -2595,9 +2597,10 @@ function trainingGroup(itemID, allgrps, type) {
         <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
       </div>
       `);
-      // getTRGroups();
-      $("#trGroup").html(allgrps);
+      fillTRGroups(allgrps, 0);
+      // $("#trGroup").html(allgrps);
     } else {
+      console.log("type 1: ");
       $(".iow").after(`
       <div class="col-12 my-2 trgrp">
         <label for="trGroup" class="form-label">Group of Trainees</label>
@@ -2609,11 +2612,41 @@ function trainingGroup(itemID, allgrps, type) {
         <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
       </div>
       `);
-      // getTRGroups();
-      $("#edit-trGroup").html(allgrps);
+      fillTRGroups(allgrps, 1);
+      // $("#edit-trGroup").html(allgrps);
     }
   } else {
     $(".trgrp").remove();
+  }
+}
+
+function fillTRGroups(allgrps, type) {
+  var trgrpSelect = $("#trGroup");
+  var editTRGrpSel = $("#edit-trGroup");
+  console.log("fillgrps allgrps: ", allgrps);
+  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
+  if (type == 0) {
+    trgrpSelect.html(
+      `<option value=0 trgrp-id=0>Select Training Group</option>`
+    );
+    $.each(allgrps, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item.abbreviation)
+        .attr("chk-id", item.id);
+      trgrpSelect.append(option);
+    });
+  } else {
+    editTRGrpSel.html(
+      `<option value=0 trgrp-id=0>Select Training Group</option>`
+    );
+    $.each(allgrps, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item.abbreviation)
+        .attr("chk-id", item.id);
+      editTRGrpSel.append(option);
+    });
   }
 }
 
@@ -2632,8 +2665,8 @@ function getTRGroups() {
       url: "php/get_groups.php",
       dataType: "json",
       success: function (data) {
-        console.log(data);
-        var allGroups = data;
+        console.log("all grps", data);
+        var allGroups = data["result"];
         resolve(allGroups);
       },
       error: function (xhr, status, error) {
