@@ -1,11 +1,6 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
-require_once "../../Override/php/global.php";
-#endregion
-
-#region set timezone
-date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region Initialize Variable
@@ -15,16 +10,13 @@ $result = [
 ];
 $required_fields = [
   'overrideEmpNum' => 'Override User Employee No.',
-  'empNum' => "Employee No.",
-  'grpNum' => "Group No.",
-  'selDate' => "Selected Date",
   'locID' => "Location",
   'projID' => "Project ID",
   'itemID' => "Item ID",
   'duration' => "Duration",
   'manhour' => "Manhour Type",
+  'drID' => "Daily Report ID",
 ];
-
 $input = $_POST;
 $missing_fields = [];
 #endregion
@@ -58,7 +50,6 @@ if ($count > 0) {
 #endregion
 
 #region ADDITIONAL CONDITION
-$grpAbbrev =  getGroup($input['grpNum']);
 $jobReqDesc = (!empty($_POST['jobReqDesc'])) ? $_POST['jobReqDesc'] : null;
 $twoDthreeD = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : null;
 $revisions = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : 0;
@@ -66,40 +57,50 @@ $typeOfWork = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : '';
 $checker = (!empty($_POST['checker'])) ? $_POST['checker'] : null;
 $remarks = (!empty($_POST['remarks'])) ? $_POST['remarks'] : null;
 $trGrp = (!empty($_POST['trGrp'])) ? $_POST['trGrp'] : null;
-$logs=date("YmdHis") . "_" . $input['overrideEmpNum'];
+$logs = date("YmdHis") . "_" . $input['overrideEmpNum'];
 #endregion
 
 #region Main Query
-try {
-  $insertDRQ = "INSERT INTO dailyreport(fldEmployeeNum, fldGroup, fldGroupID, fldDate, fldLocation, fldProject, fldItem, fldJobRequestDescription, fld2D3D, fldRevision, fldTOW, fldChecker,fldDuration, fldMHType, fldRemarks, fldTrGroup, fldChangeLog)
-                VALUES(:empNum, :grpAbbrev, :grpID, :selDate,:locID, :projID, :itemID, :jobReqDesc, :twoDthreeD, :revisions, :typeOfWork, :checker, :duration, :manhour, :remarks, :trGrp, :logs)";
-  $insertDRStmt = $connwebjmr->prepare($insertDRQ);
-  $insertDRStmt->execute([
-    ":empNum" => $input['empNum'],
-    ":grpAbbrev" => $grpAbbrev,
-    ":grpID" => $input['grpNum'],
-    ":selDate" => $input['selDate'],
+try{
+  $updateEntryQ = "UPDATE `dailyreport` 
+                   SET `fldLocation` = :locID, 
+                       `fldProject` = :projID, 
+                       `fldItem` = :itemID, 
+                       `fldJobRequestDescription` = :jobReqDesc, 
+                       `fld2D3D` = :twoDthreeD, 
+                       `fldRevision` = :revisions, 
+                       `fldTOW` = :TOWID, 
+                       `fldChecker` = :checker, 
+                       `fldDuration` = :duration, 
+                       `fldMHType` = :MHType, 
+                       `fldRemarks` = :remarks, 
+                       `fldTrGroup` = :trGrp, 
+                       `fldChangeLog` = :logs 
+                       WHERE fldID = :drID";
+  $updateEntryStmt = $connwebjmr->prepare($updateEntryQ);
+  $updateEntryStmt->execute([
     ":locID" => $input['locID'],
     ":projID" => $input['projID'],
     ":itemID" => $input['itemID'],
     ":jobReqDesc" => $jobReqDesc,
     ":twoDthreeD" => $twoDthreeD,
     ":revisions" => $revisions,
-    ":typeOfWork" => $typeOfWork,
+    ":TOWID" => $typeOfWork,
     ":checker" => $checker,
     ":duration" => $input['duration'],
-    ":manhour" => $input['manhour'],
+    ":MHType" => $input['manhour'],
     ":remarks" => $remarks,
     ":trGrp" => $trGrp,
-    ":logs" => $logs
+    ":logs" => $logs,
+    ":drID" => $input['drID'],
   ]);
-  if($insertDRStmt->rowCount() > 0) {
+  if($updateEntryStmt->rowCount() > 0) {
     $result['isSuccess'] = true;
-    $result['message'] = "Entries Added Successfully";
+    $result['message'] = "Edit Entry Successfully";
   }
   else{
     $result['isSuccess'] = false;
-    $result['message'] = "Failed to Add Entries";
+    $result['message'] = "Failed to Edit an Entry";
   }
 } catch (Exception $e) {
   $result["isSuccess"] = false;
