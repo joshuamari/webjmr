@@ -2,6 +2,7 @@
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "../../dbconn/dbconnectnew.php";
+require_once "../../dbconn/dbconnectkdtph.php";
 #endregion
 
 // Default Values
@@ -123,6 +124,20 @@ function getOtherProjID() {
   $otherProjStmt->execute([]);
   $otherProjID = $otherProjStmt->fetchColumn();
   return $otherProjID;
+}
+
+function checkAccess($empNum) {
+  global $connkdt;
+  $access = FALSE;
+  $permissionID = 50;
+  $userQ = "SELECT COUNT(*) FROM user_permissions WHERE permission_id = :permissionID AND fldEmployeeNum = :empID";
+  $userStmt = $connkdt->prepare($userQ);
+  $userStmt->execute([":empID" => $empNum, ":permissionID" => $permissionID]);
+  $userCount = $userStmt->fetchColumn();
+  if ($userCount > 0) {
+      $access = TRUE;
+  }
+  return $access;
 }
 
 // echo json_encode($global_var);
