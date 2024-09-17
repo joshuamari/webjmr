@@ -146,18 +146,6 @@ body {
   background: transparent;
 }
 
-/* .editLocError,
-.editProjError,
-.editIOWError,
-.editJRDError,
-.edit2D3DError,
-.editRevError,
-.editTOWError,
-.editDurationError,
-.editRemarksError {
-  display: none;
-} */
-
 .areaText {
   width: 95%;
 }
@@ -187,10 +175,16 @@ body {
   background: var(--blue3);
   /* transition: all 0.5s ease; */
 }
-.modal .modal-footer .btn-Eupdate:active {
+.btn-Eupdate:active {
   background: var(--blue2);
   color: var(--magnolia);
   border: 1px solid var(--blue2);
+}
+
+.emp-edit {
+  font-weight: 600;
+  color: var(--blue2);
+  /* text-decoration: underline; */
 }
 
 .radio-buttons {
