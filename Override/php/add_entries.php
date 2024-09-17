@@ -60,9 +60,9 @@ if ($count > 0) {
 #region ADDITIONAL CONDITION
 $grpAbbrev =  getGroup($input['grpNum']);
 $jobReqDesc = (!empty($_POST['jobReqDesc'])) ? $_POST['jobReqDesc'] : null;
-$twoDthreeD = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : null;
-$revisions = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : 0;
-$typeOfWork = (!empty($_POST['2D3DDesc'])) ? $_POST['2D3DDesc'] : '';
+$twoDthreeD = (!empty($_POST['twoDthreeD'])) ? $_POST['twoDthreeD'] : null;
+$revisions = (!empty($_POST['revision'])) ? $_POST['revision'] : 0;
+$typeOfWork = (!empty($_POST['TOWID'])) ? $_POST['TOWID'] : '';
 $checker = (!empty($_POST['checker'])) ? $_POST['checker'] : null;
 $remarks = (!empty($_POST['remarks'])) ? $_POST['remarks'] : null;
 $trGrp = (!empty($_POST['trGrp'])) ? $_POST['trGrp'] : null;

@@ -42,7 +42,7 @@ const months = [
 checkAccess()
   .then((emp) => {
     if (emp.isSuccess) {
-      empDetails = emp.result[0];
+      empDetails = emp.result;
       console.log(empDetails);
       $(".hello-user").text(empDetails["empFName"]);
       var thisEmpID = $($("#idEmployee").find("option:selected")).attr(

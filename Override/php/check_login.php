@@ -2,6 +2,7 @@
 #region DB Connect
 require_once '../../dbconn/dbconnectkdtph.php';
 require_once '../../dbconn/dbconnectnew.php';
+require_once '../php/global.php';
 #endregion
 
 #region Initialize Variable
@@ -9,9 +10,9 @@ if(!empty($_COOKIE["userID"])) {
   $userHash = $_COOKIE["userID"];
 }
 else {
-  $msg["isSuccess"] = false;
-  $msg["message"] = "Not logged in";
-  die(json_encode($msg));
+  $result["isSuccess"] = false;
+  $result["message"] = "Not logged in";
+  die(json_encode($result));
 }
 #endregion
 
@@ -33,25 +34,32 @@ try{
     $empDeetsStmt = $connnew->prepare($empDeetsQ);
     $empDeetsStmt->execute([":userID" => $userID]);
     if($empDeetsStmt->rowCount() > 0) {
-      $result = $empDeetsStmt->fetchAll();
-      $msg['result'] = $result; 
-      $msg['isSuccess'] = true;
-      $msg['error'] = "Successfully retrieved";
+      $empDeets = $empDeetsStmt->fetch();
+      $userAccess = checkAccess($empDeets['empID']);
+      if($userAccess) {
+        $result['result'] = $empDeets;
+        $result['isSuccess'] = true;
+        $result['message'] = "Access Granted!";
+      }
+      else {
+        $result['isSuccess'] = false;
+        $result['message'] = "Access Denied!";
+      }
     }
     else{
-      $msg['isSuccess'] = false;
-      $msg['error'] = "Failed to retrieve data";
+      $result['isSuccess'] = false;
+      $result['message'] = "Failed to retrieve data";
     }
   }
   else {
-    $msg['isSuccess'] = false;
-    $msg['error'] = "No userID Found";
+    $result['isSuccess'] = false;
+    $result['message'] = "No userID Found";
   }
   
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = false;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);
