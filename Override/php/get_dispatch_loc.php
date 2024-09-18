@@ -9,19 +9,18 @@ try {
   $locationStmt = $connwebjmr->prepare($locationQ);
   $locationStmt->execute([]);
   if($locationStmt->rowCount() > 0){
-    $location = $locationStmt->fetchAll();
-    $msg['result'] = $location;
-    $msg['error'] = "Locations successfully retrieved!";
-    $msg['isSuccess'] = true;
+    $result['result'] = $locationStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Locations successfully retrieved!";
   }
   else{
-    $msg['error'] = "No Locations retrieved!";
-    $msg['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "No Locations retrieved!";
   }
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

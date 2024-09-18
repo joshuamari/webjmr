@@ -1,7 +1,7 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
-require_once "../../Override/php/global.php";
+require_once "./global_functions.php";
 #endregion
 
 #region set timezone
@@ -10,11 +10,11 @@ date_default_timezone_set('Asia/Manila');
 
 #region Initialize Variable
 $result = [
-  "isSuccess" => false,
+  "isSuccess" => FALSE,
   "message" => ''
 ];
 $required_fields = [
-  'overrideEmpNum' => 'Override User Employee No.',
+  'overrideEmpNum' => "Override User Employee No.",
   'empNum' => "Employee No.",
   'grpNum' => "Group No.",
   'selDate' => "Selected Date",
@@ -94,15 +94,15 @@ try {
     ":logs" => $logs
   ]);
   if($insertDRStmt->rowCount() > 0) {
-    $result['isSuccess'] = true;
+    $result['isSuccess'] = TRUE;
     $result['message'] = "Entries Added Successfully";
   }
   else{
-    $result['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
     $result['message'] = "Failed to Add Entries";
   }
 } catch (Exception $e) {
-  $result["isSuccess"] = false;
+  $result["isSuccess"] = FALSE;
   $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion

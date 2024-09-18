@@ -1,7 +1,7 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
-require_once "./global.php";
+require_once "./global_functions.php";
 #endregion
 
 #region Initialize Variable
@@ -9,9 +9,9 @@ if(!empty($_POST['projID'])){
   $projID = $_POST['projID'];
 }
 else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'] = "Project ID Missing";
-  die(json_encode($msg));
+  $result['isSuccess'] = FALSE;
+  $result['message'] = "Project ID Missing";
+  die(json_encode($result));
 }
 $leaveID = getLeaveID();
 $towType = ($projID == $leaveID) ? "0" : "1";
@@ -25,19 +25,18 @@ try {
   $typeStmt = $connwebjmr->prepare($typeQ);
   $typeStmt->execute([":towType" => $towType]);
   if($typeStmt->rowCount() > 0) {
-    $result = $typeStmt->fetchAll();
-    $msg['result'] = $result;
-    $msg['isSuccess'] = TRUE;
-    $msg['error'] = "Successfully retrieved";
+    $result['result'] = $typeStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
   } else{
-      $msg['isSuccess'] = FALSE;
-      $msg['error'] = "Failed to retrieve data";
+      $result['isSuccess'] = FALSE;
+      $result['message'] = "Failed to retrieve data";
     }
   
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

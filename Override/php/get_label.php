@@ -8,9 +8,9 @@ if(!empty($_POST['itemID'])){
     $itemID = $_POST['itemID'];
 }
 else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'] = "Item ID Missing";
-  die(json_encode($msg));
+  $result['isSuccess'] = FALSE;
+  $result['message'] = "Item ID Missing";
+  die(json_encode($result));
 }
 #endregion
 
@@ -19,14 +19,18 @@ try {
   $labelQ = "SELECT fldLabel FROM itemlabels WHERE fldItem = :itemID";
   $labelStmt = $connwebjmr->prepare($labelQ);
   $labelStmt->execute([":itemID" => $itemID]);
-  $result = ($labelStmt->rowCount() > 0) ? $labelStmt->fetchColumn() : "";
-  $msg['result'] = $result;
-  $msg['isSuccess'] = TRUE;
-  $msg['error'] = "Successfully retrieved";
+  if($labelStmt->rowCount() > 0) {
+    $result['result'] = $labelStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
+  } else {
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Failed to retrieve data";
+  }
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = false;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

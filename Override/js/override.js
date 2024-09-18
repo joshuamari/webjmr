@@ -1,18 +1,17 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
-// var myEmpNum = "";
 var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
 var otCount = 0;
 var lvCount = 0;
-const leaveID = getLeaveID();
-const otherID = getOtherID();
-const mngID = getMngID();
-const kiaID = getKiaID();
-const noMoreInputItems = getNoMoreInputItems();
-// const oneBUTrainerID = getOneBUTrainerID();
+let leaveID = "";
+let otherID = "";
+let mngID = "";
+let kiaID = "";
+const noMoreInputItems = [];
+let oneBUTrainerID = "";
 
 const calendar = document.querySelector(".calendar");
 
@@ -56,11 +55,19 @@ checkAccess()
         getMyGroups(myEmpNum)
           .then((grps) => {
             fillMyGroups(grps);
-            Promise.all([getDispatchLoc(), getEntries(thisEmpID)])
-              .then(([locs, entryList]) => {
+            Promise.all([getDispatchLoc(), getEntries(thisEmpID), getVariables()])
+              .then(([locs, entryList, otherVar]) => {
                 fillDispatchLoc(locs, 0);
                 fillEntries(entryList);
                 getMHCount(thisEmpID);
+                kia_id = parseInt(otherVar.kia_id);
+                leaveID = parseInt(otherVar.leaveID);
+                mngID = parseInt(otherVar.mngID);
+                otherID = parseInt(otherVar.otherProjID);
+                oneBUTrainerID = parseInt(otherVar.oneBUTrainerID);
+                noMoreInputItems.push(otherVar.noMoreIOW);
+                // console.log(otherVar);
+                // console.log(noMoreInputItems);
                 $(".cs-loader").fadeOut(1000);
               })
               .catch((error) => {
@@ -583,6 +590,30 @@ function checkAccess() {
 //     async: false,
 //   });
 // }
+
+// COMPILED VARIABLES 
+function getVariables() {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/global_variables.php",
+      dataType: "json",
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+    // resolve(response);
+  });
+}
 
 //GROUP FUNCTIONS
 function getMyGroups(myEmpNum) {

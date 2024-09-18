@@ -1,7 +1,7 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
-require_once "./global.php";
+require_once "./global_functions.php";
 #endregion
 
 #region MAIN QUERY
@@ -12,19 +12,19 @@ try{
   if ($defaultStmt->rowCount() > 0) {
     $arrResult = $defaultStmt->fetchAll();
     foreach($arrResult as $res) {
-      $msg['result'][] = (int)$res['fldId'];
+      $result['result'][] = (int)$res['fldId'];
     }
-    $msg['isSuccess'] = true;
-    $msg['error'] = "Successfully retrieved";
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
   }
   else{
-    $msg['isSuccess'] = false;
-    $msg['error'] = "Failed to retrieve data";
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Failed to retrieve data";
   }
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

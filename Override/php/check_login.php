@@ -2,7 +2,7 @@
 #region DB Connect
 require_once '../../dbconn/dbconnectkdtph.php';
 require_once '../../dbconn/dbconnectnew.php';
-require_once '../php/global.php';
+require_once './global_functions.php';
 #endregion
 
 #region Initialize Variable

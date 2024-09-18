@@ -8,9 +8,9 @@ if(!empty($_POST['towID'])) {
     $towID = $_POST['towID'];
 }
 else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'] = "Type of Work Missing";
-  die(json_encode($msg));
+  $result['isSuccess'] = FALSE;
+  $result['message'] = "Type of Work Missing";
+  die(json_encode($result));
 }
 #endregion
 
@@ -22,19 +22,18 @@ try {
   $towStmt = $connwebjmr->prepare($towQ);
   $towStmt->execute([":towID" => $towID]);
   if($towStmt->rowCount() > 0) {
-    $result = $towStmt->fetchColumn();
-    $msg['result'] = $result;
-    $msg['isSuccess'] = TRUE;
-    $msg['error'] = "Successfully retrieved";
+    $result['result'] = $towStmt->fetchColumn();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
   }
   else{
-    $msg['isSuccess'] = FALSE;
-    $msg['error'] = "Failed to retrieve data";
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Failed to retrieve data";
   }
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);
