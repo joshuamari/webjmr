@@ -133,9 +133,9 @@ body {
 
 /* ENTRY EDIT MODAL */
 
-#editEntry .modal-content {
+/* #editEntry .modal-content {
   height: 50%;
-}
+} */
 #editEntry .modal-body {
   height: 510px;
   overflow-y: auto;
@@ -144,6 +144,10 @@ body {
 ::-webkit-scrollbar {
   width: 0px;
   background: transparent;
+}
+
+.modal .modal-body label {
+  font-weight: 600;
 }
 
 .areaText {
@@ -1000,6 +1004,12 @@ option {
   margin: 0;
   font-weight: 500;
 }
+
+.right .table-container {
+  height: calc(100vh - 450px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
 .right .table-container .rounded-2 {
   box-shadow: 0 0px 25px rgba(0, 0, 0, 0.2);
 }
@@ -1405,9 +1415,6 @@ option {
 } */
 .bg-err {
   background-color: #ff6b6b3e;
-}
-.right-cont .table-container {
-  height: calc(100% - 208px);
 }
 
 @media screen and (max-width: 800px) {

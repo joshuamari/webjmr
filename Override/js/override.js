@@ -61,6 +61,7 @@ checkAccess()
                 fillDispatchLoc(locs, 0);
                 fillEntries(entryList);
                 getMHCount(thisEmpID);
+                fillMHType(0);
                 $(".cs-loader").fadeOut(1000);
               })
               .catch((error) => {
@@ -318,7 +319,7 @@ $(document).on("change", "#edit-selProj", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   console.log("entry empID: ", thisEmpID);
-  sequenceValidation(1);
+  // sequenceValidation(1);
   Promise.all([
     getItems(thisEmpID, projID),
     getTOW(projID),
@@ -332,7 +333,6 @@ $(document).on("change", "#edit-selProj", function () {
       MHValidation(1);
       fillCheckers(checks, 1);
       if (projID != null || projID != undefined) {
-        console.log("get drawing");
         isDrawing(1);
       }
     })
@@ -361,7 +361,6 @@ $(document).on("change", "#idItem", function () {
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
-  console.log("oneBU ", itemID);
   if (itemID != 0) {
     Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
       .then(([jobs, allgrps]) => {
@@ -390,7 +389,7 @@ $(document).on("change", "#edit-selIOW", function () {
   var projID = $("#edit-selProj").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   var checkItemID = noMoreInputItems.includes(itemID);
-  sequenceValidation(1);
+  // sequenceValidation(1);
   if (itemID != 0) {
     Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
       .then(([jobs, allgrps]) => {
@@ -515,7 +514,16 @@ $(document).on("click", "#idAdd", function () {
   }
 });
 //Entry Buttons
-$(document).on("click", "#dupeBut", function () {});
+$(document).on("click", "#dupeBut", function () {
+  var entryID = $(this).closest("tr").attr("entry-id");
+  editEntry(entryID)
+    .then((entryData) => {
+      dupeEntry(entryData);
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+});
 $(document).on("click", "#editBut", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var empText = $("#idEmployee option:selected").text();
@@ -528,10 +536,15 @@ $(document).on("click", "#editBut", function () {
     fillDispatchLoc(locs, 1);
     fillProjects(projs, 1);
     fillEditFields(entryData);
-    console.log("entryID", entryID);
+    fillMHType(1);
+    // .then((success) => {
     $("#emp-edit").html(empText);
-    $("#editEntry").modal("show");
-    sequenceValidation(1);
+    setTimeout(function () {
+      $("#editEntry").modal("show");
+    }, 1000);
+    // });
+
+    // sequenceValidation(1);
     isDrawing(1);
   });
 });
@@ -957,8 +970,8 @@ function fillItems(items, type) {
     });
   } else {
     editIOWSel.html(`<option value=0 item-id=0>Select Item of Works</option>`);
+    console.log("fill items entry", items);
     $.each(items, function (index, item) {
-      console.log("fill item entry");
       var option = $("<option>")
         .attr("value", item.id)
         .text(item.itemName)
@@ -1070,6 +1083,7 @@ function fillJobs(jobs, type) {
     editJobSel.html(
       `<option value=0 job-id=0>Select Job Request Description</option>`
     );
+    console.log("fill jrd entry", jobs);
     $.each(jobs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1135,6 +1149,7 @@ function fillTOW(tows, type) {
     });
   } else {
     editTOWSel.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
+    console.log("fill tows entry", tows);
     $.each(tows, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1381,6 +1396,107 @@ function hasTOW(type) {
   }
 }
 
+//for Training Selection
+function createTRGroupDiv(itemID, allgrps, type) {
+  //check if item of work is for training for one bu
+  if (itemID == 14) {
+    if (type == 0) {
+      $(".iow").after(`
+      <div class="col-12 my-2 trgrp">
+        <label for="trGroup" class="form-label">Group of Trainees</label>
+        <div class="input-group">
+          <select class="form-select" id="trGroup" required>
+          <option value="" selected hidden>Select Group to Train</option>
+          </select>
+        </div>
+        <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
+      </div>
+      `);
+      fillTRGroups(allgrps, 0);
+      // $("#trGroup").html(allgrps);
+    } else {
+      $(".edit-iow").after(`
+      <div class="row mb-2 trgrp">
+        <label for="edit-trGroup" class="col-form-label col-form-label-sm">Group of Trainees</label>
+        <div class="input-group">
+          <select class="form-select" id="edit-trGroup" required>
+          <option value="" selected hidden>Select Group to Train</option>
+          </select>
+        </div>
+        <small class="editTRGrpError hidden">Please Complete the Field</small>
+      </div>
+      `);
+      fillTRGroups(allgrps, 1);
+      // $("#edit-trGroup").html(allgrps);
+    }
+  } else {
+    $(".trgrp").remove();
+  }
+}
+
+function fillTRGroups(allgrps, type) {
+  var trgrpSelect = $("#trGroup");
+  var editTRGrpSel = $("#edit-trGroup");
+  console.log("fillgrps allgrps: ", allgrps);
+  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
+  if (type == 0) {
+    trgrpSelect.html(
+      `<option value=0 trgrp-id=0>Select Training Group</option>`
+    );
+    $.each(allgrps, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item.abbreviation)
+        .attr("chk-id", item.id);
+      trgrpSelect.append(option);
+    });
+  } else {
+    editTRGrpSel.html(
+      `<option value=0 trgrp-id=0>Select Training Group</option>`
+    );
+    $.each(allgrps, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item.abbreviation)
+        .attr("chk-id", item.id);
+      editTRGrpSel.append(option);
+    });
+  }
+}
+
+function getTRGroups() {
+  //get groups for training group selection
+  // $.ajax({
+  //   url: "php/get_groups.php",
+  //   success: function (response) {
+  //     $("#trGroup").html(response);
+  //   },
+  //   async: false,
+  // });
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_groups.php",
+      dataType: "json",
+      success: function (data) {
+        var allGroups = data["result"];
+        resolve(allGroups);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(
+            "An unspecified error occurred while fetching Training Groups."
+          );
+        }
+      },
+    });
+  });
+}
+
 //Time
 function getMHCount() {
   //get MH Counter Values
@@ -1434,6 +1550,33 @@ function getMHCount() {
     }
   }
 }
+function fillMHType(type) {
+  var mhTypeSelect = $("#idMH");
+  var editMHTypeSel = $("#edit-selMHType");
+  const mhtypes = ["Regular", "Overtime"];
+
+  console.log("mhtypes: ", mhtypes);
+  // return;
+  if (type == 0) {
+    mhTypeSelect.html(`<option value=0 mh-id=0>Select Manhour Type</option>`);
+    $.each(mhtypes, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item)
+        .attr("mh-id", item.id);
+      mhTypeSelect.append(option);
+    });
+  } else {
+    editMHTypeSel.html(`<option value=0 mh-id=0>Select Manhour Type</option>`);
+    $.each(mhtypes, function (index, item) {
+      var option = $("<option>")
+        .attr("value", item.id)
+        .text(item)
+        .attr("edtmh-id", item.id);
+      editMHTypeSel.append(option);
+    });
+  }
+}
 
 // Button Functions
 function resetEntry() {
@@ -1469,7 +1612,7 @@ function saveFunction() {
   addEntries(editID);
 }
 
-//Add Edit Delete
+//Add Entry
 function addEntries(addMode) {
   //add Entries to Database
   var tutri = $('input[name="radio"]:checked').val();
@@ -1631,19 +1774,17 @@ function addEntries(addMode) {
           itemID: item,
           jobReqDesc: jobreq,
           trGrp: trgrp,
-          towID: tow,
+          TOWID: tow,
           revision: revision,
           duration: getDuration,
           manhour: mhtype,
           remarks: remarks,
           checker: checker,
-          addType: addMode, // might remove
           overrideEmpNum: empDetails["empID"],
         },
         dataType: "json",
         success: function (response) {
           console.log("add entry success response: ", response);
-          console.log("emp", emp);
           getEntries(emp)
             .then((entryList) => {
               fillEntries(entryList);
@@ -1653,7 +1794,7 @@ function addEntries(addMode) {
             });
           resetEntry();
           // isDrawing();
-          console.log("okay");
+          console.log("added");
           resolve(response);
         },
         error: function (xhr, status, error) {
@@ -1670,6 +1811,7 @@ function addEntries(addMode) {
     });
   }
 }
+//Edit Entry
 function editEntry(entryID) {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -1697,38 +1839,197 @@ function editEntry(entryID) {
   });
 }
 function fillEditFields(editData) {
+  //check if checker, remarks, 2d3d, trgrp, is null
   console.log("fill edit fields: ", editData);
   var entry = editData[0];
   const mhtype = entry["MHType"];
   const tow = entry["TOW"];
   const checker = entry["checkerID"];
   const duration = entry["duration"];
+  const newhrs = Math.floor(duration / 60);
+  const newmins = duration % 60;
   const id = entry["id"];
   const iow = entry["itemID"];
   const jrd = entry["jobReqDesc"];
-  const locatiom = entry["locID"];
+  const location = entry["locID"];
   const proj = entry["projID"];
   const remarks = entry["remarks"];
   const revision = entry["revision"];
   const trgrp = entry["trGrp"];
   const tutridi = entry["twoDthreeD"];
 
-  $("#edit-selLoc").val(locatiom);
-  $("#edit-selProj").val(proj);
-  $("#edit-selIOW").val(iow);
-  $("#edit-selJRD").val(jrd);
-  $("#edit-2d3d").val(tutridi);
-  $("#edit-rev").val(revision);
-  $("#edit-selTOW").val(tow);
-  $("#edit-selCheck").val(checker);
-  $("#edit-towDesc").val();
-  $("#edit-newHour").val(duration / 60);
-  $("#edit-newMin").val(duration % 60);
-  $("#edit-selMHType").val(mhtype);
+  const success = true;
+
+  // return new Promise((resolve, reject) => {
+  $("#edit-selLoc").val(location);
+  $("#edit-selProj").val(proj).change();
+
+  setTimeout(function () {
+    // console.log("item");
+    $("#edit-selIOW").val(iow).change();
+  }, 100);
+  setTimeout(function () {
+    // console.log("jrd");
+    $("#edit-selJRD").val(jrd).change();
+  }, 600);
+  if (tow) {
+    setTimeout(function () {
+      // console.log("tow");
+      $("#edit-selTOW").val(tow).change();
+    }, 200);
+  }
+  $("#edit-towDesc").val(); //runs if has tow
+  if (tow == 3) {
+    //for checker
+    // console.log("checker");
+    setTimeout(function () {
+      $("#edit-selCheck").val(checker);
+    }, 600);
+  }
+  if (trgrp) {
+    //for training group
+    setTimeout(function () {
+      // console.log("tow");
+      $("#edit-trGroup").val(trgrp);
+    }, 600);
+  }
+  if (tutridi) {
+    console.log("2d3d");
+    $("#edit-2d3d").val(tutridi);
+  }
+  if (revision != 0) {
+    console.log("rev");
+    $("#edit-rev").val(revision);
+  }
+  setTimeout(function () {
+    // console.log("hrs");
+    $("#edit-newHour").val(newhrs);
+    $("#edit-newMin").val(newmins);
+  }, 700);
+  // setTimeout(function () {
+  console.log("before", $("#edit-selMHType").val());
+  $("#edit-selMHType").val(mhtype).change();
+  console.log("after", $("#edit-selMHType").val());
+  // }, 2000);
   $("#edit-newRemarks").val(remarks);
+  // });
+
   return;
 }
+//Duplicate Entry
+function dupeEntry(entryData) {
+  console.log(entryData);
+  const dupeData = entryData[0];
 
+  console.log("dupedata: ", dupeData);
+  const emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
+  const grp = $("#idGroup").val();
+  const date = $("#idDRDate").val();
+  const tutri = dupeData["twoDthreeD"];
+  const loc = dupeData["locID"];
+  const proj = dupeData["projID"];
+  const item = dupeData["itemID"];
+  const jobreq = dupeData["jobReqDesc"];
+  const trgrp = dupeData["trGrp"];
+  const tow = dupeData["TOW"];
+  const revision = dupeData["revision"];
+  const getDuration = dupeData["duration"];
+  const mhtype = dupeData["MHType"];
+  const remarks = dupeData["remarks"];
+  const checker = dupeData["checkerID"];
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/add_entries.php",
+      data: {
+        twoDthreeD: tutri,
+        grpNum: grp,
+        selDate: date,
+        locID: loc,
+        empNum: emp,
+        projID: proj,
+        itemID: item,
+        jobReqDesc: jobreq,
+        trGrp: trgrp,
+        TOWID: tow,
+        revision: revision,
+        duration: getDuration,
+        manhour: mhtype,
+        remarks: remarks,
+        checker: checker,
+        overrideEmpNum: empDetails["empID"],
+      },
+      dataType: "json",
+      success: function (response) {
+        console.log("dupe entry success response: ", response);
+        getEntries(emp)
+          .then((entryList) => {
+            fillEntries(entryList);
+          })
+          .catch((error) => {
+            alert(`dupe entries: ${error}`);
+          });
+        resetEntry();
+        // isDrawing();
+        console.log("added");
+        resolve(response);
+      },
+      error: function (xhr, status, error) {
+        console.log("error");
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resources are not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(error);
+        }
+      },
+    });
+  });
+}
+//Delete Entry
+function deleteEntry(trID) {
+  //delete Entries from Database
+  const emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
+  // $.post(
+  //   "ajax/delete_entry.php",
+  //   {
+  //     trID: tableRowID,
+  //   },
+  //   function (data) {
+  //     getEntries();
+  //     initCalendar();
+  //     getPlans();
+  //   }
+  // );
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/delete_entry.php",
+      data: {
+        trID: trID,
+      },
+      dataType: "json",
+      success: function (response) {
+        console.log(response);
+        getEntries(emp);
+        resolve(response);
+      },
+      error: function (xhr, status, error) {
+        console.log("error");
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resources are not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(error);
+        }
+      },
+    });
+  });
+}
 //Entries
 function getEntries(thisEmpID) {
   //get Daily Report Entries
@@ -1876,109 +2177,6 @@ function fillEntries(entryList) {
     var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
     entryTable.append(addString);
   }
-}
-
-//for Training Selection
-function createTRGroupDiv(itemID, allgrps, type) {
-  //check if item of work is for training for one bu
-  if (itemID == 14) {
-    if (type == 0) {
-      console.log("type 0: ");
-      $(".iow").after(`
-      <div class="col-12 my-2 trgrp">
-        <label for="trGroup" class="form-label">Group of Trainees</label>
-        <div class="input-group">
-          <select class="form-select" id="trGroup" required>
-          <option value="" selected hidden>Select Group to Train</option>
-          </select>
-        </div>
-        <span class="col-12 mt-1 alert-danger text-danger" id="p13" role="alert"></span>
-      </div>
-      `);
-      fillTRGroups(allgrps, 0);
-      // $("#trGroup").html(allgrps);
-    } else {
-      console.log("type 1: ");
-      $(".edit-iow").after(`
-      <div class="row mb-2 trgrp">
-        <label for="edit-trGroup" class="col-form-label col-form-label-sm">Group of Trainees</label>
-        <div class="input-group">
-          <select class="form-select" id="edit-trGroup" required>
-          <option value="" selected hidden>Select Group to Train</option>
-          </select>
-        </div>
-        <small class="editTRGrpError hidden">Please Complete the Field</small>
-      </div>
-      `);
-      fillTRGroups(allgrps, 1);
-      // $("#edit-trGroup").html(allgrps);
-    }
-  } else {
-    $(".trgrp").remove();
-  }
-}
-
-function fillTRGroups(allgrps, type) {
-  var trgrpSelect = $("#trGroup");
-  var editTRGrpSel = $("#edit-trGroup");
-  console.log("fillgrps allgrps: ", allgrps);
-  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
-  if (type == 0) {
-    trgrpSelect.html(
-      `<option value=0 trgrp-id=0>Select Training Group</option>`
-    );
-    $.each(allgrps, function (index, item) {
-      var option = $("<option>")
-        .attr("value", item.id)
-        .text(item.abbreviation)
-        .attr("chk-id", item.id);
-      trgrpSelect.append(option);
-    });
-  } else {
-    editTRGrpSel.html(
-      `<option value=0 trgrp-id=0>Select Training Group</option>`
-    );
-    $.each(allgrps, function (index, item) {
-      var option = $("<option>")
-        .attr("value", item.id)
-        .text(item.abbreviation)
-        .attr("chk-id", item.id);
-      editTRGrpSel.append(option);
-    });
-  }
-}
-
-function getTRGroups() {
-  //get groups for training group selection
-  // $.ajax({
-  //   url: "php/get_groups.php",
-  //   success: function (response) {
-  //     $("#trGroup").html(response);
-  //   },
-  //   async: false,
-  // });
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      type: "GET",
-      url: "php/get_groups.php",
-      dataType: "json",
-      success: function (data) {
-        var allGroups = data["result"];
-        resolve(allGroups);
-      },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          reject("Not Found Error: The requested resource was not found.");
-        } else if (xhr.status === 500) {
-          reject("Internal Server Error: There was a server error.");
-        } else {
-          reject(
-            "An unspecified error occurred while fetching Training Groups."
-          );
-        }
-      },
-    });
-  });
 }
 
 //for sidebar
