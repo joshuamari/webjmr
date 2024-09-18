@@ -7,7 +7,7 @@ require_once "../../dbconn/dbconnectwebjmr.php";
 if(!empty($_POST['empNum'])) {
   $empNum = $_POST['empNum'];
 } else{
-  $result['isSuccess'] = false;
+  $result['isSuccess'] = FALSE;
   $result['message'] = "No Employee Number submited!";
   die(json_encode($result));
 }
@@ -42,15 +42,14 @@ try{
   $fetchDRStmt = $connwebjmr->prepare($insertDRQ);
   $fetchDRStmt->execute([
     ":selDate" => $selDate,
-    ":empNum" => $empNum
+    ":empNum" => $empNum,
   ]);
   if($fetchDRStmt->rowCount() > 0) {
-    $fetchResult = $fetchDRStmt->fetchAll();
-    $result['result'] = $fetchResult;
-    $result['isSuccess'] = true;
+    $result['result'] = $fetchDRStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
     $result['message'] = 'Successfully Retrieved!';
   } else{
-    $result['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
     $result['message'] = 'No Data Available';
   }
 } catch (Exception $e) {

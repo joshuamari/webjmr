@@ -8,9 +8,9 @@ if(!empty($_POST['grpNum'])){
   $grpNum = $_POST['grpNum'];
 }
 else{
-  $msg['error'] = "No group number provided!";
-  $msg['isSuccess'] = false;
-  die(json_encode($msg));
+  $result['message'] = "No group number provided!";
+  $result['isSuccess'] = FALSE;
+  die(json_encode($result));
 }
 #endregion
 
@@ -23,19 +23,18 @@ try {
   $memberListStmt = $connnew->prepare($memberListQ);
   $memberListStmt->execute([":grpNum"=>$grpNum]);
   if($memberListStmt->rowCount() > 0) {
-    $userGrp = $memberListStmt->fetchAll();
-    $msg['result'] = $userGrp;
-    $msg['error'] = "User group successfully retrieved!";
-    $msg['isSuccess'] = true;
+    $result['result'] = $memberListStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "User group successfully retrieved!";
   }
   else{
-    $msg['error'] = "No members exists in group number";
-    $msg['isSuccess'] = false;
+    $msg['isSuccess'] = FALSE;
+    $msg['message'] = "No members exists in group number";
   }
-
 } catch (Exception $e) {
-    echo "Connection failed: " . $e->getMessage();
+  $result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

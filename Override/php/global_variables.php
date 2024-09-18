@@ -1,6 +1,6 @@
 <?php
 #region DB Connect
-require_once "../../Override/php/global.php";
+require_once "./global_functions.php";
 #endregion
 
 $global_var = [

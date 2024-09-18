@@ -1,18 +1,17 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
-// var myEmpNum = "";
 var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
 var otCount = 0;
 var lvCount = 0;
-const leaveID = getLeaveID();
-const otherID = getOtherID();
-const mngID = getMngID();
-const kiaID = getKiaID();
-const noMoreInputItems = getNoMoreInputItems();
-// const oneBUTrainerID = getOneBUTrainerID();
+let leaveID = "";
+let otherID = "";
+let mngID = "";
+let kiaID = "";
+const noMoreInputItems = [];
+let oneBUTrainerID = "";
 
 const calendar = document.querySelector(".calendar");
 
@@ -56,12 +55,24 @@ checkAccess()
         getMyGroups(myEmpNum)
           .then((grps) => {
             fillMyGroups(grps);
-            Promise.all([getDispatchLoc(), getEntries(thisEmpID)])
-              .then(([locs, entryList]) => {
+            Promise.all([
+              getDispatchLoc(),
+              getEntries(thisEmpID),
+              getVariables(),
+            ])
+              .then(([locs, entryList, otherVar]) => {
                 fillDispatchLoc(locs, 0);
                 fillEntries(entryList);
                 getMHCount(thisEmpID);
                 fillMHType(0);
+                kia_id = parseInt(otherVar.kia_id);
+                leaveID = parseInt(otherVar.leaveID);
+                mngID = parseInt(otherVar.mngID);
+                otherID = parseInt(otherVar.otherProjID);
+                oneBUTrainerID = parseInt(otherVar.oneBUTrainerID);
+                noMoreInputItems.push(otherVar.noMoreIOW);
+                // console.log(otherVar);
+                // console.log(noMoreInputItems);
                 $(".cs-loader").fadeOut(1000);
               })
               .catch((error) => {
@@ -548,7 +559,19 @@ $(document).on("click", "#editBut", function () {
     isDrawing(1);
   });
 });
-$(document).on("click", "#delBut", function () {});
+$(document).on("click", "#delBut", function () {
+  // var getID = $($(this).parents()[1]).attr("id");
+  // console.log(getID);
+  // var trID = getID.substr(2);
+  // console.log(trID);
+  var entryID = $(this).closest("tr").attr("entry-id");
+  console.log(entryID);
+
+  if (!confirm("Delete this entry?")) {
+    return;
+  }
+  deleteEntry(entryID);
+});
 
 //disabling inputs as per sequence
 $(document).on("change", "#idEmployee", function () {
@@ -601,6 +624,30 @@ function checkAccess() {
 //     async: false,
 //   });
 // }
+
+// COMPILED VARIABLES
+function getVariables() {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/global_variables.php",
+      dataType: "json",
+      success: function (data) {
+        resolve(data);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred.");
+        }
+      },
+    });
+    // resolve(response);
+  });
+}
 
 //GROUP FUNCTIONS
 function getMyGroups(myEmpNum) {
@@ -2009,12 +2056,18 @@ function deleteEntry(trID) {
       type: "POST",
       url: "php/delete_entry.php",
       data: {
-        trID: trID,
+        drID: trID,
       },
       dataType: "json",
       success: function (response) {
         console.log(response);
-        getEntries(emp);
+        getEntries(emp)
+          .then((entryList) => {
+            fillEntries(entryList);
+          })
+          .catch((error) => {
+            alert(`new entries: ${error}`);
+          });
         resolve(response);
       },
       error: function (xhr, status, error) {

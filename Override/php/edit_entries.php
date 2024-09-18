@@ -5,7 +5,7 @@ require_once "../../dbconn/dbconnectwebjmr.php";
 
 #region Initialize Variable
 $result = [
-  "isSuccess" => false,
+  "isSuccess" => FALSE,
   "message" => ''
 ];
 $required_fields = [
@@ -95,15 +95,15 @@ try{
     ":drID" => $input['drID'],
   ]);
   if($updateEntryStmt->rowCount() > 0) {
-    $result['isSuccess'] = true;
+    $result['isSuccess'] = TRUE;
     $result['message'] = "Edit Entry Successfully";
   }
   else{
-    $result['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
     $result['message'] = "Failed to Edit an Entry";
   }
 } catch (Exception $e) {
-  $result["isSuccess"] = false;
+  $result["isSuccess"] = FALSE;
   $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion

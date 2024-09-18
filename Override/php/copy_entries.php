@@ -9,7 +9,7 @@ date_default_timezone_set('Asia/Manila');
 
 #region Initialize Variable
 $result = [
-  "isSuccess" => false,
+  "isSuccess" => FALSE,
   "message" => ''
 ];
 $required_fields = [
@@ -124,15 +124,15 @@ try{
         ]);
       }
     }
-    $result['isSuccess'] = true;
+    $result['isSuccess'] = TRUE;
     $result['message'] = "Entries Copied Successfully";
   }
   else{
-    $result['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
     $result['message'] = "Failed to Copy Entries";
   }
 } catch (Exception $e) {
-  $result["isSuccess"] = false;
+  $result["isSuccess"] = FALSE;
   $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion

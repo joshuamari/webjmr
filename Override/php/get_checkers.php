@@ -2,26 +2,50 @@
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "../../dbconn/dbconnectkdtph.php";
-require_once "../../Override/php/global.php";
+require_once "./global_functions.php";
 #endregion
 
 #region Initialize Variables
-if(!empty($_POST['grpNum'])){
-  $grpNum = $_POST['grpNum'];
+$result = [
+  "isSuccess" => FALSE,
+  "message" => ''
+];
+$required_fields = [
+  'grpNum' => "Group No.",
+  'empNum' => "Employee No.",
+];
+
+$input = $_POST;
+$missing_fields = [];
+#endregion
+
+#region input checking
+foreach ($required_fields as $key => $description) {
+  if (empty($input[$key])) {
+    $missing_fields[] = $description;
+  }
 }
-else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'][] = "Group";
+#endregion
+
+#region for separtion of error
+$count = count($missing_fields);
+if ($count > 0) {
+  if ($count === 1) {
+    $result['message'] = "{$missing_fields[0]} is missing.";
+  } elseif ($count === 2) {
+    $result['message'] = "{$missing_fields[0]} and {$missing_fields[1]} are missing.";
+  } else {
+    $last_field = array_pop($missing_fields);
+    $result['message'] = implode(', ', $missing_fields) . ", and $last_field are missing.";
+  }
+  die(json_encode($result));
 }
-if(!empty($_POST['empNum'])) {
-  $empID = $_POST['empNum'];
-}
-else {
-  $msg['isSuccess'] = FALSE;
-  $msg['error'][] = "Employee No.";
-}
-$grpAbbr = getGroup($grpNum);
+#endregion
+
+#region ADDITIONAL CONDITION
+$grpAbbr = getGroup($input['grpNum']);
 $projID = (!empty($_POST['projID'])) ? $_POST['projID'] : '';
+
 $defaultProjID = getDefaults();
 if(!in_array($projID,$defaultProjID)){
   $projGroupQ = "SELECT fldGroup FROM projectstable WHERE fldID = :projID";
@@ -30,52 +54,42 @@ if(!in_array($projID,$defaultProjID)){
   $projGroup = $projGroupStmt->fetchColumn();
   $grpAbbr = $projGroup;
 }
+
 $sharedEmp = "";
 $sharedProjQ = "SELECT fldEmployeeNum FROM project_share WHERE fldProject = :projID";
 $sharedProjStmt = $connwebjmr->prepare($sharedProjQ);
 $sharedProjStmt->execute([":projID" => $projID]);
-if($sharedProjStmt->rowCount()>0){
+if($sharedProjStmt->rowCount() > 0){
     $spArr = $sharedProjStmt->fetchAll();
     $arrValues = array_column($spArr, "fldEmployeeNum");
-    $implodeString = implode("','",array_values($arrValues));
+    $implodeString = implode("','", array_values($arrValues));
     $sharedEmp = "OR fldEmployeeNum IN ('" . $implodeString . "')";
 }
 #endregion
 
-#region separtion of error
-if (!empty($msg)) {
-	if (count($msg['error']) > 1) {
-		$errorString = '';
-		foreach ($msg['error'] as $result) {
-			if ($result === end($msg['error'])) {
-				$errorString .= "and '$result' Missing";
-			} else {
-				$errorString .= "'$result', ";
-			}
-		}
-		$msg['error'] = $errorString;
-	} else {
-		$msg['error'] = implode("", $msg['error']);
-		$msg['error'] .= " Missing";
-	}
-	die(json_encode($msg));
-}
-#endregion
-
 #region Main Query
-$memQ = "SELECT `fldEmployeeNum` AS `id`, CONCAT(`fldFirstName`, ' ', `fldSurname`) AS `name` FROM emp_prof WHERE fldEmployeeNum != :empNum AND (fldGroup = :empGrp :sharedEmp) AND fldActive = 1 AND fldNick != ''";
-$memStmt=$connkdt->prepare($memQ);
-$memStmt->execute([":empNum" => $empID, "empGrp" => $grpAbbr, ":sharedEmp" => $sharedEmp]);
-if($memStmt->rowCount() > 0) {
-  $result = $memStmt->fetchAll();
-  $msg['isSuccess'] = TRUE;
-  $msg['result'] = $result;
-  $msg['error'] = "Successfully retrieved!";
+try {
+  $memQ = "SELECT `fldEmployeeNum` AS `id`, CONCAT(`fldFirstName`, ' ', `fldSurname`) AS `name` FROM emp_prof WHERE fldEmployeeNum != :empNum AND (fldGroup = :empGrp :sharedEmp) AND fldActive = 1 AND fldNick != ''";
+  $memStmt=$connkdt->prepare($memQ);
+  $memStmt->execute([
+    ":empNum" => $input['empNum'],
+    "empGrp" => $grpAbbr,
+    ":sharedEmp" => $sharedEmp,
+  ]);
+  if($memStmt->rowCount() > 0) {
+    $result['result'] = $memStmt->fetchAll();
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved!";
+  }
+  else{
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Retrieve Unsuccessfully!";
+  }
+} catch (Exception $e) {
+  $result["isSuccess"] = FALSE;
+  $result['message'] =  "Connection failed: " . $e->getMessage();
 }
-else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'] = "Retrieve Unsuccessfully!";
-}
+
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

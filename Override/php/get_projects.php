@@ -2,53 +2,52 @@
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "../../dbconn/dbconnectnew.php";
-require_once "../../Override/php/global.php";
+require_once "./global_functions.php";
 #endregion
 
 #region Initialize Variable
-$kdtw = $mngStatement = '';
-$result = [];
+$projects = [];
 
-if(!empty($_POST['grpNum'])){
-  $grpNum = $_POST['grpNum'];
-}
-else{
-  $msg['isSuccess'] = FALSE;
-  $msg['error'][] = "Group";
-}
-if(!empty($_POST['empNum'])) {
-  $empID = $_POST['empNum'];
-}
-else {
-  $msg['isSuccess'] = FALSE;
-  $msg['error'][] = "Employee No.";
+$result = [
+  "isSuccess" => FALSE,
+  "message" => ''
+];
+$required_fields = [
+  'empNum' => "Employee No.",
+  'grpNum' => "Group No.",
+];
+
+$input = $_POST;
+$missing_fields = [];
+#endregion
+
+#region input checking
+foreach ($required_fields as $key => $description) {
+  if (empty($input[$key])) {
+    $missing_fields[] = $description;
+  }
 }
 #endregion
 
-#region separtion of error
-if (!empty($msg)) {
-	if (count($msg['error']) > 1) {
-		$errorString = '';
-		foreach ($msg['error'] as $result) {
-			if ($result === end($msg['error'])) {
-				$errorString .= "and '$result' Missing";
-			} else {
-				$errorString .= "'$result', ";
-			}
-		}
-		$msg['error'] = $errorString;
-	} else {
-		$msg['error'] = implode("", $msg['error']);
-		$msg['error'] .= " Missing";
-	}
-	die(json_encode($msg));
+#region for separation of error
+$count = count($missing_fields);
+if ($count > 0) {
+  if ($count === 1) {
+    $result['message'] = "{$missing_fields[0]} is missing.";
+  } elseif ($count === 2) {
+    $result['message'] = "{$missing_fields[0]} and {$missing_fields[1]} are missing.";
+  } else {
+    $last_field = array_pop($missing_fields);
+    $result['message'] = implode(', ', $missing_fields) . ", and $last_field are missing.";
+  }
+  die(json_encode($result));
 }
 #endregion
 
 #region ADDITIONAL CONDITION
-$grpAbbr = getGroup($grpNum);
+$grpAbbr = getGroup($input['grpNum']);
 // get employee designation
-$empDesig = getEmpPosition($empID);
+$empDesig = getEmpPosition($input['empNum']);
 
 // Solution Project/s
 $solProjID = getSolutionProjects();
@@ -57,20 +56,17 @@ $solProjID = getSolutionProjects();
 $mngProjID = getManagementProjects();
 
 // Shared Project/s
-$sharedProjects = getSharedProjects($empID);
+$sharedProjects = getSharedProjects($input['empNum']);
 
-if(!in_array($grpAbbr,$KDTWAccess)){
-  $kdtw = " AND fldID != '$solProjID'";
-}
-if(!in_array($empDesig,$managementPositions) && !in_array($empID,$devs)){
-  $mngStatement = " AND fldID != '$mngProjID'";
-}
+$kdtw = (!in_array($grpAbbr,$KDTWAccess)) ? " AND fldID != '$solProjID'" : "";
+
+$mngStatement = (!in_array($empDesig,$managementPositions) && !in_array($input['empNum'],$devs)) ? " AND fldID != '$mngProjID'" : "";
 #endregion
 
 #region MAIN QUERY
 try {
   $projectQ = "SELECT `fldID` AS `id`, `fldProject` AS `projectName`, `fldGroup` AS `group` FROM projectstable 
-      WHERE (fldGroup IS NULL OR fldGroup = :grpAbbr $sharedProjects) AND fldActive = 1 AND fldDelete = 0 $kdtw $mngStatement ORDER BY fldDirect DESC, fldPriority, fldId";
+               WHERE (fldGroup IS NULL OR fldGroup = :grpAbbr $sharedProjects) AND fldActive = 1 AND fldDelete = 0 $kdtw $mngStatement ORDER BY fldDirect DESC, fldPriority, fldId";
   $projectStmt = $connwebjmr->prepare($projectQ);
   $projectStmt->execute([":grpAbbr" => $grpAbbr]);
   if($projectStmt->rowCount() > 0) {
@@ -87,20 +83,20 @@ try {
         $output += ["id" => $projID];
         $output += ["projName" => $projName];
         $output += ["groupAppend" => $groupAppend];
-        array_push($result,$output);
+        array_push($projects,$output);
     }
-    $msg['result'] = $result;
-    $msg['isSuccess'] = TRUE;
-    $msg['error'] = "Successfully retrieved";
+    $result['result'] = $projects;
+    $result['isSuccess'] = TRUE;
+    $result['message'] = "Successfully retrieved";
   } else{
-    $msg['isSuccess'] = FALSE;
-    $msg['error'] = "Failed to retrieve data";
+    $result['isSuccess'] = FALSE;
+    $result['message'] = "Failed to retrieve data";
   }
   
 } catch (Exception $e) {
-	$msg["isSuccess"] = false;
-	$msg['error'] =  "Connection failed: " . $e->getMessage();
+	$result["isSuccess"] = FALSE;
+	$result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
-echo json_encode($msg);
+echo json_encode($result);

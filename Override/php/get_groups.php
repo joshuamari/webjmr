@@ -10,15 +10,15 @@ try {
   $groupsStmt->execute([]);
   if($groupsStmt->rowCount() > 0) {
     $result['result'] = $groupsStmt->fetchAll();
-    $result['isSuccess'] = true;
+    $result['isSuccess'] = TRUE;
     $result['message'] = "Successfully Retrieved!";
   }
   else{
-    $result['isSuccess'] = false;
+    $result['isSuccess'] = FALSE;
     $result['message'] = "Failed to retrieve";
   }
 } catch (Exception $e) {
-  $result["isSuccess"] = false;
+  $result["isSuccess"] = FALSE;
   $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
