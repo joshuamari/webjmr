@@ -796,7 +796,8 @@ option {
 .left .left-cont #p9,
 .left .left-cont #p10,
 .left .left-cont #p11,
-.left .left-cont #p12 {
+.left .left-cont #p12,
+.left .left-cont #p13 {
   font-size: 14px;
 }
 .left .left-cont .checkbox {

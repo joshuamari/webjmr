@@ -20,7 +20,7 @@ try {
   $labelStmt = $connwebjmr->prepare($labelQ);
   $labelStmt->execute([":itemID" => $itemID]);
   if($labelStmt->rowCount() > 0) {
-    $result['result'] = $labelStmt->fetchAll();
+    $result['result'] = $labelStmt->fetch();
     $result['isSuccess'] = TRUE;
     $result['message'] = "Successfully retrieved";
   } else {

@@ -10,7 +10,7 @@ let leaveID = "";
 let otherID = "";
 let mngID = "";
 let kiaID = "";
-const noMoreInputItems = [];
+let noMoreInputItems = [];
 let oneBUTrainerID = "";
 
 const calendar = document.querySelector(".calendar");
@@ -70,7 +70,7 @@ checkAccess()
                 mngID = parseInt(otherVar.mngID);
                 otherID = parseInt(otherVar.otherProjID);
                 oneBUTrainerID = parseInt(otherVar.oneBUTrainerID);
-                noMoreInputItems.push(otherVar.noMoreIOW);
+                noMoreInputItems = otherVar.noMoreIOW;
                 // console.log(otherVar);
                 // console.log(noMoreInputItems);
                 $(".cs-loader").fadeOut(1000);
@@ -370,6 +370,7 @@ $(document).on("change", "#idItem", function () {
 
   var projID = $("#idProject").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
+  console.log("itemID", itemID);
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
   if (itemID != 0) {
@@ -494,16 +495,19 @@ $(document).on("change", "#idChecking", function () {
   $("#p9").text("");
   $(this).removeClass("border-danger");
 });
+
 //Hours Minutes
 $(document).on("click", "#getHour, #getMin", function () {
   $("#p10").text("");
   $(this).removeClass("border-danger");
 });
+
 //ManHour Type
 $(document).on("change", "#idMH", function () {
   $("#p11").text("");
   $(this).removeClass("border-danger");
 });
+
 // Add / Clear / Save Changes / Cancel Buttons
 $(document).on("click", "#idReset", function () {
   //click Reset Event
@@ -524,7 +528,8 @@ $(document).on("click", "#idAdd", function () {
       break;
   }
 });
-//Entry Buttons
+
+//Entry Table Buttons
 $(document).on("click", "#dupeBut", function () {
   var entryID = $(this).closest("tr").attr("entry-id");
   editEntry(entryID)
@@ -560,17 +565,24 @@ $(document).on("click", "#editBut", function () {
   });
 });
 $(document).on("click", "#delBut", function () {
-  // var getID = $($(this).parents()[1]).attr("id");
-  // console.log(getID);
-  // var trID = getID.substr(2);
-  // console.log(trID);
   var entryID = $(this).closest("tr").attr("entry-id");
-  console.log(entryID);
-
   if (!confirm("Delete this entry?")) {
     return;
   }
   deleteEntry(entryID);
+});
+
+//copy button
+$(document).on("click", "#idCopy", function () {
+  var copyfrom = $("#idCopyDate").val();
+  var empName = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
+  if (!copyfrom || !empName) {
+    alert("Please Select an Employee & a Date to Copy From");
+  }
+  console.log(copyfrom, empName);
+
+  copyEntries();
 });
 
 //disabling inputs as per sequence
@@ -1041,15 +1053,18 @@ function getLabel(itemID, type) {
     dataType: "json",
     success: function (response) {
       const msg = response["result"];
+      console.log("msg", msg);
+      const lbl = msg["fldLabel"];
+
       if (type == 0) {
         $("#labell").remove();
         $("#p6").after(`
-          <span class="col-12 alert-primary text-primary" id="labell" role="alert">${msg}</span>
+          <span class="col-12 alert-primary text-primary" id="labell" role="alert">${lbl}</span>
           `);
       } else {
         $("#edit-labell").remove();
         $(".editIOWError").after(`
-          <span class="col-12 alert-primary text-primary" id="edit-labell" role="alert">${msg}</span>
+          <span class="col-12 alert-primary text-primary" id="edit-labell" role="alert">${lbl}</span>
           `);
       }
     },
@@ -1600,26 +1615,31 @@ function getMHCount() {
 function fillMHType(type) {
   var mhTypeSelect = $("#idMH");
   var editMHTypeSel = $("#edit-selMHType");
-  const mhtypes = ["Regular", "Overtime"];
+  const mhtypes = [
+    { id: 0, type: "Regular" },
+    { id: 1, type: "Overtime" },
+  ];
 
   console.log("mhtypes: ", mhtypes);
   // return;
   if (type == 0) {
-    mhTypeSelect.html(`<option value=0 mh-id=0>Select Manhour Type</option>`);
+    mhTypeSelect.html(`<option value="" mhid=0>Select Manhour Type</option>`);
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
-        .text(item)
-        .attr("mh-id", item.id);
+        .text(item.type)
+        .attr("mhid", item.id);
       mhTypeSelect.append(option);
     });
   } else {
-    editMHTypeSel.html(`<option value=0 mh-id=0>Select Manhour Type</option>`);
+    editMHTypeSel.html(
+      `<option value="" edtmhid=0>Select Manhour Type</option>`
+    );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
-        .text(item)
-        .attr("edtmh-id", item.id);
+        .text(item.type)
+        .attr("edtmhid", item.id);
       editMHTypeSel.append(option);
     });
   }
@@ -1629,7 +1649,7 @@ function fillMHType(type) {
 function resetEntry() {
   //reset Inputs
   $("#getHour,#getMin,#idRemarks").val("").change();
-  $("#idMH").val("").change();
+  $("#idMH").val(0).change();
   // $("#idGroup,#idEmployee").val(0).change();
   $("#idLocation,#idProject,#idItem,#idJRD,#idTOW,#towDesc,#trGroup")
     .val(0)
@@ -1762,6 +1782,7 @@ function addEntries(addMode) {
     $("#getMin").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ORAS");
   }
+  console.log("mhtype: ", mhtype);
   if (!mhtype && proj != leaveID) {
     $("#p11").text("Please Select Manhour Type");
     $("#idMH").addClass("border border-danger").addClass("bg-err");
@@ -1771,15 +1792,14 @@ function addEntries(addMode) {
     //IF LEAVE
     mhtype = 2;
   }
-  // if (item == oneBUTrainerID) {
-  //   if (!trgrp) {
-  //     $("#p13").text("Please Select Group To Train");
-  //     $("#trGroup").addClass("border border-danger").addClass("bg-err");
-  //     mgaKulang.push("TRGROUP");
-  //   }
-  // }
+  if (item == 14) {
+    if (!trgrp || trgrp == 0) {
+      $("#p13").text("Please Select Group To Train");
+      $("#trGroup").addClass("border border-danger").addClass("bg-err");
+      mgaKulang.push("TRGROUP");
+    }
+  }
 
-  console.log("jrd: ");
   if (mgaKulang.length > 0) {
     console.log(mgaKulang);
     return;
@@ -1953,11 +1973,11 @@ function fillEditFields(editData) {
     $("#edit-newHour").val(newhrs);
     $("#edit-newMin").val(newmins);
   }, 700);
-  // setTimeout(function () {
-  console.log("before", $("#edit-selMHType").val());
-  $("#edit-selMHType").val(mhtype).change();
-  console.log("after", $("#edit-selMHType").val());
-  // }, 2000);
+  setTimeout(function () {
+    console.log("before", $("#edit-selMHType").val());
+    $("#edit-selMHType").val(mhtype).change();
+    console.log("after", $("#edit-selMHType").val());
+  }, 900);
   $("#edit-newRemarks").val(remarks);
   // });
 
@@ -2230,6 +2250,62 @@ function fillEntries(entryList) {
     var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
     entryTable.append(addString);
   }
+}
+
+function copyEntries() {
+  //copy entries from selected date
+  var getDate = $("#idDRDate").val();
+  var copyDate = $("#idCopyDate").val();
+  var getEmp = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
+  // $.post(
+  //   "ajax/copy_entries.php",
+  //   {
+  //     empNum: empDetails["empNum"],
+  //     getDate: getDate,
+  //     copyDate: copyDate,
+  //   },
+  //   function (data) {
+  //     getEntries();
+  //     resetEntry();
+  //     initCalendar();
+  //     getPlans();
+  //   }
+  // );
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/copy_entries.php",
+      data: {
+        empID: getEmp,
+        overrideEmpID: empDetails["empID"],
+        selDate: getDate,
+        copyDate: copyDate,
+      },
+      success: function (response) {
+        console.log(response);
+        getEntries(getEmp)
+          .then((entryList) => {
+            fillEntries(entryList);
+          })
+          .catch((error) => {
+            alert(`add entries: ${error}`);
+          });
+        // resetEntry(); //might not need
+        resolve(response);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resources are not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(error);
+        }
+      },
+    });
+  });
 }
 
 //for sidebar
