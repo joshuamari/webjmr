@@ -101,22 +101,17 @@ body {
   --blue1: #80aff0;
   --blue2: #33425b;
   --blue3: #1347a1;
+  --blue4: #415e91;
 }
 /* MODAL */
-/* MODAL 1 */
 .modal-header {
-  background-color: var(--blue1);
-  background: linear-gradient(180deg, var(--blue1) 25%, var(--blue2) 100%);
-  /* background-color: var(--red3);
-  background: linear-gradient(
-    135deg,
-    var(--black1) 1%,
-    var(--red4) 50%,
-    var(--red1) 100%
-  ); */
+  background-color: var(--blue4);
   color: var(--magnolia);
 }
 .modal-header h1 {
+  color: var(--magnolia);
+}
+.modal .modal-header .btn-close {
   color: var(--magnolia);
 }
 .btn-ok {
@@ -133,9 +128,6 @@ body {
 
 /* ENTRY EDIT MODAL */
 
-/* #editEntry .modal-content {
-  height: 50%;
-} */
 #editEntry .modal-body {
   height: 510px;
   overflow-y: auto;
@@ -155,40 +147,38 @@ body {
 }
 
 .btn-Ecancel {
-  border: 1px solid var(--red3);
+  border: 2px solid var(--red3);
   color: var(--red3);
 }
 .btn-Ecancel:hover {
-  border: 1px solid var(--red2);
+  border: 2px solid var(--red2);
   background: var(--red2);
   color: var(--magnolia);
 }
-.btn-Ecancel:active {
-  border: 1px solid var(--red4);
+.modal .modal-footer .btn-Ecancel:active {
+  border: 2px solid var(--red4);
   background: var(--red4);
   color: var(--magnolia);
 }
 .btn-Eupdate {
-  background: var(--blue2);
-  color: var(--magnolia);
-  border: 1px solid var(--blue2);
+  /* background: var(--blue3); */
+  color: var(--blue3);
+  border: 2px solid var(--blue3);
 }
 .btn-Eupdate:hover {
   color: var(--magnolia);
-  border: 1px solid var(--blue3);
-  background: var(--blue3);
-  /* transition: all 0.5s ease; */
+  border: 2px solid var(--blue4);
+  background: var(--blue4);
 }
-.btn-Eupdate:active {
+.modal .modal-footer .btn-Eupdate:active {
   background: var(--blue2);
   color: var(--magnolia);
-  border: 1px solid var(--blue2);
+  border: 2px solid var(--blue2);
 }
 
 .emp-edit {
   font-weight: 600;
-  color: var(--blue2);
-  /* text-decoration: underline; */
+  color: var(--blue1);
 }
 
 .radio-buttons {
@@ -287,7 +277,6 @@ body {
   transition: left 0.3s;
 }
 .modal-content .modal-body .checkbox:checked {
-  /* background-color: var(--tiffanyblue); */
   background: linear-gradient(45deg, var(--blue2) 0%, var(--blue1) 100%);
 }
 .modal-content .modal-body .checkbox:checked::after {
@@ -295,6 +284,30 @@ body {
   content: "\2713";
   color: #11101d;
   color: var(--black1);
+}
+
+/* DELETE MODAL */
+
+.delMBody {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0 50px 0;
+  font-size: 1.25rem;
+}
+
+.btn-Edelete {
+  color: var(--magnolia);
+  background: var(--red2);
+}
+.btn-Edelete:hover {
+  color: var(--magnolia);
+  background: var(--red4);
+}
+.modal .modal-footer .btn-Edelete:active {
+  color: var(--red1);
+  background: var(--magnolia);
+  border: 2px solid var(--red1);
 }
 
 /* sidebar */
@@ -447,7 +460,6 @@ body {
 .sidebar .nav-links li .sub-menu a {
   color: var(--magnolia);
 
-  /* font-weight: 600; */
   font-size: 15px;
   padding: 5px 0;
   white-space: nowrap;
@@ -524,7 +536,6 @@ body {
 }
 
 .user-name h5 span {
-  /* color: var(--red1); */
   color: var(--blue1);
 }
 
@@ -542,7 +553,6 @@ footer {
 }
 .footer-text a {
   font-weight: 600;
-  /* color: var(--red1); */
   color: var(--blue1);
 }
 
@@ -611,7 +621,6 @@ footer {
   justify-content: space-between;
   padding: 0 20px 0 20px;
   background: var(--metal);
-  /* background: linear-gradient(45deg, var(--silver) 0%, var(--metal) 100%); */
 }
 
 .home-section .home-topbar .bx-menu,
@@ -638,53 +647,14 @@ footer {
 
 .page-title .title {
   font-size: 55px;
-  /* width: 430px;
-  height: 75px; */
   width: 98%;
   height: 93%;
   -webkit-clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
   clip-path: polygon(0 0, 100% 0, 90% 100%, 0% 100%);
-  /* -webkit-clip-path: polygon(1% 1%, 99% 1%, 79% 99%, 1% 99%);
-  clip-path: polygon(1% 1%, 99% 1%, 89% 99%, 1% 99%); */
-
-  /* background: var(--card-color); */
-  /* background: linear-gradient(
-    45deg,
-    rgba(254, 161, 111, 1) 0%,
-    rgba(253, 193, 104, 1) 100%
-  ); */
-  /* background: var(--red3); */
-  /* background: var(--arsenic); */
-  /* background: linear-gradient(
-    45deg,
-    var(--red1) 1%,
-    var(--red4) 45%,
-    var(--red5) 80%,
-    var(--black1) 100%
-  ); */
-  /* background: linear-gradient(
-    45deg,
-    var(--black1) 1%,
-    var(--red5) 25%,
-    var(--red4) 60%,
-    var(--red1) 100%
-  ); */
-
-  background: var(--blue2);
-  /* background: linear-gradient(
-    45deg,
-    var(--metal) 1%,
-    var(--blue2) 15%,
-    var(--blue1) 100%
-  ); */
-  /* background: linear-gradient(
-    45deg,
-    var(--blue1) 1%,
-    var(--blue2) 75%,
-    var(--metal) 100%
-  ); */
+  background: var(--arsenic);
   opacity: 1;
-  color: #fff;
+  color: var(--magnolia);
+  font-weight: 500;
 }
 
 .page-title .pg-title-inner {
@@ -827,7 +797,6 @@ option {
   transition: left 0.3s;
 }
 .left .left-cont .checkbox:checked {
-  /* background-color: var(--tiffanyblue); */
   background: linear-gradient(45deg, var(--blue2) 0%, var(--blue1) 100%);
 }
 .left .left-cont .checkbox:checked::after {
@@ -837,19 +806,10 @@ option {
   color: var(--black1);
 }
 .left .left-cont .btn-add {
-  /* background: var(--main-blue); */
-  /* background: rgb(32, 191, 85);
-  background: linear-gradient(
-    45deg,
-    rgba(32, 191, 85, 1) 0%,
-    rgba(1, 186, 239, 1) 100%
-  ); */
-
   background: var(--blue1);
   background: linear-gradient(45deg, var(--blue1) 0%, var(--blue2) 100%);
 
   font-weight: 600;
-  /* color: #fff; */
   color: var(--magnolia);
   border: 3px solid var(--blue1);
 }
@@ -888,11 +848,9 @@ option {
 }
 
 .left .left-cont .btn-add:hover {
-  /* color: #fff; */
   color: var(--magnolia);
   border: 3px solid var(--blue2);
   background: var(--blue2);
-  /* background: linear-gradient(45deg, var(--silver) 0%, var(--arsenic) 100%); */
   background: linear-gradient(45deg, var(--blue2) 0%, var(--blue1) 100%);
   transition: all 0.5s ease;
 }
@@ -921,13 +879,6 @@ option {
   width: 100%;
   height: 100%;
   background: var(--red1);
-  /* background: linear-gradient(
-    45deg,
-    var(--red1) 1%,
-    var(--red4) 45%,
-    var(--red5) 80%,
-    var(--black1) 100%
-  ); */
   background: linear-gradient(45deg, var(--blue1) 1%, var(--blue2) 100%);
   content: "";
   position: absolute;
@@ -957,8 +908,6 @@ option {
   font-weight: 600;
 }
 .right .right-cont .btn-copy {
-  /* background: var(--arsenic); */
-  /* background: linear-gradient(45deg, var(--silver) 0%, var(--arsenic) 100%); */
   background: linear-gradient(45deg, var(--blue1) 0%, var(--blue2) 100%);
 
   border: none;
@@ -966,7 +915,6 @@ option {
 }
 .right .right-cont .btn-copy:hover {
   background: var(--silver);
-  /* background: linear-gradient(45deg, var(--arsenic) 0%, var(--silver) 100%); */
   background: linear-gradient(45deg, var(--blue2) 0%, var(--blue1) 100%);
   color: #fff;
 }
@@ -989,6 +937,7 @@ option {
   padding: 8px;
   margin: 0;
   font-size: 40px;
+  font-weight: 500;
 }
 .right .card .content {
   position: relative;
@@ -1025,6 +974,11 @@ option {
 }
 .right .table-container .table tbody tr td:last-child {
   white-space: nowrap;
+}
+.right .table-container .table .entry-none h2 {
+  color: var(--text-color);
+  font-size: 1.75rem;
+  font-weight: 500;
 }
 .right .btn-export {
   background: var(--card-color);
@@ -1065,26 +1019,44 @@ option {
 }
 
 /* ACTION BUTTONS (Table)*/
-.selectBut {
+.dupeBut {
   height: 40px;
   width: 40px;
-  background-color: var(--main-blue);
-
-  margin: 2px;
+  /* background-color: var(--blue3); */
+  border: 2px solid var(--blue3);
+  border-radius: 20px;
+  /* color: var(--magnolia); */
+  margin: 1px;
 }
-.edit {
+.dupeBut:hover {
+  background-color: var(--blue3);
+  color: var(--magnolia);
+}
+.editBut {
   height: 40px;
   width: 40px;
-  background-color: var(--yellow-color);
-
-  margin: 2px;
+  /* background-color: var(--blue2); */
+  border: 2px solid var(--blue2);
+  /* color: var(--magnolia); */
+  border-radius: 20px;
+  margin: 1px;
+}
+.editBut:hover {
+  background-color: var(--blue2);
+  color: var(--magnolia);
 }
 .delBut {
   height: 40px;
   width: 40px;
-  background-color: var(--red-color);
-
-  margin: 2px;
+  /* background-color: var(--red3); */
+  border: 2px solid var(--red3);
+  /* color: var(--magnolia); */
+  border-radius: 20px;
+  margin: 1px;
+}
+.delBut:hover {
+  background-color: var(--red3);
+  color: var(--magnolia);
 }
 
 /*loaderrrrr*/
@@ -1186,13 +1158,6 @@ option {
   animation: lol 1.5s 500ms infinite ease-in-out;
 }
 
-/* SELECT DROPDOWNS (Form) */
-.loc select > option:hover {
-  background: red;
-}
-.loc .form-select option:hover {
-  background: yellow;
-}
 /* SELECT EMPLOYEE */
 
 .emp.active .content {

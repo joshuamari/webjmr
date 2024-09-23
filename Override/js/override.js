@@ -12,6 +12,9 @@ let mngID = "";
 let kiaID = "";
 let noMoreInputItems = [];
 let oneBUTrainerID = "";
+let entryArr = [];
+let editTRID = [];
+let delTRID = [];
 
 const calendar = document.querySelector(".calendar");
 
@@ -37,12 +40,10 @@ const months = [
 
 //#endregion
 // checkLogin();
-// const myEmpNum = empDetails["empNum"];
 checkAccess()
   .then((emp) => {
     if (emp.isSuccess) {
       empDetails = emp.result;
-      console.log(empDetails);
       $(".hello-user").text(empDetails["empFName"]);
       var thisEmpID = $($("#idEmployee").find("option:selected")).attr(
         "emp-id"
@@ -71,8 +72,6 @@ checkAccess()
                 otherID = parseInt(otherVar.otherProjID);
                 oneBUTrainerID = parseInt(otherVar.oneBUTrainerID);
                 noMoreInputItems = otherVar.noMoreIOW;
-                // console.log(otherVar);
-                // console.log(noMoreInputItems);
                 $(".cs-loader").fadeOut(1000);
               })
               .catch((error) => {
@@ -197,7 +196,6 @@ $(document).on("click", "#drInstruction .btn-close", function () {
 //ENTRY MODAL
 $(document).on("click", ".btn-close", function () {
   $(this).closest(".modal").find("input").attr("disabled", true);
-  // $("#btn-updateWorkEntry").attr("e-wh-id", 0);
   $("small").removeClass("block");
   $("small").addClass("hidden");
   // clearAddWorkInputs();
@@ -205,13 +203,32 @@ $(document).on("click", ".btn-close", function () {
 });
 $(document).on("click", ".btn-Ecancel", function () {
   $(this).closest(".modal").find(".btn-close").click();
+  resetEntry();
+});
+$(document).on("click", ".btn-Eupdate", function () {
+  saveEdit();
+  $(this).closest(".modal").find(".btn-close").click();
+  resetEntry();
 });
 
+$(document).on("click", ".btn-Edelete", function () {
+  deleteEntry(delTRID);
+  $(this).closest(".modal").find(".btn-close").click();
+});
 //Remove Red Borders Errors
 $(document).on(
   "click",
   "#idGroup, #idDRDate, #idLocation, #idEmployee, #idProject, #idItem, #idJRD, #idTOW, #idChecking, #idMH, #idRemarks, #trGroup, #getHour, #getMin",
   function () {
+    $(this).removeClass("bg-err");
+    $(this).removeClass("border border-danger");
+  }
+);
+$(document).on(
+  "click",
+  "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin",
+  function () {
+    $(".editInputError").removeClass("block").addClass("hidden");
     $(this).removeClass("bg-err");
     $(this).removeClass("border border-danger");
   }
@@ -253,7 +270,6 @@ $(document).on("change", "#idGroup", function () {
       alert(`${error}`);
     });
 
-  // $("#idJRD, #idItem, #idProject, #idEmployee").val("");
   $("#p1").text("");
   $(this).removeClass("border-danger");
   // $(".iow").removeClass("active");
@@ -271,12 +287,17 @@ $(document).on("change", "#idLocation", function () {
 $(document).on("change", "#idEmployee", function () {
   //select Employee Event
   var thisEmpID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
+  var selDate = $("#idDRDate").val();
   sequenceValidation(0);
-  Promise.all([getProjects(thisEmpID), getEntries(thisEmpID)])
-    .then(([projs, entryList]) => {
+  Promise.all([
+    getProjects(thisEmpID),
+    getEntries(thisEmpID), //get text entries
+    getIDEntries(thisEmpID, selDate), //get id entries
+  ])
+    .then(([projs, entryList, entryIDs]) => {
       resetSelection(1);
       fillProjects(projs, 0);
-      fillEntries(entryList);
+      fillEntries(entryList); //fill table entries
       getMHCount(thisEmpID);
     })
     .catch((error) => {
@@ -285,7 +306,6 @@ $(document).on("change", "#idEmployee", function () {
 
   $("#p4").text("");
   $(this).removeClass("border-danger");
-  // getProjects(thisEmpID);
 });
 
 // FOR PROJECTS LIST
@@ -320,7 +340,7 @@ $(document).on("change", "#idProject", function () {
     $("#itemlbl").html("Leave Type");
     $("#lbltow").html("Day Type");
   } else {
-    $("#itemlbl").html("Select Item of Works");
+    $("#itemlbl").html("Item of Works");
     $("#lbltow").html("Type of Work");
   }
   $(".trgrp").remove();
@@ -329,7 +349,6 @@ $(document).on("change", "#edit-selProj", function () {
   //select Project Event Type=[1]
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
-  console.log("entry empID: ", thisEmpID);
   // sequenceValidation(1);
   Promise.all([
     getItems(thisEmpID, projID),
@@ -350,14 +369,13 @@ $(document).on("change", "#edit-selProj", function () {
     .catch((error) => {
       alert(`${error}`);
     });
-  // $("#p5").text("");
   $(this).removeClass("border-danger");
 
   if (projID == leaveID) {
     $("#edit-itemlbl").html("Leave Type");
     $("#edit-lbltow").html("Day Type");
   } else {
-    $("#edit-itemlbl").html("Select Item of Works");
+    $("#edit-itemlbl").html("Item of Works");
     $("#edit-lbltow").html("Type of Work");
   }
   $(".trgrp").remove();
@@ -370,7 +388,6 @@ $(document).on("change", "#idItem", function () {
 
   var projID = $("#idProject").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
-  console.log("itemID", itemID);
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
   if (itemID != 0) {
@@ -386,12 +403,9 @@ $(document).on("change", "#idItem", function () {
       });
   }
 
-  // $(".trgrp").remove();
-  // disableInputs(projID, itemID);
   if (checkItemID) {
     $("#drInstruction").modal("show");
   }
-  // getJobs(projID, itemID);
   $("#p6").text("");
   $(this).removeClass("border-danger");
 });
@@ -415,13 +429,9 @@ $(document).on("change", "#edit-selIOW", function () {
       });
   }
 
-  // $(".trgrp").remove();
-  // disableInputs(projID, itemID);
   if (checkItemID) {
     $("#drInstruction").modal("show");
   }
-  // getJobs(projID, itemID);
-  $("#p6").text("");
   $(this).removeClass("border-danger");
 });
 
@@ -433,7 +443,6 @@ $(document).on("change", "#idJRD", function () {
 });
 $(document).on("change", "#edit-selJRD", function () {
   var editselJRD = $($(this).find("option:selected")).attr("job-id");
-  $("#e7").text("");
   $(this).removeClass("border-danger");
 });
 $(document).on("change", "#idTOW", function () {
@@ -508,50 +517,36 @@ $(document).on("change", "#idMH", function () {
   $(this).removeClass("border-danger");
 });
 
-// Add / Clear / Save Changes / Cancel Buttons
+// Add / Clear
 $(document).on("click", "#idReset", function () {
   //click Reset Event
-  if ($(this).text().trim() == "Clear") {
-    resetEntry();
-  } else {
-    cancelEditFunction();
-  }
+  resetEntry();
 });
 $(document).on("click", "#idAdd", function () {
   //click Add Event
-  switch ($(this).text().trim()) {
-    case "Add":
-      addEntries(0);
-      break;
-    case "Save Changes":
-      saveFunction();
-      break;
-  }
+  addEntries(0);
 });
 
 //Entry Table Buttons
 $(document).on("click", "#dupeBut", function () {
   var entryID = $(this).closest("tr").attr("entry-id");
-  editEntry(entryID)
-    .then((entryData) => {
-      dupeEntry(entryData);
-    })
-    .catch((error) => {
-      alert(`${error}`);
-    });
+  const entryRow = entryArr.filter((entry) => entry.id === entryID);
+  dupeEntry(entryRow);
 });
 $(document).on("click", "#editBut", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var empText = $("#idEmployee option:selected").text();
   var entryID = $(this).closest("tr").attr("entry-id");
+  const entryRow = entryArr.filter((entry) => entry.id === entryID);
+  editTRID = entryID;
   Promise.all([
     getDispatchLoc(),
     getProjects(thisEmpID),
-    editEntry(entryID),
-  ]).then(([locs, projs, entryData]) => {
+    // getIDEntries(entryID),
+  ]).then(([locs, projs]) => {
     fillDispatchLoc(locs, 1);
     fillProjects(projs, 1);
-    fillEditFields(entryData);
+    fillEditFields(entryRow);
     fillMHType(1);
     // .then((success) => {
     $("#emp-edit").html(empText);
@@ -565,11 +560,8 @@ $(document).on("click", "#editBut", function () {
   });
 });
 $(document).on("click", "#delBut", function () {
-  var entryID = $(this).closest("tr").attr("entry-id");
-  if (!confirm("Delete this entry?")) {
-    return;
-  }
-  deleteEntry(entryID);
+  delTRID = $(this).closest("tr").attr("entry-id");
+  $("#deleteEntry").modal("show");
 });
 
 //copy button
@@ -580,8 +572,6 @@ $(document).on("click", "#idCopy", function () {
   if (!copyfrom || !empName) {
     alert("Please Select an Employee & a Date to Copy From");
   }
-  console.log(copyfrom, empName);
-
   copyEntries();
 });
 
@@ -604,7 +594,6 @@ function checkAccess() {
       url: "php/check_login.php",
       dataType: "json",
       success: function (data) {
-        console.log("checkAccess data: ", data);
         const empDetails = data;
         resolve(empDetails);
       },
@@ -674,17 +663,6 @@ function getMyGroups(myEmpNum) {
       success: function (response) {
         const grps = response["result"];
         resolve(grps);
-        // const groupIDS = grps.map((obj) => obj.abbreviation);
-        // var grpSelect = $("#idGroup");
-        // grpSelect.html(`<option value=0 grp-id=0>Select Group</option>`);
-        // // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
-        // $.each(grps, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.abbreviation)
-        //     .attr("grp-id", item.id);
-        //   grpSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -701,7 +679,6 @@ function getMyGroups(myEmpNum) {
 function fillMyGroups(grps) {
   var grpSelect = $("#idGroup");
   grpSelect.html(`<option value=0 grp-id=0>Select Group</option>`);
-  // grpSelect.html(`<option value='0' hidden>Select Group</option>`);
   $.each(grps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
@@ -722,17 +699,6 @@ function getDispatchLoc() {
       success: function (response) {
         const locs = response["result"];
         resolve(locs);
-        // const locsIDs = locs.map((obj) => obj.location);
-        // var locSelect = $("#idLocation");
-        // locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
-        // // locSelect.html(`<option value='0' hidden>Select Location</option>`);
-        // $.each(locs, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.location)
-        //     .attr("loc-id", item.id);
-        //   locSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -749,7 +715,6 @@ function getDispatchLoc() {
 function fillDispatchLoc(locs, type) {
   var locSelect = $("#idLocation");
   var editLocSel = $("#edit-selLoc");
-  // locSelect.html(`<option value='0' hidden>Select Location</option>`);
   if (type == 0) {
     locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
     $.each(locs, function (index, item) {
@@ -787,17 +752,6 @@ function getEmployees() {
       success: function (response) {
         const emps = response["result"];
         resolve(emps);
-        // const empsList = emps.map((obj) => obj.fullName);
-        // var empSelect = $("#idEmployee");
-        // empSelect.html(`<option value=0 emp-id=0>Select Employee</option>`);
-        // // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
-        // $.each(emps, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.fullName)
-        //     .attr("emp-id", item.id);
-        //   empSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -814,7 +768,6 @@ function getEmployees() {
 function fillEmployees(emps) {
   var empSelect = $("#idEmployee");
   empSelect.html(`<option value=0 emp-id=0>Select Employee</option>`);
-  // empSelect.html(`<option value='0' hidden>Select Employee</option>`);
   $.each(emps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
@@ -842,17 +795,6 @@ function getProjects(thisEmpID) {
       success: function (response) {
         const projs = response["result"];
         resolve(projs);
-        // const projList = projs.map((obj) => obj.projName);
-        // var projSelect = $("#idProject");
-        // projSelect.html(`<option value=0 proj-id=0>Select Project</option>`);
-        // // empSelect.html(`<option value='0' hidden>Select Project</option>`);
-        // $.each(projs, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.projName)
-        //     .attr("proj-id", item.id);
-        //   projSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -869,7 +811,6 @@ function getProjects(thisEmpID) {
 function fillProjects(projs, type) {
   var projSelect = $("#idProject");
   var editProjSel = $("#edit-selProj");
-  // empSelect.html(`<option value='0' hidden>Select Project</option>`);
   if (type == 0) {
     projSelect.html(`<option value=0 proj-id=0>Select Project</option>`);
     $.each(projs, function (index, item) {
@@ -988,19 +929,6 @@ function getItems(thisEmpID, projID) {
       success: function (response) {
         const items = response["result"];
         resolve(items);
-        // const itemList = items.map((obj) => obj.itemName);
-        // var itemSelect = $("#idItem");
-        // itemSelect.html(
-        //   `<option value=0 item-id=0>Select Item of Works</option>`
-        // );
-        // // empSelect.html(`<option value='0' hidden>Select Item of Works</option>`);
-        // $.each(items, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.itemName)
-        //     .attr("item-id", item.id);
-        //   itemSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -1017,7 +945,6 @@ function getItems(thisEmpID, projID) {
 function fillItems(items, type) {
   var itemSelect = $("#idItem");
   var editIOWSel = $("#edit-selIOW");
-  // empSelect.html(`<option value='0' hidden>Select Item of Works</option>`);
   if (type == 0) {
     itemSelect.html(`<option value=0 item-id=0>Select Item of Works</option>`);
     $.each(items, function (index, item) {
@@ -1029,7 +956,6 @@ function fillItems(items, type) {
     });
   } else {
     editIOWSel.html(`<option value=0 item-id=0>Select Item of Works</option>`);
-    console.log("fill items entry", items);
     $.each(items, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1053,7 +979,6 @@ function getLabel(itemID, type) {
     dataType: "json",
     success: function (response) {
       const msg = response["result"];
-      console.log("msg", msg);
       const lbl = msg["fldLabel"];
 
       if (type == 0) {
@@ -1100,19 +1025,6 @@ function getJobs(thisEmpID, projID, itemID) {
       success: function (response) {
         const jobs = response["result"];
         resolve(jobs);
-        // const jobList = jobs.map((obj) => obj.jobName);
-        // var jobSelect = $("#idJRD");
-        // jobSelect.html(
-        //   `<option value=0 job-id=0>Select Job Request Description</option>`
-        // );
-        // // empSelect.html(`<option value='0' hidden>Select Job Request Description</option>`);
-        // $.each(jobs, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.jobName)
-        //     .attr("job-id", item.id);
-        //   jobSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -1129,7 +1041,6 @@ function getJobs(thisEmpID, projID, itemID) {
 function fillJobs(jobs, type) {
   var jobSelect = $("#idJRD");
   var editJobSel = $("#edit-selJRD");
-  // empSelect.html(`<option value='0' hidden>Select Job Request Description</option>`);
   if (type == 0) {
     jobSelect.html(
       `<option value=0 job-id=0>Select Job Request Description</option>`
@@ -1145,7 +1056,6 @@ function fillJobs(jobs, type) {
     editJobSel.html(
       `<option value=0 job-id=0>Select Job Request Description</option>`
     );
-    console.log("fill jrd entry", jobs);
     $.each(jobs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1154,6 +1064,42 @@ function fillJobs(jobs, type) {
       editJobSel.append(option);
     });
   }
+}
+
+//items that triggers JMR Modal Instruction
+function getNoMoreInputItems() {
+  //get ids of no more input
+  var nmiIDs = [];
+  // $.ajax({
+  //   url: "php/get_nomoreinput_items.php",
+  //   success: function (data) {
+  //     nmiIDs = $.parseJSON(data);
+  //   },
+  //   async: false,
+  // });
+  // return nmiIDs;
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "GET",
+      url: "php/get_nomoreinput_items.php",
+      dataType: "json",
+      success: function (data) {
+        nmIDs = data["result"];
+        resolve(nmIDs);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(
+            "An unspecified error occurred while fetching NoMoreInputItems."
+          );
+        }
+      },
+    });
+  });
 }
 
 //Types of Work FUNCTIONS
@@ -1172,17 +1118,6 @@ function getTOW(projID) {
       success: function (response) {
         const tow = response["result"];
         resolve(tow);
-        // const towList = tow.map((obj) => obj.itemName);
-        // var towSelect = $("#idTOW");
-        // towSelect.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
-        // // empSelect.html(`<option value='0' hidden>Select ToW</option>`);
-        // $.each(tow, function (index, item) {
-        //   var option = $("<option>")
-        //     .attr("value", item.id)
-        //     .text(item.itemName)
-        //     .attr("tow-id", item.id);
-        //   towSelect.append(option);
-        // });
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -1199,7 +1134,6 @@ function getTOW(projID) {
 function fillTOW(tows, type) {
   var towSelect = $("#idTOW");
   var editTOWSel = $("#edit-selTOW");
-  // empSelect.html(`<option value='0' hidden>Select ToW</option>`);
   if (type == 0) {
     towSelect.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
     $.each(tows, function (index, item) {
@@ -1211,7 +1145,6 @@ function fillTOW(tows, type) {
     });
   } else {
     editTOWSel.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
-    console.log("fill tows entry", tows);
     $.each(tows, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1261,7 +1194,6 @@ function getTOWDesc(typesOfWorkID, type) {
 function getCheckers(projID) {
   //get Checkers Selection
   var empGrp = $("#idGroup").val();
-  // console.log("==>projID: ", projID);
   if (projID == 0 || projID == undefined) {
     $(".checker").addClass("d-none");
     return;
@@ -1296,7 +1228,6 @@ function getCheckers(projID) {
 function fillCheckers(checks, type) {
   var checkSelect = $("#idChecking");
   var editCheckSel = $("#edit-selCheck");
-  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
   if (type == 0) {
     checkSelect.html(`<option value=0 chk-id=0>Select Employee</option>`);
     $.each(checks, function (index, item) {
@@ -1349,11 +1280,9 @@ function isEngineering(type) {
       projID != undefined;
     // return isDrawing;
     if (isDrawing) {
-      // console.log("### isEngineering TRUE ###");
       $("#id2DDiv").removeClass("d-none");
       $("#idRevDiv").removeClass("d-none");
     } else {
-      // console.log("### isEngineering FALSE ###");
       $("#id2DDiv").addClass("d-none");
       $("#idRevDiv").addClass("d-none");
     }
@@ -1367,11 +1296,9 @@ function isEngineering(type) {
       editprojID != undefined;
     // return isDrawing;
     if (isDrawing) {
-      // console.log("### isEngineering TRUE ###");
       $("#edit-2D3DDiv").removeClass("d-none");
       $("#edit-RevDiv").removeClass("d-none");
     } else {
-      // console.log("### isEngineering FALSE ###");
       $("#edit-2D3DDiv").addClass("d-none");
       $("#edit-RevDiv").addClass("d-none");
     }
@@ -1388,19 +1315,15 @@ function hasJRD(type) {
   if (type == 0) {
     isDrawing = projID != leaveID && projID != otherID;
     if (isDrawing) {
-      // console.log("### hasJRD TRUE ###");
       $("#idJRDDiv").removeClass("d-none");
     } else {
-      // console.log("### hasJRD FALSE ###");
       $("#idJRDDiv").addClass("d-none");
     }
   } else {
     isDrawing = editprojID != leaveID && editprojID != otherID;
     if (isDrawing) {
-      // console.log("### hasJRD TRUE ###");
       $("#edit-JRDDiv").removeClass("d-none");
     } else {
-      // console.log("### hasJRD FALSE ###");
       $("#edit-JRDDiv").addClass("d-none");
     }
   }
@@ -1413,7 +1336,6 @@ function hasTOW(type) {
   var editprojID = parseInt(
     $($("#edit-selProj").find("option:selected")).attr("proj-id")
   );
-  // var projID = $("#idProject").val();
   var selGroup = $("#idGroup").val();
   if (type == 0) {
     isDrawing =
@@ -1422,16 +1344,13 @@ function hasTOW(type) {
       projID != null &&
       projID != undefined;
     if (isDrawing) {
-      // console.log("### hasTOW TRUE ###");
       $("#idTowDiv").removeClass("d-none");
       $("#idTowDescDiv").removeClass("d-none");
     } else {
-      // console.log("### hasTOW FALSE ###");
       $("#idTowDiv").addClass("d-none");
       $("#idTowDescDiv").addClass("d-none");
     }
     if (projID == leaveID) {
-      // console.log("### hasTOW is leaveID ###");
       $("#idTowDiv").removeClass("d-none");
       $("#idTowDescDiv").removeClass("d-none");
     }
@@ -1442,16 +1361,13 @@ function hasTOW(type) {
       editprojID != null &&
       editprojID != undefined;
     if (isDrawing) {
-      // console.log("### hasTOW TRUE ###");
       $("#edit-TOWDiv").removeClass("d-none");
       $("#edit-TOWDescDiv").removeClass("d-none");
     } else {
-      // console.log("### hasTOW FALSE ###");
       $("#edit-TOWDiv").addClass("d-none");
       $("#edit-TOWDescDiv").addClass("d-none");
     }
     if (editprojID == leaveID) {
-      // console.log("### hasTOW is leaveID ###");
       $("#edit-TOWDiv").removeClass("d-none");
       $("#edit-TOWDescDiv").removeClass("d-none");
     }
@@ -1475,7 +1391,6 @@ function createTRGroupDiv(itemID, allgrps, type) {
       </div>
       `);
       fillTRGroups(allgrps, 0);
-      // $("#trGroup").html(allgrps);
     } else {
       $(".edit-iow").after(`
       <div class="row mb-2 trgrp">
@@ -1489,7 +1404,6 @@ function createTRGroupDiv(itemID, allgrps, type) {
       </div>
       `);
       fillTRGroups(allgrps, 1);
-      // $("#edit-trGroup").html(allgrps);
     }
   } else {
     $(".trgrp").remove();
@@ -1499,8 +1413,6 @@ function createTRGroupDiv(itemID, allgrps, type) {
 function fillTRGroups(allgrps, type) {
   var trgrpSelect = $("#trGroup");
   var editTRGrpSel = $("#edit-trGroup");
-  console.log("fillgrps allgrps: ", allgrps);
-  // checkSelect.html(`<option value='0' hidden>Select Employee</option>`);
   if (type == 0) {
     trgrpSelect.html(
       `<option value=0 trgrp-id=0>Select Training Group</option>`
@@ -1528,13 +1440,6 @@ function fillTRGroups(allgrps, type) {
 
 function getTRGroups() {
   //get groups for training group selection
-  // $.ajax({
-  //   url: "php/get_groups.php",
-  //   success: function (response) {
-  //     $("#trGroup").html(response);
-  //   },
-  //   async: false,
-  // });
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -1620,10 +1525,11 @@ function fillMHType(type) {
     { id: 1, type: "Overtime" },
   ];
 
-  console.log("mhtypes: ", mhtypes);
   // return;
   if (type == 0) {
-    mhTypeSelect.html(`<option value="" mhid=0>Select Manhour Type</option>`);
+    mhTypeSelect.html(
+      `<option value=null mhid=null>Select Manhour Type</option>`
+    );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1633,7 +1539,7 @@ function fillMHType(type) {
     });
   } else {
     editMHTypeSel.html(
-      `<option value="" edtmhid=0>Select Manhour Type</option>`
+      `<option value=null edtmhid=null>Select Manhour Type</option>`
     );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
@@ -1649,7 +1555,7 @@ function fillMHType(type) {
 function resetEntry() {
   //reset Inputs
   $("#getHour,#getMin,#idRemarks").val("").change();
-  $("#idMH").val(0).change();
+  $("#idMH").val("null").change();
   // $("#idGroup,#idEmployee").val(0).change();
   $("#idLocation,#idProject,#idItem,#idJRD,#idTOW,#towDesc,#trGroup")
     .val(0)
@@ -1662,6 +1568,13 @@ function resetEntry() {
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
+  $(
+    "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin"
+  )
+    .removeClass("border border-danger")
+    .removeClass("bg-err");
+  $(".editInputError").removeClass("block").addClass("hidden");
+
   $(".checker").addClass("d-none");
   // $("#id2DDiv").addClass("d-none");
   // $("#idRevDiv").addClass("d-none");
@@ -1674,9 +1587,183 @@ function cancelEditFunction() {
   $("#idReset").text("Clear");
   resetEntry();
 }
-function saveFunction() {
+function saveEdit() {
   //update database entry
-  addEntries(editID);
+  var grp = $("#idGroup").val();
+  var date = $("#idDRDate").val();
+  var emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
+  var entryID = editTRID;
+
+  var loc = $($("#edit-selLoc").find("option:selected")).attr("loc-id");
+  var proj = $($("#edit-selProj").find("option:selected")).attr("proj-id");
+  var item = $($("#edit-selIOW").find("option:selected")).attr("item-id");
+  var trgrp = $($("#edit-trGroup").find("option:selected")).val() || "";
+  var jobreq =
+    $($("#edit-selJRD").find("option:selected")).attr("job-id") || "";
+  var tutri = $('input[name="edt-radio"]:checked').val();
+  var revision = ""; //ischecked?
+  var tow = $($("#edit-selTOW").find("option:selected")).attr("tow-id");
+  var checker =
+    $($("#edit-selCheck").find("option:selected")).attr("chk-id") || "";
+  var hour = $("#edit-newHour").val() * 60 || "0";
+  var mins = $("#edit-newMin").val() || "0";
+  var getDuration = `${parseFloat(hour) + parseFloat(mins)}`;
+  var mhtype = $($("#edit-selMHType").find("option:selected")).attr("edtmhid");
+  var remarks = $("#edit-newRemarks").val();
+
+  var mgaKulang = [];
+
+  if ($("#id2DDiv").hasClass("d-none")) {
+    tutri = "";
+  }
+  if (!grp || grp == 0) {
+    $("#p1").text("Please Select Group");
+    $("#idGroup").addClass("border border-danger ").addClass("bg-err");
+    mgaKulang.push("GROUP");
+  }
+  if (!date) {
+    $("#p2").text("Please Select Date");
+    $("#idDRDate").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("DATE");
+  }
+  if (!emp || emp == 0) {
+    $("#p4").text("Please Select Employee");
+    $("#idEmployee").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("EMPLOYEE");
+  }
+  if (!loc || loc == 0) {
+    // $("#p3").text("Please Select Location");
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selLoc").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("LOCATION");
+  }
+  if (!proj || proj == 0) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selProj").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("PROJECT");
+  }
+  if (!item || item == 0) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selIOW").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ITEM");
+  }
+  if ((!jobreq && proj != leaveID && proj != otherID) || jobreq == 0) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selJRD").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("JRD");
+  }
+  if ($("#edit-rev").is(":checked") && !$("#edit-RevDiv").hasClass("d-none")) {
+    revision = 1;
+  } else {
+    revision = 0;
+  }
+  if (!tow || tow == 0) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selTOW").addClass("border border-danger").addClass("bg-err");
+  }
+  if (!tow && (!defaults.includes(proj) || proj == leaveID)) {
+    if (proj == leaveID) {
+      $(".editInputError").removeClass("hidden").addClass("block");
+    } else {
+      $(".editInputError").removeClass("hidden").addClass("block");
+    }
+    $("#edit-selTOW").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("TOW");
+  }
+  if (tow == 3) {
+    //If checker
+    if (!checker || checker == 0) {
+      $(".editInputError").removeClass("hidden").addClass("block");
+      $("#edit-selCheck").addClass("border border-danger").addClass("bg-err");
+      mgaKulang.push("CHECKER");
+    }
+  }
+  if (hour > 1200 || hour < 0 || hour == 0) {
+    //hour*60
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-newHour").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if (mins > 59 || mins < 0) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-newMin").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if ((hour == "" && mins == "") || (hour == 0 && mins == 0)) {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-newHour").addClass("border border-danger").addClass("bg-err");
+    $("#edit-newMin").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("ORAS");
+  }
+  if ((!mhtype && proj != leaveID) || mhtype == "null") {
+    $(".editInputError").removeClass("hidden").addClass("block");
+    $("#edit-selMHType").addClass("border border-danger").addClass("bg-err");
+    mgaKulang.push("MHTYPE");
+  }
+  if (proj == leaveID) {
+    //IF LEAVE
+    mhtype = 2;
+  }
+  if (item == 14) {
+    if (!trgrp || trgrp == 0) {
+      $(".editInputError").removeClass("hidden").addClass("block");
+      $("#edit-trGroup").addClass("border border-danger").addClass("bg-err");
+      mgaKulang.push("TRGROUP");
+    }
+  }
+
+  if (mgaKulang.length > 0) {
+    console.log(mgaKulang);
+    return;
+  } else {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        type: "POST",
+        url: "php/update_entries.php",
+        data: {
+          drID: entryID,
+          twoDthreeD: tutri,
+          grpNum: grp,
+          selDate: date,
+          locID: loc,
+          empNum: emp,
+          projID: proj,
+          itemID: item,
+          jobReqDesc: jobreq,
+          trGrp: trgrp,
+          TOWID: tow,
+          revision: revision,
+          duration: getDuration,
+          manhour: mhtype,
+          remarks: remarks,
+          checker: checker,
+          overrideEmpNum: empDetails["empID"],
+        },
+        dataType: "json",
+        success: function (response) {
+          getEntries(emp)
+            .then((entryList) => {
+              fillEntries(entryList);
+              getIDEntries(emp, date);
+            })
+            .catch((error) => {
+              alert(`add entries: ${error}`);
+            });
+          resetEntry();
+          resolve(response);
+        },
+        error: function (xhr, status, error) {
+          if (xhr.status === 404) {
+            reject("Not Found Error: The requested resources are not found.");
+          } else if (xhr.status === 500) {
+            reject("Internal Server Error: There was a server error.");
+          } else {
+            reject(error);
+          }
+        },
+      });
+    });
+  }
 }
 
 //Add Entry
@@ -1687,9 +1774,6 @@ function addEntries(addMode) {
   var date = $("#idDRDate").val();
   var loc = $($("#idLocation").find("option:selected")).attr("loc-id");
   var emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
-  // var proj = parseInt(
-  //   $($("#idProject").find("option:selected")).attr("proj-id")
-  // );
   var proj = $($("#idProject").find("option:selected")).attr("proj-id");
   var item = $($("#idItem").find("option:selected")).attr("item-id");
   var trgrp = $($("#trGroup").find("option:selected")).val() || "";
@@ -1782,7 +1866,6 @@ function addEntries(addMode) {
     $("#getMin").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ORAS");
   }
-  console.log("mhtype: ", mhtype);
   if (!mhtype && proj != leaveID) {
     $("#p11").text("Please Select Manhour Type");
     $("#idMH").addClass("border border-danger").addClass("bg-err");
@@ -1804,29 +1887,6 @@ function addEntries(addMode) {
     console.log(mgaKulang);
     return;
   } else {
-    //for (var pair of fd.entries()) {
-    //   console.log(pair[0]+ ', ' + pair[1]);
-    //}
-    // return;
-    // $.ajax({
-    //   type: "POST",
-    //   url: "ajax/add_entries.php",
-    //   data: fd,
-    //   contentType: false,
-    //   cache: false,
-    //   processData: false,
-    //   success: function (data) {
-    //     getEntries();
-    //     resetEntry();
-    //     if ($("#idAdd").text() != "Add") {
-    //       $("#idAdd").text("Add");
-    //       $("#idReset").text("Reset");
-    //     }
-    //     isDrawing();
-    //     initCalendar();
-    //     getPlans();
-    //   },
-    // });
     return new Promise((resolve, reject) => {
       $.ajax({
         type: "POST",
@@ -1851,21 +1911,18 @@ function addEntries(addMode) {
         },
         dataType: "json",
         success: function (response) {
-          console.log("add entry success response: ", response);
           getEntries(emp)
             .then((entryList) => {
               fillEntries(entryList);
+              getIDEntries(emp, date);
             })
             .catch((error) => {
               alert(`add entries: ${error}`);
             });
           resetEntry();
-          // isDrawing();
-          console.log("added");
           resolve(response);
         },
         error: function (xhr, status, error) {
-          console.log("error");
           if (xhr.status === 404) {
             reject("Not Found Error: The requested resources are not found.");
           } else if (xhr.status === 500) {
@@ -1879,18 +1936,19 @@ function addEntries(addMode) {
   }
 }
 //Edit Entry
-function editEntry(entryID) {
+function getIDEntries(entryID, selDate) {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
       url: "php/get_data_edit.php",
       data: {
-        drID: entryID,
+        empNum: entryID,
+        selDate: selDate,
       },
       dataType: "json",
       success: function (response) {
-        console.log("entry data: ", response);
         const entryData = response["result"];
+        entryArr = response["result"];
         resolve(entryData);
       },
       error: function (xhr, status, error) {
@@ -1906,8 +1964,6 @@ function editEntry(entryID) {
   });
 }
 function fillEditFields(editData) {
-  //check if checker, remarks, 2d3d, trgrp, is null
-  console.log("fill edit fields: ", editData);
   var entry = editData[0];
   const mhtype = entry["MHType"];
   const tow = entry["TOW"];
@@ -1932,23 +1988,19 @@ function fillEditFields(editData) {
   $("#edit-selProj").val(proj).change();
 
   setTimeout(function () {
-    // console.log("item");
     $("#edit-selIOW").val(iow).change();
   }, 100);
   setTimeout(function () {
-    // console.log("jrd");
     $("#edit-selJRD").val(jrd).change();
   }, 600);
   if (tow) {
     setTimeout(function () {
-      // console.log("tow");
       $("#edit-selTOW").val(tow).change();
     }, 200);
   }
   $("#edit-towDesc").val(); //runs if has tow
   if (tow == 3) {
     //for checker
-    // console.log("checker");
     setTimeout(function () {
       $("#edit-selCheck").val(checker);
     }, 600);
@@ -1956,27 +2008,21 @@ function fillEditFields(editData) {
   if (trgrp) {
     //for training group
     setTimeout(function () {
-      // console.log("tow");
       $("#edit-trGroup").val(trgrp);
     }, 600);
   }
   if (tutridi) {
-    console.log("2d3d");
     $("#edit-2d3d").val(tutridi);
   }
   if (revision != 0) {
-    console.log("rev");
     $("#edit-rev").val(revision);
   }
   setTimeout(function () {
-    // console.log("hrs");
     $("#edit-newHour").val(newhrs);
     $("#edit-newMin").val(newmins);
   }, 700);
   setTimeout(function () {
-    console.log("before", $("#edit-selMHType").val());
     $("#edit-selMHType").val(mhtype).change();
-    console.log("after", $("#edit-selMHType").val());
   }, 900);
   $("#edit-newRemarks").val(remarks);
   // });
@@ -1985,10 +2031,8 @@ function fillEditFields(editData) {
 }
 //Duplicate Entry
 function dupeEntry(entryData) {
-  console.log(entryData);
   const dupeData = entryData[0];
 
-  console.log("dupedata: ", dupeData);
   const emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
   const grp = $("#idGroup").val();
   const date = $("#idDRDate").val();
@@ -2029,21 +2073,18 @@ function dupeEntry(entryData) {
       },
       dataType: "json",
       success: function (response) {
-        console.log("dupe entry success response: ", response);
         getEntries(emp)
           .then((entryList) => {
             fillEntries(entryList);
+            getIDEntries(emp, date);
           })
           .catch((error) => {
             alert(`dupe entries: ${error}`);
           });
         resetEntry();
-        // isDrawing();
-        console.log("added");
         resolve(response);
       },
       error: function (xhr, status, error) {
-        console.log("error");
         if (xhr.status === 404) {
           reject("Not Found Error: The requested resources are not found.");
         } else if (xhr.status === 500) {
@@ -2060,17 +2101,6 @@ function deleteEntry(trID) {
   //delete Entries from Database
   const emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
 
-  // $.post(
-  //   "ajax/delete_entry.php",
-  //   {
-  //     trID: tableRowID,
-  //   },
-  //   function (data) {
-  //     getEntries();
-  //     initCalendar();
-  //     getPlans();
-  //   }
-  // );
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -2080,7 +2110,6 @@ function deleteEntry(trID) {
       },
       dataType: "json",
       success: function (response) {
-        console.log(response);
         getEntries(emp)
           .then((entryList) => {
             fillEntries(entryList);
@@ -2091,7 +2120,6 @@ function deleteEntry(trID) {
         resolve(response);
       },
       error: function (xhr, status, error) {
-        console.log("error");
         if (xhr.status === 404) {
           reject("Not Found Error: The requested resources are not found.");
         } else if (xhr.status === 500) {
@@ -2106,11 +2134,9 @@ function deleteEntry(trID) {
 //Entries
 function getEntries(thisEmpID) {
   //get Daily Report Entries
-  // console.log("empID: ", thisEmpID);
   var date = $("#idDRDate").val();
   return new Promise((resolve, reject) => {
     if (thisEmpID == undefined || thisEmpID == 0) {
-      // console.log("empID missing");
       var res = 0;
       resolve(res);
     } else {
@@ -2123,9 +2149,8 @@ function getEntries(thisEmpID) {
         },
         dataType: "json",
         success: function (response) {
-          // console.log("entries: ", response);
-          const entryList = response;
-          resolve(entryList);
+          const allEntries = response;
+          resolve(allEntries);
         },
         error: function (xhr, status, error) {
           if (xhr.status === 404) {
@@ -2168,18 +2193,15 @@ function fillEntries(entryList) {
   lvCount = 0;
   var entryTable = $("#drEntries");
   entryTable.empty();
-  // console.log("entryList: ", entryList);
   if (entryList == 0) {
     entryTable.empty();
-    var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
+    var addString = `<tr><td colspan='9'class="text-center py-5 entry-none"><h2>No Entries Found</h2></td></tr>`;
     entryTable.append(addString);
     return;
   }
   if (entryList.isSuccess) {
     var currDayEntries = entryList["result"];
-    console.log("current: ", currDayEntries);
     if (currDayEntries.length > 0) {
-      // currDayEntries.map();
       $.each(currDayEntries, function (index, item) {
         item.duration = (item.duration / 60).toFixed(2);
         const mhtyp = ["Regular", "OT", "Leave"];
@@ -2232,11 +2254,7 @@ function fillEntries(entryList) {
         );
 
         row.append(`<td>
-        <button class="btn btn-primary action dupeBut" id="dupeBut" title="Duplicate"><i class="text-light bx bx-duplicate"></i></button>
-
-        <button class="btn btn-warning action editBut" id="editBut" title="Edit"><i class="fa fa-pencil"></i></button>
-
-        <button class="btn btn-danger action delBut" id="delBut" title="Delete"><i class="text-light fa fa-trash"></i></button>
+        <button class="btn action dupeBut" id="dupeBut" title="Duplicate"><i class="bx bx-duplicate"></i></button><button class="btn action editBut" id="editBut" title="Edit"><i class="fa fa-pencil"></i></button><button class="btn action delBut" id="delBut" title="Delete"><i class="fa fa-trash"></i></button>
         </td>`);
 
         entryTable.append(row);
@@ -2247,7 +2265,7 @@ function fillEntries(entryList) {
     }
     getMHCount();
   } else {
-    var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
+    var addString = `<tr><td colspan='9'class="text-center py-5 entry-none"><h2>No Entries Found</h2></td></tr>`;
     entryTable.append(addString);
   }
 }
@@ -2257,21 +2275,6 @@ function copyEntries() {
   var getDate = $("#idDRDate").val();
   var copyDate = $("#idCopyDate").val();
   var getEmp = $($("#idEmployee").find("option:selected")).attr("emp-id");
-
-  // $.post(
-  //   "ajax/copy_entries.php",
-  //   {
-  //     empNum: empDetails["empNum"],
-  //     getDate: getDate,
-  //     copyDate: copyDate,
-  //   },
-  //   function (data) {
-  //     getEntries();
-  //     resetEntry();
-  //     initCalendar();
-  //     getPlans();
-  //   }
-  // );
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -2284,7 +2287,6 @@ function copyEntries() {
         copyDate: copyDate,
       },
       success: function (response) {
-        console.log(response);
         getEntries(getEmp)
           .then((entryList) => {
             fillEntries(entryList);
@@ -2292,7 +2294,6 @@ function copyEntries() {
           .catch((error) => {
             alert(`add entries: ${error}`);
           });
-        // resetEntry(); //might not need
         resolve(response);
       },
       error: function (xhr, status, error) {
@@ -2324,30 +2325,12 @@ function ifSmallScreen() {
 
 function initializeDate() {
   //Initialize Selected Date
-  // $.ajax({
-  //   url: "php/get_date.php",
-  //   success: function (response) {
-  //     $("#idDRDate").val(response);
-  //     console.log("date response: ", response);
-  //   },
-  //   async: false,
-  // });
-
-  // var datedate = new Date().toDateString();
-  // console.log("toDate: ", datedate);
-  // var currentDate = new Date().toISOString();
-  // console.log("current ISO Date is: ", currentDate);
-  // var currDate = currentDate.split("T")[0];
-  // console.log("split date is: ", currDate);
-
-  //test date
   var getDate = new Date();
   var offsetDate = getDate.getTimezoneOffset() * 60 * 1000;
   var localTime = getDate - offsetDate;
   var localTime = new Date(localTime);
   var iso = localTime.toISOString();
   var ISOFormatDate = iso.split("T")[0];
-  console.log("test Date: ", ISOFormatDate);
   $("#idDRDate").val(ISOFormatDate);
 }
 
@@ -2397,15 +2380,12 @@ function resetSelection(num, type) {
       proj.val(0).change();
       iow.val(0).change();
       jrd.val(0).change();
-      // console.log("reset 1");
     } else if (num == 2) {
       jrd.val(0).change();
       iow.val(0).change();
       tow.val(0).change();
-      // console.log("reset 2");
     } else if (num == 3) {
       jrd.val(0).change();
-      // console.log("reset 3");
     }
   } else {
     var proj = $("#edit-selProj"); //get Project selection
@@ -2417,15 +2397,12 @@ function resetSelection(num, type) {
       proj.val(0).change();
       iow.val(0).change();
       jrd.val(0).change();
-      // console.log("reset 1");
     } else if (num == 2) {
       jrd.val(0).change();
       iow.val(0).change();
       tow.val(0).change();
-      // console.log("reset 2");
     } else if (num == 3) {
       jrd.val(0).change();
-      // console.log("reset 3");
     }
   }
 }
@@ -2851,28 +2828,7 @@ function planAccess() {
   );
 }
 
-function disableInputs(projID, itemID) {
-  //disable input for no more inputs
-  $("#getHour").prop("disabled", true);
-  $("#getMin").prop("disabled", true);
-  $("#idMH").prop("disabled", true);
-  $("#idRemarks").prop("disabled", true);
-  $("#idAdd").prop("disabled", true);
-
-  if (projID != leaveID) {
-    if (!noMoreInputItems.includes(itemID)) {
-      $("#idRemarks").prop("disabled", false);
-      $("#idAdd").prop("disabled", false);
-      $("#getHour").prop("disabled", false);
-      $("#getMin").prop("disabled", false);
-      $("#idMH").prop("disabled", false);
-    }
-  } else {
-    $("#idRemarks").prop("disabled", false);
-    $("#idAdd").prop("disabled", false);
-  }
-}
-
+//in Globals
 function getDefaults() {
   //get Default Projects(GOW,Kaizen,etc.)
   var defaultsArray = [];
@@ -3013,42 +2969,6 @@ function getKiaID() {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject("An unspecified error occurred while fetching Kia ID.");
-        }
-      },
-    });
-  });
-}
-
-//items that triggers JMR Modal Instruction
-function getNoMoreInputItems() {
-  //get ids of no more input
-  var nmiIDs = [];
-  $.ajax({
-    url: "php/get_nomoreinput_items.php",
-    success: function (data) {
-      nmiIDs = $.parseJSON(data);
-    },
-    async: false,
-  });
-  return nmiIDs;
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      type: "GET",
-      url: "php/get_nomoreinput_items.php",
-      dataType: "json",
-      success: function (data) {
-        var nmIDs = data["result"];
-        resolve(nmIDs);
-      },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          reject("Not Found Error: The requested resource was not found.");
-        } else if (xhr.status === 500) {
-          reject("Internal Server Error: There was a server error.");
-        } else {
-          reject(
-            "An unspecified error occurred while fetching NoMoreInputItems."
-          );
         }
       },
     });
