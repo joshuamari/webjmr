@@ -1822,7 +1822,7 @@ function addEntries(addMode) {
     $("#idItem").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ITEM");
   }
-  if ((!jobreq && proj != leaveID && proj != otherID) || jobreq == 0) {
+  if (!jobreq && proj != leaveID && proj != otherID) {
     $("#p7").text("Please Select Job Request Description");
     $("#idJRD").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("JRD");
