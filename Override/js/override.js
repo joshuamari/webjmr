@@ -246,7 +246,8 @@ $(document).on("click", ".menu-two", function () {
 $(document).on("change", "#idDRDate", function () {
   //select Date Event
   var thisEmpID = $($("#idEmployee").find("option:selected")).attr("emp-id"); //get ID of selected Employee
-  Promise.all([getEntries(thisEmpID)])
+  var selDate = $(this).val();
+  Promise.all([getEntries(thisEmpID), getIDEntries(thisEmpID, selDate)])
     .then(([entryList]) => {
       fillEntries(entryList);
       MHValidation();
@@ -552,7 +553,7 @@ $(document).on("click", "#editBut", function () {
     $("#emp-edit").html(empText);
     setTimeout(function () {
       $("#editEntry").modal("show");
-    }, 1000);
+    }, 1500);
     // });
 
     // sequenceValidation(1);
