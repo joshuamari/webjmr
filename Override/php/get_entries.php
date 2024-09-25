@@ -17,28 +17,37 @@ $selDate = (!empty($_POST['selDate'])) ? $_POST['selDate'] : date("Y-m-d");
 #region Main Query
 try{
   $insertDRQ = "SELECT `dr`.`fldID` AS `id`,
+     `dr`.`fldLocation` AS `locID`,
 	   `dl`.`fldLocation` AS `location`,
      `dr`.`fldGroup` AS `group`,
+     `dr`.`fldProject` AS `projID`,
      `pt`.`fldProject` AS `projName`,
+     `dr`.`fldItem` AS `itemID`,
      `it`.`fldItem` AS `itemName`,
+     `dr`.`fldJobRequestDescription` AS `jobReqDesc`,
      `jt`.`fldJob` AS `jobName`,
+     `dr`.`fld2D3D` AS `twoDthreeD`,
+     `dr`.`fldRevision` AS `revision`,
+     `dr`.`fldTOW` AS `TOW`,
+     `dr`.`fldChecker` AS `checkerID`,
      `dr`.`fldDuration` AS `duration`,
      `dr`.`fldMHType` AS `MHType`,
      `dr`.`fldRemarks` AS `remarks`,
+     `dr`.`fldTrGroup` AS `trGrp`,
      `pt`.`fldDelete` AS `projDel`,
-     `tow`.`fldTOW` AS `towName`
+     `tow`.`fldTOW` AS `towName` 
     FROM dailyreport AS dr 
-    LEFT OUTER JOIN projectstable AS pt 
-    ON dr.fldProject = pt.fldID 
-    LEFT OUTER JOIN itemofworkstable AS it 
-    ON dr.fldItem = it.fldID 
-    LEFT OUTER JOIN drawingreference AS jt 
-    ON dr.fldJobRequestDescription = jt.fldID 
+    LEFT OUTER JOIN projectstable AS `pt` 
+    ON `dr`.`fldProject` = `pt`.`fldID` 
+    LEFT OUTER JOIN itemofworkstable AS `it` 
+    ON `dr`.`fldItem` = `it`.`fldID` 
+    LEFT OUTER JOIN drawingreference AS `jt` 
+    ON `dr`.`fldJobRequestDescription` = `jt`.`fldID` 
     LEFT OUTER JOIN dispatch_locations AS dl 
-    ON dr.fldLocation = dl.fldID 
-    LEFT OUTER JOIN typesofworktable AS tow 
-    ON dr.fldTOW = tow.fldID 
-    WHERE dr.fldDate = :selDate AND dr.fldEmployeeNum = :empNum";
+    ON `dr`.`fldLocation` = `dl`.`fldID` 
+    LEFT OUTER JOIN typesofworktable AS `tow` 
+    ON `dr`.`fldTOW` = `tow`.`fldID` 
+    WHERE `dr`.`fldDate` = :selDate AND `dr`.`fldEmployeeNum` = :empNum";
   $fetchDRStmt = $connwebjmr->prepare($insertDRQ);
   $fetchDRStmt->execute([
     ":selDate" => $selDate,

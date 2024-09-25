@@ -1,7 +1,6 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
-var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
 var otCount = 0;
@@ -206,7 +205,7 @@ $(document).on("click", ".btn-Ecancel", function () {
   resetEntry();
 });
 $(document).on("click", ".btn-Eupdate", function () {
-  saveEdit();
+  saveEdit()
   $(this).closest(".modal").find(".btn-close").click();
   resetEntry();
 });
