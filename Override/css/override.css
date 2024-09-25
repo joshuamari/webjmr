@@ -531,6 +531,7 @@ body {
 }
 
 .user-name h5 {
+  font-size: 20px;
   margin-bottom: 0;
   color: var(--magnolia);
 }
@@ -755,21 +756,7 @@ option {
   opacity: 1;
   transform: translateX(-50%) scale(1);
 }
-.left .left-cont #p1,
-.left .left-cont #p2,
-.left .left-cont #p3,
-.left .left-cont #p4,
-.left .left-cont #p5,
-.left .left-cont #p6,
-.left .left-cont #p7,
-.left .left-cont #p8,
-.left .left-cont #p9,
-.left .left-cont #p10,
-.left .left-cont #p11,
-.left .left-cont #p12,
-.left .left-cont #p13 {
-  font-size: 14px;
-}
+
 .left .left-cont .checkbox {
   -webkit-appearance: none;
   position: relative;
