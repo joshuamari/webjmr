@@ -1,19 +1,24 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
+// var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
 var otCount = 0;
 var lvCount = 0;
-let leaveID = "";
-let otherID = "";
-let mngID = "";
-let kiaID = "";
+let leaveID = 0;
+let otherID = 0;
+let mngID = 0;
+let kiaID = 0;
 let noMoreInputItems = [];
 let oneBUTrainerID = "";
 let entryArr = [];
 let editTRID = [];
 let delTRID = [];
+const mhtypes = [
+  { id: 0, type: "Regular" },
+  { id: 1, type: "Overtime" },
+];
 
 const calendar = document.querySelector(".calendar");
 
@@ -65,11 +70,11 @@ checkAccess()
                 fillEntries(entryList);
                 getMHCount(thisEmpID);
                 fillMHType(0);
-                kia_id = parseInt(otherVar.kia_id);
-                leaveID = parseInt(otherVar.leaveID);
-                mngID = parseInt(otherVar.mngID);
-                otherID = parseInt(otherVar.otherProjID);
-                oneBUTrainerID = parseInt(otherVar.oneBUTrainerID);
+                kiaID += parseInt(otherVar.kia_id);
+                leaveID += parseInt(otherVar.leaveID);
+                mngID += parseInt(otherVar.mngID);
+                otherID += parseInt(otherVar.otherProjID);
+                oneBUTrainerID += parseInt(otherVar.oneBUTrainerID);
                 noMoreInputItems = otherVar.noMoreIOW;
                 $(".cs-loader").fadeOut(1000);
               })
@@ -77,7 +82,9 @@ checkAccess()
                 alert(`check Access => ${error}`);
               });
           })
-          .catch(() => {});
+          .catch((error) => {
+            alert(`check Access => ${error}`);
+          });
       });
     } else {
       alert(emp.message);
@@ -202,12 +209,32 @@ $(document).on("click", ".btn-close", function () {
 });
 $(document).on("click", ".btn-Ecancel", function () {
   $(this).closest(".modal").find(".btn-close").click();
-  resetEntry();
+  removeOutlines();
 });
 $(document).on("click", ".btn-Eupdate", function () {
+  let date = $("#idDRDate").val();
+  let emp = $("#idEmployee").val();
   saveEdit()
-  $(this).closest(".modal").find(".btn-close").click();
-  resetEntry();
+    .then((status) => {
+      if (status) {
+        getEntries(emp)
+          .then((entryList) => {
+            fillEntries(entryList);
+            getIDEntries(emp, date);
+          })
+          .catch((error) => {
+            alert(`Add Entries (Save Edit): ${error}`);
+          });
+        resetEntry();
+        $(this).closest(".modal").find(".btn-close").click();
+        removeOutlines();
+      } else {
+        alert(`Unsucessful Save of Edit`);
+      }
+    })
+    .catch((error) => {
+      alert(`Save Edit Error: ${error}`);
+    });
 });
 
 $(document).on("click", ".btn-Edelete", function () {
@@ -221,6 +248,7 @@ $(document).on(
   function () {
     $(this).removeClass("bg-err");
     $(this).removeClass("border border-danger");
+    $(".missingInputs").addClass("hidden");
   }
 );
 $(document).on(
@@ -261,16 +289,26 @@ $(document).on("change", "#idDRDate", function () {
 // FOR GROUP LIST
 $(document).on("change", "#idGroup", function () {
   //select Group Event
+  resetEntry();
   sequenceValidation(0);
   getEmployees()
     .then((emps) => {
       fillEmployees(emps);
+      let thisEmpID = $("#idEmployee").val();
+      getEntries(thisEmpID)
+        .then((entryList) => {
+          console.log("fill entries next...");
+          fillEntries(entryList);
+          getMHCount();
+        })
+        .catch((error) => {
+          alert(`${error}`);
+        });
     })
     .catch((error) => {
       alert(`${error}`);
     });
 
-  $("#p1").text("");
   $(this).removeClass("border-danger");
   // $(".iow").removeClass("active");
 });
@@ -279,7 +317,6 @@ $(document).on("change", "#idGroup", function () {
 $(document).on("change", "#idLocation", function () {
   //select Location Event
   MHValidation();
-  $("#p3").text("");
   $(this).removeClass("border-danger");
 });
 
@@ -289,22 +326,23 @@ $(document).on("change", "#idEmployee", function () {
   var thisEmpID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
   var selDate = $("#idDRDate").val();
   sequenceValidation(0);
-  Promise.all([
-    getProjects(thisEmpID),
-    getEntries(thisEmpID), //get text entries
-    getIDEntries(thisEmpID, selDate), //get id entries
-  ])
-    .then(([projs, entryList, entryIDs]) => {
-      resetSelection(1);
-      fillProjects(projs, 0);
-      fillEntries(entryList); //fill table entries
-      getMHCount(thisEmpID);
-    })
-    .catch((error) => {
-      alert(`${error}`);
-    });
+  if (thisEmpID != 0 || thisEmpID != undefined) {
+    Promise.all([
+      getProjects(thisEmpID),
+      getEntries(thisEmpID), //get text entries
+      getIDEntries(thisEmpID, selDate), //get id entries
+    ])
+      .then(([projs, entryList]) => {
+        resetSelection(1, 0);
+        fillProjects(projs, 0);
+        fillEntries(entryList); //fill table entries
+        getMHCount(thisEmpID);
+      })
+      .catch((error) => {
+        alert(`${error}`);
+      });
+  }
 
-  $("#p4").text("");
   $(this).removeClass("border-danger");
 });
 
@@ -333,7 +371,6 @@ $(document).on("change", "#idProject", function () {
     .catch((error) => {
       alert(`${error}`);
     });
-  $("#p5").text("");
   $(this).removeClass("border-danger");
 
   if (projID == leaveID) {
@@ -385,7 +422,6 @@ $(document).on("change", "#edit-selProj", function () {
 $(document).on("change", "#idItem", function () {
   //select Item Event
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
-
   var projID = $("#idProject").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   var checkItemID = noMoreInputItems.includes(itemID);
@@ -406,7 +442,6 @@ $(document).on("change", "#idItem", function () {
   if (checkItemID) {
     $("#drInstruction").modal("show");
   }
-  $("#p6").text("");
   $(this).removeClass("border-danger");
 });
 $(document).on("change", "#edit-selIOW", function () {
@@ -438,7 +473,6 @@ $(document).on("change", "#edit-selIOW", function () {
 // FOR JOB REQ DESC LIST
 $(document).on("change", "#idJRD", function () {
   var jrdID = $($(this).find("option:selected")).attr("job-id");
-  $("#p7").text("");
   $(this).removeClass("border-danger");
 });
 $(document).on("change", "#edit-selJRD", function () {
@@ -469,7 +503,6 @@ $(document).on("change", "#idTOW", function () {
   }
   getTOWDesc(towVal, 0);
 
-  $("#p12").text("");
   $(this).removeClass("border-danger");
 });
 $(document).on("change", "#edit-selTOW", function () {
@@ -496,24 +529,20 @@ $(document).on("change", "#edit-selTOW", function () {
   }
   getTOWDesc(towVal, 1);
 
-  $("#p12").text("");
   $(this).removeClass("border-danger");
 });
 //Checker
 $(document).on("change", "#idChecking", function () {
-  $("#p9").text("");
   $(this).removeClass("border-danger");
 });
 
 //Hours Minutes
 $(document).on("click", "#getHour, #getMin", function () {
-  $("#p10").text("");
   $(this).removeClass("border-danger");
 });
 
 //ManHour Type
 $(document).on("change", "#idMH", function () {
-  $("#p11").text("");
   $(this).removeClass("border-danger");
 });
 
@@ -524,7 +553,7 @@ $(document).on("click", "#idReset", function () {
 });
 $(document).on("click", "#idAdd", function () {
   //click Add Event
-  addEntries(0);
+  addEntries();
 });
 
 //Entry Table Buttons
@@ -678,8 +707,15 @@ function getMyGroups(myEmpNum) {
 }
 function fillMyGroups(grps) {
   var grpSelect = $("#idGroup");
-  grpSelect.html(`<option value=0 grp-id=0>Select Group</option>`);
-  $.each(grps, function (index, item) {
+  grpSelect.html(
+    `<option selected hidden value=0 grp-id=0>Select Group</option>`
+  );
+  let sortedGrps = grps.sort(function (a, b) {
+    var first = a.abbreviation.toUpperCase();
+    var second = b.abbreviation.toUpperCase();
+    return first < second ? -1 : first > second ? 1 : 0;
+  });
+  $.each(sortedGrps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
       .text(item.abbreviation)
@@ -716,7 +752,9 @@ function fillDispatchLoc(locs, type) {
   var locSelect = $("#idLocation");
   var editLocSel = $("#edit-selLoc");
   if (type == 0) {
-    locSelect.html(`<option value=0 loc-id=0>Select Location</option>`);
+    locSelect.html(
+      `<option selected hidden value=0 loc-id=0>Select Location</option>`
+    );
     $.each(locs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -725,7 +763,9 @@ function fillDispatchLoc(locs, type) {
       locSelect.append(option);
     });
   } else {
-    editLocSel.html(`<option value=0 loc-id=0>Select Location</option>`);
+    editLocSel.html(
+      `<option selected hidden value=0 loc-id=0>Select Location</option>`
+    );
     $.each(locs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -767,20 +807,36 @@ function getEmployees() {
 }
 function fillEmployees(emps) {
   var empSelect = $("#idEmployee");
-  empSelect.html(`<option value=0 emp-id=0>Select Employee</option>`);
+  empSelect.html(
+    `<option selected hidden value=0 emp-id=0>Select Employee</option>`
+  );
+  // let formattedName = formatName(emps);
   $.each(emps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
-      .text(item.fullName)
+      .text(formatName(item.fullName))
       .attr("emp-id", item.id);
     empSelect.append(option);
   });
 }
 
+function formatName(emp) {
+  let names = [];
+  const splitName = emp.split(", ");
+  const splitFName = splitName[1].split(" ");
+  $.each(splitName, function (index, name) {
+    let lower = name.toLowerCase();
+    let capital = lower.charAt(0).toUpperCase() + lower.slice(1);
+    names.push(capital);
+  });
+  names[1] = splitFName.join(" ");
+  const newname = names.join(", ");
+  return newname;
+}
+
 //PROJECT FUNCTIONS
 function getProjects(thisEmpID) {
   //get PROJECT Selection
-  var proj = [];
   var groupID = $("#idGroup").val();
 
   return new Promise((resolve, reject) => {
@@ -812,7 +868,9 @@ function fillProjects(projs, type) {
   var projSelect = $("#idProject");
   var editProjSel = $("#edit-selProj");
   if (type == 0) {
-    projSelect.html(`<option value=0 proj-id=0>Select Project</option>`);
+    projSelect.html(
+      `<option selected hidden value=0 proj-id=0>Select Project</option>`
+    );
     $.each(projs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -821,7 +879,9 @@ function fillProjects(projs, type) {
       projSelect.append(option);
     });
   } else {
-    editProjSel.html(`<option value=0 proj-id=0>Select Project</option>`);
+    editProjSel.html(
+      `<option selected hidden value=0 proj-id=0>Select Project</option>`
+    );
     $.each(projs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -946,7 +1006,9 @@ function fillItems(items, type) {
   var itemSelect = $("#idItem");
   var editIOWSel = $("#edit-selIOW");
   if (type == 0) {
-    itemSelect.html(`<option value=0 item-id=0>Select Item of Works</option>`);
+    itemSelect.html(
+      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`
+    );
     $.each(items, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -955,7 +1017,9 @@ function fillItems(items, type) {
       itemSelect.append(option);
     });
   } else {
-    editIOWSel.html(`<option value=0 item-id=0>Select Item of Works</option>`);
+    editIOWSel.html(
+      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`
+    );
     $.each(items, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -983,7 +1047,7 @@ function getLabel(itemID, type) {
 
       if (type == 0) {
         $("#labell").remove();
-        $("#p6").after(`
+        $("#iowLbl").after(`
           <span class="col-12 alert-primary text-primary" id="labell" role="alert">${lbl}</span>
           `);
       } else {
@@ -1043,7 +1107,7 @@ function fillJobs(jobs, type) {
   var editJobSel = $("#edit-selJRD");
   if (type == 0) {
     jobSelect.html(
-      `<option value=0 job-id=0>Select Job Request Description</option>`
+      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`
     );
     $.each(jobs, function (index, item) {
       var option = $("<option>")
@@ -1054,7 +1118,7 @@ function fillJobs(jobs, type) {
     });
   } else {
     editJobSel.html(
-      `<option value=0 job-id=0>Select Job Request Description</option>`
+      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`
     );
     $.each(jobs, function (index, item) {
       var option = $("<option>")
@@ -1135,7 +1199,9 @@ function fillTOW(tows, type) {
   var towSelect = $("#idTOW");
   var editTOWSel = $("#edit-selTOW");
   if (type == 0) {
-    towSelect.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
+    towSelect.html(
+      `<option selected hidden value=0 tow-id=0>Select...</option>`
+    );
     $.each(tows, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1144,7 +1210,9 @@ function fillTOW(tows, type) {
       towSelect.append(option);
     });
   } else {
-    editTOWSel.html(`<option value=0 tow-id=0>Select Type of Work</option>`);
+    editTOWSel.html(
+      `<option selected hidden value=0 tow-id=0>Select...</option>`
+    );
     $.each(tows, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1229,7 +1297,9 @@ function fillCheckers(checks, type) {
   var checkSelect = $("#idChecking");
   var editCheckSel = $("#edit-selCheck");
   if (type == 0) {
-    checkSelect.html(`<option value=0 chk-id=0>Select Employee</option>`);
+    checkSelect.html(
+      `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+    );
     $.each(checks, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1238,7 +1308,9 @@ function fillCheckers(checks, type) {
       checkSelect.append(option);
     });
   } else {
-    editCheckSel.html(`<option value=0 chk-id=0>Select Employee</option>`);
+    editCheckSel.html(
+      `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+    );
     $.each(checks, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
@@ -1264,9 +1336,11 @@ function isDrawing(type) {
 }
 function isEngineering(type) {
   var isDrawing = true;
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var editprojID = $($("#edit-selProj").find("option:selected")).attr(
-    "proj-id"
+  var projID = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
+  var editprojID = parseInt(
+    $($("#edit-selProj").find("option:selected")).attr("proj-id")
   );
   var selGroup = $("#idGroup").val();
 
@@ -1306,9 +1380,11 @@ function isEngineering(type) {
 }
 function hasJRD(type) {
   var isDrawing = true;
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
-  var editprojID = $($("#edit-selProj").find("option:selected")).attr(
-    "proj-id"
+  var projID = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
+  var editprojID = parseInt(
+    $($("#edit-selProj").find("option:selected")).attr("proj-id")
   );
   var selGroup = $("#idGroup").val();
 
@@ -1415,7 +1491,7 @@ function fillTRGroups(allgrps, type) {
   var editTRGrpSel = $("#edit-trGroup");
   if (type == 0) {
     trgrpSelect.html(
-      `<option value=0 trgrp-id=0>Select Training Group</option>`
+      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`
     );
     $.each(allgrps, function (index, item) {
       var option = $("<option>")
@@ -1426,7 +1502,7 @@ function fillTRGroups(allgrps, type) {
     });
   } else {
     editTRGrpSel.html(
-      `<option value=0 trgrp-id=0>Select Training Group</option>`
+      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`
     );
     $.each(allgrps, function (index, item) {
       var option = $("<option>")
@@ -1520,15 +1596,11 @@ function getMHCount() {
 function fillMHType(type) {
   var mhTypeSelect = $("#idMH");
   var editMHTypeSel = $("#edit-selMHType");
-  const mhtypes = [
-    { id: 0, type: "Regular" },
-    { id: 1, type: "Overtime" },
-  ];
 
   // return;
   if (type == 0) {
     mhTypeSelect.html(
-      `<option value=null mhid=null>Select Manhour Type</option>`
+      `<option selected hidden value=null mhid=null>Select Manhour Type</option>`
     );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
@@ -1539,7 +1611,7 @@ function fillMHType(type) {
     });
   } else {
     editMHTypeSel.html(
-      `<option value=null edtmhid=null>Select Manhour Type</option>`
+      `<option selected hidden value=null edtmhid=null>Select Manhour Type</option>`
     );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
@@ -1562,22 +1634,15 @@ function resetEntry() {
     .change();
   // $("#one").click();
   $("#idRev").prop("checked", false);
-  $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12,#p13").text("");
   $(
     "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
-  $(
-    "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin"
-  )
-    .removeClass("border border-danger")
-    .removeClass("bg-err");
-  $(".editInputError").removeClass("block").addClass("hidden");
 
   $(".checker").addClass("d-none");
-  // $("#id2DDiv").addClass("d-none");
-  // $("#idRevDiv").addClass("d-none");
+  $("#id2DDiv").addClass("d-none");
+  $("#idRevDiv").addClass("d-none");
   sequenceValidation(0);
   // resetSelection(1);
 }
@@ -1611,28 +1676,25 @@ function saveEdit() {
   var mhtype = $($("#edit-selMHType").find("option:selected")).attr("edtmhid");
   var remarks = $("#edit-newRemarks").val();
 
+  let isSuccessful = false;
   var mgaKulang = [];
 
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
   }
   if (!grp || grp == 0) {
-    $("#p1").text("Please Select Group");
     $("#idGroup").addClass("border border-danger ").addClass("bg-err");
     mgaKulang.push("GROUP");
   }
   if (!date) {
-    $("#p2").text("Please Select Date");
     $("#idDRDate").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("DATE");
   }
   if (!emp || emp == 0) {
-    $("#p4").text("Please Select Employee");
     $("#idEmployee").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("EMPLOYEE");
   }
   if (!loc || loc == 0) {
-    // $("#p3").text("Please Select Location");
     $(".editInputError").removeClass("hidden").addClass("block");
     $("#edit-selLoc").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("LOCATION");
@@ -1647,7 +1709,7 @@ function saveEdit() {
     $("#edit-selIOW").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("ITEM");
   }
-  if ((!jobreq && proj != leaveID && proj != otherID) || jobreq == 0) {
+  if (!jobreq && proj != leaveID && proj != otherID) {
     $(".editInputError").removeClass("hidden").addClass("block");
     $("#edit-selJRD").addClass("border border-danger").addClass("bg-err");
     mgaKulang.push("JRD");
@@ -1712,11 +1774,11 @@ function saveEdit() {
     }
   }
 
-  if (mgaKulang.length > 0) {
-    console.log(mgaKulang);
-    return;
-  } else {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    if (mgaKulang.length > 0) {
+      console.log(mgaKulang);
+      reject("Missing Input Fields");
+    } else {
       $.ajax({
         type: "POST",
         url: "php/update_entries.php",
@@ -1741,16 +1803,8 @@ function saveEdit() {
         },
         dataType: "json",
         success: function (response) {
-          getEntries(emp)
-            .then((entryList) => {
-              fillEntries(entryList);
-              getIDEntries(emp, date);
-            })
-            .catch((error) => {
-              alert(`add entries: ${error}`);
-            });
-          resetEntry();
-          resolve(response);
+          isSuccessful = true;
+          resolve(isSuccessful);
         },
         error: function (xhr, status, error) {
           if (xhr.status === 404) {
@@ -1762,12 +1816,12 @@ function saveEdit() {
           }
         },
       });
-    });
-  }
+    }
+  });
 }
 
 //Add Entry
-function addEntries(addMode) {
+function addEntries() {
   //add Entries to Database
   var tutri = $('input[name="radio"]:checked').val();
   var grp = $("#idGroup").val();
@@ -1788,43 +1842,45 @@ function addEntries(addMode) {
   var checker =
     $($("#idChecking").find("option:selected")).attr("chk-id") || "";
   var mgaKulang = [];
+  const form = $(".left-cont");
+  let noInput = null;
 
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
   }
   if (!grp || grp == 0) {
-    $("#p1").text("Please Select Group");
     $("#idGroup").addClass("border border-danger ").addClass("bg-err");
+    if (!noInput) noInput = $("#idGroup");
     mgaKulang.push("GROUP");
   }
   if (!date) {
-    $("#p2").text("Please Select Date");
     $("#idDRDate").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idDRDate");
     mgaKulang.push("DATE");
   }
   if (!loc || loc == 0) {
-    $("#p3").text("Please Select Location");
     $("#idLocation").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idLocation");
     mgaKulang.push("LOCATION");
   }
   if (!emp || emp == 0) {
-    $("#p4").text("Please Select Employee");
     $("#idEmployee").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idEmployee");
     mgaKulang.push("EMPLOYEE");
   }
   if (!proj || proj == 0) {
-    $("#p5").text("Please Select Project");
     $("#idProject").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idProject");
     mgaKulang.push("PROJECT");
   }
   if (!item || item == 0) {
-    $("#p6").text("Please Select Item of Works");
     $("#idItem").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idItem");
     mgaKulang.push("ITEM");
   }
   if (!jobreq && proj != leaveID && proj != otherID) {
-    $("#p7").text("Please Select Job Request Description");
     $("#idJRD").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idJRD");
     mgaKulang.push("JRD");
   }
   if ($("#idRev").is(":checked") && !$("#idRevDiv").hasClass("d-none")) {
@@ -1834,41 +1890,42 @@ function addEntries(addMode) {
   }
   if (!tow && (!defaults.includes(proj) || proj == leaveID)) {
     if (proj == leaveID) {
-      $("#p12").text("Please Select Day Type");
+      if (!noInput) noInput = $("#idTOW");
     } else {
-      $("#p12").text("Please Select Type of Work");
+      if (!noInput) noInput = $("#idTOW");
     }
     $("#idTOW").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idTOW");
     mgaKulang.push("TOW");
   }
   if (tow == 3) {
     //If checker
     if (!checker) {
-      $("#p9").text("Please Select Member");
       $("#idChecking").addClass("border border-danger").addClass("bg-err");
+      if (!noInput) noInput = $("#idChecking");
       mgaKulang.push("CHECKER");
     }
   }
   if (hour > 1200 || hour < 0 || hour == 0) {
     //hour*60
-    $("#p10").text("Please Input Valid Time");
     $("#getHour").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#getHour");
     mgaKulang.push("ORAS");
   }
   if (mins > 59 || mins < 0) {
-    $("#p10").text("Please Input Valid Time");
     $("#getMin").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#getMin");
     mgaKulang.push("ORAS");
   }
   if ((hour == "" && mins == "") || (hour == 0 && mins == 0)) {
-    $("#p10").text("Please Input Valid Time");
     $("#getHour").addClass("border border-danger").addClass("bg-err");
     $("#getMin").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#getHour");
     mgaKulang.push("ORAS");
   }
   if (!mhtype && proj != leaveID) {
-    $("#p11").text("Please Select Manhour Type");
     $("#idMH").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idMH");
     mgaKulang.push("MHTYPE");
   }
   if (proj == leaveID) {
@@ -1877,17 +1934,18 @@ function addEntries(addMode) {
   }
   if (item == 14) {
     if (!trgrp || trgrp == 0) {
-      $("#p13").text("Please Select Group To Train");
       $("#trGroup").addClass("border border-danger").addClass("bg-err");
+      if (!noInput) noInput = $("#trGroup");
       mgaKulang.push("TRGROUP");
     }
   }
 
-  if (mgaKulang.length > 0) {
-    console.log(mgaKulang);
-    return;
-  } else {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    if (mgaKulang.length > 0) {
+      $(".missingInputs").removeClass("hidden");
+      console.log(mgaKulang);
+      reject("Missing Input Fields");
+    } else {
       $.ajax({
         type: "POST",
         url: "php/add_entries.php",
@@ -1932,8 +1990,8 @@ function addEntries(addMode) {
           }
         },
       });
-    });
-  }
+    }
+  });
 }
 //Edit Entry
 function getIDEntries(entryID, selDate) {
@@ -1964,6 +2022,7 @@ function getIDEntries(entryID, selDate) {
   });
 }
 function fillEditFields(editData) {
+  console.log("entry Data: ", editData);
   var entry = editData[0];
   const mhtype = entry["MHType"];
   const tow = entry["TOW"];
@@ -2336,6 +2395,8 @@ function initializeDate() {
 
 function sequenceValidation(type) {
   //sequence checking Project->Item->Job
+  $("#id2DDiv").addClass("d-none");
+  $("#idRevDiv").addClass("d-none");
   if (type == 0) {
     $("#idEmployee").prop("disabled", true);
     $("#idProject").prop("disabled", true);
@@ -2405,6 +2466,15 @@ function resetSelection(num, type) {
       jrd.val(0).change();
     }
   }
+}
+
+function removeOutlines() {
+  $(
+    "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin"
+  )
+    .removeClass("border border-danger")
+    .removeClass("bg-err");
+  $(".editInputError").removeClass("block").addClass("hidden");
 }
 
 function isWorkDay(location) {

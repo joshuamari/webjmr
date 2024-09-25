@@ -761,11 +761,11 @@
                         required
                       ></select>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 col-md-6 mt-1 alert-danger text-danger"
                       id="p1"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 col-md-6 my-2 datepicker">
@@ -776,11 +776,11 @@
                       id="idDRDate"
                       required
                     />
-                    <span
+                    <!-- <span
                       class="col-12 col-md-6 mt-1 alert-danger text-danger"
                       id="p2"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 my-2 loc">
@@ -792,11 +792,11 @@
                         </option>
                       </select>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p3"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 my-2 emp">
@@ -840,11 +840,11 @@
                       </div>
                       <ul id="empOptions" class="options p-0"></ul>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p4"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 my-2 proj">
@@ -856,7 +856,7 @@
                       id="idProject"
                       required
                     >
-                      <option selected hidden disabled value="">
+                      <option selected hidden disabled value="0">
                         Select Project
                       </option>
                     </select>
@@ -873,11 +873,11 @@
                       </div>
                       <ul id="projOptions" class="options p-0"></ul>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p5"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <!-- <div class="col-12 my-2 iow">
@@ -913,11 +913,12 @@
                       </div>
                       <ul id="itemOptions" class="options p-0"></ul>
                     </div>
-                    <span
+                    <span class="iowLbl" id="iowLbl"></span>
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p6"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <!-- <div class="col-12 my-2 " id="idJRDDiv">
@@ -953,11 +954,11 @@
                       </div>
                       <ul id="jrdOptions" class="options p-0"></ul>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p7"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <!-- ADDITIONAL OPTIONS (FOR SELECTED BUs ONLY) -->
@@ -1035,11 +1036,11 @@
                     <div class="input-group switch">
                       <input type="checkbox" class="checkbox" id="idRev" />
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p8"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <!-- SELECTED PROJECTS ONLY -->
@@ -1057,11 +1058,11 @@
                         <option>Checker</option>
                       </select>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p12"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 col-lg-6 mt-2 checker d-none">
@@ -1072,11 +1073,11 @@
                       </select>
                     </div>
 
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p9"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 my-2 d-none" id="idTowDescDiv">
@@ -1115,11 +1116,11 @@
                         required
                       />
                     </div>
-                    <span
+                    <!-- <span
                       class="col-6 mt-1 alert-danger text-danger"
                       id="p10"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 col-lg-6 my-2">
@@ -1131,11 +1132,11 @@
                         <option mhid="1">Overtime</option>
                       </select>
                     </div>
-                    <span
+                    <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
                       id="p11"
                       role="alert"
-                    ></span>
+                    ></span> -->
                   </div>
 
                   <div class="col-12 my-2">
@@ -1146,6 +1147,10 @@
                       rows="2"
                     ></textarea>
                   </div>
+                  <small class="missingInputs hidden alert-danger text-danger"
+                    ><i class="bx bx-info-circle"></i> Please Complete the
+                    Form.</small
+                  >
 
                   <div
                     class="row col-12 my-4 d-flex"
