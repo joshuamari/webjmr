@@ -4,7 +4,6 @@ require_once "./global_functions.php";
 #endregion
 
 $global_var = [
-  'date' => date("Y-m-d"),
   'kia_id' => getkiaProjID(),
   'leaveID' => getLeaveID(),
   'mngID' => getManagementProjects(),
