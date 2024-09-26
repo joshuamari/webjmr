@@ -706,16 +706,20 @@ function getMyGroups(myEmpNum) {
   });
 }
 function fillMyGroups(grps) {
+  console.log("grps: ", grps);
   var grpSelect = $("#idGroup");
   grpSelect.html(
     `<option selected hidden value=0 grp-id=0>Select Group</option>`
   );
-  let sortedGrps = grps.sort(function (a, b) {
-    var first = a.abbreviation.toUpperCase();
-    var second = b.abbreviation.toUpperCase();
-    return first < second ? -1 : first > second ? 1 : 0;
-  });
-  $.each(sortedGrps, function (index, item) {
+  if (grps.length > 1) {
+    grps = grps.sort(function (a, b) {
+      var first = a.abbreviation.toUpperCase();
+      var second = b.abbreviation.toUpperCase();
+      return first < second ? -1 : first > second ? 1 : 0;
+    });
+  }
+
+  $.each(grps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
       .text(item.abbreviation)
