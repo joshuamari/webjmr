@@ -16,9 +16,10 @@ $selDate = (!empty($_POST['selDate'])) ? $_POST['selDate'] : date("Y-m-d");
 
 #region Main Query
 try{
-  $insertDRQ = "SELECT `dr`.`fldID` AS `id`,
+  $getDRQ = "SELECT `dr`.`fldID` AS `id`,
      `dr`.`fldLocation` AS `locID`,
 	   `dl`.`fldLocation` AS `location`,
+     `dr`.`fldGroupID` as `groupID`,
      `dr`.`fldGroup` AS `group`,
      `dr`.`fldProject` AS `projID`,
      `pt`.`fldProject` AS `projName`,
@@ -48,7 +49,7 @@ try{
     LEFT OUTER JOIN typesofworktable AS `tow` 
     ON `dr`.`fldTOW` = `tow`.`fldID` 
     WHERE `dr`.`fldDate` = :selDate AND `dr`.`fldEmployeeNum` = :empNum";
-  $fetchDRStmt = $connwebjmr->prepare($insertDRQ);
+  $fetchDRStmt = $connwebjmr->prepare($getDRQ);
   $fetchDRStmt->execute([
     ":selDate" => $selDate,
     ":empNum" => $empNum,
