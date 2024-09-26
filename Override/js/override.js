@@ -2009,6 +2009,7 @@ function getIDEntries(entryID, selDate) {
       },
       dataType: "json",
       success: function (response) {
+        console.log("getIDEntries: ", response);
         const entryData = response["result"];
         entryArr = response["result"];
         resolve(entryData);
@@ -2212,6 +2213,7 @@ function getEntries(thisEmpID) {
         },
         dataType: "json",
         success: function (response) {
+          console.log("getEntries: ", response);
           const allEntries = response;
           resolve(allEntries);
         },
