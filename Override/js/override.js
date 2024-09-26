@@ -19,6 +19,7 @@ const mhtypes = [
   { id: 0, type: "Regular" },
   { id: 1, type: "Overtime" },
 ];
+let editGrpID = 0;
 
 const calendar = document.querySelector(".calendar");
 
@@ -220,7 +221,6 @@ $(document).on("click", ".btn-Eupdate", function () {
         getEntries(emp)
           .then((entryList) => {
             fillEntries(entryList);
-            getIDEntries(emp, date);
           })
           .catch((error) => {
             alert(`Add Entries (Save Edit): ${error}`);
@@ -274,7 +274,7 @@ $(document).on("change", "#idDRDate", function () {
   //select Date Event
   var thisEmpID = $($("#idEmployee").find("option:selected")).attr("emp-id"); //get ID of selected Employee
   var selDate = $(this).val();
-  Promise.all([getEntries(thisEmpID), getIDEntries(thisEmpID, selDate)])
+  Promise.all([getEntries(thisEmpID)])
     .then(([entryList]) => {
       fillEntries(entryList);
       MHValidation();
@@ -325,12 +325,12 @@ $(document).on("change", "#idEmployee", function () {
   //select Employee Event
   var thisEmpID = $($(this).find("option:selected")).attr("emp-id"); //get ID of selected Employee
   var selDate = $("#idDRDate").val();
+  var groupID = $("#idGroup").val();
   sequenceValidation(0);
   if (thisEmpID != 0 || thisEmpID != undefined) {
     Promise.all([
-      getProjects(thisEmpID),
+      getProjects(thisEmpID, groupID),
       getEntries(thisEmpID), //get text entries
-      getIDEntries(thisEmpID, selDate), //get id entries
     ])
       .then(([projs, entryList]) => {
         resetSelection(1, 0);
@@ -351,11 +351,12 @@ $(document).on("change", "#idProject", function () {
   //select Project Event Type=[0]
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
+  var groupID = $("#idGroup").val();
   sequenceValidation(0);
   Promise.all([
-    getItems(thisEmpID, projID),
+    getItems(thisEmpID, projID, groupID),
     getTOW(projID),
-    getCheckers(projID),
+    getCheckers(projID, groupID),
   ])
     .then(([items, tows, checks]) => {
       resetSelection(2, 0);
@@ -388,9 +389,9 @@ $(document).on("change", "#edit-selProj", function () {
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   // sequenceValidation(1);
   Promise.all([
-    getItems(thisEmpID, projID),
+    getItems(thisEmpID, projID, editGrpID),
     getTOW(projID),
-    getCheckers(projID),
+    getCheckers(projID, editGrpID),
   ])
     .then(([items, tows, checks]) => {
       resetSelection(2, 1);
@@ -424,10 +425,11 @@ $(document).on("change", "#idItem", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $("#idProject").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
+  var groupID = $("#idGroup").val();
   var checkItemID = noMoreInputItems.includes(itemID);
   sequenceValidation(0);
   if (itemID != 0) {
-    Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
+    Promise.all([getJobs(thisEmpID, projID, itemID, groupID), getTRGroups()])
       .then(([jobs, allgrps]) => {
         resetSelection(3, 0);
         fillJobs(jobs, 0);
@@ -452,7 +454,7 @@ $(document).on("change", "#edit-selIOW", function () {
   var checkItemID = noMoreInputItems.includes(itemID);
   // sequenceValidation(1);
   if (itemID != 0) {
-    Promise.all([getJobs(thisEmpID, projID, itemID), getTRGroups()])
+    Promise.all([getJobs(thisEmpID, projID, itemID, editGrpID), getTRGroups()])
       .then(([jobs, allgrps]) => {
         resetSelection(3, 1);
         fillJobs(jobs, 1);
@@ -567,26 +569,28 @@ $(document).on("click", "#editBut", function () {
   var empText = $("#idEmployee option:selected").text();
   var entryID = $(this).closest("tr").attr("entry-id");
   const entryRow = entryArr.filter((entry) => entry.id === entryID);
+  editGrpID = entryRow[0].groupID;
   editTRID = entryID;
-  Promise.all([
-    getDispatchLoc(),
-    getProjects(thisEmpID),
-    // getIDEntries(entryID),
-  ]).then(([locs, projs]) => {
-    fillDispatchLoc(locs, 1);
-    fillProjects(projs, 1);
-    fillEditFields(entryRow);
-    fillMHType(1);
-    // .then((success) => {
-    $("#emp-edit").html(empText);
-    setTimeout(function () {
-      $("#editEntry").modal("show");
-    }, 1500);
-    // });
+  console.log("entryID", entryID, "entryArr", entryArr);
+  console.log("entryRow", entryRow);
+  console.log("grpID", editGrpID);
+  Promise.all([getDispatchLoc(), getProjects(thisEmpID, editGrpID)]).then(
+    ([locs, projs]) => {
+      fillDispatchLoc(locs, 1);
+      fillProjects(projs, 1);
+      fillEditFields(entryRow);
+      fillMHType(1);
+      // .then((success) => {
+      $("#emp-edit").html(empText);
+      setTimeout(function () {
+        $("#editEntry").modal("show");
+      }, 1500);
+      // });
 
-    // sequenceValidation(1);
-    isDrawing(1);
-  });
+      // sequenceValidation(1);
+      isDrawing(1);
+    }
+  );
 });
 $(document).on("click", "#delBut", function () {
   delTRID = $(this).closest("tr").attr("entry-id");
@@ -839,16 +843,16 @@ function formatName(emp) {
 }
 
 //PROJECT FUNCTIONS
-function getProjects(thisEmpID) {
+function getProjects(thisEmpID, grpID) {
   //get PROJECT Selection
-  var groupID = $("#idGroup").val();
+  // var groupID = $("#idGroup").val();
 
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
       url: "php/get_projects.php",
       data: {
-        grpNum: groupID,
+        grpNum: grpID,
         empNum: thisEmpID,
       },
       dataType: "json",
@@ -869,6 +873,7 @@ function getProjects(thisEmpID) {
   });
 }
 function fillProjects(projs, type) {
+  // console.log("all projs", projs);
   var projSelect = $("#idProject");
   var editProjSel = $("#edit-selProj");
   if (type == 0) {
@@ -973,12 +978,12 @@ function MHValidation(type) {
 }
 
 //ITEM of WORKS FUNCTIONS
-function getItems(thisEmpID, projID) {
+function getItems(thisEmpID, projID, grpID) {
   //get Item Selection
   var itms = [];
   $("#labell").remove();
   $("#edit-labell").remove();
-  var groupID = $("#idGroup").val();
+  // var groupID = $("#idGroup").val();
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -987,7 +992,7 @@ function getItems(thisEmpID, projID) {
       data: {
         empNum: thisEmpID,
         projID: projID,
-        grpNum: groupID,
+        grpNum: grpID,
       },
       dataType: "json",
       success: function (response) {
@@ -1074,10 +1079,10 @@ function getLabel(itemID, type) {
 }
 
 //JRD FUNCTIONS
-function getJobs(thisEmpID, projID, itemID) {
+function getJobs(thisEmpID, projID, itemID, grpID) {
   //get JRD Selection
   var jobs = [];
-  var groupID = $("#idGroup").val();
+  // var groupID = $("#idGroup").val();
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -1086,7 +1091,7 @@ function getJobs(thisEmpID, projID, itemID) {
       data: {
         empNum: thisEmpID,
         projID: projID,
-        grpNum: groupID,
+        grpNum: grpID,
         itemID: itemID,
       },
       dataType: "json",
@@ -1263,9 +1268,9 @@ function getTOWDesc(typesOfWorkID, type) {
 }
 
 //for checking ToW
-function getCheckers(projID) {
+function getCheckers(projID, grpID) {
   //get Checkers Selection
-  var empGrp = $("#idGroup").val();
+  // var empGrp = $("#idGroup").val();
   if (projID == 0 || projID == undefined) {
     $(".checker").addClass("d-none");
     return;
@@ -1276,7 +1281,7 @@ function getCheckers(projID) {
       type: "POST",
       url: "php/get_checkers.php",
       data: {
-        grpNum: empGrp,
+        grpNum: grpID,
         empNum: empDetails["empID"],
         projID: projID,
       },
@@ -1658,7 +1663,7 @@ function cancelEditFunction() {
 }
 function saveEdit() {
   //update database entry
-  var grp = $("#idGroup").val();
+  var grp = editGrpID;
   var date = $("#idDRDate").val();
   var emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
   var entryID = editTRID;
@@ -1976,7 +1981,6 @@ function addEntries() {
           getEntries(emp)
             .then((entryList) => {
               fillEntries(entryList);
-              getIDEntries(emp, date);
             })
             .catch((error) => {
               alert(`add entries: ${error}`);
@@ -1998,41 +2002,15 @@ function addEntries() {
   });
 }
 //Edit Entry
-function getIDEntries(entryID, selDate) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      type: "POST",
-      url: "php/get_data_edit.php",
-      data: {
-        empNum: entryID,
-        selDate: selDate,
-      },
-      dataType: "json",
-      success: function (response) {
-        console.log("getIDEntries: ", response);
-        const entryData = response["result"];
-        entryArr = response["result"];
-        resolve(entryData);
-      },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          reject("Not Found Error: The requested resources are not found.");
-        } else if (xhr.status === 500) {
-          reject("Internal Server Error: There was a server error.");
-        } else {
-          reject(error);
-        }
-      },
-    });
-  });
-}
 function fillEditFields(editData) {
   console.log("entry Data: ", editData);
   var entry = editData[0];
+  console.log("entry", entry);
   const mhtype = entry["MHType"];
   const tow = entry["TOW"];
   const checker = entry["checkerID"];
-  const duration = entry["duration"];
+  const timeFormat = entry["duration"];
+  const duration = timeFormat * 60;
   const newhrs = Math.floor(duration / 60);
   const newmins = duration % 60;
   const id = entry["id"];
@@ -2140,7 +2118,6 @@ function dupeEntry(entryData) {
         getEntries(emp)
           .then((entryList) => {
             fillEntries(entryList);
-            getIDEntries(emp, date);
           })
           .catch((error) => {
             alert(`dupe entries: ${error}`);
@@ -2215,6 +2192,7 @@ function getEntries(thisEmpID) {
         success: function (response) {
           console.log("getEntries: ", response);
           const allEntries = response;
+          entryArr = response["result"];
           resolve(allEntries);
         },
         error: function (xhr, status, error) {
