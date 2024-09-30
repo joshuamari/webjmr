@@ -14,7 +14,7 @@ try {
   ]);
   $gods = ['464', '510', '487'];
   $sys = array();
-  $sysQ = "SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,510,487,466)";
+  $sysQ = "SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup='SYS' AND fldActive=1 AND fldEmployeeNum NOT IN (464,510,487)";
   $sysStmt = $connkdt->query($sysQ);
   $sysArr = $sysStmt->fetchAll();
   foreach ($sysArr as $syss) {

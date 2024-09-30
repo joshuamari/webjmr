@@ -59,6 +59,7 @@ try {
                 }
             } else {
                 $new_in = checkStart($in_time, $location, $currentDay);
+
                 $new_in_timestamp = strtotime($currentDay . " " . $new_in);
 
                 if ($new_in !== NULL) {
@@ -128,7 +129,7 @@ function getReductions($start, $end, $location, $currentday)
         $location = 1;
         $coreStatement = " AND core_name_id NOT IN(1,3)";
     }
-    $redQ = "SELECT core_name_id, location_id, sd AS start, ed AS end FROM ( SELECT core_name_id, location_id, MIN(CASE WHEN core_start = 1 THEN core_time END) AS sd, MAX(CASE WHEN core_start = 0 THEN core_time END) AS ed FROM coretime WHERE effective_date = ( SELECT MAX(effective_date) FROM coretime WHERE :currentday >= effective_date AND location_id = :location_id  AND core_name_id NOT IN(1,3)) AND location_id = :location_id $coreStatement GROUP BY core_name_id ) AS subquery WHERE subquery.sd <= :endTime AND subquery.ed >= :startTime";
+    $redQ = "SELECT core_name_id, location_id, sd AS start, ed AS end FROM ( SELECT core_name_id, location_id, MIN(CASE WHEN core_start = 1 THEN core_time END) AS sd, MAX(CASE WHEN core_start = 0 THEN core_time END) AS ed FROM coretime WHERE effective_date = ( SELECT MAX(effective_date) FROM coretime WHERE :currentday >= effective_date AND location_id = :location_id  AND core_name_id NOT IN(1,3)) AND location_id = :location_id $coreStatement GROUP BY core_name_id ) AS subquery WHERE :startTime <= subquery.sd AND :endTime >= subquery.ed";
     $redStmt = $connwebjmr->prepare($redQ);
     $redStmt->execute([":currentday" => $currentday, ":location_id" => $location, ":startTime" => $start, ":endTime" => $end]);
     if ($redStmt->rowCount() > 0) {
@@ -198,4 +199,4 @@ function getHalfend($location)
 }
 
 #endregion
-echo json_encode($result);
+echo json_encode($result, JSON_PRETTY_PRINT);

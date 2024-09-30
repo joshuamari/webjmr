@@ -902,7 +902,6 @@ function generateAMS(
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
-  console.log(amsLogs);
   for (let x = 1; x <= _maxDays; x++) {
     let cellColor = "";
     if (amsLogs[padZero(x)] && amsLogs[padZero(x)]["hours"] !== undefined) {
@@ -1067,7 +1066,6 @@ function createMemberHours(user) {
     totalHours,
     leavesData
   );
-
   //Start Leave Section
 
   $("#mainTbody")

@@ -245,7 +245,8 @@
                     >Start Date
                   </label>
                   <div class="form-check">
-                    <input
+                    <!--#region multiple input planning-->
+                    <!-- <input
                       class="form-check-input"
                       type="checkbox"
                       value=""
@@ -253,7 +254,8 @@
                     />
                     <label class="form-check-label" for="excludeDays">
                       Exclude weekend/holidays
-                    </label>
+                    </label> -->
+                    <!--#endregion-->
                   </div>
                 </div>
                 <input
@@ -283,8 +285,8 @@
                   role="alert"
                 ></span>
               </div>
-
-              <div
+              <!--#region multiple planning input-->
+              <!-- <div
                 class="btn-group col-12 my-2"
                 role="group"
                 aria-label="Basic radio toggle button group"
@@ -313,9 +315,10 @@
                 <label class="btn btn-outline-primary" for="multipleInput"
                   >Multiple Input</label
                 >
-              </div>
-
-              <div class="col-12 my-2 mult d-none overflow-auto">
+              </div> -->
+              <!--#endregion-->
+              <!--#region multiple planning input-->
+              <!-- <div class="col-12 my-2 mult d-none overflow-auto">
                 <table class="table table-bordered">
                   <thead>
                     <tr id="yearRow"></tr>
@@ -329,15 +332,18 @@
                 <small class="error text-danger d-none"
                   >You have no input.</small
                 >
-              </div>
-              <div class="tot my-2 d-none d-flex gap-2 align-items-baseline">
+              </div> -->
+              <!--#endregion-->
+              <!--#region multiple planning input-->
+              <!-- <div class="tot my-2 d-none d-flex gap-2 align-items-baseline">
                 <span>Total MH</span
                 ><span
                   class="totVal fs-3 fw-semibold"
                   style="color: var(--main-blue)"
                 ></span>
-              </div>
-              <div class="col-12 my-2 single d-none">
+              </div> -->
+              <!--#endregion-->
+              <div class="col-12 my-2 single ">
                 <label for="idMH" class="form-label">Daily Alloted MH</label>
                 <input
                   type="number"
@@ -356,7 +362,8 @@
             </div>
           </div>
           <div class="modal-footer justify-content-between">
-            <div class="">
+            <!--#region multiple planning input-->
+            <!-- <div class="">
               <label for="plannedBy" style="font-size: 14px !important">
                 Planned by
               </label>
@@ -366,7 +373,8 @@
                 style="font-size: 14px !important"
                 >Collene KEith</span
               >
-            </div>
+            </div> -->
+            <!-- #endregion -->
             <div>
               <button
                 type="button"
@@ -546,7 +554,8 @@
                   <label for="idStartDateEdit" class="form-label"
                     >Start Date</label
                   >
-                  <div class="form-check">
+                  <!-- #region multiple input planning-->
+                  <!-- <div class="form-check">
                     <input
                       class="form-check-input"
                       type="checkbox"
@@ -556,7 +565,8 @@
                     <label class="form-check-label" for="editexcludeDays">
                       Exclude weekend/holidays
                     </label>
-                  </div>
+                  </div> -->
+                  <!-- #endregion-->
                 </div>
                 <input
                   type="date"
@@ -586,7 +596,7 @@
                 ></span>
               </div>
 
-              <div class="col-12 my-2 editmult overflow-auto">
+              <!-- <div class="col-12 my-2 editmult overflow-auto">
                 <table class="table table-bordered">
                   <thead>
                     <tr id="edityearRow"></tr>
@@ -600,18 +610,37 @@
                 <small class="error text-danger d-none"
                   >You have no input.</small
                 >
-              </div>
-              <div class="edittot my-2 d-flex gap-2 align-items-baseline">
+              </div> -->
+              <!-- <div class="edittot my-2 d-flex gap-2 align-items-baseline">
                 <span>Total MH</span
                 ><span
                   class="totVal fs-3 fw-semibold"
                   style="color: var(--main-blue)"
                 ></span>
+              </div> -->
+              <div class="col-12 my-2">
+                <label for="idMHEdit" class="form-label"
+                  >Daily MH Alloted</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="idMHEdit"
+                  min="1"
+                  placeholder="00"
+                  required
+                />
+                <span
+                  class="col-12 col-md-6 mt-1 alert-danger text-danger"
+                  id="e8"
+                  role="alert"
+                ></span>
               </div>
             </div>
           </div>
           <div class="modal-footer justify-content-between">
-            <div class="">
+            <!--#region multiple planning input-->
+            <!-- <div class="">
               <label for="editPlannedBy" style="font-size: 14px !important">
                 Planned by
               </label>
@@ -621,7 +650,8 @@
                 style="font-size: 14px !important"
                 >Collene KEith</span
               >
-            </div>
+            </div> -->
+            <!-- #endregion -->
             <div>
               <button
                 type="button"
@@ -964,13 +994,13 @@
                     Add Entry
                   </button>
                 </div>
-                <small
+                <!-- <small
                   class="d-flex gap-1 align-items-center text-black-50 py-2"
                 >
                   <i class="bx bx-info-circle text-black-50"></i>
                   You won't be able to make changes on planning made by someone
                   else.
-                </small>
+                </small> -->
                 <div class="table-cont overflow-auto position-relative">
                   <table class="table table-hover">
                     <thead class="bg-body">
