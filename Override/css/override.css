@@ -102,6 +102,7 @@ body {
   --blue2: #33425b;
   --blue3: #1347a1;
   --blue4: #415e91;
+  --blue5: #e6f0ff;
 }
 /* MODAL */
 .modal-header {
@@ -181,16 +182,16 @@ body {
   color: var(--blue1);
 }
 
-.radio-buttons {
+.edt-radio-buttons {
   width: 100%;
   margin: 0;
   text-align: center;
 }
 
-.modal-content .modal-body .custom-radio input {
+.modal-content .modal-body .edt-custom-radio input {
   display: none;
 }
-.modal-content .modal-body .custom-radio .radio-btn {
+.modal-content .modal-body .edt-custom-radio .edt-radio-btn {
   margin: 5px;
   width: 100px;
   height: 65px;
@@ -198,11 +199,11 @@ body {
   border-radius: 10px;
   position: relative;
   text-align: center;
-  box-shadow: 0 0 20px #c3c3c367;
-  border: 1px solid var(--arsenic);
+  box-shadow: 0 0 20px var(--gray1);
+  /* border: 1px solid var(--arsenic); */
   cursor: pointer;
 }
-.modal-content .modal-body .custom-radio .radio-btn > i {
+.modal-content .modal-body .edt-custom-radio .edt-radio-btn > i {
   color: #fff;
   background: linear-gradient(45deg, var(--blue1) 0%, var(--blue2) 100%);
 
@@ -217,34 +218,34 @@ body {
   pointer-events: none;
   opacity: 0;
 }
-.modal-content .modal-body .radio-btn .radio-content {
+.modal-content .modal-body .edt-radio-btn .edt-radio-content {
   position: absolute;
   top: 40%;
   left: 50%;
   padding-top: 15px;
   transform: translate(-50%, -50%);
 }
-.modal-content .modal-body .radio-btn .radio-content small {
+.modal-content .modal-body .edt-radio-btn .edt-radio-content small {
   color: var(--blue3);
 
   font-weight: 600;
 }
 .modal-content
   .modal-body
-  .radio-buttons
-  .custom-radio
+  .edt-radio-buttons
+  .edt-custom-radio
   input:checked
-  + .radio-btn {
-  border: 2px solid var(--arsenic);
-  background-color: var(--blue1);
-  color: var(--magnolia);
+  + .edt-radio-btn {
+  border: 2px solid var(--blue1);
+  /* background-color: var(--blue1); */
+  color: var(--blue2);
 }
 .modal-content
   .modal-body
-  .radio-buttons
-  .custom-radio
+  .edt-radio-buttons
+  .edt-custom-radio
   input:checked
-  + .radio-btn
+  + .edt-radio-btn
   > i {
   opacity: 1;
   transform: translateX(-50%) scale(1);
@@ -745,7 +746,8 @@ option {
   transform: translate(-50%, -50%);
 }
 .radio-btn .radio-content small {
-  color: var(--blue1);
+  color: var(--blue3);
+  /* color: var(--red1); */
 
   font-weight: 600;
 }
@@ -954,7 +956,8 @@ option {
   color: var(--main-blue);
 }
 .right .table-container .table tbody tr:hover {
-  background: var(--whitegray);
+  /* background: var(--whitegray); */
+  background: var(--blue5);
 }
 .right .table-container .table tbody tr:hover td {
   color: var(--metal);

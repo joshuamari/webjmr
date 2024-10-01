@@ -111,9 +111,6 @@
                   ></select>
                 </div>
               </div>
-              <!-- <small class="editLocError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div class="row mb-2">
                 <label
@@ -130,9 +127,6 @@
                   ></select>
                 </div>
               </div>
-              <!-- <small class="editProjError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div class="row mb-2 edit-iow">
                 <label
@@ -150,9 +144,7 @@
                   ></select>
                 </div>
               </div>
-              <!-- <small class="editIOWError hidden"
-                >Please Complete the Field</small
-              > -->
+              <small class="editIoWLbl hidden"> </small>
 
               <div class="row mb-2" id="edit-JRDDiv">
                 <label
@@ -169,14 +161,11 @@
                   ></select>
                 </div>
               </div>
-              <!-- <small class="editJRDError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div class="row mb-2" id="edit-2D3DDiv">
                 <label for="edit-2d3d" class="form-label">2D/3D</label>
-                <div class="radio-buttons m-0 p-0">
-                  <label class="custom-radio">
+                <div class="edt-radio-buttons m-0 p-0">
+                  <label class="edt-custom-radio">
                     <input
                       type="radio"
                       name="edt-radio"
@@ -184,34 +173,34 @@
                       value="2D"
                       checked
                     />
-                    <span class="radio-btn"
+                    <span class="edt-radio-btn"
                       ><i class="bx bx-check"></i>
-                      <div class="radio-content">
+                      <div class="edt-radio-content">
                         <h5 class="top mb-0">2D</h5>
                         <small>AutoCad</small>
                       </div>
                     </span>
                   </label>
-                  <label class="custom-radio">
+                  <label class="edt-custom-radio">
                     <input type="radio" name="edt-radio" id="3D" value="3D" />
-                    <span class="radio-btn"
+                    <span class="edt-radio-btn"
                       ><i class="bx bx-check"></i>
-                      <div class="radio-content">
+                      <div class="edt-radio-content">
                         <h5 class="top mb-0">3D</h5>
                         <small style="white-space: nowrap">Navis, Video</small>
                       </div>
                     </span>
                   </label>
-                  <label class="custom-radio">
+                  <label class="edt-custom-radio">
                     <input
                       type="radio"
                       name="edt-radio"
                       id="2D3D"
                       value="2D3D"
                     />
-                    <span class="radio-btn"
+                    <span class="edt-radio-btn"
                       ><i class="bx bx-check"></i>
-                      <div class="radio-content">
+                      <div class="edt-radio-content">
                         <h5 class="top mb-0" style="display: inline-flex">
                           3D<i class="bx bx-right-arrow-alt fs-5"></i>2D
                         </h5>
@@ -219,16 +208,16 @@
                       </div>
                     </span>
                   </label>
-                  <label class="custom-radio">
+                  <label class="edt-custom-radio">
                     <input
                       type="radio"
                       name="edt-radio"
                       id="3D2D"
                       value="3D2D"
                     />
-                    <span class="radio-btn"
+                    <span class="edt-radio-btn"
                       ><i class="bx bx-check"></i>
-                      <div class="radio-content">
+                      <div class="edt-radio-content">
                         <h5 class="top mb-0" style="display: inline-flex">
                           2D<i class="bx bx-right-arrow-alt fs-5"></i>3D
                         </h5>
@@ -238,14 +227,16 @@
                   </label>
                 </div>
               </div>
-              <!-- <small class="edit2D3DError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div class="row mb-2" id="edit-RevDiv">
                 <label for="edit-rev" class="form-label">Revision</label>
                 <div class="input-group switch">
-                  <input type="checkbox" class="checkbox" id="idRev" />
+                  <input
+                    type="checkbox"
+                    class="checkbox"
+                    id="edit-rev"
+                    class="toggle"
+                  />
                 </div>
                 <span
                   class="col-12 mt-1 alert-danger text-danger"
@@ -253,9 +244,6 @@
                   role="alert"
                 ></span>
               </div>
-              <!-- <small class="editRevError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div class="mb-2 d-flex flex-row" id="edit-TOWDiv">
                 <div class="col-sm-6">
@@ -296,9 +284,6 @@
                   > -->
                 </div>
               </div>
-              <!-- <small class="editTOWError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div
                 class="row mb-2 flex align-items-center justify-content-center"
@@ -359,9 +344,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <small class="editDurationError hidden"
-                >Please Complete the Field</small
-              > -->
 
               <div
                 class="row mb-2 flex align-items-center justify-content-center"
@@ -377,9 +359,6 @@
                   rows="2"
                 ></textarea>
               </div>
-              <!-- <small class="editRemarksError hidden"
-                >Please Complete the Field</small
-              > -->
             </div>
           </div>
           <div class="modal-footer">
@@ -1034,7 +1013,12 @@
                   <div class="col-12 col-12 my-2 d-none" id="idRevDiv">
                     <label for="idRev" class="form-label">Revision</label>
                     <div class="input-group switch">
-                      <input type="checkbox" class="checkbox" id="idRev" />
+                      <input
+                        type="checkbox"
+                        class="checkbox"
+                        id="idRev"
+                        class="toggle"
+                      />
                     </div>
                     <!-- <span
                       class="col-12 mt-1 alert-danger text-danger"
