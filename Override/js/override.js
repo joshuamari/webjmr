@@ -353,6 +353,7 @@ $(document).on("change", "#idProject", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   var groupID = $("#idGroup").val();
+  console.log("projID", projID);
   sequenceValidation(0);
   Promise.all([
     getItems(thisEmpID, projID, groupID),
@@ -396,6 +397,7 @@ $(document).on("change", "#edit-selProj", function () {
   ])
     .then(([items, tows, checks]) => {
       resetSelection(2, 1);
+      console.log("fill items on change of project");
       fillItems(items, 1);
       fillTOW(tows, 1);
       disableTimeInput(projID, 1);
@@ -566,34 +568,19 @@ $(document).on("click", "#dupeBut", function () {
   editGrpID = entryRow[0].groupID;
   dupeEntry(entryRow);
 });
+
 $(document).on("click", "#editBut", function () {
-  var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var empText = $("#idEmployee option:selected").text();
+
   var entryID = $(this).closest("tr").attr("entry-id");
   const entryRow = entryArr.filter((entry) => entry.id === entryID);
-  editGrpID = entryRow[0].groupID;
   editTRID = entryID;
   console.log("entryID", entryID, "entryArr", entryArr);
   console.log("entryRow (onclick Edit)", entryRow);
-  console.log("grpID", editGrpID);
 
-  Promise.all([getDispatchLoc(), getProjects(thisEmpID, editGrpID)]).then(
-    ([locs, projs]) => {
-      fillDispatchLoc(locs, 1);
-      fillProjects(projs, 1);
-      fillEditFields(entryRow);
-      fillMHType(1);
-      // .then((success) => {
-      $("#emp-edit").html(empText);
-      setTimeout(function () {
-        $("#editEntry").modal("show");
-      }, 1500);
-      // });
-
-      // sequenceValidation(1);
-      // isDrawing(1);
-    }
-  );
+  fillEditFields(entryRow);
+  $("#emp-edit").html(empText);
+  $("#editEntry").modal("show");
 });
 $(document).on("click", "#delBut", function () {
   delTRID = $(this).closest("tr").attr("entry-id");
@@ -983,6 +970,7 @@ function MHValidation(type) {
 function getItems(thisEmpID, projID, grpID) {
   //get Item Selection
   var itms = [];
+  console.log("parameters: ", thisEmpID, projID, grpID);
   $("#labell").remove();
   $("#edit-labell").remove();
   // var groupID = $("#idGroup").val();
@@ -1007,7 +995,9 @@ function getItems(thisEmpID, projID, grpID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred while fetching items.");
+          reject(
+            "ITEMS REJECT ERROR: An unspecified error occurred while fetching items."
+          );
         }
       },
     });
@@ -1238,7 +1228,6 @@ function fillTOW(tows, type) {
 }
 function getTOWDesc(typesOfWorkID, type) {
   //get TOW Description Selection
-  // return new Promise((resolve, reject) => {
   if (typesOfWorkID == 0) {
     $("#towDesc").html("-");
   }
@@ -1269,7 +1258,6 @@ function getTOWDesc(typesOfWorkID, type) {
       }
     },
   });
-  // });
 }
 
 //for checking ToW
@@ -1358,7 +1346,6 @@ function isEngineering(type) {
   );
   var selGroup = $("#idGroup").val();
   if (type == 0) {
-    console.log("2d3d main");
     isDrawing =
       !defaults.includes(projID) &&
       selGroup != 16 && //System Group
@@ -1371,12 +1358,10 @@ function isEngineering(type) {
       $("#id2DDiv").removeClass("d-none");
       $("#idRevDiv").removeClass("d-none");
     } else {
-      console.log("2d3d none");
       $("#id2DDiv").addClass("d-none");
       $("#idRevDiv").addClass("d-none");
     }
   } else {
-    console.log("2d3d in edit");
     isDrawing =
       !defaults.includes(editprojID) &&
       editGrpID != 16 && //System Group
@@ -1386,7 +1371,6 @@ function isEngineering(type) {
       editprojID != undefined;
     // return isDrawing;
     if (isDrawing) {
-      console.log("2d3d edit display");
       $("input[name=edt-radio]").prop("disabled", false);
       $("#edit-rev").prop("disabled", false);
 
@@ -1648,10 +1632,9 @@ function resetEntry() {
   //reset Inputs
   $("#getHour,#getMin,#idRemarks").val("").change();
   $("#idMH").val("null").change();
+  // $("#towDesc").val("");
   // $("#idGroup,#idEmployee").val(0).change();
-  $("#idLocation,#idProject,#idItem,#idJRD,#idTOW,#towDesc,#trGroup")
-    .val(0)
-    .change();
+  $("#idLocation,#idProject,#idItem,#idJRD,#idTOW,#trGroup").val(0).change();
   // $("#one").click();
   $("#idRev").prop("checked", false);
   $("#edit-rev").prop("checked", false);
@@ -1747,6 +1730,17 @@ function saveEdit() {
     revision = 1;
   } else {
     revision = 0;
+  }
+  if (
+    (!$("#edit-TOWDiv").hasClass("d-none") && tow == 0) ||
+    (!$("#edit-TOWDiv").hasClass("d-none") && tow == null)
+  ) {
+    console.log("tow on display");
+    $("#edit-selTOW").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idTOW");
+    mgaKulang.push("TOW");
+  } else {
+    console.log("tow hidden");
   }
   if (!tow || tow == 0) {
     $(".editInputError").removeClass("hidden").addClass("block");
@@ -1928,6 +1922,17 @@ function addEntries() {
   } else {
     revision = 0;
   }
+  if (
+    (!$("#idTowDiv").hasClass("d-none") && tow == 0) ||
+    (!$("#idTowDiv").hasClass("d-none") && tow == null)
+  ) {
+    console.log("tow on display");
+    $("#idTOW").addClass("border border-danger").addClass("bg-err");
+    if (!noInput) noInput = $("#idTOW");
+    mgaKulang.push("TOW");
+  } else {
+    console.log("tow hidden");
+  }
   if (!tow && (!defaults.includes(proj) || proj == leaveID)) {
     if (proj == leaveID) {
       if (!noInput) noInput = $("#idTOW");
@@ -2035,8 +2040,13 @@ function addEntries() {
 //Edit Entry
 function fillEditFields(editData) {
   console.log("entry Data (fill EditFields): ", editData);
+
+  var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
+
   var entry = editData[0];
   console.log("entry", entry);
+
+  editGrpID = entry["groupID"];
   const mhtype = entry["MHType"];
   const tow = entry["TOW"];
   const checker = entry["checkerID"];
@@ -2054,52 +2064,110 @@ function fillEditFields(editData) {
   const trgrp = entry["trGrp"];
   const tutridi = entry["twoDthreeD"];
 
-  const success = true;
+  let checkItemID = noMoreInputItems.includes(iow); //for instruction modal
 
-  // return new Promise((resolve, reject) => {
-  $("#edit-selLoc").val(location);
-  $("#edit-selProj").val(proj).change();
+  Promise.all([getDispatchLoc(), getProjects(thisEmpID, editGrpID)])
+    .then(([locs, projs]) => {
+      fillDispatchLoc(locs, 1);
+      fillProjects(projs, 1);
+      fillMHType(1);
 
-  setTimeout(function () {
-    $("#edit-selIOW").val(iow).change();
-  }, 100);
-  setTimeout(function () {
-    $("#edit-selJRD").val(jrd).change();
-  }, 600);
-  if (tow) {
-    setTimeout(function () {
-      $("#edit-selTOW").val(tow).change();
-    }, 200);
-  }
-  $("#edit-towDesc").val(); //runs if has tow
-  if (tow == 3) {
-    //for checker
-    setTimeout(function () {
-      $("#edit-selCheck").val(checker);
-    }, 600);
-  }
-  if (trgrp) {
-    //for training group
-    setTimeout(function () {
-      $("#edit-trGroup").val(trgrp);
-    }, 600);
-  }
-  if (tutridi) {
-    // $("#edit-2d3d").val(tutridi);
-    $(`#${tutridi}`).prop("checked", true);
-  }
-  if (revision != 0) {
-    $("#edit-rev").prop("checked", true);
-  }
-  setTimeout(function () {
-    $("#edit-newHour").val(newhrs);
-    $("#edit-newMin").val(newmins);
-  }, 700);
-  setTimeout(function () {
-    $("#edit-selMHType").val(mhtype).change();
-  }, 900);
-  $("#edit-newRemarks").val(remarks);
-  // });
+      $("#edit-selLoc").val(location);
+      $("#edit-selProj").val(proj);
+      $("#edit-newRemarks").val(remarks);
+
+      //Promise after changing Project Selection Value
+      Promise.all([
+        getItems(thisEmpID, proj, editGrpID),
+        getTOW(proj),
+        getCheckers(proj, editGrpID),
+      ])
+        .then(([items, tows, checks]) => {
+          resetSelection(2, 1);
+          fillItems(items, 1);
+          $("#edit-selIOW").val(iow);
+
+          //Promise after changing IOW Selection Value
+          Promise.all([getJobs(thisEmpID, proj, iow, editGrpID), getTRGroups()])
+            .then(([jobs, allgrps]) => {
+              resetSelection(3, 1);
+              fillJobs(jobs, 1);
+
+              $("#edit-selJRD").val(jrd);
+
+              getLabel(iow, 1);
+              createTRGroupDiv(iow, allgrps, 1);
+              if (trgrp) {
+                //for training group
+                $("#edit-trGroup").val(trgrp);
+              }
+            })
+            .catch((error) => {
+              alert(`Get Edit JRD / TRGroups : ${error}`);
+            });
+
+          if (checkItemID) {
+            $("#drInstruction").modal("show");
+          }
+
+          fillTOW(tows, 1);
+          disableTimeInput(proj, 1);
+          MHValidation(1);
+          fillCheckers(checks, 1);
+          if (proj != null || proj != undefined) {
+            isDrawing(1);
+          }
+
+          if (proj == leaveID) {
+            $("#edit-itemlbl").html("Leave Type");
+            $("#edit-lbltow").html("Day Type");
+          } else {
+            $("#edit-itemlbl").html("Item of Works");
+            $("#edit-lbltow").html("Type of Work");
+          }
+          $(".trgrp").remove();
+
+          if (tow) {
+            $("#edit-selTOW").val(tow);
+            //After changing ToW Selection Value
+            if (tow == 3) {
+              //for checker
+              $(".edit-check").removeClass("d-none");
+              $("#edit-selCheck").val(checker);
+            } else {
+              $(".edit-check").addClass("d-none");
+            }
+            if (tow == 0) {
+              $(".edit-check").addClass("d-none");
+              $("#edit-newHour").val("");
+            }
+            if (tow == 10 || tow == 11) {
+              $("#edit-newHour").val("4");
+            }
+            if (tow == 12) {
+              $("#edit-newHour").val("8");
+            }
+            getTOWDesc(tow, 1);
+            // $("#edit-towDesc").val();
+            $("#edit-newHour").val(newhrs);
+            $("#edit-newMin").val(newmins);
+            $("#edit-selMHType").val(mhtype).change();
+          }
+
+          if (tutridi) {
+            $(`#${tutridi}`).prop("checked", true);
+          }
+          if (revision != 0) {
+            $("#edit-rev").prop("checked", true);
+          }
+        })
+        .catch((error) => {
+          alert(`Get Edit Items / ToW / Checker : ${error}`);
+        });
+    })
+    .catch((error) => {
+      alert(`Get Edit Location / Project : ${error}`);
+    });
 
   return;
 }
