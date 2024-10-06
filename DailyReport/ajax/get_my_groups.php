@@ -1,6 +1,6 @@
 <?php
 #region DB Connect
-require_once "../Includes/dbconnectkdtph.php";
+require_once "../../dbconn/dbconnectkdtph.php";
 #endregion
 #region Initialize Variable
 $output="<option value='' selected hidden>Select Group</option>";

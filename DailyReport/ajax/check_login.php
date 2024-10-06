@@ -1,5 +1,5 @@
 <?php
-require_once 'dbconnectkdtph.php'; //database connection
+require_once '../../dbconn/dbconnectkdtph.php'; //database connection
 $output=array();
 $userHash='';
 if(isset($_COOKIE["userID"])){

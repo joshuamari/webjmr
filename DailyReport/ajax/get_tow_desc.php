@@ -1,6 +1,6 @@
 <?php
 #region DB Connect
-require_once "../Includes/dbconnectwebjmr.php";
+require_once "../../dbconn/dbconnectwebjmr.php";
 #endregion
 #region Initialize Variable
 $towID="";
