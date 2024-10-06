@@ -1,6 +1,6 @@
 <?php
 #region Require Database Connections
-require_once "../Includes/dbconnectwebjmr.php";
+require_once "./global_var.php";
 #endregion
 
 #region set timezone

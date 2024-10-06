@@ -1,6 +1,7 @@
 <?php
 #region DB Connect
-require_once "../Includes/dbconnectwebjmr.php";
+require_once "../../dbconn/dbconnectwebjmr.php";
+require_once "./global_var.php";
 #endregion
 #region Initialize Variable
 $jobsArray = array();

@@ -422,7 +422,7 @@ $(document).on("click", ".planned .header", function () {
 function checkLogin() {
   //check if user is logged in
   $.ajax({
-    url: "Includes/check_login.php",
+    url: "ajax/check_login.php",
     success: function (data) {
       console.log(data);
       //ajax to check 9 is logged in
