@@ -203,14 +203,13 @@ $(document).on("click", "#drInstruction .btn-close", function () {
 //ENTRY MODAL
 $(document).on("click", ".btn-close", function () {
   resetEntry();
+  removeOutlines();
   $(this).closest(".modal").find("input").attr("disabled", true);
   $(".editInputError").removeClass("block");
   $(".editInputError").addClass("hidden");
-  // clearAddWorkInputs();
-  // removeOutline();
 });
 $(document).on("click", ".btn-Ecancel", function () {
-  removeOutlines();
+  // removeOutlines();
   $(this).closest(".modal").find(".btn-close").click();
 });
 $(document).on("click", ".btn-Eupdate", function () {
@@ -995,9 +994,7 @@ function getItems(thisEmpID, projID, grpID) {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject(
-            "ITEMS REJECT ERROR: An unspecified error occurred while fetching items."
-          );
+          reject("An unspecified error occurred while fetching items.");
         }
       },
     });

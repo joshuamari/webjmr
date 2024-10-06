@@ -25,5 +25,5 @@ foreach($myGroupArr AS $myGroups){
     }
 }
 #endregion
-echo $output;
+echo json_encode($output);
 ?>

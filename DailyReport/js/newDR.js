@@ -459,17 +459,59 @@ function initializeDate() {
 }
 function getMyGroups() {
   //get Group Selection
-  $.ajaxSetup({ async: false });
-  $.post(
-    "ajax/get_my_groups.php",
-    {
+  console.log("get groups");
+  console.log("empNum", empDetails["empNum"]);
+  $.ajax({
+    type: "POST",
+    url: "ajax/get_my_groups.php",
+    data: {
       empNum: empDetails["empNum"],
     },
-    function (data) {
-      $("#idGroup").html(data);
-    }
-  );
-  $.ajaxSetup({ async: true });
+    dataType: "json",
+    success: function (response) {
+      console.log("response", response);
+      const grps = response;
+      var grpSelect = $("#idGroup");
+      grpSelect.html(
+        `<option selected hidden value=0 grp-id=0>Select Group</option>`
+      );
+      // if (grps.length > 1) {
+      //   grps = grps.sort(function (a, b) {
+      //     var first = a.abbreviation.toUpperCase();
+      //     var second = b.abbreviation.toUpperCase();
+      //     return first < second ? -1 : first > second ? 1 : 0;
+      //   });
+      // }
+
+      $.each(grps, function (index, item) {
+        var option = $("<option>")
+          .attr("value", item.id)
+          .text(item.abbreviation)
+          .attr("grp-id", item.id);
+        grpSelect.append(option);
+      });
+    },
+    error: function (xhr, status, error) {
+      if (xhr.status === 404) {
+        reject("Not Found Error: The requested resource was not found.");
+      } else if (xhr.status === 500) {
+        reject("Internal Server Error: There was a server error.");
+      } else {
+        reject("An unspecified error occurred while fetching groups.");
+      }
+    },
+  });
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "ajax/get_my_groups.php",
+  //   {
+  //     empNum: empDetails["empNum"],
+  //   },
+  //   function (data) {
+  //     // $("#idGroup").html(data);
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
 }
 function getDispatchLoc() {
   //get Dispatch Location Selection
@@ -827,6 +869,7 @@ function addEntries(addMode) {
     $($("#idChecking").find("option:selected")).attr("dataid") || "";
   var mgaKulang = [];
 
+  console.log("grp", grp);
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
   }
