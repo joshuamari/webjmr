@@ -136,7 +136,9 @@ $(document).on("click", ".pindot", function () {
 });
 $(document).on("change", "#idGroup", function () {
   //select Group Event
-  getProjects();
+  getProjects().then((projs) => {
+    fillProj(projs);
+  });
   $("#p1").text("");
   $(this).removeClass("border-danger");
   $(".iow").removeClass("active");
@@ -179,7 +181,9 @@ $(document).on("change", "#idProject", function () {
         `<option selected hidden disabled value="">Select Item of Works</option>`
       );
   }
-  getItems(projID);
+  getItems(projID).then((items) => {
+    fillItem(items);
+  });
   isDrawing();
   getTOW(projID);
   disableTimeInput(projID);
@@ -210,7 +214,9 @@ $(document).on("change", "#idItem", function () {
     $("#drInstruction").modal("show");
   }
   trainingGroup(itemID);
-  getJobs(projID, itemID);
+  getJobs(projID, itemID).then((jobs) => {
+    fillJobs(jobs);
+  });
   $("#p5").text("");
   $(this).removeClass("border-danger");
 });
@@ -459,6 +465,7 @@ function initializeDate() {
 }
 function getMyGroups() {
   //get Group Selection
+  $("#idGroup").html(`<option value='' hidden>Select Group</option>`);
   console.log("get groups");
   console.log("empNum", empDetails["empNum"]);
   $.ajax({
@@ -602,6 +609,7 @@ function getEntries() {
     },
     function (data) {
       var entries = $.parseJSON(data);
+      console.log("entries", entries);
       if (entries.length > 0) {
         entries.map(addRow);
       } else {
@@ -681,40 +689,48 @@ function sequenceValidation() {
 
 function getProjects() {
   //get PROJECT Selection
-  var proj = [];
   $("#projOptions,#idProject").empty();
   $("#idProject").html(`<option value='' hidden>Select Project</option>`);
 
-  console.log("group selected: ", $("#idGroup").val());
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_projects.php",
+      data: {
+        empGroup: $("#idGroup").val(),
+        empNum: empDetails["empNum"],
+        empPos: empDetails["empPos"],
+      },
+      dataType: "json",
+      success: function (response) {
+        // console.log("projects: ", response);
+        const projs = response;
+        sequenceValidation();
+        resolve(projs);
+        // resolve(projs.map(fillProj));
+        // var projSelect = $("#idProject");
 
-  $.ajax({
-    type: "POST",
-    url: "ajax/get_projects.php",
-    data: {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-    },
-    dataType: "json",
-    success: function (response) {
-      console.log("projects: ", response);
-      // const projs = response["result"];
-      const projs = response;
-      sequenceValidation();
-      projs.map(fillProj);
-      // var projSelect = $("#idProject");
-
-      // projSelect.html(
-      //   `<option selected hidden value=0 proj-id=0>Select Project</option>`
-      // );
-      // $.each(projs, function (index, item) {
-      //   var option = $("<option>")
-      //     .attr("value", item.id)
-      //     .text(item.projName)
-      //     .attr("proj-id", item.id);
-      //   projSelect.append(option);
-      // });
-    },
+        // projSelect.html(
+        //   `<option selected hidden value=0 proj-id=0>Select Project</option>`
+        // );
+        // $.each(projs, function (index, item) {
+        //   var option = $("<option>")
+        //     .attr("value", item.id)
+        //     .text(item.projName)
+        //     .attr("proj-id", item.id);
+        //   projSelect.append(option);
+        // });
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Projects.");
+        }
+      },
+    });
   });
 
   // $.ajaxSetup({ async: false });
@@ -735,11 +751,23 @@ function getProjects() {
   // $.ajaxSetup({ async: true });
 }
 function fillProj(projArrayElement) {
-  var projDeets = projArrayElement;
-  var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
-  var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
-  $(`#projOptions`).append(addString);
-  $(`#idProject`).append(addStringMain);
+  // console.log("fill project selection", projArrayElement);
+  let ind = 0;
+
+  $.each(projArrayElement, function (index, item) {
+    var projDeets = projArrayElement[ind];
+    // console.log("item", projDeets);
+    var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
+    var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
+    $(`#projOptions`).append(addString);
+    $(`#idProject`).append(addStringMain);
+    ind++;
+  });
+  // var projDeets = projArrayElement;
+  // var addString = `<li proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</li>`;
+  // var addStringMain = `<option hidden proj-id='${projDeets["projID"]}'>${projDeets["projName"]}${projDeets["groupAppend"]}</option>`;
+  // $(`#projOptions`).append(addString);
+  // $(`#idProject`).append(addStringMain);
 }
 function getProjSearch() {
   //get Item Selection
@@ -765,36 +793,77 @@ function getProjSearch() {
 
 function getItems(projID) {
   //get Item Selection
-  var itms = [];
   $("#itemOptions").empty();
   $("#idItem").html(`<option value='' hidden>Select Item of Works</option>`);
   $("#labell").remove();
-  $.ajaxSetup({ async: false });
-  $.post(
-    "ajax/get_items.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-    },
-    function (data) {
-      itms = $.parseJSON(data);
-      itms.map(fillItem);
-      sequenceValidation();
-      if (projID == mngID) {
-        $($("#idItem").children()[1]).prop("selected", true).change();
-      }
-    }
-  );
-  $.ajaxSetup({ async: true });
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_items.php",
+      data: {
+        empGroup: $("#idGroup").val(),
+        empNum: empDetails["empNum"],
+        empPos: empDetails["empPos"],
+        projID: projID,
+      },
+      dataType: "json",
+      success: function (response) {
+        // console.log("items response: ", response);
+        const items = response;
+        sequenceValidation();
+        if (projID == mngID) {
+          $($("#idItem").children()[1]).prop("selected", true).change();
+        }
+        console.log(items);
+        resolve(items);
+        // items.map(fillItem);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Items.");
+        }
+      },
+    });
+  });
+
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "ajax/get_items.php",
+  //   {
+  //     empGroup: $("#idGroup").val(),
+  //     empNum: empDetails["empNum"],
+  //     empPos: empDetails["empPos"],
+  //     projID: projID,
+  //   },
+  //   function (data) {
+  //     itms = $.parseJSON(data);
+  //     itms.map(fillItem);
+  //     sequenceValidation();
+  //     if (projID == mngID) {
+  //       $($("#idItem").children()[1]).prop("selected", true).change();
+  //     }
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
 }
 function fillItem(itemArrayElement) {
-  var itemDeets = itemArrayElement;
-  var addString = `<li item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</li>`;
-  var addStringMain = `<option hidden item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</option>`;
-  $(`#itemOptions`).append(addString);
-  $(`#idItem`).append(addStringMain);
+  console.log("fill items selection", itemArrayElement);
+  let ind = 0;
+
+  $.each(itemArrayElement, function (index, item) {
+    var itemDeets = itemArrayElement[ind];
+    console.log("item", itemDeets);
+    var addString = `<li item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</li>`;
+    var addStringMain = `<option hidden item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</option>`;
+    $(`#itemOptions`).append(addString);
+    $(`#idItem`).append(addStringMain);
+    ind++;
+  });
 }
 function getItemSearch(projID) {
   //get Item Selection
@@ -821,38 +890,79 @@ function getItemSearch(projID) {
 
 function getJobs(projID, itemID) {
   //get Item Selection
-  var jobs = [];
   $("#jrdOptions").empty();
   $("#idJRD").html(
     `<option value='' hidden>Select Job Request Description</option>`
   );
-  $.ajaxSetup({ async: false });
-  $.post(
-    "ajax/get_jobs.php",
-    {
-      empGroup: $("#idGroup").val(),
-      empNum: empDetails["empNum"],
-      empPos: empDetails["empPos"],
-      projID: projID,
-      itemID: itemID,
-    },
-    function (data) {
-      jobs = $.parseJSON(data);
-      jobs.map(fillJobs);
-      sequenceValidation();
-      if (projID == mngID || projID == kiaID) {
-        $($("#idJRD").children()[1]).prop("selected", true).change();
-      }
-    }
-  );
-  $.ajaxSetup({ async: true });
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_jobs.php",
+      data: {
+        empGroup: $("#idGroup").val(),
+        empNum: empDetails["empNum"],
+        empPos: empDetails["empPos"],
+        projID: projID,
+        itemID: itemID,
+      },
+      dataType: "json",
+      success: function (response) {
+        // console.log("jobs response: ", response);
+        const jobs = response;
+        sequenceValidation();
+        if (projID == mngID || projID == kiaID) {
+          $($("#idJRD").children()[1]).prop("selected", true).change();
+        }
+        resolve(jobs);
+        // jobs.map(fillJobs);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching Jobs.");
+        }
+      },
+    });
+  });
+
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "ajax/get_jobs.php",
+  //   {
+  //     empGroup: $("#idGroup").val(),
+  //     empNum: empDetails["empNum"],
+  //     empPos: empDetails["empPos"],
+  //     projID: projID,
+  //     itemID: itemID,
+  //   },
+  //   function (data) {
+  //     jobs = $.parseJSON(data);
+  //     jobs.map(fillJobs);
+  //     sequenceValidation();
+  //     if (projID == mngID || projID == kiaID) {
+  //       $($("#idJRD").children()[1]).prop("selected", true).change();
+  //     }
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
 }
 function fillJobs(jobArrayElement) {
-  var jrdDeets = jobArrayElement;
-  var addString = `<li job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</li>`;
-  var addStringMain = `<option hidden job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</option>`;
-  $(`#jrdOptions`).append(addString);
-  $(`#idJRD`).append(addStringMain);
+  // console.log("fill items selection", jobArrayElement);
+  let ind = 0;
+
+  $.each(jobArrayElement, function (index, item) {
+    var jrdDeets = jobArrayElement[ind];
+    console.log("jrds", jrdDeets);
+    var addString = `<li job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</li>`;
+    var addStringMain = `<option hidden job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</option>`;
+    $(`#jrdOptions`).append(addString);
+    $(`#idJRD`).append(addStringMain);
+    ind++;
+  });
 }
 function getJRDSearch(projID, itemID) {
   //get Item Selection
@@ -992,7 +1102,7 @@ function addEntries(addMode) {
   }
   var fd = new FormData();
   fd.append("getTwoThree", tutri);
-  fd.append("getGroup", grp);
+  fd.append("grpNum", grp);
   fd.append("getDate", date);
   fd.append("getLocation", loc);
   fd.append("getProject", proj);
@@ -1052,8 +1162,9 @@ function deleteEntry(tableRowID) {
 }
 function resetEntry() {
   //reset Inputs
+  $("#idGroup").val(0).change();
   $(
-    "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc,#trGroup"
+    "#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc,#trGroup"
   )
     .val("")
     .change();
@@ -1215,6 +1326,7 @@ function editEntry(currentObject) {
   $("#idReset").text("Cancel");
   $("#idLocation").val("");
 
+  // console.log("editObject Entry: ", currentObject);
   var trID = $($(currentObject).parents()[1]).attr("id");
   editID = trID.split("_")[1];
 
@@ -1225,27 +1337,49 @@ function editEntry(currentObject) {
     },
     function (data) {
       var dataEdit = $.parseJSON(data);
+      console.log("dataEdit: ", dataEdit);
       $($("#idLocation").find(`option[loc-id=${dataEdit[0]}]`))
         .prop("selected", true)
         .change();
-      $("#idGroup").val(dataEdit[1]);
-      getCheckers();
-      getProjects();
-      $($("#idProject").find(`option[proj-id=${dataEdit[2]}]`))
-        .prop("selected", true)
-        .change();
-      getItems(dataEdit[2]);
-      $($("#idItem").find(`option[item-id=${dataEdit[3]}]`))
-        .prop("selected", true)
-        .change();
-      getJobs(dataEdit[2], dataEdit[3]);
-      $($("#idJRD").find(`option[job-id=${dataEdit[4]}]`))
-        .prop("selected", true)
-        .change();
+      $("#idGroup").val(dataEdit[13]);
+      $("#idRemarks").val(dataEdit[8]);
+      // getCheckers();
+
+      // Paste Project Value
+      getProjects().then((projs) => {
+        fillProj(projs);
+        console.log("pasting proj entry");
+        $($("#idProject").find(`option[proj-id=${dataEdit[2]}]`)).prop(
+          "selected",
+          true
+        );
+
+        // Paste Item Value
+        getItems(dataEdit[2]).then((items) => {
+          console.log("after get items: ", items);
+          fillItem(items);
+          console.log("pasting item entry");
+          $($("#idItem").find(`option[item-id=${dataEdit[3]}]`)).prop(
+            "selected",
+            true
+          );
+
+          // Paste Jobs Value
+          getJobs(dataEdit[2], dataEdit[3]).then((jobs) => {
+            fillJobs(jobs);
+            console.log("pasting job entry");
+            $($("#idJRD").find(`option[job-id=${dataEdit[4]}]`)).prop(
+              "selected",
+              true
+            );
+          });
+        });
+      });
+
       $(`#getHour`).val(`${Math.floor(dataEdit[5] / 60)}`);
       $(`#getMin`).val(`${dataEdit[5] % 60}`);
       isDrawing();
-      getTOW(`${dataEdit[2]}`);
+      // getTOW(`${dataEdit[2]}`);
       disableTimeInput(`${dataEdit[2]}`);
       MHValidation();
       $($("#idTOW").find(`option[tow-id=${dataEdit[7]}]`))
@@ -1255,7 +1389,6 @@ function editEntry(currentObject) {
       $($("#idMH").find(`option[mhid=${dataEdit[6]}]`))
         .prop("selected", true)
         .change();
-      $("#idRemarks").val(dataEdit[8]);
       if (dataEdit[9] != null) {
         $(`#${dataEdit[9]}`).click();
       }
@@ -1351,21 +1484,49 @@ function ifSmallScreen() {
 
 function getCheckers() {
   //get Checkers Selection
-  $.ajaxSetup({ async: false });
+  // $.ajaxSetup({ async: false });
   var empGrp = $("#idGroup").val();
-  var projID = $($("#idProject").find("option:selected")).attr("proj-id") || "";
-  $.post(
-    "ajax/get_checkers.php",
-    {
-      empGrp: empGrp,
-      empNum: empDetails["empNum"],
-      projID: projID,
-    },
-    function (data) {
-      $("#idChecking").html(data);
-    }
-  );
-  $.ajaxSetup({ async: true });
+  var projID = $($("#idProject").find("option:selected")).attr("proj-id");
+
+  console.log("checkerseseseses", "grpID: ", empGrp, "projID: ", projID);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "ajax/get_checkers.php",
+      data: {
+        empGrp: empGrp,
+        empNum: empDetails["empNum"],
+        projID: projID,
+      },
+      dataType: "json",
+      success: function (response) {
+        console.log("checking response", response);
+        $("#idChecking").html(response);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching checkers.");
+        }
+      },
+    });
+  });
+
+  // $.post(
+  //   "ajax/get_checkers.php",
+  //   {
+  //     empGrp: empGrp,
+  //     empNum: empDetails["empNum"],
+  //     projID: projID,
+  //   },
+  //   function (data) {
+  //     $("#idChecking").html(data);
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
 }
 function saveFunction() {
   //update database entry
