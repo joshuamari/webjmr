@@ -12,7 +12,7 @@ if(isset($_REQUEST['empNum'])){
 }
 $empGrp='';
 if(isset($_REQUEST['empGrp'])){
-    $empGrp=$_REQUEST['empGrp'];
+    $empGrp=getGroup($_REQUEST['empGrp']);
 }
 $projID='';
 if(!empty($_REQUEST['projID'])){

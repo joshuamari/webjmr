@@ -7,7 +7,7 @@ require_once "./global_var.php";
 $jobsArray = array();
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
-    $empGroup=$_REQUEST['empGroup'];
+    $empGroup=getGroup($_REQUEST['empGroup']);
 }
 $projID='';
 if(isset($_REQUEST['projID'])){
