@@ -470,18 +470,18 @@ function getMyGroups() {
     dataType: "json",
     success: function (response) {
       console.log("response", response);
-      const grps = response;
+      let grps = response["result"];
       var grpSelect = $("#idGroup");
       grpSelect.html(
         `<option selected hidden value=0 grp-id=0>Select Group</option>`
       );
-      // if (grps.length > 1) {
-      //   grps = grps.sort(function (a, b) {
-      //     var first = a.abbreviation.toUpperCase();
-      //     var second = b.abbreviation.toUpperCase();
-      //     return first < second ? -1 : first > second ? 1 : 0;
-      //   });
-      // }
+      if (grps.length > 1) {
+        grps = grps.sort(function (a, b) {
+          var first = a.abbreviation.toUpperCase();
+          var second = b.abbreviation.toUpperCase();
+          return first < second ? -1 : first > second ? 1 : 0;
+        });
+      }
 
       $.each(grps, function (index, item) {
         var option = $("<option>")
@@ -685,22 +685,54 @@ function getProjects() {
   $("#projOptions,#idProject").empty();
   $("#idProject").html(`<option value='' hidden>Select Project</option>`);
 
-  $.ajaxSetup({ async: false });
-  $.post(
-    "ajax/get_projects.php",
-    {
+  console.log("group selected: ", $("#idGroup").val());
+
+  $.ajax({
+    type: "POST",
+    url: "ajax/get_projects.php",
+    data: {
       empGroup: $("#idGroup").val(),
       empNum: empDetails["empNum"],
       empPos: empDetails["empPos"],
     },
-    function (data) {
-      proj = $.parseJSON(data);
-      proj.map(fillProj);
+    dataType: "json",
+    success: function (response) {
+      console.log("projects: ", response);
+      // const projs = response["result"];
+      const projs = response;
       sequenceValidation();
-      $("#idProject").val("").change();
-    }
-  );
-  $.ajaxSetup({ async: true });
+      projs.map(fillProj);
+      // var projSelect = $("#idProject");
+
+      // projSelect.html(
+      //   `<option selected hidden value=0 proj-id=0>Select Project</option>`
+      // );
+      // $.each(projs, function (index, item) {
+      //   var option = $("<option>")
+      //     .attr("value", item.id)
+      //     .text(item.projName)
+      //     .attr("proj-id", item.id);
+      //   projSelect.append(option);
+      // });
+    },
+  });
+
+  // $.ajaxSetup({ async: false });
+  // $.post(
+  //   "ajax/get_projects.php",
+  //   {
+  //     empGroup: $("#idGroup").val(),
+  //     empNum: empDetails["empNum"],
+  //     empPos: empDetails["empPos"],
+  //   },
+  //   function (data) {
+  //     proj = $.parseJSON(data);
+  //     proj.map(fillProj);
+  //     sequenceValidation();
+  //     $("#idProject").val("").change();
+  //   }
+  // );
+  // $.ajaxSetup({ async: true });
 }
 function fillProj(projArrayElement) {
   var projDeets = projArrayElement;
@@ -1056,10 +1088,7 @@ function isEngineering() {
   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
   var selGroup = $("#idGroup").val();
   isDrawing =
-    !defaults.includes(projID) &&
-    selGroup != "SYS" &&
-    selGroup != "IT" &&
-    projID;
+    !defaults.includes(projID) && selGroup != 16 && selGroup != 10 && projID;
   // return isDrawing;
   if (isDrawing) {
     $("#id2DDiv").removeClass("d-none");
