@@ -7,7 +7,7 @@ require_once "./global_var.php";
 $projectsArray=array();
 $empGroup='';
 if(isset($_REQUEST['empGroup'])){
-    $empGroup=$_REQUEST['empGroup'];
+    $empGroup=getGroup($_REQUEST['empGroup']);
 }
 $kdtw='';
 if(!in_array($empGroup,$KDTWAccess)){

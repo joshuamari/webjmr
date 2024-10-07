@@ -11,7 +11,7 @@ if(!empty($_REQUEST['projID'])){
 }
 $empGroup='';
 if(!empty($_REQUEST['empGroup'])){
-    $empGroup=$_REQUEST['empGroup'];
+    $empGroup=getGroup($_REQUEST['empGroup']);
 }
 $empPos='';
 if(!empty($_REQUEST['empPos'])){
