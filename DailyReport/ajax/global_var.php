@@ -3,15 +3,6 @@
 require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "../../dbconn/dbconnectnew.php";
 
-$defaultProjID = array();
-  $dProjQ = "SELECT * FROM projectstable WHERE fldDirect=0 AND fldDelete=0";
-  $dProjStmt = $connwebjmr->query($dProjQ);
-  if ($dProjStmt->rowCount() > 0) {
-    $dProjArr = $dProjStmt->fetchAll();
-    foreach ($dProjArr as $dProj) {
-      array_push($defaultProjID, $dProj['fldID']);
-    }
-  }
 $leaveQ = "SELECT fldID FROM projectstable WHERE fldProject='Leave'";
 $leaveStmt = $connwebjmr->query($leaveQ);
 $leaveID = $leaveStmt->fetchColumn();
@@ -53,4 +44,17 @@ function getGroup($grpNum) {
   $getGroupStmt->execute([":grpNum" => $grpNum]);
   $grpAbbr = $getGroupStmt->fetchColumn();
   return $grpAbbr;
+}
+
+function getDefaults() {
+  global $connwebjmr;
+  $defaults = array();
+  $defaultsQ = "SELECT `fldId` FROM `projectstable` WHERE fldDirect = 0 AND fldDelete = 0";
+  $defaultStmt = $connwebjmr->prepare($defaultsQ);
+  $defaultStmt->execute([]);
+  $arrResult = $defaultStmt->fetchAll();
+    foreach($arrResult as $res) {
+      $defaults[] = (int)$res['fldId'];
+    }
+  return $defaults;
 }
