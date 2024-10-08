@@ -117,6 +117,7 @@ $(document).on("change", "#idTOW", function () {
   if (towVal == 12) {
     $("#getHour").val("8");
   }
+  console.log("towValue is: ", towVal);
   getTOWDesc(towVal);
 
   $("#p11").text("");
@@ -136,6 +137,7 @@ $(document).on("click", ".pindot", function () {
 });
 $(document).on("change", "#idGroup", function () {
   //select Group Event
+  resetEntry();
   getProjects().then((projs) => {
     fillProj(projs);
   });
@@ -200,7 +202,9 @@ $(document).on("change", "#idProject", function () {
     $("#lbltow").html("Type of Work");
   }
 
-  getCheckers();
+  getCheckers().then((checks) => {
+    fillCheckers(checks);
+  });
   $(".trgrp").remove();
 });
 $(document).on("change", "#idItem", function () {
@@ -466,8 +470,6 @@ function initializeDate() {
 function getMyGroups() {
   //get Group Selection
   $("#idGroup").html(`<option value='' hidden>Select Group</option>`);
-  console.log("get groups");
-  console.log("empNum", empDetails["empNum"]);
   $.ajax({
     type: "POST",
     url: "ajax/get_my_groups.php",
@@ -476,7 +478,6 @@ function getMyGroups() {
     },
     dataType: "json",
     success: function (response) {
-      console.log("response", response);
       let grps = response["result"];
       var grpSelect = $("#idGroup");
       grpSelect.html(
@@ -541,6 +542,7 @@ function getTOW(projID) {
       projID: projID,
     },
     function (data) {
+      // console.log("TOW DATA: ", data);
       $("#idTOW").html(data);
       $("#idTOW").val("").change();
     }
@@ -815,7 +817,6 @@ function getItems(projID) {
         if (projID == mngID) {
           $($("#idItem").children()[1]).prop("selected", true).change();
         }
-        console.log(items);
         resolve(items);
         // items.map(fillItem);
       },
@@ -852,12 +853,12 @@ function getItems(projID) {
   // $.ajaxSetup({ async: true });
 }
 function fillItem(itemArrayElement) {
-  console.log("fill items selection", itemArrayElement);
+  // console.log("fill items selection", itemArrayElement);
   let ind = 0;
 
   $.each(itemArrayElement, function (index, item) {
     var itemDeets = itemArrayElement[ind];
-    console.log("item", itemDeets);
+    // console.log("item", itemDeets);
     var addString = `<li item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</li>`;
     var addStringMain = `<option hidden item-id='${itemDeets["itemID"]}'>${itemDeets["itemName"]}</option>`;
     $(`#itemOptions`).append(addString);
@@ -956,7 +957,7 @@ function fillJobs(jobArrayElement) {
 
   $.each(jobArrayElement, function (index, item) {
     var jrdDeets = jobArrayElement[ind];
-    console.log("jrds", jrdDeets);
+    // console.log("jrds", jrdDeets);
     var addString = `<li job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</li>`;
     var addStringMain = `<option hidden job-id='${jrdDeets["jobID"]}'>${jrdDeets["jobName"]}</option>`;
     $(`#jrdOptions`).append(addString);
@@ -1008,7 +1009,7 @@ function addEntries(addMode) {
   var mhtype = $($("#idMH").find("option:selected")).attr("mhid");
   var remarks = $("#idRemarks").val();
   var checker =
-    $($("#idChecking").find("option:selected")).attr("dataid") || "";
+    $($("#idChecking").find("option:selected")).attr("chk-id") || "";
   var mgaKulang = [];
 
   console.log("grp", grp);
@@ -1162,9 +1163,9 @@ function deleteEntry(tableRowID) {
 }
 function resetEntry() {
   //reset Inputs
-  $("#idGroup").val(0).change();
+  // $("#idGroup").val(0).change();
   $(
-    "#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#towDesc,#trGroup"
+    "#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#trGroup"
   )
     .val("")
     .change();
@@ -1177,6 +1178,8 @@ function resetEntry() {
     .removeClass("border border-danger")
     .removeClass("bg-err");
   $(".checker").addClass("d-none");
+  $("#id2DDiv").addClass("d-none");
+  $("#idRevDiv").addClass("d-none");
   sequenceValidation();
 }
 function disableTimeInput(projID) {
@@ -1222,9 +1225,10 @@ function hasJRD() {
 }
 function hasTOW() {
   var isDrawing = true;
-  var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
-  );
+  // var projID = parseInt(
+  //   $($("#idProject").find("option:selected")).attr("proj-id")
+  // );
+  var projID = $("#idProject").val();
   var selGroup = $("#idGroup").val();
   isDrawing = !defaults.includes(projID) && projID;
   if (isDrawing) {
@@ -1291,15 +1295,36 @@ function isWorkDay(location) {
 }
 function getTOWDesc(typesOfWorkID) {
   //get TOW Selection
-  $.post(
-    "ajax/get_tow_desc.php",
-    {
+  console.log("typesOfWorkID", typesOfWorkID);
+  if (typesOfWorkID == 0 || typesOfWorkID == undefined) {
+    $("#towDesc").html("-");
+    return;
+  }
+  console.log("typesOfWorkID not undefined nor 0");
+  $.ajax({
+    type: "POST",
+    url: "ajax/get_tow_desc.php",
+    data: {
       towID: typesOfWorkID,
     },
-    function (data) {
-      $("#towDesc").html(data.trim());
-    }
-  );
+    dataType: "json",
+    success: function (response) {
+      console.log("towDesc Success", response);
+      $("#towDesc").html(response);
+      console.log("towdesc value: ", $("#towDesc").val());
+    },
+  });
+  // $.post(
+  //   "ajax/get_tow_desc.php",
+  //   {
+  //     towID: typesOfWorkID,
+  //   },
+  //   function (data) {
+  //     console.log("towDesc Success", data);
+  //     $("#towDesc").html(data);
+  //     console.log("towdesc value: ", $("#towDesc").val());
+  //   }
+  // );
 }
 function copyEntries() {
   //copy entries from selected date
@@ -1325,6 +1350,7 @@ function editEntry(currentObject) {
   $("#idAdd").text("Save Changes");
   $("#idReset").text("Cancel");
   $("#idLocation").val("");
+  $(".trgrp").remove();
 
   // console.log("editObject Entry: ", currentObject);
   var trID = $($(currentObject).parents()[1]).attr("id");
@@ -1343,7 +1369,6 @@ function editEntry(currentObject) {
         .change();
       $("#idGroup").val(dataEdit[13]);
       $("#idRemarks").val(dataEdit[8]);
-      // getCheckers();
 
       // Paste Project Value
       getProjects().then((projs) => {
@@ -1353,39 +1378,56 @@ function editEntry(currentObject) {
           "selected",
           true
         );
+        isDrawing();
 
         // Paste Item Value
-        getItems(dataEdit[2]).then((items) => {
-          console.log("after get items: ", items);
+        Promise.all([
+          getItems(dataEdit[2]),
+          getCheckers(),
+          getTOW(dataEdit[2]),
+        ]).then(([items, checks]) => {
           fillItem(items);
-          console.log("pasting item entry");
+          fillCheckers(checks);
+          // console.log("pasting item entry");
           $($("#idItem").find(`option[item-id=${dataEdit[3]}]`)).prop(
             "selected",
             true
           );
-
           // Paste Jobs Value
           getJobs(dataEdit[2], dataEdit[3]).then((jobs) => {
             fillJobs(jobs);
-            console.log("pasting job entry");
+            // console.log("pasting job entry");
             $($("#idJRD").find(`option[job-id=${dataEdit[4]}]`)).prop(
               "selected",
               true
             );
+
+            if (dataEdit[3] == 14 && dataEdit[12]) {
+              trainingGroup(dataEdit[3]);
+              console.log("pasting trGrps");
+              $("#trGroup").val(dataEdit[12]);
+            }
           });
+
+          $($("#idTOW").find(`option[tow-id=${dataEdit[7]}]`))
+            .prop("selected", true)
+            .change();
+          getTOWDesc(dataEdit[7]);
+
+          if (dataEdit[11] != null) {
+            // $("#forChecking").show();
+            $($("#idChecking").find(`option[chk-id=${dataEdit[11]}]`))
+              .prop("selected", true)
+              .change();
+          }
         });
       });
 
       $(`#getHour`).val(`${Math.floor(dataEdit[5] / 60)}`);
       $(`#getMin`).val(`${dataEdit[5] % 60}`);
-      isDrawing();
-      // getTOW(`${dataEdit[2]}`);
       disableTimeInput(`${dataEdit[2]}`);
       MHValidation();
-      $($("#idTOW").find(`option[tow-id=${dataEdit[7]}]`))
-        .prop("selected", true)
-        .change();
-      getTOWDesc(dataEdit[7]);
+
       $($("#idMH").find(`option[mhid=${dataEdit[6]}]`))
         .prop("selected", true)
         .change();
@@ -1396,16 +1438,9 @@ function editEntry(currentObject) {
         $("#idRev").click();
       }
       disableTimeInput(dataEdit[2]);
-      if (dataEdit[11] != null) {
-        $("#forChecking").show();
-        $($("#idChecking").find(`option[dataid=${dataEdit[11]}]`))
-          .prop("selected", true)
-          .change();
-      }
-      $("#trGroup").val(dataEdit[12]);
     }
   );
-  isDrawing();
+  // isDrawing();
 }
 
 function selectEntry(currentObject) {
@@ -1458,8 +1493,8 @@ function selectEntry(currentObject) {
       }
       disableTimeInput(dataSelect[2]);
       if (dataSelect[11] != null) {
-        $("#forChecking").show();
-        $($("#idChecking").find(`option[dataid=${dataSelect[11]}]`))
+        // $("#forChecking").show();
+        $($("#idChecking").find(`option[chk-id=${dataSelect[11]}]`))
           .prop("selected", true)
           .change();
       }
@@ -1488,20 +1523,21 @@ function getCheckers() {
   var empGrp = $("#idGroup").val();
   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
 
-  console.log("checkerseseseses", "grpID: ", empGrp, "projID: ", projID);
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
       url: "ajax/get_checkers.php",
       data: {
-        empGrp: empGrp,
+        grpNum: empGrp,
         empNum: empDetails["empNum"],
         projID: projID,
       },
       dataType: "json",
       success: function (response) {
-        console.log("checking response", response);
-        $("#idChecking").html(response);
+        // console.log("checking response", response);
+        const checklist = response["result"];
+        // $("#idChecking").html(response);
+        resolve(checklist);
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -1527,6 +1563,19 @@ function getCheckers() {
   //   }
   // );
   // $.ajaxSetup({ async: true });
+}
+function fillCheckers(checks) {
+  var checkSelect = $("#idChecking");
+  checkSelect.html(
+    `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+  );
+  $.each(checks, function (index, item) {
+    var option = $("<option>")
+      .attr("value", item.id)
+      .text(item.name)
+      .attr("chk-id", item.id);
+    checkSelect.append(option);
+  });
 }
 function saveFunction() {
   //update database entry
