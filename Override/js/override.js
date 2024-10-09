@@ -1,7 +1,6 @@
 //#region GLOBALS
 const rootFolder = `//${document.location.hostname}`;
 let empDetails = [];
-// var editID = "";
 const defaults = getDefaults();
 var regCount = 0;
 var otCount = 0;
@@ -97,78 +96,6 @@ checkAccess()
   });
 
 //#region BINDS
-// $(document).ready(function () {
-//   //page Initialize Event
-//   $(".hello-user").text(empDetails["empFName"]);
-//   ifSmallScreen();
-//   initializeDate();
-//   getMyGroups();
-//   // getEmployees();
-//   getDispatchLoc();
-//   // getTOW();
-//   getEntries();
-//   sequenceValidation();
-//   // initCalendar();
-//   // getPlans();
-//   // planAccess();
-//   //#region sidebarshits
-//   let arrow = document.querySelectorAll(".arrow");
-
-//   for (var i = 0; i < arrow.length; i++) {
-//     arrow[i].addEventListener("click", (e) => {
-//       let arrowParent = e.target.parentElement.parentElement; //selecting main parent of arrow
-//       arrowParent.classList.toggle("showMenu");
-//     });
-//   }
-//   let ey = document.querySelectorAll(".ey");
-
-//   for (var i = 0; i < ey.length; i++) {
-//     ey[i].addEventListener("click", (e) => {
-//       let aey = e.target.parentElement.parentElement.parentElement; //selecting main parent of arrow
-//       aey.classList.toggle("showMenu");
-//     });
-//   }
-
-//   let sidebar = document.querySelector(".sidebar");
-//   let sidebarBtn = document.querySelector(".menu-one");
-//   let sidebarBtn2 = document.querySelector(".menu-two");
-//   sidebarBtn.addEventListener("click", () => {
-//     $(".sidebar").toggleClass("close");
-//   });
-//   sidebarBtn2.addEventListener("click", () => {
-//     $(".sidebar").addClass("close");
-//   });
-//   //#endregion
-//   //#region input time validation
-//   var inputHour = document.getElementById("getHour");
-
-//   var invalidChars = ["-", "+", "e", "."];
-
-//   inputHour.addEventListener("input", function () {
-//     this.value = this.value.replace(/[e\+\-\.]/gi, "");
-//   });
-
-//   inputHour.addEventListener("keydown", function (e) {
-//     if (invalidChars.includes(e.key)) {
-//       e.preventDefault();
-//     }
-//   });
-//   var inputMin = document.getElementById("getMin");
-
-//   var invalidChars = ["-", "+", "e", "."];
-
-//   inputMin.addEventListener("input", function () {
-//     this.value = this.value.replace(/[e\+\-\.]/gi, "");
-//   });
-
-//   inputMin.addEventListener("keydown", function (e) {
-//     if (invalidChars.includes(e.key)) {
-//       e.preventDefault();
-//     }
-//   });
-//   //#endregion
-//   $(".cs-loader").fadeOut(1000);
-// });
 
 $(document).on("click", "body", function (event) {
   if (
@@ -194,7 +121,6 @@ $(document).on("click", "body", function (event) {
 $(document).on("click", "#back2Project", function () {
   $("#drInstruction").modal("hide");
   $("#idItem").val(0).change();
-  // $("#labell").remove();
 });
 $(document).on("click", "#drInstruction .btn-close", function () {
   $("#back2Project").click();
@@ -209,7 +135,6 @@ $(document).on("click", ".btn-close", function () {
   $(".editInputError").addClass("hidden");
 });
 $(document).on("click", ".btn-Ecancel", function () {
-  // removeOutlines();
   $(this).closest(".modal").find(".btn-close").click();
 });
 $(document).on("click", ".btn-Eupdate", function () {
@@ -236,11 +161,11 @@ $(document).on("click", ".btn-Eupdate", function () {
       alert(`Save Edit Error: ${error}`);
     });
 });
-
 $(document).on("click", ".btn-Edelete", function () {
   deleteEntry(delTRID);
   $(this).closest(".modal").find(".btn-close").click();
 });
+
 //Remove Red Borders Errors
 $(document).on(
   "click",
@@ -297,7 +222,6 @@ $(document).on("change", "#idGroup", function () {
       let thisEmpID = $("#idEmployee").val();
       getEntries(thisEmpID)
         .then((entryList) => {
-          console.log("fill entries next...");
           fillEntries(entryList);
           getMHCount();
         })
@@ -310,7 +234,6 @@ $(document).on("change", "#idGroup", function () {
     });
 
   $(this).removeClass("border-danger");
-  // $(".iow").removeClass("active");
 });
 
 // FOR LOCATION LIST
@@ -352,7 +275,6 @@ $(document).on("change", "#idProject", function () {
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
   var groupID = $("#idGroup").val();
-  console.log("projID", projID);
   sequenceValidation(0);
   Promise.all([
     getItems(thisEmpID, projID, groupID),
@@ -388,7 +310,6 @@ $(document).on("change", "#edit-selProj", function () {
   //select Project Event Type=[1]
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
   var projID = $($(this).find("option:selected")).attr("proj-id"); //get ID of selected Project
-  // sequenceValidation(1);
   Promise.all([
     getItems(thisEmpID, projID, editGrpID),
     getTOW(projID),
@@ -396,7 +317,6 @@ $(document).on("change", "#edit-selProj", function () {
   ])
     .then(([items, tows, checks]) => {
       resetSelection(2, 1);
-      console.log("fill items on change of project");
       fillItems(items, 1);
       fillTOW(tows, 1);
       disableTimeInput(projID, 1);
@@ -454,7 +374,6 @@ $(document).on("change", "#edit-selIOW", function () {
   var projID = $("#edit-selProj").val(); //get ID of selected Project
   var itemID = $($(this).find("option:selected")).attr("item-id"); //get ID of selected IoW
   var checkItemID = noMoreInputItems.includes(itemID);
-  // sequenceValidation(1);
   if (itemID != 0) {
     Promise.all([getJobs(thisEmpID, projID, itemID, editGrpID), getTRGroups()])
       .then(([jobs, allgrps]) => {
@@ -535,6 +454,7 @@ $(document).on("change", "#edit-selTOW", function () {
 
   $(this).removeClass("border-danger");
 });
+
 //Checker
 $(document).on("change", "#idChecking", function () {
   $(this).removeClass("border-danger");
@@ -567,15 +487,12 @@ $(document).on("click", "#dupeBut", function () {
   editGrpID = entryRow[0].groupID;
   dupeEntry(entryRow);
 });
-
 $(document).on("click", "#editBut", function () {
   var empText = $("#idEmployee option:selected").text();
 
   var entryID = $(this).closest("tr").attr("entry-id");
   const entryRow = entryArr.filter((entry) => entry.id === entryID);
   editTRID = entryID;
-  console.log("entryID", entryID, "entryArr", entryArr);
-  console.log("entryRow (onclick Edit)", entryRow);
 
   fillEditFields(entryRow);
   $("#emp-edit").html(empText);
@@ -632,21 +549,6 @@ function checkAccess() {
     // resolve(response);
   });
 }
-// function checkLogin() {
-//   //check if user is logged in
-//   $.ajax({
-//     url: "Includes/check_login.php",
-//     success: function (data) {
-//       //ajax to check 9 is logged in
-//       empDetails = $.parseJSON(data);
-//       if (Object.keys(empDetails).length < 1) {
-//         //if result is 0, redirect to log in page
-//         window.location.href = rootFolder + "/KDTPortalLogin";
-//       }
-//     },
-//     async: false,
-//   });
-// }
 
 // COMPILED VARIABLES
 function getVariables() {
@@ -668,7 +570,6 @@ function getVariables() {
         }
       },
     });
-    // resolve(response);
   });
 }
 
@@ -704,6 +605,7 @@ function fillMyGroups(grps) {
     `<option selected hidden value=0 grp-id=0>Select Group</option>`
   );
   if (grps.length > 1) {
+    //sort group if more than 1
     grps = grps.sort(function (a, b) {
       var first = a.abbreviation.toUpperCase();
       var second = b.abbreviation.toUpperCase();
@@ -806,7 +708,6 @@ function fillEmployees(emps) {
   empSelect.html(
     `<option selected hidden value=0 emp-id=0>Select Employee</option>`
   );
-  // let formattedName = formatName(emps);
   $.each(emps, function (index, item) {
     var option = $("<option>")
       .attr("value", item.id)
@@ -815,7 +716,6 @@ function fillEmployees(emps) {
     empSelect.append(option);
   });
 }
-
 function formatName(emp) {
   let names = [];
   const splitName = emp.split(", ");
@@ -833,8 +733,6 @@ function formatName(emp) {
 //PROJECT FUNCTIONS
 function getProjects(thisEmpID, grpID) {
   //get PROJECT Selection
-  // var groupID = $("#idGroup").val();
-
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -861,7 +759,6 @@ function getProjects(thisEmpID, grpID) {
   });
 }
 function fillProjects(projs, type) {
-  // console.log("all projs", projs);
   var projSelect = $("#idProject");
   var editProjSel = $("#edit-selProj");
   if (type == 0) {
@@ -969,10 +866,8 @@ function MHValidation(type) {
 function getItems(thisEmpID, projID, grpID) {
   //get Item Selection
   var itms = [];
-  console.log("parameters: ", thisEmpID, projID, grpID);
   $("#labell").remove();
   $("#edit-labell").remove();
-  // var groupID = $("#idGroup").val();
 
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -1048,8 +943,6 @@ function getLabel(itemID, type) {
           <span class="col-12 alert-primary text-primary" id="labell" role="alert">${lbl}</span>
           `);
         } else {
-          console.log("lbl", lbl);
-          console.log("paste IOW label");
           $("#edit-labell").remove();
           $(".editIoWLbl").removeClass("hidden").addClass("block");
           $(".editIoWLbl").after(`
@@ -1074,8 +967,6 @@ function getLabel(itemID, type) {
 function getJobs(thisEmpID, projID, itemID, grpID) {
   //get JRD Selection
   var jobs = [];
-  // var groupID = $("#idGroup").val();
-
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -1135,14 +1026,6 @@ function fillJobs(jobs, type) {
 function getNoMoreInputItems() {
   //get ids of no more input
   var nmiIDs = [];
-  // $.ajax({
-  //   url: "php/get_nomoreinput_items.php",
-  //   success: function (data) {
-  //     nmiIDs = $.parseJSON(data);
-  //   },
-  //   async: false,
-  // });
-  // return nmiIDs;
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -1260,7 +1143,6 @@ function getTOWDesc(typesOfWorkID, type) {
 //for checking ToW
 function getCheckers(projID, grpID) {
   //get Checkers Selection
-  // var empGrp = $("#idGroup").val();
   if (projID == 0 || projID == undefined) {
     $(".checker").addClass("d-none");
     return;
@@ -1541,7 +1423,7 @@ function getTRGroups() {
   });
 }
 
-//Time
+//Time Cards
 function getMHCount() {
   //get MH Counter Values
   var reg = 0;
@@ -1594,11 +1476,12 @@ function getMHCount() {
     }
   }
 }
+
+//ManHour Type
 function fillMHType(type) {
   var mhTypeSelect = $("#idMH");
   var editMHTypeSel = $("#edit-selMHType");
 
-  // return;
   if (type == 0) {
     mhTypeSelect.html(
       `<option selected hidden value=null mhid=null>Select Manhour Type</option>`
@@ -1625,6 +1508,7 @@ function fillMHType(type) {
 }
 
 // Button Functions
+
 function resetEntry() {
   //reset Inputs
   $("#getHour,#getMin,#idRemarks").val("").change();
@@ -1647,12 +1531,7 @@ function resetEntry() {
   sequenceValidation(0);
   // resetSelection(1);
 }
-function cancelEditFunction() {
-  //cancel editables
-  $("#idAdd").text("Add");
-  $("#idReset").text("Clear");
-  resetEntry();
-}
+//Save Edit in Edit Modal
 function saveEdit() {
   //update database entry
   const grp = editGrpID;
@@ -1732,12 +1611,9 @@ function saveEdit() {
     (!$("#edit-TOWDiv").hasClass("d-none") && tow == 0) ||
     (!$("#edit-TOWDiv").hasClass("d-none") && tow == null)
   ) {
-    console.log("tow on display");
     $("#edit-selTOW").addClass("border border-danger").addClass("bg-err");
     if (!noInput) noInput = $("#idTOW");
     mgaKulang.push("TOW");
-  } else {
-    console.log("tow hidden");
   }
   if (!tow || tow == 0) {
     $(".editInputError").removeClass("hidden").addClass("block");
@@ -1839,8 +1715,7 @@ function saveEdit() {
     }
   });
 }
-
-//Add Entry
+//Add Entry in Main Form
 function addEntries() {
   //add Entries to Database
   let tutri = $('input[name="radio"]:checked').val();
@@ -1864,7 +1739,6 @@ function addEntries() {
   let mgaKulang = [];
   let noInput = null;
 
-  console.log("rev state", revision);
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
   }
@@ -1902,12 +1776,9 @@ function addEntries() {
     (!$("#idJRDDiv").hasClass("d-none") && jobreq == 0) ||
     (!$("#idJRDDiv").hasClass("d-none") && jobreq == null)
   ) {
-    console.log("jrd on display");
     $("#idJRD").addClass("border border-danger").addClass("bg-err");
     if (!noInput) noInput = $("#idJRD");
     mgaKulang.push("JRD");
-  } else {
-    console.log("jrd hidden");
   }
   if (!jobreq && proj != leaveID && proj != otherID) {
     $("#idJRD").addClass("border border-danger").addClass("bg-err");
@@ -1923,12 +1794,9 @@ function addEntries() {
     (!$("#idTowDiv").hasClass("d-none") && tow == 0) ||
     (!$("#idTowDiv").hasClass("d-none") && tow == null)
   ) {
-    console.log("tow on display");
     $("#idTOW").addClass("border border-danger").addClass("bg-err");
     if (!noInput) noInput = $("#idTOW");
     mgaKulang.push("TOW");
-  } else {
-    console.log("tow hidden");
   }
   if (!tow && (!defaults.includes(proj) || proj == leaveID)) {
     if (proj == leaveID) {
@@ -2034,14 +1902,11 @@ function addEntries() {
     }
   });
 }
-//Edit Entry
+//Fill Edit Modal Fields Entry
 function fillEditFields(editData) {
-  console.log("entry Data (fill EditFields): ", editData);
-
   var thisEmpID = $("#idEmployee").val(); //get ID of selected Employee
 
   var entry = editData[0];
-  console.log("entry", entry);
 
   editGrpID = entry["groupID"];
   const mhtype = entry["MHType"];
@@ -2171,7 +2036,6 @@ function fillEditFields(editData) {
 //Duplicate Entry
 function dupeEntry(entryData) {
   const dupeData = entryData[0];
-  console.log("dupeData", dupeData);
 
   const emp = $($("#idEmployee").find("option:selected")).attr("emp-id");
   const grp = editGrpID;
@@ -2289,7 +2153,6 @@ function getEntries(thisEmpID) {
         },
         dataType: "json",
         success: function (response) {
-          console.log("getEntries: ", response);
           const allEntries = response;
           entryArr = response["result"];
           resolve(allEntries);
@@ -2467,6 +2330,7 @@ function ifSmallScreen() {
   }
 }
 
+//Date
 function initializeDate() {
   //Initialize Selected Date
   var getDate = new Date();
@@ -2478,6 +2342,7 @@ function initializeDate() {
   $("#idDRDate").val(ISOFormatDate);
 }
 
+//Others
 function sequenceValidation(type) {
   //sequence checking Project->Item->Job
   // $("#id2DDiv").addClass("d-none");
@@ -2514,7 +2379,6 @@ function sequenceValidation(type) {
     }
   }
 }
-
 function resetSelection(num, type) {
   if (type == 0) {
     var proj = $("#idProject"); //get Project selection
@@ -2552,7 +2416,6 @@ function resetSelection(num, type) {
     }
   }
 }
-
 function removeOutlines() {
   $(
     "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin"
