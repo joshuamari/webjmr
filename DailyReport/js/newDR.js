@@ -766,7 +766,7 @@ function getProjects() {
   // $.ajaxSetup({ async: true });
 }
 function fillProj(projArrayElement) {
-  console.log("fill project selection", projArrayElement);
+  // console.log("fill project selection", projArrayElement);
   let ind = 0;
 
   $.each(projArrayElement, function (index, item) {
