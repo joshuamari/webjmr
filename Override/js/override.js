@@ -268,6 +268,33 @@ $(document).on("change", "#idEmployee", function () {
 
   $(this).removeClass("border-danger");
 });
+// $(document).on("click", "#idEmployee", function (event) {
+//   event.stopPropagation();
+//   $(".emp").toggleClass("active");
+//   // $(".proj").removeClass("active");
+//   // $(".jord").removeClass("active");
+//   // $(".iow").removeClass("active");
+//   $(this).blur();
+// });
+// $(document).on("click", "#empOptions li", function () {
+//   $(".emp").removeClass("active");
+//   var empID = $(this).attr("emp-id");
+//   $($("#idEmployee").find(`option[emp-id=${empID}]`))
+//     .prop("selected", true)
+//     .change();
+// });
+// $(document).on("keyup", "#searchEmp", function () {
+//   var empID = $($("#idEmployee").find("option:selected")).attr("emp-id");
+//   getEmpSearch().then((empSearch) => {
+//     fillEmployees(empSearch);
+//   });
+// });
+// $(document).on("search", "#searchEmp", function () {
+//   var empID = $($("#idEmployee").find("option:selected")).attr("emp-id");
+//   getEmpSearch().then((empSearch) => {
+//     fillEmployees(empSearch);
+//   });
+// });
 
 // FOR PROJECTS LIST
 $(document).on("change", "#idProject", function () {
@@ -728,6 +755,42 @@ function formatName(emp) {
   names[1] = splitFName.join(" ");
   const newname = names.join(", ");
   return newname;
+}
+function getEmpSearch() {
+  //get Employee Selection
+  var emps = [];
+  var searchEmp = $(`#searchEmp`).val();
+  $("#empOptions").empty();
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_member_list.php",
+      data: {
+        empGroup: $("#idGroup").val(),
+        empNum: empDetails["empNum"],
+        empPos: empDetails["empPos"],
+        searchEmp: searchEmp,
+      },
+      dataType: "json",
+      success: function (response) {
+        // console.log("empsearch data: ", response);
+        const empsearch = response;
+        resolve(empsearch);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject(
+            "An unspecified error occurred while fetching Employee Search."
+          );
+        }
+      },
+    });
+  });
 }
 
 //PROJECT FUNCTIONS
