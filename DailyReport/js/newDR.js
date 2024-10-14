@@ -213,6 +213,7 @@ $(document).on("change", "#idItem", function () {
   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
   var itemID = $($(this).find("option:selected")).attr("item-id");
   $(".trgrp").remove();
+  $("#labell").remove();
   getLabel(itemID);
   disableInputs(projID, itemID);
   if (noMoreInputItems.includes(itemID)) {
