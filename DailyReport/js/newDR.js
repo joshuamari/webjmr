@@ -1342,10 +1342,10 @@ function hasJRD() {
 }
 function hasTOW() {
   var isDrawing = true;
-  // var projID = parseInt(
-  //   $($("#idProject").find("option:selected")).attr("proj-id")
-  // );
-  var projID = $("#idProject").val();
+  var projID = parseInt(
+    $($("#idProject").find("option:selected")).attr("proj-id")
+  );
+  // var projID = $("#idProject").val();
   var selGroup = $("#idGroup").val();
   isDrawing = !defaults.includes(projID) && projID;
   if (isDrawing) {
