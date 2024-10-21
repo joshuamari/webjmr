@@ -1,6 +1,7 @@
 <?php
 #region Functions
 
+#region Authentication
 function getLoginDetails($userhash)
 {
     global $connnew;
@@ -49,16 +50,9 @@ function checkAuthentication()
 
     return $result;
 }
-function getMHReportAccess($id)
-{
-    $permissionID = 3;
-    return checkAccess($permissionID, $id);
-}
-function alLGroupAccess($id)
-{
-    $permissionID = 51;
-    return checkAccess($permissionID, $id);
-}
+#endregion
+
+#region Authorization
 function checkAccess($permission_id, $employee_id)
 {
     global $connkdt;
@@ -72,10 +66,18 @@ function checkAccess($permission_id, $employee_id)
     }
     return $access;
 }
-function getGroups($empnum)
+function getMHReportAccess($id)
+{
+    $permissionID = 3;
+    return checkAccess($permissionID, $id);
+}
+#endregion
+
+#region Group Functions
+function getGroups($empnum, $permission_id)
 {
     global $connnew;
-    $allGroupAccess = alLGroupAccess($empnum);
+    $allGroupAccess = checkAccess($permission_id, $empnum);
     $myGroups = array();
     if (!$allGroupAccess) {
         $groupsQ = "SELECT `eg`.group_id,`gl`.abbreviation,`gl`.name FROM `employee_group` eg JOIN `group_list` gl ON `eg`.group_id=`gl`.id WHERE `employee_number` = :empnum ORDER BY `gl`.name";
@@ -108,16 +110,22 @@ function getGroups($empnum)
     }
     return $myGroups;
 }
-function stringify($string)
+function getGroupByID($groupid)
 {
-    $stringRet = $string;
-    if (strpos($string, "'")) {
-        $stringRet = str_replace("'", "&apos;", $string);
-    } else if (strpos($string, '"')) {
-        $stringRet = str_replace("'", "&quot;", $string);
+    global $connnew;
+    $grp = "";
+    $grpQ = "SELECT `abbreviation` FROM `group_list` WHERE `id`=:groupid";
+    $grpStmt = $connnew->prepare($grpQ);
+    $grpStmt->execute([":groupid" => $groupid]);
+    if ($grpStmt->rowCount() > 0) {
+        $grp = $grpStmt->fetchColumn();
     }
-    return $stringRet;
+    return $grp;
 }
+#endregion
+
+
+#region Date Functions
 function getFirstday($yearMonthValue, $cutOffValue)
 {
     $firstDay = date("Y-m-01", strtotime($yearMonthValue));
@@ -131,7 +139,6 @@ function getFirstday($yearMonthValue, $cutOffValue)
     }
     return $firstDay;
 }
-
 function getLastday($yearMonthValue, $cutOffValue, $firstd)
 {
     $lastDay = date("Y-m-16", strtotime($yearMonthValue));
@@ -148,16 +155,21 @@ function getLastday($yearMonthValue, $cutOffValue, $firstd)
     }
     return $lastDay;
 }
-function getGroupByID($groupid)
+#endregion
+
+
+#region text formatting
+function stringify($string)
 {
-    global $connnew;
-    $grp = "";
-    $grpQ = "SELECT `abbreviation` FROM `group_list` WHERE `id`=:groupid";
-    $grpStmt = $connnew->prepare($grpQ);
-    $grpStmt->execute([":groupid" => $groupid]);
-    if ($grpStmt->rowCount() > 0) {
-        $grp = $grpStmt->fetchColumn();
+    $stringRet = $string;
+    if (strpos($string, "'")) {
+        $stringRet = str_replace("'", "&apos;", $string);
+    } else if (strpos($string, '"')) {
+        $stringRet = str_replace("'", "&quot;", $string);
     }
-    return $grp;
+    return $stringRet;
 }
+#endregion
+
+
 #endregion
