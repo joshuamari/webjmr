@@ -20,11 +20,6 @@ if (!empty($_POST['searchEmployee'])) {
     $searchEmployee = $_POST['searchEmployee'];
     $searchEmpStatement = " AND fldName LIKE '%$searchEmployee%'";
 }
-// $searchSDate = NULL;
-// if (!empty($_POST['searchSDate'])) {
-//     $searchSDate = $_POST['searchSDate'];
-//     $searchStatement .= " AND pl.fldStartDate = '$searchSDate'";
-// }
 $searchSDate = NULL;
 if (!empty($_POST['searchSDate'])) {
     $searchSDate = $_POST['searchSDate'];

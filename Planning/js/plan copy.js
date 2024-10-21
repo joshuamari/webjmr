@@ -189,8 +189,7 @@ $(document).on("change", "#idEndDate", function () {
   $("#p7").text("");
   $(this).removeClass("border-danger");
   $(".grpbtn").prop("disabled", false);
-  // $("#singleInput").click();
-  //multiple planning input
+  $("#singleInput").click();
 });
 $(document).on("change", "#idEndDateEdit", function () {
   //select Date Event
@@ -481,44 +480,41 @@ $(document).on("change", "#filterJRD", function () {
   getPlans();
 });
 $(document).on("click", ".addEntry-btn", function () {
-  // $("#plannedBy").html(empDetails["empFName"] + " " + empDetails["empSName"]);
-  // $("#singleInput").click();
-  //multiple planning input
+  $("#plannedBy").html(empDetails["empFName"] + " " + empDetails["empSName"]);
+  $("#singleInput").click();
 });
-//multiple planning input
-// $(document).on("click", "#singleInput", function () {
-//   $(".single").removeClass("d-none");
-//   $(".mult").addClass("d-none");
-//   $(".totVal").text("");
-//   $(".tot").addClass("d-none");
-// });
-// $(document).on("click", "#multipleInput", function () {
-//   $(".single").addClass("d-none");
-//   $(".mult").removeClass("d-none");
-//   $(".tot").removeClass("d-none");
-//   $("#idMH").val("");
-//   createTH();
-// });
-//multiple planning input
-// $(document).on("change", "#excludeDays", function () {
-//   if ($(this).is(":checked")) {
-//     $(".weekend").find("input").attr("disabled", true).val("");
-//   } else {
-//     $(".weekend").find("input").attr("disabled", false);
-//   }
-//   computeTot("#inputRow input");
-// });
-// $(document).on("change", "#editexcludeDays", function () {
-//   if ($(this).is(":checked")) {
-//     $("#editPlanningEntry .weekend")
-//       .find("input")
-//       .attr("disabled", true)
-//       .val("");
-//   } else {
-//     $("#editPlanningEntry .weekend").find("input").attr("disabled", false);
-//   }
-//   computeTot("#editinputRow input");
-// });
+$(document).on("click", "#singleInput", function () {
+  $(".single").removeClass("d-none");
+  $(".mult").addClass("d-none");
+  $(".totVal").text("");
+  $(".tot").addClass("d-none");
+});
+$(document).on("click", "#multipleInput", function () {
+  $(".single").addClass("d-none");
+  $(".mult").removeClass("d-none");
+  $(".tot").removeClass("d-none");
+  $("#idMH").val("");
+  createTH();
+});
+$(document).on("change", "#excludeDays", function () {
+  if ($(this).is(":checked")) {
+    $(".weekend").find("input").attr("disabled", true).val("");
+  } else {
+    $(".weekend").find("input").attr("disabled", false);
+  }
+  computeTot("#inputRow input");
+});
+$(document).on("change", "#editexcludeDays", function () {
+  if ($(this).is(":checked")) {
+    $("#editPlanningEntry .weekend")
+      .find("input")
+      .attr("disabled", true)
+      .val("");
+  } else {
+    $("#editPlanningEntry .weekend").find("input").attr("disabled", false);
+  }
+  computeTot("#editinputRow input");
+});
 $(document).on("change", "#inputRow input", function () {
   $(".error").addClass("d-none");
 });
@@ -1244,27 +1240,26 @@ function addEntries() {
   var sdate = $("#idStartDate").val();
   var edate = $("#idEndDate").val();
   var mh = $("#idMH").val() * 60;
-  // var hasValue =
-  //   $("#inputRow input").filter(function () {
-  //     return $(this).val().trim() !== "";
-  //   }).length > 0;
-  // var mult = $("#multipleInput");
+  var hasValue =
+    $("#inputRow input").filter(function () {
+      return $(this).val().trim() !== "";
+    }).length > 0;
+  var mult = $("#multipleInput");
   var mgaKulang = [];
 
-  //multiple planning input
-  // if ($("#multipleInput").is(":checked")) {
-  //   if (!hasValue) {
-  //     $(".error").removeClass("d-none");
-  //     mgaKulang.push("MH");
-  //   }
-  // }
-  // if ($("#singleInput").is(":checked")) {
-  //   if (!mh || mh == 0) {
-  //     $("#p8").text("Please input man hour");
-  //     $("#idMH").addClass("border border-danger");
-  //     mgaKulang.push("MH");
-  //   }
-  // }
+  if ($("#multipleInput").is(":checked")) {
+    if (!hasValue) {
+      $(".error").removeClass("d-none");
+      mgaKulang.push("MH");
+    }
+  }
+  if ($("#singleInput").is(":checked")) {
+    if (!mh || mh == 0) {
+      $("#p8").text("Please input man hour");
+      $("#idMH").addClass("border border-danger");
+      mgaKulang.push("MH");
+    }
+  }
 
   if (!grp) {
     $("#p1").text("Please select group");
@@ -1436,7 +1431,7 @@ function resetEntry() {
   sequenceValidation();
   $(".grpbtn").prop("disabled", true);
   $("#yearRow, #monthRow, #dateRow, #inputRow").empty();
-  // $("#excludeDays").prop("checked", false); //multiple input planning comment muna
+  $("#excludeDays").prop("checked", false);
 }
 // function resetEditEntry() {
 //   //reset Inputs
@@ -1540,7 +1535,7 @@ function fillPlans(planString) {
     var buttons = $(this).find("button");
     var planner = $(this).attr("planner");
     console.log(planner);
-    if (planner != eid) {
+    if (planner !== eid) {
       buttons.prop("disabled", true);
     }
   });
@@ -1590,8 +1585,7 @@ function fillEditPlan(editDetails) {
   $("#idStartDateEdit").val(projStart).change();
   $("#idEndDateEdit").val(projEnd).change();
   $("#idMHEdit").val(projMH).change();
-  // $("#editPlannedBy").text(planner);
-  //multiple planning input
+  $("#editPlannedBy").text(planner);
   editcreateTH();
 }
 function updateStatus() {

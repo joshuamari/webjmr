@@ -62,8 +62,6 @@ function checkLogin() {
     success: function (data) {
       //ajax to check if user is logged in
       _empDetails = $.parseJSON(data);
-      console.log(_empDetails);
-
       if (Object.keys(_empDetails).length < 1) {
         window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
       }
