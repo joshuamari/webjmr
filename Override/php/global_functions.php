@@ -12,7 +12,8 @@ $devs = ['464', '510', '487'];
 $noMoreInputItemOfWorks = ['6', '10', '15', '17', '19', '21'];
 
 // Employee Position
-function getEmpPosition($empID) {
+function getEmpPosition($empID)
+{
   global $connnew;
   $getDesigQ = "SELECT `acronym` FROM `employee_list` AS `el`
     INNER JOIN `designation_list` AS `dl` ON `dl`.`id` = `el`.`designation`
@@ -24,23 +25,29 @@ function getEmpPosition($empID) {
 }
 
 // Shared Project/s
-function getSharedProjects($empID) {
+function getSharedProjects($empID)
+{
   global $connwebjmr;
   $sharedProjects = "";
   $spQ = "SELECT * FROM `project_share` WHERE `fldEmployeeNum` = '$empID'";
   $spStmt = $connwebjmr->prepare($spQ);
   $spStmt->execute([]);
-  if($spStmt->rowCount()>0){
-      $spArr=$spStmt->fetchAll();
-      $arrValues = array_column($spArr, "fldProject");
-      $implodeString = implode("','",array_values($arrValues));
-      $sharedProjects = "OR fldID IN ('" . $implodeString . "')";
+  if ($spStmt->rowCount() > 0) {
+    $spArr = $spStmt->fetchAll();
+    $arrValues = array_column($spArr, "fldProject");
+    $implodeString = implode("','", array_values($arrValues));
+    $sharedProjects = "OR fldProject IN ('" . $implodeString . "')";
   }
   return $sharedProjects;
 }
-
+//quick fix sa get projects lol
+function replaceSharedString($string)
+{
+  return ($pos = strpos($string, 'fldProject')) !== false ? substr_replace($string, 'fldID', $pos, strlen('fldProject')) : $string;
+}
 // Management Project/s
-function getManagementProjects() {
+function getManagementProjects()
+{
   global $connwebjmr;
   $mngProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Management'";
   $mngProjStmt = $connwebjmr->prepare($mngProjQ);
@@ -50,7 +57,8 @@ function getManagementProjects() {
 }
 
 // Solution Project/s
-function getSolutionProjects() {
+function getSolutionProjects()
+{
   global $connwebjmr;
   $solProjQ = "SELECT fldID FROM projectstable WHERE fldProject = 'Development, Analysis & IT'";
   $solProjStmt = $connwebjmr->prepare($solProjQ);
@@ -59,7 +67,8 @@ function getSolutionProjects() {
   return $solProjID;
 }
 
-function getGroup($grpNum) {
+function getGroup($grpNum)
+{
   global $connnew;
   $getGroupQ = "SELECT `abbreviation` FROM `group_list` WHERE `id` = :grpNum";
   $getGroupStmt = $connnew->prepare($getGroupQ);
@@ -68,7 +77,8 @@ function getGroup($grpNum) {
   return $grpAbbr;
 }
 
-function getTrainProjID() {
+function getTrainProjID()
+{
   global $connwebjmr;
   $trainProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Training'";
   $trainProjStmt = $connwebjmr->prepare($trainProjQ);
@@ -77,7 +87,8 @@ function getTrainProjID() {
   return $trainProjID;
 }
 
-function getLeaveID() {
+function getLeaveID()
+{
   global $connwebjmr;
   $leaveQ = "SELECT fldID FROM projectstable WHERE fldProject='Leave'";
   $leaveStmt = $connwebjmr->prepare($leaveQ);
@@ -86,20 +97,22 @@ function getLeaveID() {
   return $leaveID;
 }
 
-function getDefaults() {
+function getDefaults()
+{
   global $connwebjmr;
   $defaults = array();
   $defaultsQ = "SELECT `fldId` FROM `projectstable` WHERE fldDirect = 0 AND fldDelete = 0";
   $defaultStmt = $connwebjmr->prepare($defaultsQ);
   $defaultStmt->execute([]);
   $arrResult = $defaultStmt->fetchAll();
-    foreach($arrResult as $res) {
-      $defaults[] = (int)$res['fldId'];
-    }
+  foreach ($arrResult as $res) {
+    $defaults[] = (int)$res['fldId'];
+  }
   return $defaults;
 }
 
-function getkiaProjID() {
+function getkiaProjID()
+{
   global $connwebjmr;
   $kiaProjQ = "SELECT fldID FROM projectstable WHERE fldProject = 'KDT Internal Activities'";
   $kiaProjStmt = $connwebjmr->prepare($kiaProjQ);
@@ -108,7 +121,8 @@ function getkiaProjID() {
   return $kiaProjID;
 }
 
-function getOneBUTrainerID() {
+function getOneBUTrainerID()
+{
   global $connwebjmr;
   $obuTrainQ = "SELECT fldID FROM itemofworkstable WHERE fldItem='Trainer for One BU Participants'";
   $obuTrainStmt = $connwebjmr->prepare($obuTrainQ);
@@ -117,7 +131,8 @@ function getOneBUTrainerID() {
   return $oneBUTrainerID;
 }
 
-function getOtherProjID() {
+function getOtherProjID()
+{
   global $connwebjmr;
   $otherProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Business Trip & Other'";
   $otherProjStmt = $connwebjmr->prepare($otherProjQ);
@@ -126,7 +141,8 @@ function getOtherProjID() {
   return $otherProjID;
 }
 
-function checkAccess($empNum) {
+function checkAccess($empNum)
+{
   global $connkdt;
   $access = FALSE;
   $permissionID = 50;
@@ -135,7 +151,7 @@ function checkAccess($empNum) {
   $userStmt->execute([":empID" => $empNum, ":permissionID" => $permissionID]);
   $userCount = $userStmt->fetchColumn();
   if ($userCount > 0) {
-      $access = TRUE;
+    $access = TRUE;
   }
   return $access;
 }

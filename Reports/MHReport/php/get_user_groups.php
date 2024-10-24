@@ -15,7 +15,7 @@ $result = [
     'message' => 'No access',
 ];
 $login = checkAuthentication();
-$mhAccessID = 3;
+$mhAllGroupAccess = 51;
 #endregion
 
 #region get data values
@@ -30,7 +30,7 @@ try {
     }
     $ac = getMHReportAccess($login['data']['id']);
     if ($ac) {
-        $result['data'] = getGroups($login['data']['id']);
+        $result['data'] = getGroups($login['data']['id'], $mhAllGroupAccess);
         $result['isSuccess'] = TRUE;
         $result['message'] = "Groups fetched";
     }
