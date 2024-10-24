@@ -840,7 +840,7 @@ function fillProjects(projs, type) {
     $.each(projs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
-        .text(item.projName)
+        .text(`${item.projName}${item.groupAppend}`)
         .attr("proj-id", item.id);
       projSelect.append(option);
     });
@@ -851,7 +851,7 @@ function fillProjects(projs, type) {
     $.each(projs, function (index, item) {
       var option = $("<option>")
         .attr("value", item.id)
-        .text(item.projName)
+        .text(`${item.projName}${item.groupAppend}`)
         .attr("proj-id", item.id);
       editProjSel.append(option);
     });
