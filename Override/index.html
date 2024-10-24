@@ -411,6 +411,48 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="modal fade"
+      id="copyEntriesConfirmation"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <!-- include in class (text-light text-center) -->
+            <h1 class="modal-title fs-2" id="staticBackdropLabel2">
+              <!-- include in i class (text-light) -->
+              <i class="bx bxs-info-circle px-2"></i>Copying Entries
+            </h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body fs-4 text-center p-lg-5 p-2">
+            Do you want to Copy the Entries from
+            <span class="copy-date-data" id="copy-date-data">01/01/01</span>?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-copyCancel">Cancel</button>
+            <button
+              type="button"
+              class="btn btn-copyConfirm"
+              id="btn-updateEntry"
+            >
+              Copy Entries
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!--#endregion-->
 
     <!--#region Planning Modal -->
