@@ -56,11 +56,11 @@ $solProjID = getSolutionProjects();
 $mngProjID = getManagementProjects();
 
 // Shared Project/s
-$sharedProjects = getSharedProjects($input['empNum']);
+$sharedProjects = replaceSharedString(getSharedProjects($input['empNum']));
 
-$kdtw = (!in_array($grpAbbr,$KDTWAccess)) ? " AND fldID != '$solProjID'" : "";
+$kdtw = (!in_array($grpAbbr, $KDTWAccess)) ? " AND fldID != '$solProjID'" : "";
 
-$mngStatement = (!in_array($empDesig,$managementPositions) && !in_array($input['empNum'],$devs)) ? " AND fldID != '$mngProjID'" : "";
+$mngStatement = (!in_array($empDesig, $managementPositions) && !in_array($input['empNum'], $devs)) ? " AND fldID != '$mngProjID'" : "";
 #endregion
 
 #region MAIN QUERY
@@ -69,33 +69,32 @@ try {
                WHERE (fldGroup IS NULL OR fldGroup = :grpAbbr $sharedProjects) AND fldActive = 1 AND fldDelete = 0 $kdtw $mngStatement ORDER BY fldDirect DESC, fldPriority, fldId";
   $projectStmt = $connwebjmr->prepare($projectQ);
   $projectStmt->execute([":grpAbbr" => $grpAbbr]);
-  if($projectStmt->rowCount() > 0) {
+  if ($projectStmt->rowCount() > 0) {
     $partialres = $projectStmt->fetchAll();
     foreach ($partialres as $proj) {
       $output = array();
       $groupAppend = "";
-      if($proj['group'] != $grpAbbr AND $proj['group'] != NULL) {
+      if ($proj['group'] != $grpAbbr and $proj['group'] != NULL) {
         $groupAppend = "(" . $proj['group'] . ")";
       }
-        $projName = $proj['projectName'];
-        $projID = $proj['id'];
+      $projName = $proj['projectName'];
+      $projID = $proj['id'];
 
-        $output += ["id" => $projID];
-        $output += ["projName" => $projName];
-        $output += ["groupAppend" => $groupAppend];
-        array_push($projects,$output);
+      $output += ["id" => $projID];
+      $output += ["projName" => $projName];
+      $output += ["groupAppend" => $groupAppend];
+      array_push($projects, $output);
     }
     $result['result'] = $projects;
     $result['isSuccess'] = TRUE;
     $result['message'] = "Successfully retrieved";
-  } else{
+  } else {
     $result['isSuccess'] = FALSE;
     $result['message'] = "Failed to retrieve data";
   }
-  
 } catch (Exception $e) {
-	$result["isSuccess"] = FALSE;
-	$result['message'] =  "Connection failed: " . $e->getMessage();
+  $result["isSuccess"] = FALSE;
+  $result['message'] =  "Connection failed: " . $e->getMessage();
 }
 #endregion
 
