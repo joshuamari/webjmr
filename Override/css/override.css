@@ -311,6 +311,43 @@ body {
   border: 2px solid var(--red1);
 }
 
+/* Confirm Copy Entries Modal */
+
+.copy-date-data {
+  font-weight: 600;
+  color: var(--blue1);
+}
+
+.btn-copyCancel {
+  border: 2px solid var(--red3);
+  color: var(--red3);
+}
+.btn-copyCancel:hover {
+  border: 2px solid var(--red2);
+  background: var(--red2);
+  color: var(--magnolia);
+}
+.modal .modal-footer .btn-copyCancel:active {
+  border: 2px solid var(--red4);
+  background: var(--red4);
+  color: var(--magnolia);
+}
+.btn-copyConfirm {
+  /* background: var(--blue3); */
+  color: var(--blue3);
+  border: 2px solid var(--blue3);
+}
+.btn-copyConfirm:hover {
+  color: var(--magnolia);
+  border: 2px solid var(--blue4);
+  background: var(--blue4);
+}
+.modal .modal-footer .btn-copyConfirm:active {
+  background: var(--blue2);
+  color: var(--magnolia);
+  border: 2px solid var(--blue2);
+}
+
 /* sidebar */
 
 .sidebar {

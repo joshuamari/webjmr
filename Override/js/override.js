@@ -165,6 +165,13 @@ $(document).on("click", ".btn-Edelete", function () {
   deleteEntry(delTRID);
   $(this).closest(".modal").find(".btn-close").click();
 });
+$(document).on("click", ".btn-copyCancel", function () {
+  $(this).closest(".modal").find(".btn-close").click();
+});
+$(document).on("click", ".btn-copyConfirm", function () {
+  copyEntries();
+  $(this).closest(".modal").find(".btn-close").click();
+});
 
 //Remove Red Borders Errors
 $(document).on(
@@ -534,11 +541,13 @@ $(document).on("click", "#delBut", function () {
 $(document).on("click", "#idCopy", function () {
   var copyfrom = $("#idCopyDate").val();
   var empName = $($("#idEmployee").find("option:selected")).attr("emp-id");
+  $("#copy-date-data").html(copyfrom);
 
   if (!copyfrom || !empName) {
     alert("Please Select an Employee & a Date to Copy From");
+  } else {
+    $("#copyEntriesConfirmation").modal("show");
   }
-  copyEntries();
 });
 
 //disabling inputs as per sequence
