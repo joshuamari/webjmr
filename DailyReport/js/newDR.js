@@ -98,6 +98,11 @@ $(document).ready(function () {
   });
   //#endregion
   $(".cs-loader").fadeOut(1000);
+  if (empDetails["hasOverride"]) {
+    $(".override-btn").show();
+  } else{
+    $(".override-btn").hide();
+  }
 });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY

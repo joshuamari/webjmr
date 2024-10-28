@@ -1,5 +1,6 @@
 <?php
 require_once '../../dbconn/dbconnectkdtph.php'; //database connection
+require_once './global_var.php';
 $output=array();
 $userHash='';
 if(isset($_COOKIE["userID"])){
@@ -24,6 +25,7 @@ if(!empty($userHash)){
             $output+=["empPos"=>$empdeets['fldDesig']];
         } 
     }
+    $output+=["hasOverride"=>checkAccess($userLogin)];
 }
 echo json_encode($output);
 ?>

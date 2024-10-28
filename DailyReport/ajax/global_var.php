@@ -58,3 +58,18 @@ function getDefaults() {
     }
   return $defaults;
 }
+
+function checkAccess($empNum)
+{
+  global $connkdt;
+  $access = FALSE;
+  $permissionID = 50;
+  $userQ = "SELECT COUNT(*) FROM user_permissions WHERE permission_id = :permissionID AND fldEmployeeNum = :empID";
+  $userStmt = $connkdt->prepare($userQ);
+  $userStmt->execute([":empID" => $empNum, ":permissionID" => $permissionID]);
+  $userCount = $userStmt->fetchColumn();
+  if ($userCount > 0) {
+    $access = TRUE;
+  }
+  return $access;
+}
