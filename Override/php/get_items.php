@@ -56,7 +56,7 @@ if($projID == $mngProjID){
             $mngStatement = " AND fldID = 1";
             break;
         case 'DM':
-            if(in_array($empGroup,$KDTWAccess)){
+            if(in_array($grpAbbr,$KDTWAccess)){
                 $mngStatement = " AND fldID = 2";
             }
             else{

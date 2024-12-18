@@ -41,13 +41,13 @@ $result = [
     die(json_encode($result));
   }
   #endregion
-  
+
   #region ADDITIONAL CONDITION
   $grpAbbr = getGroup($input['grpNum']);
   $projID = (!empty($_POST['projID'])) ? $_POST['projID'] : '';
   
   $defaultProjID = getDefaults();
-  if(!in_array($projID,$defaultProjID)){
+  if(!empty($_POST['projID']) && !in_array($projID,$defaultProjID)){
     $projGroupQ = "SELECT fldGroup FROM projectstable WHERE fldID = :projID";
     $projGroupStmt = $connwebjmr->prepare($projGroupQ);
     $projGroupStmt->execute([":projID" => $projID]);
@@ -69,12 +69,11 @@ $result = [
   
   #region Main Query
   try {
-    $memQ = "SELECT `fldEmployeeNum` AS `id`, CONCAT(`fldFirstName`, ' ', `fldSurname`) AS `name` FROM emp_prof WHERE fldEmployeeNum != :empNum AND (fldGroup = :empGrp :sharedEmp) AND fldActive = 1 AND fldNick != ''";
+    $memQ = "SELECT `fldEmployeeNum` AS `id`, CONCAT(`fldFirstName`, ' ', `fldSurname`) AS `name` FROM emp_prof WHERE fldEmployeeNum != :empNum AND (fldGroup = :empGrp {$sharedEmp}) AND fldActive = 1 AND fldNick != ''";
     $memStmt=$connkdt->prepare($memQ);
     $memStmt->execute([
       ":empNum" => $input['empNum'],
-      "empGrp" => $grpAbbr,
-      ":sharedEmp" => $sharedEmp,
+      ":empGrp" => $grpAbbr,
     ]);
     if($memStmt->rowCount() > 0) {
       $result['result'] = $memStmt->fetchAll();

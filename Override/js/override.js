@@ -517,7 +517,7 @@ $(document).on("click", "#idAdd", function () {
 //Entry Table Buttons
 $(document).on("click", "#dupeBut", function () {
   var entryID = $(this).closest("tr").attr("entry-id");
-  const entryRow = entryArr.filter((entry) => entry.id === entryID);
+  const entryRow = entryArr.filter((entry) => entry.id == entryID);
   editGrpID = entryRow[0].groupID;
   dupeEntry(entryRow);
 });
@@ -525,7 +525,7 @@ $(document).on("click", "#editBut", function () {
   var empText = $("#idEmployee option:selected").text();
 
   var entryID = $(this).closest("tr").attr("entry-id");
-  const entryRow = entryArr.filter((entry) => entry.id === entryID);
+  const entryRow = entryArr.filter((entry) => entry.id == entryID);
   editTRID = entryID;
 
   fillEditFields(entryRow);
@@ -1662,17 +1662,17 @@ function saveEdit() {
     mgaKulang.push("ITEM");
   }
   if (
-    (!$("#edit-selJRD").hasClass("d-none") && jobreq == 0) ||
-    (!$("#edit-selJRD").hasClass("d-none") && jobreq == null)
+    (!$("#edit-selJRD").hasClass("d-none") && jobreq === 0) ||
+    (!$("#edit-selJRD").hasClass("d-none") && jobreq === null)
   ) {
     $(".editInputError").removeClass("hidden").addClass("block");
     $("#edit-selJRD").addClass("border border-danger").addClass("bg-err");
-    mgaKulang.push("JRD");
+    mgaKulang.push("JRD1");
   }
   if (!jobreq && proj != leaveID && proj != otherID) {
     $(".editInputError").removeClass("hidden").addClass("block");
     $("#edit-selJRD").addClass("border border-danger").addClass("bg-err");
-    mgaKulang.push("JRD");
+    mgaKulang.push("JRD2");
   }
   if (revision) {
     revision = 1;
@@ -2087,6 +2087,11 @@ function fillEditFields(editData) {
             $("#edit-newMin").val(newmins);
             $("#edit-selMHType").val(mhtype).change();
           }
+          else{
+            $("#edit-newHour").val(newhrs);
+            $("#edit-newMin").val(newmins);
+            $("#edit-selMHType").val(mhtype).change();
+          }
 
           if (tutridi) {
             $(`#${tutridi}`).prop("checked", true);
@@ -2283,18 +2288,18 @@ function fillEntries(entryList) {
       $.each(currDayEntries, function (index, item) {
         item.duration = (item.duration / 60).toFixed(2);
         const mhtyp = ["Regular", "OT", "Leave"];
-        switch (item.MHType) {
-          case "0":
+        switch (parseInt(item.MHType)) {
+          case parseInt("0"):
             regCount += parseFloat(item.duration);
             break;
-          case "1":
+          case parseInt("1"):
             otCount += parseFloat(item.duration);
             break;
-          case "2":
+          case parseInt("2"):
             lvCount += parseFloat(item.duration);
             break;
           default:
-            alert("alert get entries");
+            // alert("alert get entries");
             break;
         }
         var row = $(`<tr entry-id=${item.id}>`);

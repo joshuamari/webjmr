@@ -17,7 +17,7 @@ else{
 #region main query
 try {
   $memberListQ = "SELECT `emplist`.`id`, CONCAT(`emplist`.`surname`, ', ', `emplist`.`firstname`) AS `fullName` FROM `employee_list` AS `emplist`
-                  WHERE `emplist`.`group_id` = :grpNum AND (`emp_status` = 1 AND `resignation_date` = '0000-00-00')";
+                  WHERE `emplist`.`group_id` = :grpNum AND (`emp_status` = 1 AND (`resignation_date` = '0000-00-00' OR `resignation_date` IS NULL))";
   $memberListStmt = $connnew->prepare($memberListQ);
   $memberListStmt->execute([":grpNum"=>$grpNum]);
   if($memberListStmt->rowCount() > 0) {
