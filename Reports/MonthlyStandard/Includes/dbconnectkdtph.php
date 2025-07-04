@@ -34,8 +34,15 @@ try {
   foreach ($actArr as $acts) {
     array_push($mgaACT, $acts['fldEmployeeNum']);
   }
+  $mgaADM = array();
+  $admQ = "SELECT fldEmployeeNum FROM emp_prof WHERE fldGroup IN ('ADM') AND fldActive=1";
+  $admStmt = $connkdt->query($admQ);
+  $admArr = $admStmt->fetchAll();
+  foreach ($admArr as $adms) {
+    array_push($mgaADM, $adms['fldEmployeeNum']);
+  }
   $reportAllGroupAccess = [];
-  $reportAllGroupAccess = array_merge($gods, $itMembers, $mgaSM, $mgaACT);
+  $reportAllGroupAccess = array_merge($gods, $itMembers, $mgaSM, $mgaACT, $mgaADM);
 } catch (PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }

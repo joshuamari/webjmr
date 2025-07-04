@@ -1,15 +1,5 @@
 //#region GLOBALS
-switch (document.location.hostname) {
-  case "kdt-ph":
-    rootFolder = "//kdt-ph/";
-    break;
-  case "localhost":
-    rootFolder = "//localhost/";
-    break;
-  default:
-    rootFolder = "//kdt-ph/";
-    break;
-}
+const rootFolder = `//${document.location.hostname}`;
 
 const today = new Date();
 //#endregion
@@ -89,29 +79,28 @@ function getGroupList() {
 //#region for queries
 
 function queries() {
-  $.getJSON("js/testdata-KDT.json",
-    function (data) {
-      $.each(data, function (empNum, empDets) {
+  $.getJSON("js/testdata-KDT.json", function (data) {
+    $.each(data, function (empNum, empDets) {
+      const totalOT =
+        empDets.hours.regular_OT +
+        empDets.hours.rdOT +
+        empDets.hours.rdOT_excess +
+        empDets.hours.legal +
+        empDets.hours.legal_excess +
+        empDets.hours.legal +
+        empDets.hours.rdOT_legal_excess +
+        empDets.hours.special +
+        empDets.hours.special_excess +
+        empDets.hours.rdOT_special +
+        empDets.hours.rdOT_special_excess;
 
-        const totalOT =
-          empDets.hours.regular_OT +
-          empDets.hours.rdOT +
-          empDets.hours.rdOT_excess +
-          empDets.hours.legal +
-          empDets.hours.legal_excess +
-          empDets.hours.legal +
-          empDets.hours.rdOT_legal_excess +
-          empDets.hours.special +
-          empDets.hours.special_excess +
-          empDets.hours.rdOT_special +
-          empDets.hours.rdOT_special_excess;
+      const totalHours =
+        totalOT +
+        empDets.hours.regular_hours +
+        empDets.hours.paid_leave +
+        empDets.hours.unpaid_leave;
 
-        const totalHours = totalOT +
-          empDets.hours.regular_hours +
-          empDets.hours.paid_leave +
-          empDets.hours.unpaid_leave;
-
-        $('#acctBody').append(`
+      $("#acctBody").append(`
         <tr class="emp_row" emp_num="${empNum}">
         <td>${empNum}</td>
         <td>${empDets.empName}</td>
@@ -132,18 +121,17 @@ function queries() {
         <td>${empDets.hours.rdOT_special}</td>
         <td>${empDets.hours.rdOT_special_excess}</td>
         </tr>`);
-      });
-    }
-  );
+    });
+  });
 }
 
 //#endregion
 
-$(document).on('change','#selLoc',function(){
-  console.log($(this).val())
-  if($(this).val() == "Overseas"){
-    $('#loc-head').show();
-  }else{
-    $('#loc-head').hide();
+$(document).on("change", "#selLoc", function () {
+  console.log($(this).val());
+  if ($(this).val() == "Overseas") {
+    $("#loc-head").show();
+  } else {
+    $("#loc-head").hide();
   }
 });

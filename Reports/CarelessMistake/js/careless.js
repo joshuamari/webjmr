@@ -1,15 +1,5 @@
 //#region GLOBALS
-switch (document.location.hostname) {
-  case "kdt-ph":
-    rootFolder = "//kdt-ph/";
-    break;
-  case "localhost":
-    rootFolder = "//localhost/";
-    break;
-  default:
-    rootFolder = "//kdt-ph/";
-    break;
-}
+const rootFolder = `//${document.location.hostname}`;
 var _empDetails = [];
 var _entries = [];
 var _tows = ["New", "Kmod", "Mkdt", "Mkhi", "Chk", "Cal", "Doc", "Other"];
