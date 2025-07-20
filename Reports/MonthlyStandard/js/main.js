@@ -6,6 +6,7 @@ var allEmployees = {};
 
 const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
+const holidays = ["2025-07-04", "2025-07-18"];
 const today = new Date();
 $("#monthSel").val(
   `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
@@ -18,7 +19,6 @@ const onlyUnique = (value, index, self) => {
 
 // const members = [
 //   { empNum: "464", empName: "Coquia, Joshua Mari" },
-//   { empNum: "465", empName: "Petate, Felix Edwin" },
 //   { empNum: "487", empName: "Medrano, Collene Keith" }
 // ];
 
@@ -403,6 +403,7 @@ function fillLocations(locs) {
   $("#locSel").append(addString);
 }
 //#region table creation
+
 function createTables(ymVal, useAmsCache = false) {
   _grpProj = [];
   _grpOT = [];
@@ -447,6 +448,7 @@ function createTables(ymVal, useAmsCache = false) {
               generateMainTable(allEmployees, getOGP);
               generateSubTable(allEmployees);
               colorYellow();
+              colorHolidays(holidays);
               colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
               addWidthtoGroupTable();
             }
@@ -633,6 +635,7 @@ function generateRegularHours(
     ams[padZero(x)];
 
     let cellColor = "rgb(255, 255, 0)";
+    // let cellColor = "";
     if (includeColor.totalHours && ams[padZero(x)]) {
       cellColor = getTotalHourColor(
         totalHours[padZero(x)],
@@ -647,12 +650,22 @@ function generateRegularHours(
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"</td>
   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255, 255, 0);">Total Hours</td>
   ${totalHourCells}
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: rgb(255, 255, 0);" data-b-a-s="thin" data-a-h="center">${
     monthTotalHours["totalHours"] ? monthTotalHours["totalHours"] : "0"
   }</td>
 
   </tr>
   </tr>`;
+  // htmlString += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="tTot"employee-number="${employeeId}" >
+  // <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center"</td>
+  // <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="">Total Hours</td>
+  // ${totalHourCells}
+  // <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${
+  //   monthTotalHours["totalHours"] ? monthTotalHours["totalHours"] : "0"
+  // }</td>
+
+  // </tr>
+  // </tr>`;
   return { regularHourCells: htmlString, totalHours };
 }
 function generateOtHours(
@@ -889,11 +902,14 @@ function generateAMS(
   leavesData,
   otEntries
 ) {
+  console.log(regularHourEntries);
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
   for (let x = 1; x <= _maxDays; x++) {
     let cellColor = "";
+    let excelColor = "";
+    let title = "";
     if (amsLogs[padZero(x)] && amsLogs[padZero(x)]["hours"] !== undefined) {
       totalAmsMonth += amsLogs[padZero(x)]["hours"];
       cellColor = getAMSEntryColor(
@@ -906,27 +922,53 @@ function generateAMS(
       //No ams entry
       const location = $("#locSel").val();
       if (
-        (location === "WFH" || location === "KDT/WFH" || location === "KDT") &&
+        (location === "KDT/WFH" || location === "KDT") &&
         regularHourEntries[padZero(x)] !== undefined
       ) {
         //Not Dispatch
         if (regularHourEntries[padZero(x)] !== undefined) {
           cellColor = "#ff0000";
+          excelColor = "ff0000";
+          title = "invalid";
         }
+      } else if (
+        location === "WFH" &&
+        regularHourEntries[padZero(x)] !== undefined
+      ) {
+        cellColor = "#fda5d6";
+        excelColor = "fda5d6";
+        title = "WFH";
+      } else if (
+        location === "HWFH" &&
+        regularHourEntries[padZero(x)] !== undefined
+      ) {
+        cellColor = "#c8aff1";
+        // excelColor = "919cec";
+        excelColor = "c8aff1";
+        title = "HWFH";
       } else {
+        //Dispatch
         if (regularHourEntries[padZero(x)] !== undefined) {
-          cellColor = "#c5976a";
+          cellColor = "#f8d1bb";
+          excelColor = "f8d1bb";
+          title = "Dispatch";
         }
       }
     }
 
-    amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: ${cellColor};"  data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+    amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: ${cellColor};"  
+    data-fill-color="${excelColor}" data-b-a-s="thin" data-a-h="center" dayVal="${x}" title="${title}">${
       amsLogs[padZero(x)] ? amsLogs[padZero(x)]["hours"] : ""
     }</td>`;
   }
+  // amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
+  // <td></td>
+  // <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255,255,0);">AMS</td>
+  //   ${amsLogsCells}
+  //   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
   amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
   <td></td>  
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255,255,0);">AMS</td>
+  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" >AMS</td>
     ${amsLogsCells}
     <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
   return amsLogsSection;
@@ -1519,16 +1561,17 @@ function getTotalHourColor(totalHour, amsHour, otHour) {
   return "rgb(255, 255, 0)";
 }
 function colorYellow() {
-  var myClass = [
-    `oTot`,
-    `lRow`,
-    `lTot`,
-    `gtTot`,
-    `goTot`,
-    `glRow`,
-    `glTot`,
-    "amsRowLabel",
-  ];
+  // var myClass = [
+  //   `oTot`,
+  //   `lRow`,
+  //   `lTot`,
+  //   `gtTot`,
+  //   `goTot`,
+  //   `glRow`,
+  //   `glTot`,
+  //   "amsRowLabel",
+  // ];
+  var myClass = [`tTot`];
   myClass.forEach((element) => {
     $(`.${element}`).each(function () {
       for (let x = 1; x < $(this).children().length; x++) {
@@ -1539,16 +1582,53 @@ function colorYellow() {
     });
   });
 }
+function colorHolidays(filteredHolidayArray) {
+  // Extract the day numbers from the holiday dates
+  const holidayDays = filteredHolidayArray.map((dateStr) =>
+    parseInt(dateStr.split("-")[2], 10)
+  );
+
+  const mySelectors = [
+    `#mainThead`,
+    `#subThead`,
+    `.pRow`,
+    `.gpRow`,
+    `.oRow`,
+    `.goRow`,
+    `.tTot`,
+    `.oTot`,
+    `.lRow`,
+    `.lTot`,
+    `.gtTot`,
+    `.goTot`,
+    `.glRow`,
+    `.glTot`,
+    `.amsRow`,
+  ];
+
+  mySelectors.forEach((selector) => {
+    $(selector).each(function () {
+      for (let x = 2; x < $(this).children().length; x++) {
+        const dayNum = parseInt($($("#mainThead").children()[x]).text(), 10);
+        if (holidayDays.includes(dayNum)) {
+          $($(this).children()[x])
+            .attr("data-fill-color", "ffcccc")
+            .css("background-color", "#ffcccc"); // light red
+        }
+      }
+    });
+  });
+}
 
 function colorWeekends(year, month) {
   _sundays = getSundays(year, month);
   _saturdays = getSaturdays(year, month);
   for (let x = 2; x < $(`#mainThead`).children().length; x++) {
     if (_sundays.includes(x - 1)) {
-      $($(`#mainThead`).children()[x]).attr("data-fill-color", "00ff00");
+      $($(`#mainThead`).children()[x]).attr("data-fill-color", "b9f8cf");
     }
     if (_saturdays.includes(x - 1)) {
-      $($(`#mainThead`).children()[x]).attr("data-fill-color", "ccff99");
+      $($(`#mainThead`).children()[x]).attr("data-fill-color", "b9f8cf");
     }
   }
   var mySelectors = [
@@ -1573,13 +1653,13 @@ function colorWeekends(year, month) {
       for (let x = 2; x < $(this).children().length; x++) {
         if (_sundays.includes(x - 1)) {
           $($(this).children()[x])
-            .attr("data-fill-color", "00ff00")
-            .css("background-color", "#00ff00");
+            .attr("data-fill-color", "b9f8cf")
+            .css("background-color", "#b9f8cf");
         }
         if (_saturdays.includes(x - 1)) {
           $($(this).children()[x])
-            .attr("data-fill-color", "ccff99")
-            .css("background-color", "#ccff99");
+            .attr("data-fill-color", "b9f8cf")
+            .css("background-color", "#b9f8cf");
         }
       }
     });
