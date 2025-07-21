@@ -25,6 +25,15 @@ $yearMonth = date("Y-m");
 if (!empty($_POST["yearMonth"])) {
     $yearMonth = $_POST["yearMonth"];
 }
+$location = 1;
+if(!empty($_POST["location"])){
+    $location = $_POST["location"];
+}
+if($location == -1 || $location == 8 || $location == 2 || $location == 0){
+    $location = 1;
+}
+$holidates=[];
+getWeekendDates($yearMonth,$location);
 $result = array();
 #endregion
 
@@ -61,8 +70,12 @@ try {
                     $hours += 0.5;
                 }
             } else {
-                $new_in = checkStart($in_time, $location, $currentDay);
-
+                if(in_array($day,$holidates)){
+                    $new_in = $in_time;
+                } else{
+                    $new_in = checkStart($in_time, $location, $currentDay);
+                }
+                
                 $new_in_timestamp = strtotime($currentDay . " " . $new_in);
 
                 if ($new_in !== NULL) {
@@ -78,7 +91,9 @@ try {
             } else {
                 if ($location == "2") {
                     $amsArray[$empid][$day]["locationName"] = "WFH";
-                } else {
+                } else if($location == "8"){
+                    $amsArray[$empid][$day]["locationName"] = "HWFH";
+                }else {
                     $amsArray[$empid][$day]["locationName"] = "Unknown";
                 }
             }
@@ -200,6 +215,45 @@ function getHalfend($location)
     }
     return $halfday;
 }
+function isWorkDay($selDate, $loc)
+{
+    global $connkdt;
+    $isWorkday = true;
 
+    if (date('N', strtotime($selDate)) >= 6) {
+        return false;
+    }
+
+    $workDayQ = "SELECT fldHolidayType FROM kdtholiday WHERE fldDate = :selDate AND fldLocation = :loc";
+    $stmt = $connkdt->prepare($workDayQ);
+    $stmt->execute([
+        ":selDate" => $selDate,
+        ":loc" => $loc
+    ]);
+
+    if ($stmt->rowCount() > 0) {
+        $holidayType = $stmt->fetchColumn();
+        return $holidayType == "2";
+    }
+
+    return $isWorkday;
+}
+
+function getWeekendDates($yearMonth, $loc)
+{
+    global $holidates;
+    $holidates = []; 
+
+    $current = strtotime(date("Y-m-01", strtotime($yearMonth)));
+    $end = strtotime(date("Y-m-t", strtotime($yearMonth)));
+
+    while ($current <= $end) {
+        $dateStr = date("Y-m-d", $current);
+        if (!isWorkDay($dateStr, $loc)) {
+            $holidates[] = (int)date("d", $current); // push only the day (1–31)
+        }
+        $current = strtotime('+1 day', $current);
+    }
+}
 #endregion
 echo json_encode($result, JSON_PRETTY_PRINT);

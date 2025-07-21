@@ -40,18 +40,20 @@ checkLogin()
       _empDetails = emp;
       msAccess();
       $(document).ready(function () {
-        Promise.all([getGroupList(), getLocations(),fetchHolidays()]).then(([grps, locs,hols]) => {
-          fillGroups(grps);
-          getEmployeeList().then((emplist) => {
-            if (emplist) {
-              emplist.map(fillMembers);
+        Promise.all([getGroupList(), getLocations(), fetchHolidays()]).then(
+          ([grps, locs, hols]) => {
+            fillGroups(grps);
+            getEmployeeList().then((emplist) => {
+              if (emplist) {
+                emplist.map(fillMembers);
+              }
+            });
+            global_holidays = hols;
+            if (locs) {
+              fillLocations(locs);
             }
-          });
-          global_holidays=hols;
-          if (locs) {
-            fillLocations(locs);
           }
-        });
+        );
       });
     } else {
       window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
@@ -75,9 +77,9 @@ $(document).on("change", "#monthSel", function () {
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
   $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
-  fetchHolidays().then(function(holidays) {
-  global_holidays = holidays;
-});
+  fetchHolidays().then(function (holidays) {
+    global_holidays = holidays;
+  });
 });
 $(document).on("change", "#buSel", function () {
   // $.ajaxSetup({ async: false });
@@ -156,6 +158,20 @@ $(document).on("change", "#locSel", function () {
 
 //#region FUNCTIONS
 function checkLogin() {
+  // $.ajaxSetup({ async: false });
+  // $.ajax({
+  //   url: "Includes/check_login.php",
+  //   success: function (data) {
+  //     //ajax to check if user is logged in
+  //     _empDetails = $.parseJSON(data);
+
+  //     if (Object.keys(_empDetails).length < 1) {
+  //       window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
+  //     }
+  //     msAccess();
+  //   },
+  // });
+  // $.ajaxSetup({ async: true });
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -164,6 +180,13 @@ function checkLogin() {
       success: function (data) {
         const empdetails = data;
         resolve(empdetails);
+        // //ajax to check if user is logged in
+        // _empDetails = $.parseJSON(data);
+
+        // if (Object.keys(_empDetails).length < 1) {
+        //   window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
+        // }
+        // msAccess();
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -299,6 +322,21 @@ function getEmployeeList() {
   const grpSel = $("#buSel").val();
   const cutOff = $(`#CO`).val();
   $("#members-list").empty();
+  // $.post(
+  //   "ajax/get_emplist.php",
+  //   {
+  //     monthSel: selDate,
+  //     groupSel: grpSel,
+  //     getHalfSel: cutOff,
+  //   },
+  //   function (data) {
+  //     _emplist = $.parseJSON(data);
+  //     _emplist.map(fillMembers);
+  //     _selectedMembers = _selectedMembers.filter((item) =>
+  //       _emplist.some((myItem) => myItem.empNum === item)
+  //     );
+  //   }
+  // );
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -362,7 +400,9 @@ function getLocations() {
   });
 }
 function fillLocations(locs) {
-  $("#locSel").html(`<option loc-id=0>KDT/WFH</option><option loc-id='-1'>KDT/HWFH</option>`);
+  $("#locSel").html(
+    `<option loc-id=0>KDT/WFH</option><option loc-id='-1'>KDT/HWFH</option>`
+  );
   $.each(locs, function (key, value) {
     var option = $("<option>").attr("loc-id", key).text(value);
     $("#locSel").append(option);
@@ -371,7 +411,7 @@ function fillLocations(locs) {
 //#region table creation
 
 function createTables(ymVal, useAmsCache = false) {
-  console.time("createTables duration");
+  // console.time("createTables duration");
   _grpProj = [];
   _grpOT = [];
   allEmployees = {};
@@ -418,7 +458,7 @@ function createTables(ymVal, useAmsCache = false) {
               colorHolidays(global_holidays);
               colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
               addWidthtoGroupTable();
-              console.timeEnd("createTables duration");
+              // console.timeEnd("createTables duration");
             }
           );
         } else {
@@ -446,13 +486,13 @@ function fetchHolidays() {
   // }).then(function (data) {
   //   return JSON.parse(data); // Return parsed JSON array
   // });
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
       url: "php/get_holidays.php",
       data: {
         monthSel: ymVal,
-        location: location
+        location: location,
       },
       dataType: "json",
       success: function (response) {
@@ -758,7 +798,7 @@ function generateLeaves(leaves, employeeId = 0) {
   let addHtml = "";
   //Setup data
   leaves.forEach((leaveEntry) => {
-    if (leaveEntry["iIndex"] === 25) {
+    if (leaveEntry["iIndex"] == 25) {
       leaveEntry["dateEntries"].forEach((entry) => {
         if (leavesMap[`vl-${entry["entryDate"]}`] !== undefined) {
           leavesMap[`vl-${entry["entryDate"]}`] += entry["hours"];
@@ -781,7 +821,7 @@ function generateLeaves(leaves, employeeId = 0) {
           monthTotalHours["totalLeave"] += entry["hours"];
         }
       });
-    } else if (leaveEntry["iIndex"] === 26) {
+    } else if (leaveEntry["iIndex"] == 26) {
       leaveEntry["dateEntries"].forEach((entry) => {
         if (leavesMap[`sl-${entry["entryDate"]}`] !== undefined) {
           leavesMap[`sl-${entry["entryDate"]}`] += entry["hours"];
@@ -846,10 +886,10 @@ function generateLeaves(leaves, employeeId = 0) {
     vlCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
       leavesMap[`vl-${padZero(x)}`] ? leavesMap[`vl-${padZero(x)}`] : ""
     }</td>`;
-    otherLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+    slCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
       leavesMap[`sl-${padZero(x)}`] ? leavesMap[`sl-${padZero(x)}`] : ""
     }</td>`;
-    slCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
+    otherLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
       leavesMap[`other-${padZero(x)}`] ? leavesMap[`other-${padZero(x)}`] : ""
     }</td>`;
     totalLeaveCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" dayVal="${x}">${
@@ -904,77 +944,75 @@ function generateAMS(
   leavesData,
   otEntries
 ) {
-  console.log(regularHourEntries);
   let amsLogsSection = "";
   let amsLogsCells = "";
   let totalAmsMonth = 0;
+
   for (let x = 1; x <= _maxDays; x++) {
     let cellColor = "";
     let excelColor = "";
     let title = "";
-    if (amsLogs[padZero(x)] && amsLogs[padZero(x)]["hours"] !== undefined) {
-      totalAmsMonth += amsLogs[padZero(x)]["hours"];
+    const dayKey = padZero(x);
+    const amsEntry = amsLogs[dayKey];
+    const regularHours = regularHourEntries[dayKey];
+    const leaveHours = leavesData[`total-${dayKey}`];
+    const location = $("#locSel").val();
+    if (amsEntry && amsEntry["hours"] !== undefined) {
+      totalAmsMonth += amsEntry["hours"];
+
+      const isWfh = amsEntry["locationName"] === "WFH";
       cellColor = getAMSEntryColor(
-        amsLogs[padZero(x)]["locationName"] === "WFH",
-        amsLogs[padZero(x)]["hours"],
-        leavesData[`total-${padZero(x)}`],
-        regularHourEntries[padZero(x)]
+        isWfh,
+        amsEntry["hours"],
+        leaveHours,
+        regularHours,
+        amsEntry["locationName"]
       );
-    } else {
-      //No ams entry
-      const location = $("#locSel").val();
-      if (
-        (location === "KDT/WFH" || location === "KDT") &&
-        regularHourEntries[padZero(x)] !== undefined
-      ) {
-        //Not Dispatch
-        if (regularHourEntries[padZero(x)] !== undefined) {
-          cellColor = "#ff0000";
-          excelColor = "ff0000";
-          title = "invalid";
-        }
+
+      excelColor = cellColor?.replace("#", "") || "";
+      if (amsEntry["locationName"] === "KDT" && regularHours !== undefined) {
+        title = "invalid";
       } else if (
-        location === "WFH" &&
-        regularHourEntries[padZero(x)] !== undefined
+        amsEntry["locationName"] === "WFH" &&
+        regularHours !== undefined
       ) {
-        cellColor = "#fda5d6";
-        excelColor = "fda5d6";
         title = "WFH";
       } else if (
-        location === "HWFH" &&
-        regularHourEntries[padZero(x)] !== undefined
+        amsEntry["locationName"] === "HWFH" &&
+        regularHours !== undefined
       ) {
-        cellColor = "#c8aff1";
-        // excelColor = "919cec";
-        excelColor = "c8aff1";
         title = "HWFH";
+      } else if (regularHours !== undefined) {
+        title = "Dispatch";
+      }
+    } else {
+      // No AMS entry
+      if (leaveHours > 0 && (regularHours === 0 || regularHours === undefined)) {
+        cellColor = "#ff8904";
+        excelColor = "ff8904";
+        title="Leave";
       } else {
-        //Dispatch
-        if (regularHourEntries[padZero(x)] !== undefined) {
-          cellColor = "#f8d1bb";
-          excelColor = "f8d1bb";
-          title = "Dispatch";
-        }
+        cellColor = "#ff0000";
+        excelColor = "ff0000";
       }
     }
 
     amsLogsCells += `<td data-a-v="middle" data-f-name="Arial" data-f-sz="9" style="background-color: ${cellColor};"  
-    data-fill-color="${excelColor}" data-b-a-s="thin" data-a-h="center" dayVal="${x}" title="${title}">${
-      amsLogs[padZero(x)] ? amsLogs[padZero(x)]["hours"] : ""
+      data-fill-color="${excelColor}" data-b-a-s="thin" data-a-h="center" dayVal="${x}" title="${title}">${
+      amsEntry ? amsEntry["hours"] : ""
     }</td>`;
   }
-  // amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
-  // <td></td>
-  // <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" style="background-color: rgb(255,255,0);">AMS</td>
-  //   ${amsLogsCells}
-  //   <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
+
   amsLogsSection += `<tr data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" class="amsRow" employee-number="${employeeId}">
-  <td></td>  
-  <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" >AMS</td>
+    <td></td>  
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">AMS</td>
     ${amsLogsCells}
-    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td></tr>`;
+    <td data-a-v="middle" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center">${totalAmsMonth}</td>
+  </tr>`;
+
   return amsLogsSection;
 }
+
 function generateMainTable(allEmployees, includeOgp = false) {
   $("#mainTbody").empty();
   Object.values(allEmployees).forEach((user) => {
@@ -1532,20 +1570,27 @@ function getTotals() {
   });
 }
 
-function getAMSEntryColor(isWfh, totalAmsHours, leaveHours, totalRegularHours) {
-  if (totalAmsHours === undefined) {
-    totalAmsHours = 0;
-  }
-  if (leaveHours === undefined) {
-    leaveHours = 0;
-  }
-  if (totalRegularHours === undefined) {
-    totalRegularHours = 0;
-  }
-
+function getAMSEntryColor(
+  isWfh,
+  totalAmsHours,
+  leaveHours,
+  totalRegularHours,
+  location
+) {
+  const kdtlocs = ["KDT", "WFH", "HWFH", "KDT/WFH", "KDT/HWFH"];
+  if (totalAmsHours === undefined) totalAmsHours = 0;
+  if (leaveHours === undefined) leaveHours = 0;
+  if (totalRegularHours === undefined) totalRegularHours = 0;
   if (isWfh === true) {
-    return "#ffc0cb";
+    return "#fda5d6";
   }
+  if (location === "HWFH") {
+    return "#a3b3ff";
+  }
+  if (!kdtlocs.includes(location)) {
+    return "#f8d1bb";
+  }
+  return "";
 }
 
 function getTotalHourColor(totalHour, amsHour, otHour) {
