@@ -6,7 +6,7 @@ var allEmployees = {};
 
 const Leaves = ["6"];
 const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
-const holidays = ["2025-07-04", "2025-07-18"];
+let global_holidays = [];
 const today = new Date();
 $("#monthSel").val(
   `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
@@ -40,13 +40,14 @@ checkLogin()
       _empDetails = emp;
       msAccess();
       $(document).ready(function () {
-        Promise.all([getGroupList(), getLocations()]).then(([grps, locs]) => {
+        Promise.all([getGroupList(), getLocations(),fetchHolidays()]).then(([grps, locs,hols]) => {
           fillGroups(grps);
           getEmployeeList().then((emplist) => {
             if (emplist) {
               emplist.map(fillMembers);
             }
           });
+          global_holidays=hols;
           if (locs) {
             fillLocations(locs);
           }
@@ -74,6 +75,9 @@ $(document).on("change", "#monthSel", function () {
   $("#selAll").attr("class", "btn btn-primary w-100 mt-4 ");
   $("#selAll").text("Select All");
   $(".memBtn").attr("class", "w-100 btn btn-secondary memBtn");
+  fetchHolidays().then(function(holidays) {
+  global_holidays = holidays;
+});
 });
 $(document).on("change", "#buSel", function () {
   // $.ajaxSetup({ async: false });
@@ -152,20 +156,6 @@ $(document).on("change", "#locSel", function () {
 
 //#region FUNCTIONS
 function checkLogin() {
-  // $.ajaxSetup({ async: false });
-  // $.ajax({
-  //   url: "Includes/check_login.php",
-  //   success: function (data) {
-  //     //ajax to check if user is logged in
-  //     _empDetails = $.parseJSON(data);
-
-  //     if (Object.keys(_empDetails).length < 1) {
-  //       window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
-  //     }
-  //     msAccess();
-  //   },
-  // });
-  // $.ajaxSetup({ async: true });
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
@@ -174,13 +164,6 @@ function checkLogin() {
       success: function (data) {
         const empdetails = data;
         resolve(empdetails);
-        // //ajax to check if user is logged in
-        // _empDetails = $.parseJSON(data);
-
-        // if (Object.keys(_empDetails).length < 1) {
-        //   window.location.href = rootFolder + "/KDTPortalLogin"; //if result is 0, redirect to log in page
-        // }
-        // msAccess();
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -316,21 +299,6 @@ function getEmployeeList() {
   const grpSel = $("#buSel").val();
   const cutOff = $(`#CO`).val();
   $("#members-list").empty();
-  // $.post(
-  //   "ajax/get_emplist.php",
-  //   {
-  //     monthSel: selDate,
-  //     groupSel: grpSel,
-  //     getHalfSel: cutOff,
-  //   },
-  //   function (data) {
-  //     _emplist = $.parseJSON(data);
-  //     _emplist.map(fillMembers);
-  //     _selectedMembers = _selectedMembers.filter((item) =>
-  //       _emplist.some((myItem) => myItem.empNum === item)
-  //     );
-  //   }
-  // );
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "POST",
@@ -394,17 +362,16 @@ function getLocations() {
   });
 }
 function fillLocations(locs) {
-  $("#locSel").html(`<option loc-id=0>KDT/WFH</option>`);
-  var addString = ``;
+  $("#locSel").html(`<option loc-id=0>KDT/WFH</option><option loc-id='-1'>KDT/HWFH</option>`);
   $.each(locs, function (key, value) {
     var option = $("<option>").attr("loc-id", key).text(value);
-    $("select").append(option);
+    $("#locSel").append(option);
   });
-  $("#locSel").append(addString);
 }
 //#region table creation
 
 function createTables(ymVal, useAmsCache = false) {
+  console.time("createTables duration");
   _grpProj = [];
   _grpOT = [];
   allEmployees = {};
@@ -426,7 +393,7 @@ function createTables(ymVal, useAmsCache = false) {
           $(".lower .right").removeClass("d-none");
           $("#mainThead,#mainTbody,#subThead,#subTbody").empty();
           $.post(
-            "ajax/get_entries.php",
+            "php/get_entries.php",
             {
               monthSel: ymVal,
               empArray: JSON.stringify(_selectedMembers),
@@ -448,9 +415,10 @@ function createTables(ymVal, useAmsCache = false) {
               generateMainTable(allEmployees, getOGP);
               generateSubTable(allEmployees);
               colorYellow();
-              colorHolidays(holidays);
+              colorHolidays(global_holidays);
               colorWeekends(ymVal.split("-")[0], ymVal.split("-")[1]);
               addWidthtoGroupTable();
+              console.timeEnd("createTables duration");
             }
           );
         } else {
@@ -468,7 +436,41 @@ function hideTable() {
   $(".noShow").removeClass("d-none");
   $(".lower .right").addClass("d-none");
 }
-function getEntries() {}
+function fetchHolidays() {
+  let ymVal = $("#monthSel").val();
+  let location = $("#locSel option:selected").attr("loc-id");
+
+  // return $.post("php/get_holidays.php", {
+  //   monthSel: ymVal,
+  //   location: location,
+  // }).then(function (data) {
+  //   return JSON.parse(data); // Return parsed JSON array
+  // });
+    return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "php/get_holidays.php",
+      data: {
+        monthSel: ymVal,
+        location: location
+      },
+      dataType: "json",
+      success: function (response) {
+        const hols = response;
+        resolve(hols);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error: The requested resource was not found.");
+        } else if (xhr.status === 500) {
+          reject("Internal Server Error: There was a server error.");
+        } else {
+          reject("An unspecified error occurred while fetching holidays.");
+        }
+      },
+    });
+  });
+}
 function getAMS() {
   const monthSel = $("#monthSel").val();
   return new Promise((resolve, reject) => {

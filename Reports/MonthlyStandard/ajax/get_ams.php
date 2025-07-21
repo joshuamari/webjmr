@@ -37,6 +37,9 @@ try {
         $entriesArr = $entriesStmt->fetchAll();
         // die(json_encode($entriesArr));
         foreach ($entriesArr as $entries) {
+            if($entries["in"]==NULL OR $entries["out"]==NULL){
+                continue;
+            }
             $reductions = 0;
             $empid = $entries["empid"];
             $rawIn = $entries["in"];
