@@ -21,6 +21,7 @@ const monthNames = [
   "November",
   "December",
 ];
+let workdays = 0;
 //#endregion
 checkLogin()
   .then((emp_deets) => {
@@ -225,6 +226,7 @@ $(document).on("change", "#idLoc", function () {
       fillCoretime(crtime);
       getReportData()
         .then((repdata) => {
+          // console.log('here')
           createTable(repdata);
         })
         .catch((error) => {
@@ -494,7 +496,7 @@ function createTable(repdata) {
     $(".table-cont table tbody tr:not(#appendBefore)").remove();
     $("#appendBefore").before(dayTr);
 
-    calculateTotalHours();
+    // calculateTotalHours();
     countToken();
     if (tokenChecked === true) {
       $(".token").removeClass("d-none");
@@ -532,6 +534,7 @@ function createTable(repdata) {
     }
   }
   //#endregion
+  calculateTotalHours();
 }
 function toggleCheckbox(checkbox) {
   checkbox.classList.toggle("checked");
@@ -540,10 +543,10 @@ function toggleCheckbox(checkbox) {
 function calculateTotalHours() {
   var totalManHour = 0;
   var totalOverTime = 0;
-
+  const locSelect = parseInt($("#idLoc").find(":selected").attr("loc-id"));
   $("#appendHere tr:not(#appendBefore)").each(function () {
-    var manHour = parseInt($(this).find("td:nth-child(4)").text());
-    var overTime = parseInt($(this).find("td:nth-child(5)").text());
+    var manHour = parseFloat($(this).find("td:nth-child(4)").text());
+    var overTime = parseFloat($(this).find("td:nth-child(5)").text());
 
     if (!isNaN(manHour)) {
       totalManHour += manHour;
@@ -552,7 +555,9 @@ function calculateTotalHours() {
       totalOverTime += overTime;
     }
   });
-
+  if(locSelect==2){
+    totalOverTime = totalManHour-(workdays * 7.5);
+  }
   $("#totalMH").text(totalManHour);
   $("#totalOT").text(totalOverTime);
 }
@@ -1005,7 +1010,8 @@ function getReportData() {
       },
       dataType: "json",
       success: function (data) {
-        const repdata = data;
+        workdays = data.workday;
+        const repdata = data.data;
         resolve(repdata);
       },
       error: function (xhr, status, error) {
@@ -1014,7 +1020,7 @@ function getReportData() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred hehe.");
         }
       },
     });

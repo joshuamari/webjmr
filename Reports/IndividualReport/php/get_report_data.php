@@ -75,8 +75,11 @@ if (isset($_POST['core'])) {
 }
 $amT = getHDTow('Leave AM');
 $pmT = getHDTow('Leave PM');
-$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect AND (pt.fldGroup = :groupSel OR (pt.fldGroup IS NULL AND dr.fldGroup = :groupSel)) $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, dr.`fldLocation`, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect AND (pt.fldGroup = :groupSel OR (pt.fldGroup IS NULL AND dr.fldGroup = :groupSel)) $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
 $reportStmt = $connwebjmr->prepare($reportQ);
+
+$workDayCount=0;
+$workDates=[];
 #endregion
 
 #region main
@@ -91,6 +94,12 @@ if ($reportStmt->rowCount() > 0) {
         $orderNum = $rep['fldOrder'];
         $khic = $rep['fldKHIC'];
         $isHalf = $rep['isHalfDay'];
+        $isWFH = $rep['fldLocation'] == 2 ? true : false;
+        $exactDay = $rep['fldDate'];
+        if($locSelect==2 && isWorkDay($exactDay,$locSelect)){
+            $workDayCount++;
+            array_push($workDates,$exactDay);
+        }
         #region description
         $dsc = '';
         foreach ($selectedColumns as $col) {
@@ -107,64 +116,70 @@ if ($reportStmt->rowCount() > 0) {
             $dsc .= " ($hrs $hrSuff)";
         }
 
-        if (isset($reportData[$repDate]['desc'])) {
-            if (!in_array(extractProjectName($dsc)[0], extractProjectName($reportData[$repDate]['desc']))) {
-                $reportData[$repDate]['desc'] .= " | " . $dsc;
+        if (isset($reportData['data'][$repDate]['desc'])) {
+            if (!in_array(extractProjectName($dsc)[0], extractProjectName($reportData['data'][$repDate]['desc']))) {
+                $reportData['data'][$repDate]['desc'] .= " | " . $dsc;
             } else {
                 if ($hoursChecked) {
                     list($projectNameToUpdate, $hoursToUpdate) = explode('(', rtrim($dsc, ')'));
                     $hoursToUpdate = trim($hoursToUpdate, ' hours'); // Remove ' hours' suffix
-                    $reportData[$repDate]['desc'] = updateProjectHours($reportData[$repDate]['desc'], ['name' => trim($projectNameToUpdate), 'hours' => trim($hoursToUpdate)]);
+                    $reportData['data'][$repDate]['desc'] = updateProjectHours($reportData['data'][$repDate]['desc'], ['name' => trim($projectNameToUpdate), 'hours' => trim($hoursToUpdate)]);
                 }
             }
         } else {
-            $reportData[$repDate]['desc'] = $dsc;
+            $reportData['data'][$repDate]['desc'] = $dsc;
         }
         #endregion
         #region hours
         if ($projid !== $leaveID) {
-            if (isset($reportData[$repDate]['hours'])) {
-                $reportData[$repDate]['hours'] += $hrs;
+            if (isset($reportData['data'][$repDate]['hours'])) {
+                $reportData['data'][$repDate]['hours'] += $hrs;
             } else {
-                $reportData[$repDate]['hours'] = $hrs;
+                $reportData['data'][$repDate]['hours'] = $hrs;
             }
         }
         #endregion
         #region range
-        if (isset($reportData[$repDate]['hours'])) {
-            $range = getTimeRange($coretime, $reportData[$repDate]['hours'], $isHalf);
+        if (isset($reportData['data'][$repDate]['hours'])) {
+            $range = getTimeRange($coretime, $reportData['data'][$repDate]['hours'], $isHalf);
             if ($range) {
-                $reportData[$repDate]['start'] = $range['startTime'];
-                $reportData[$repDate]['end'] = $range['endTime'];
+                $reportData['data'][$repDate]['start'] = $range['startTime'];
+                $reportData['data'][$repDate]['end'] = $range['endTime'];
             }
         }
         #endregion
         #region OT
         if ($isOT) {
-            if (isset($reportData[$repDate]['ot'])) {
-                $reportData[$repDate]['ot'] += $hrs;
+            if (isset($reportData['data'][$repDate]['ot'])) {
+                $reportData['data'][$repDate]['ot'] += $hrs;
             } else {
-                $reportData[$repDate]['ot'] = $hrs;
+                $reportData['data'][$repDate]['ot'] = $hrs;
             }
         }
         #endregion
         #region ordernum
         if ($orderNum) {
-            if (!isset($reportData[$repDate]['order'])) {
-                $reportData[$repDate]['order'] = $orderNum;
+            if (!isset($reportData['data'][$repDate]['order'])) {
+                $reportData['data'][$repDate]['order'] = $orderNum;
             }
         }
         #endregion
         #region pic
         if ($khic) {
-            if (!isset($reportData[$repDate]['khic'])) {
-                $reportData[$repDate]['khic'] = $khic;
+            if (!isset($reportData['data'][$repDate]['khic'])) {
+                $reportData['data'][$repDate]['khic'] = $khic;
             }
         }
         #endregion
-
+        #region isWFH
+        if(!isset($reportData['data'][$repDate]['isWFH'])){
+            $reportData['data'][$repDate]['isWFH'] = (bool)$isWFH;
+        }
+        #endregion
     }
 }
+$reportData['workday']=$workDayCount;
+$reportData['workdates']=$workDates;
 #endregion
 
 #region function
@@ -271,6 +286,40 @@ function getHDTow($towValue)
 
     return $hdTow;
 }
+function isWorkDay(string $day, int $loc): bool
+{
+    global $connkdt;
+
+    // Normalize location mapping
+    if ($loc === 2) {
+        $loc = 1;
+    }
+    // Validate/normalize date
+    $ts = strtotime($day);
+    if ($ts === false) {
+        // Decide your policy: throw, return false, etc.
+        throw new InvalidArgumentException("Invalid date format: {$day}");
+    }
+    $normDate = date('Y-m-d', $ts);
+
+    // Check holiday/workday override first
+    $sql = "SELECT fldHolidayType
+            FROM kdtholiday
+            WHERE fldDate = :selDate AND fldLocID = :selLoc
+            LIMIT 1";
+    $stmt = $connkdt->prepare($sql);
+    $stmt->execute([':selDate' => $normDate, ':selLoc' => $loc]);
+    $workDayType = $stmt->fetchColumn(); // false if no row
+
+    if ($workDayType !== false) {
+        // In your schema: '2' means *workday*; anything else = not a workday
+        return (string)$workDayType == '2';
+    }
+
+    // No override in DB → Mon–Fri are workdays
+    return (int)date('N', $ts) < 6; // 1..5 = Mon..Fri
+}
+
 #endregion
 echo json_encode($reportData, JSON_PRETTY_PRINT);
 // echo json_encode($locStmt, JSON_PRETTY_PRINT);

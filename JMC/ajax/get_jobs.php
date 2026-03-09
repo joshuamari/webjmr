@@ -38,6 +38,7 @@ if(count($jobArr)>0){
         $khiDeadline = $job['fldKHIDeadline'];
         $kdtDeadline = $job['fldKDTDeadline'];
         $expectedMH = $job['fldExpectedMH'];
+        $khiPrep = $job['fldKHIPrep'];
         $jobActive = $job['fldActive'];
         $output += ["jobName" => $jobName];
         $output += ["jobID" => $jobID];
@@ -49,6 +50,7 @@ if(count($jobArr)>0){
         $output += ["khiDeadline" => $khiDeadline];
         $output += ["kdtDeadline" => $kdtDeadline];
         $output += ["expectedMH" => $expectedMH];
+        $output += ["khiPrep" => $khiPrep];
         $output += ["jobActive" => $jobActive];
         array_push($jobsArray, $output);
         // array_push($jobs,$job['fldJob']."||".$job['fldID']."||".$job['fldNoSheets']."||".$job['fldPaperSize']."||".$job['fldDrawingName']."||".$job['fldKHIDate']."||".$job['fldKHIC']."||".$job['fldKHIDeadline']."||".$job['fldKDTDeadline']."||".$job['fldExpectedMH']."||".$job['fldActive']."||".$job['fldPriority']);

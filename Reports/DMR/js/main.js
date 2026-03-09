@@ -288,6 +288,8 @@ function updateTr() {
     $(v).attr("emp-num", $($(v).children(".ename")).attr("e-id"));
     $(aRow).attr("job-num", $($(v).children(".jname")).attr("job-num"));
     $(aRow).attr("emp-num", $($(v).children(".ename")).attr("e-id"));
+
+    $(aRow).attr("item-id", $(v).attr("item-id"));
   });
 }
 
@@ -321,28 +323,63 @@ function ifMonday(date) {
 
 function latagProjects(data) {
   $.each(data, function (pName, det) {
+
+    // project header row
     $("#main-tbody").append(`
-    <tr data-height="20" class="project-row bg-warning" proj-num="${det.pNum}">
-    <th data-f-name="Arial" data-f-sz="9" data-fill-color="ffff99" data-b-a-s="thin" data-b-t-s="double" data-f-bold="true" class="pName" colspan="">${pName}</th>
-    </tr>
+      <tr data-height="20" class="project-row bg-warning" proj-num="${det.pNum}">
+        <th data-f-name="Arial" data-f-sz="9" data-fill-color="ffff99"
+            data-b-a-s="thin" data-b-t-s="double" data-f-bold="true"
+            class="pName" colspan="">
+          ${pName}
+        </th>
+      </tr>
     `);
+
+    // items under project
     $.each(det.Items, function (itemName, iDet) {
+      const itemId = iDet.itemID;
+
+      if (itemId == null) {
+        console.error("Missing itemID", itemName, iDet);
+        return;
+      }
+
       latagPDetails(iDet, itemName).forEach((element) => {
-        $("#main-tbody")
-          .append(`<tr data-height="20" class="plan-row" job-num emp-num ${
-          det.Direct ? "direct" : "indirect"
-        }>
-        ${element}
-        </tr>
-        <tr data-height="20" class="actual-row" job-num emp-num ${
-          det.Direct ? "direct" : "indirect"
-        }>
-        <td class="tot-mh" data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">totActual</td>
-        <td data-a-h="center" data-a-v="middle"  data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" style="background-color: #ffccff" data-fill-color="ffccff">Actual</td>
-        </tr>`);
+        $("#main-tbody").append(`
+          <tr data-height="20"
+              class="plan-row"
+              item-id="${itemId}"
+              job-num
+              emp-num
+              ${det.Direct ? "direct" : "indirect"}>
+            ${element}
+          </tr>
+
+          <tr data-height="20"
+              class="actual-row"
+              item-id="${itemId}"
+              job-num
+              emp-num
+              ${det.Direct ? "direct" : "indirect"}>
+            <td class="tot-mh" data-a-h="center" data-a-v="middle"
+                data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"
+                style="background-color: #ffccff"
+                data-fill-color="ffccff">
+              totActual
+            </td>
+            <td data-a-h="center" data-a-v="middle"
+                data-f-name="Arial" data-f-sz="9" data-b-a-s="thin"
+                style="background-color: #ffccff"
+                data-fill-color="ffccff">
+              Actual
+            </td>
+          </tr>
+        `);
       });
     });
+
   });
+
   createTable();
 }
 
@@ -371,23 +408,22 @@ function latagPDetails(data, itemName) {
 function latagPlanning(data) {
   $.each(data, function (pName, pDets) {
     $.each(pDets.Items, function (iName, iDets) {
+      const itemId = iDets.itemID;
       $.each(iDets, function (jName, jDets) {
         $.each(jDets.Members, function (empId, eDets) {
           var totPlanned = 0;
           var totActual = 0;
           $.each(eDets.Dates, function (date, hours) {
             $(
-              $(
-                `.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
-              ).children(`[date-val="${date}"]`)
+  $(`.plan-row[item-id="${itemId}"][job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+    .children(`[date-val="${date}"]`)
             )
               .text(hours.Planned)
               .css("background-color", "#ccff99")
               .attr("data-fill-color", "ccff99");
             $(
-              $(
-                `.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`
-              ).children(`[date-val="${date}"]`)
+  $(`.actual-row[item-id="${itemId}"][job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+    .children(`[date-val="${date}"]`)
             )
               .text(hours.Actual)
               .css("background-color", "#ffccff")
@@ -395,16 +431,13 @@ function latagPlanning(data) {
             totPlanned += parseFloat(hours.Planned);
             totActual += parseFloat(hours.Actual);
           });
-          $(`.plan-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
-            .children(`.tot-mh`)
-            .text(totPlanned)
-            .css("background-color", "#ccff99")
-            .attr("data-fill-color", "ccff99");
-          $(`.actual-row[job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
-            .children(`.tot-mh`)
-            .text(totActual)
-            .css("background-color", "#ffccff")
-            .attr("data-fill-color", "ffccff");
+$(`.plan-row[item-id="${itemId}"][job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+  .children(`.tot-mh`)
+  .text(totPlanned);
+
+$(`.actual-row[item-id="${itemId}"][job-num="${jDets.jobNum}"][emp-num="${empId}"]`)
+  .children(`.tot-mh`)
+  .text(totActual);
         });
       });
     });

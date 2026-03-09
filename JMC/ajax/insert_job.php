@@ -58,6 +58,10 @@ $jobMH=NULL;
 if(!empty($_REQUEST['jobMH'])){
     $jobMH=$_REQUEST['jobMH'];
 }
+$jobPrep=NULL;
+if(!empty($_REQUEST['jobPrep'])){
+    $jobPrep=$_REQUEST['jobPrep'];
+}
 $prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL)";
 $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
@@ -72,9 +76,9 @@ if($dup>0){
     echo "Duplicate Title";
 }
 else{
-    $projQ="INSERT INTO drawingreference(fldProject,fldItem,fldJob,fldGroup,fldPriority,fldNoSheets,fldPaperSize,fldDrawingName,fldKHIDate,fldKHIC,fldKHIDeadline,fldKDTDeadline,fldExpectedMH) VALUES (:projID,:itemID,:jobName,:grp,:maxPrio,:jobSheet,:jobPaper,:jobDraw,:jobKHIReq,:jobKHICharge,:jobKHIDead,:jobKDTDead,:jobMH)";
+    $projQ="INSERT INTO drawingreference(fldProject,fldItem,fldJob,fldGroup,fldPriority,fldNoSheets,fldPaperSize,fldDrawingName,fldKHIDate,fldKHIC,fldKHIDeadline,fldKDTDeadline,fldExpectedMH,fldKHIPrep) VALUES (:projID,:itemID,:jobName,:grp,:maxPrio,:jobSheet,:jobPaper,:jobDraw,:jobKHIReq,:jobKHICharge,:jobKHIDead,:jobKDTDead,:jobMH,:jobPrep)";
     $projStmt=$connwebjmr->prepare($projQ);
-    $projStmt->execute([":projID"=>$projID,":itemID"=>$itemID,":jobName"=>$jobName,":grp"=>$grp,":maxPrio"=>$maxPrio,":jobSheet"=>$jobSheet,":jobPaper"=>$jobPaper,":jobDraw"=>$jobDraw,":jobKHIReq"=>$jobKHIReq,":jobKHICharge"=>$jobKHICharge,":jobKHIDead"=>$jobKHIDead,":jobKDTDead"=>$jobKDTDead,":jobMH"=>$jobMH]);
+    $projStmt->execute([":projID"=>$projID,":itemID"=>$itemID,":jobName"=>$jobName,":grp"=>$grp,":maxPrio"=>$maxPrio,":jobSheet"=>$jobSheet,":jobPaper"=>$jobPaper,":jobDraw"=>$jobDraw,":jobKHIReq"=>$jobKHIReq,":jobKHICharge"=>$jobKHICharge,":jobKHIDead"=>$jobKHIDead,":jobKDTDead"=>$jobKDTDead,":jobMH"=>$jobMH, ":jobPrep"=>$jobPrep]);
 }
 #endregion
 ?>

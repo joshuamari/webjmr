@@ -75,6 +75,7 @@ $(document).on("click", ".editJrd-btn", function () {
   var khidead = $(getTR[7]).text();
   var kdtdead = $(getTR[8]).text();
   var manhour = $(getTR[9]).text();
+  var prep = $(getTR[10]).text();
   var getTD = getTR[11];
   var editDrawRef = ``;
   if (checkJRDEdit()) {
@@ -106,6 +107,9 @@ $(document).on("click", ".editJrd-btn", function () {
     );
     $(getTR[9]).html(
       `<input id='editJMH' type='number' class='form-control'  value='${manhour}' sid='${jrdid}'>`
+    );
+    $(getTR[10]).html(
+      `<input id='editJPrep' type='number' class='form-control'  value='${prep}' sid='${jrdid}'>`
     );
   }
   $(getTR[1]).html(
@@ -886,6 +890,7 @@ function jobRow(jobArrayElement) {
   var trKHIDeadline = jobArrayElement["khiDeadline"] || "";
   var trKDTDeadline = jobArrayElement["kdtDeadline"] || "";
   var trExpMH = jobArrayElement["expectedMH"] || "";
+  var trKHIPrep = jobArrayElement["khiPrep"] || "";
   var iActive = jobArrayElement["jobActive"] || "";
   var draggable = "mover";
   var activeStatus = "checked";
@@ -921,9 +926,10 @@ function jobRow(jobArrayElement) {
   <td>${trKHIC}</td>
   <td>${trKHIDeadline}</td>
   <td>${trKDTDeadline}</td>
-  <td>${trExpMH}</td>`;
+  <td>${trExpMH}</td>
+  <td>${trKHIPrep}</td>`;
   if (defaultDrawref()) {
-    hasDrawref = `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
+    hasDrawref = `<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>`;
   }
 
   var addString = `<tr class="text-center ${draggable}" id="j_${trID}">
@@ -956,6 +962,7 @@ function addJob() {
   var jobKHIDead = $("#jrdKhiDl").val();
   var jobKDTDead = $("#jrdKdtDl").val();
   var jobMH = $("#jrdMh").val();
+  var jobPrep = $("#jrdPrep").val();
   var grp = $("#myGroup").val();
   $.post(
     "ajax/insert_job.php",
@@ -969,6 +976,7 @@ function addJob() {
       jobKHIDead: jobKHIDead,
       jobKDTDead: jobKDTDead,
       jobMH: jobMH,
+      jobPrep: jobPrep,
       grp: grp,
       projID: selectedProject,
       itemID: selectedItems,
@@ -1048,6 +1056,11 @@ function checkJRDADD() {
     <label for="jrdMh" class="form-label">Expected Manhour</label>
     <input type="number" placeholder="#" class="form-control"  min="0" id="jrdMh"  required/>
       <span class="col-12 mt-1 alert-danger text-danger" id="j8" role="alert"></span>
+  </div>
+  <div class="col-12 mb-2 engr">
+    <label for="jrdPrep" class="form-label">KHI Preparing Manhour</label>
+    <input type="number" placeholder="#" class="form-control"  min="0" id="jrdPrep"  required/>
+      <span class="col-12 mt-1 alert-danger text-danger" id="j9" role="alert"></span>
   </div>`);
   }
 }
@@ -1102,6 +1115,7 @@ function updateJob(jobID) {
   var editJKHIDead = $("#editJKHIDead").val();
   var editJKDTDead = $("#editJKDTDead").val();
   var editJMH = $("#editJMH").val();
+  var editJPrep = $("#editJPrep").val();
   $.post(
     "ajax/update_job.php",
     {
@@ -1115,6 +1129,7 @@ function updateJob(jobID) {
       editJKHIDead: editJKHIDead,
       editJKDTDead: editJKDTDead,
       editJMH: editJMH,
+      editJPrep: editJPrep
     },
     function (data) {
       getJobs();

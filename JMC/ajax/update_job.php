@@ -43,11 +43,15 @@ $editJMH=NULL;
 if(!empty($_POST['editJMH'])){
     $editJMH=$_POST['editJMH'];
 }
+$editJPrep=NULL;
+if(!empty($_POST['editJPrep'])){
+    $editJPrep=$_POST['editJPrep'];
+}
 #endregion
 #region Update Query
-$updateQ="UPDATE drawingreference SET fldJob=:editJName,fldNoSheets=:editJSheet,fldPaperSize=:editJPaper,fldDrawingName=:editJDraw,fldKHIDate=:editJKHIReq,fldKHIC=:editJKHIC,fldKHIDeadline=:editJKHIDead,fldKDTDeadline=:editJKDTDead,fldExpectedMH=:editJMH WHERE fldID=:id";
+$updateQ="UPDATE drawingreference SET fldJob=:editJName,fldNoSheets=:editJSheet,fldPaperSize=:editJPaper,fldDrawingName=:editJDraw,fldKHIDate=:editJKHIReq,fldKHIC=:editJKHIC,fldKHIDeadline=:editJKHIDead,fldKDTDeadline=:editJKDTDead,fldExpectedMH=:editJMH,fldKHIPrep=:editJPrep WHERE fldID=:id";
 $updateStmt=$connwebjmr->prepare($updateQ);
-$updateStmt->execute([":id"=>$id,":editJName"=>$editJName,":editJSheet"=>$editJSheet,":editJPaper"=>$editJPaper,":editJDraw"=>$editJDraw,":editJKHIReq"=>$editJKHIReq,":editJKHIC"=>$editJKHIC,":editJKHIDead"=>$editJKHIDead,":editJKDTDead"=>$editJKDTDead,":editJMH"=>$editJMH]);
+$updateStmt->execute([":id"=>$id,":editJName"=>$editJName,":editJSheet"=>$editJSheet,":editJPaper"=>$editJPaper,":editJDraw"=>$editJDraw,":editJKHIReq"=>$editJKHIReq,":editJKHIC"=>$editJKHIC,":editJKHIDead"=>$editJKHIDead,":editJKDTDead"=>$editJKDTDead,":editJMH"=>$editJMH,":editJPrep"=>$editJPrep]);
 #endregion
 var_dump($updateStmt);
 ?>

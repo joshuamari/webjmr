@@ -39,7 +39,7 @@ $entriesArray = array();
 #endregion
 
 #region main
-$entriesQuery = "SELECT pt.fldDirect,pt.fldID AS projID,pt.fldProject,it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND (
+$entriesQuery = "SELECT pt.fldDirect,pt.fldID AS projID,pt.fldProject, it.fldID AS itemID, it.fldItem,jrd.fldJob,jrd.fldID AS jobID,dr.fldEmployeeNum,dr.fldDate,SUM(dr.fldDuration) AS duration,(SELECT SUM(fldDuration) FROM dailyreport WHERE fldEmployeeNum=dr.fldEmployeeNum AND (
     (fldJobRequestDescription = jrd.fldID AND fldProject <> 5)
     OR
     (fldItem = it.fldID AND fldProject = 5)
@@ -51,6 +51,7 @@ foreach ($entriesArr as $ent) {
     $projDirect = $ent['fldDirect'] == 0 ? FALSE : TRUE;
     $projID = $ent['projID'];
     $projName = $ent['fldProject'];
+    $itemID = $ent['itemID'];
     $itemName = $ent['fldItem'];
     $jobID = $ent['jobID'];
     $jobName = $ent['fldJob'];
@@ -73,6 +74,7 @@ foreach ($entriesArr as $ent) {
     $entriesArray[$projName]['pNum'] = $projID;
     $entriesArray[$projName]['Direct'] = $projDirect;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['jobNum'] = $jobID;
+    $entriesArray[$projName]['Items'][$itemName]['itemID'] = $itemID;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['sheets'] = $noSheets;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['dName'] = $drawName;
     $entriesArray[$projName]['Items'][$itemName][$jobName]['kic'] = $khic;

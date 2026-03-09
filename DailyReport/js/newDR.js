@@ -1221,10 +1221,6 @@ function addEntries(addMode) {
     console.log(mgaKulang);
     return;
   } else {
-    //for (var pair of fd.entries()) {
-    //   console.log(pair[0]+ ', ' + pair[1]);
-    //}
-    // return;
     $.ajax({
       type: "POST",
       url: "ajax/add_entries.php",
@@ -1311,11 +1307,15 @@ function isDrawing() {
   hasTOW();
 }
 function isEngineering() {
-  var isDrawing = true;
+  // var isDrawing = true;
   var projID = $($("#idProject").find("option:selected")).attr("proj-id");
   var selGroup = $("#idGroup").val();
-  isDrawing =
-    !defaults.includes(projID) && selGroup != 16 && selGroup != 10 && projID;
+  // isDrawing =
+  //   !defaults.includes(projID) && selGroup != 16 && selGroup != 10 && projID;
+  const isDrawing =
+  !defaults.includes(Number(projID)) && 
+  ![10, 16].includes(Number(selGroup)) &&  
+  Boolean(projID); 
   // return isDrawing;
   if (isDrawing) {
     $("#id2DDiv").removeClass("d-none");
@@ -1423,17 +1423,6 @@ function getTOWDesc(typesOfWorkID) {
       $("#towDesc").html(response["result"]);
     },
   });
-  // $.post(
-  //   "ajax/get_tow_desc.php",
-  //   {
-  //     towID: typesOfWorkID,
-  //   },
-  //   function (data) {
-  //     console.log("towDesc Success", data);
-  //     $("#towDesc").html(data);
-  //     console.log("towdesc value: ", $("#towDesc").val());
-  //   }
-  // );
 }
 function copyEntries() {
   //copy entries from selected date
@@ -1471,7 +1460,7 @@ function editEntry(currentObject) {
     },
     function (data) {
       var dataEdit = $.parseJSON(data);
-      console.log("dataEdit: ", dataEdit);
+      // console.log("dataEdit: ", dataEdit);
       $($("#idLocation").find(`option[loc-id=${dataEdit[0]}]`))
         .prop("selected", true)
         .change();
@@ -1481,7 +1470,6 @@ function editEntry(currentObject) {
       // Paste Project Value
       getProjects().then((projs) => {
         fillProj(projs);
-        console.log("pasting proj entry");
         $($("#idProject").find(`option[proj-id=${dataEdit[2]}]`)).prop(
           "selected",
           true
@@ -1496,7 +1484,6 @@ function editEntry(currentObject) {
         ]).then(([items, checks]) => {
           fillItem(items);
           fillCheckers(checks);
-          // console.log("pasting item entry");
           $($("#idItem").find(`option[item-id=${dataEdit[3]}]`)).prop(
             "selected",
             true
@@ -1504,7 +1491,6 @@ function editEntry(currentObject) {
           // Paste Jobs Value
           getJobs(dataEdit[2], dataEdit[3]).then((jobs) => {
             fillJobs(jobs);
-            // console.log("pasting job entry");
             $($("#idJRD").find(`option[job-id=${dataEdit[4]}]`)).prop(
               "selected",
               true
@@ -1512,7 +1498,6 @@ function editEntry(currentObject) {
 
             if (dataEdit[3] == 14 && dataEdit[12]) {
               trainingGroup(dataEdit[3]);
-              console.log("pasting trGrps");
               $("#trGroup").val(dataEdit[12]);
             }
           });
