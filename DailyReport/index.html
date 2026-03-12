@@ -415,47 +415,74 @@
                   <!-- LOCK FEATURE -->
                   <div
                     id="lockingOverlay"
-                    class="hidden absolute bottom-0 left-0 w-full h-[calc(100%_-_100px)] z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+                    class="hidden absolute bottom-0 left-0 z-50 flex h-[calc(100%_-_100px)] w-full items-center justify-center bg-slate-900/18 backdrop-blur-[2px] pb-10"
                   >
                     <div
-                      class="flex flex-col items-center justify-center text-center bg-white rounded-xl shadow-xl px-10 py-8 gap-5 max-w-[520px]"
+                      class="relative flex w-full max-w-[470px] justify-center px-5"
                     >
-                      <div
-                        class="w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100"
-                      >
-                        <i class="bx bx-lock-alt text-yellow-500 text-3xl"></i>
+                      <!-- Floating shield -->
+                      <div class="absolute -top-9 z-10">
+                        <div
+                          class="relative flex h-[82px] w-[82px] items-center justify-center"
+                        >
+                          <div
+                            class="absolute inset-0 rounded-full bg-yellow-200/70 blur-[2px]"
+                          ></div>
+                          <div
+                            class="relative flex h-[82px] w-[82px] items-center justify-center rounded-full bg-yellow-100 shadow-[0_12px_28px_rgba(234,179,8,0.28)]"
+                          >
+                            <div
+                              class="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-yellow-400"
+                            >
+                              <i
+                                class="bx bx-lock-alt text-[30px] text-white"
+                              ></i>
+                            </div>
+                          </div>
+                        </div>
                       </div>
 
-                      <h3 class="text-xl font-semibold text-gray-800">
-                        Editing Locked
-                      </h3>
-
-                      <p
-                        id="lockingMessage"
-                        class="text-gray-600 leading-relaxed"
+                      <!-- Card -->
+                      <div
+                        class="flex w-full flex-col items-center rounded-[22px] bg-white px-10 pb-8 pt-16 text-center shadow-[0_22px_55px_rgba(15,23,42,0.16)]"
                       >
-                        This Daily Report is outside the current editable month.
-                      </p>
-
-                      <button
-                        id="btnRequestAccess"
-                        class="btn btn-primary w-full max-w-[280px]"
-                      >
-                        Request 1-Day Access for
-                        <span
-                          id="lockedMonthLabel"
-                          class="font-medium text-white"
-                          >Selected Month</span
+                        <h3
+                          class="text-[20px] font-semibold tracking-[0.1px] text-slate-800"
                         >
-                      </button>
+                          Editing Locked
+                        </h3>
 
-                      <button
-                        id="btnGoCurrentMonth"
-                        type="button"
-                        class="text-sm text-blue-500 hover:text-blue-700 transition bg-transparent border-0"
-                      >
-                        Go to Current Month →
-                      </button>
+                        <p
+                          id="lockingMessage"
+                          class="mt-8 max-w-[360px] text-[15px] leading-8 text-slate-500"
+                        >
+                          This Daily Report is outside the current editable
+                          month.
+                          <br />
+                          You may still view the existing details, but changes
+                          <br />
+                          are disabled. To make updates, request
+                          <br />
+                          1-day temporary access.
+                        </p>
+
+                        <button
+                          id="btnRequestAccess"
+                          type="button"
+                          class="mt-8 min-h-[42px] w-full max-w-[300px] rounded-[8px] border-0 bg-blue-500 px-5 text-[15px] font-medium text-white shadow-sm transition hover:bg-blue-600"
+                        >
+                          Request 1-Day Access
+                        </button>
+
+                        <button
+                          id="btnGoCurrentMonth"
+                          type="button"
+                          class="mt-7 border-0 bg-transparent text-[14px] font-medium text-blue-500 transition hover:text-blue-700"
+                        >
+                          Go to Current Month
+                          <span class="ml-1 inline-block">→</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
 
