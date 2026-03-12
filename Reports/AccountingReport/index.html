@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Accounting Report</title>
@@ -13,34 +13,15 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/accounting.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../../tailwindcss/output.css" />
+
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!-- <script src="js/xlsx.js"></script> -->
     <script src="js/jquery.table2excel.js"></script>
-    <!-- <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>  -->
+
     <script src="js/lottie.mjs" type="module"></script>
-
-
-    
-    <script>
-      var busterCall = [
-        "js/acct.js",
-        "css/accounting.css",
-        "css/bootstrap.min.css",
-
-      ];
-      $.post(
-        "ajax/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Accounting Report",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
+    <script src="js/acct.js"></script>
   </head>
 
   <!-- #region modal -->
@@ -80,9 +61,7 @@
               class="form-select"
               id="selLoc"
               aria-label="Select Location"
-            >
-            
-            </select>
+            ></select>
             <label for="selLoc">Select Location</label>
           </div>
 
@@ -93,21 +72,17 @@
 
           <div class="form-floating col-12 col-lg-2 col-md-3 col-sm-4 mb-2">
             <select class="form-select" id="co" aria-label="Select Cut-off">
-              <option value=0>Monthly</option>
-              <option value=1>First half</option>
-              <option value=2>Second Half</option>
+              <option value="0">Monthly</option>
+              <option value="1">First half</option>
+              <option value="2">Second Half</option>
             </select>
             <label for="co">Select Cut-off</label>
           </div>
         </div>
 
         <div class="tablecont col-12 p-3 position-relative">
-          
-          <div class="mainTable overflow-auto ">
-            
-          </div>
+          <div class="mainTable overflow-auto"></div>
         </div>
-       
       </div>
     </div>
   </body>

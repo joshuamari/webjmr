@@ -31,6 +31,7 @@ $(document).ready(function () {
   initCalendar();
   getPlans();
   planAccess();
+
   //#region sidebarshits
   let arrow = document.querySelectorAll(".arrow");
 
@@ -93,6 +94,9 @@ $(document).ready(function () {
   } else {
     $(".override-btn").hide();
   }
+
+  updateLockedMonthLabel();
+  evaluateMonthLock();
 });
 //IIIFFFFFUUUUUU AAAAAAAAAAAAAAAAAAGGHHCCKK
 // $('.card').addClass('new');//PANG PALIT KULAY
@@ -121,11 +125,11 @@ $(document).on("click", ".pindot", function () {
   $(".ms").toggleClass("open");
   if ($(".ms").hasClass("open")) {
     $(".ms-lbl p").html(
-      `<i class='bx bx-x' style='color:#fff; font-size:40px;'></i>`
+      `<i class='bx bx-x' style='color:#fff; font-size:40px;'></i>`,
     );
   } else {
     $(".ms-lbl p").html(
-      `Calendar <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`
+      `Calendar <i class='bx bx-right-arrow-alt d-flex align-items-center text-light' style="font-size: 20px;"></i>`,
     );
   }
 });
@@ -141,11 +145,15 @@ $(document).on("change", "#idGroup", function () {
   $(".iow").removeClass("active");
 });
 $(document).on("change", "#idDRDate", function () {
-  //select Date Event
+  const isLocked = evaluateMonthLock();
+
   getEntries();
   getPlans();
-  MHValidation();
-  sequenceValidation();
+
+  if (!isLocked) {
+    MHValidation();
+    sequenceValidation();
+  }
 });
 $(document).on("click", "#idReset", function () {
   //click Reset Event
@@ -176,7 +184,7 @@ $(document).on("change", "#idProject", function () {
     $("#idItem")
       .empty()
       .append(
-        `<option selected hidden disabled value="">Select Item of Works</option>`
+        `<option selected hidden disabled value="">Select Item of Works</option>`,
       );
   }
   getItems(projID).then((items) => {
@@ -416,7 +424,7 @@ $(document).on(
   "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
   function () {
     $(this).removeClass("bg-err");
-  }
+  },
 );
 $(document).on("click", ".planned .header", function () {
   $(".planned").toggleClass("open");
@@ -430,9 +438,19 @@ $(document).on("click", ".planned .header", function () {
     $(".planned .header")
       .find("small")
       .html(
-        `<i class="bx bx-info-circle"></i>Please click here to toggle this collapsible element.`
+        `<i class="bx bx-info-circle"></i>Please click here to toggle this collapsible element.`,
       );
   }
+});
+$(document).on("click", "#btnGoCurrentMonth", function () {
+  const todayString = getTodayLocalDateString();
+  $("#idDRDate").val(todayString).trigger("change");
+});
+$(document).on("click", "#btnRequestAccess", function () {
+  const selectedDate = $("#idDRDate").val();
+  const monthLabel = getMonthYearLabel(selectedDate);
+
+  alert(`Requesting 1-day access for ${monthLabel}`);
 });
 
 //#endregion
@@ -443,7 +461,7 @@ function checkLogin() {
   $.ajax({
     url: "ajax/check_login.php",
     success: function (data) {
-      console.log(data);
+      // console.log(data);
       //ajax to check 9 is logged in
       empDetails = $.parseJSON(data);
       if (Object.keys(empDetails).length < 1) {
@@ -490,7 +508,7 @@ function getMyGroups() {
       let grps = response["result"];
       var grpSelect = $("#idGroup");
       grpSelect.html(
-        `<option selected hidden value=0 grp-id=0>Select Group</option>`
+        `<option selected hidden value=0 grp-id=0>Select Group</option>`,
       );
       if (grps.length > 1) {
         grps = grps.sort(function (a, b) {
@@ -554,7 +572,7 @@ function getTOW(projID) {
       // console.log("TOW DATA: ", data);
       $("#idTOW").html(data);
       $("#idTOW").val("").change();
-    }
+    },
   );
   $.ajaxSetup({ async: true });
 }
@@ -620,7 +638,7 @@ function getEntries() {
     },
     function (data) {
       var entries = $.parseJSON(data);
-      console.log("entries", entries);
+      // console.log("entries", entries);
       if (entries.length > 0) {
         entries.map(addRow);
       } else {
@@ -628,7 +646,7 @@ function getEntries() {
         $("#drEntries").append(addString);
       }
       getMHCount();
-    }
+    },
   );
 }
 function getMHCount() {
@@ -809,7 +827,7 @@ function getProjSearch() {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject(
-            "An unspecified error occurred while fetching Project Search."
+            "An unspecified error occurred while fetching Project Search.",
           );
         }
       },
@@ -962,7 +980,7 @@ function getJobs(projID, itemID) {
   //get Item Selection
   $("#jrdOptions").empty();
   $("#idJRD").html(
-    `<option value='' hidden>Select Job Request Description</option>`
+    `<option value='' hidden>Select Job Request Description</option>`,
   );
 
   return new Promise((resolve, reject) => {
@@ -1090,12 +1108,17 @@ function getJRDSearch(projID, itemID) {
 
 function addEntries(addMode) {
   //add Entries to Database
+  if (evaluateMonthLock()) {
+    alert("Editing is locked for dates outside the current month.");
+    return;
+  }
+
   var tutri = $('input[name="radio"]:checked').val();
   var grp = $("#idGroup").val();
   var date = $("#idDRDate").val();
   var loc = $($("#idLocation").find("option:selected")).attr("loc-id");
   var proj = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
+    $($("#idProject").find("option:selected")).attr("proj-id"),
   );
   var item = $($("#idItem").find("option:selected")).attr("item-id");
   var trgrp = $($("#trGroup").find("option:selected")).val() || "";
@@ -1243,6 +1266,10 @@ function addEntries(addMode) {
   }
 }
 function deleteEntry(tableRowID) {
+  if (evaluateMonthLock()) {
+    alert("Deleting is locked for dates outside the current month.");
+    return;
+  }
   //delete Entries from Database
   $.post(
     "ajax/delete_entry.php",
@@ -1253,14 +1280,14 @@ function deleteEntry(tableRowID) {
       getEntries();
       initCalendar();
       getPlans();
-    }
+    },
   );
 }
 function resetEntry() {
   //reset Inputs
   // $("#idGroup").val(0).change();
   $(
-    "#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#trGroup"
+    "#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#trGroup",
   )
     .val("")
     .change();
@@ -1268,7 +1295,7 @@ function resetEntry() {
   $("#idRev").prop("checked", false);
   $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12").text("");
   $(
-    "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
+    "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
@@ -1281,7 +1308,7 @@ function resetOnGrpChange() {
   $("#idProject,#idItem,#idJRD,#idTOW,#trGroup").val("").change();
   $("#p1,#p2,#p3,#p4,#p5,#p6,#p7,#p8,#p9,#p10,#p11,#p12").text("");
   $(
-    "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
+    "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
@@ -1313,9 +1340,9 @@ function isEngineering() {
   // isDrawing =
   //   !defaults.includes(projID) && selGroup != 16 && selGroup != 10 && projID;
   const isDrawing =
-  !defaults.includes(Number(projID)) && 
-  ![10, 16].includes(Number(selGroup)) &&  
-  Boolean(projID); 
+    !defaults.includes(Number(projID)) &&
+    ![10, 16].includes(Number(selGroup)) &&
+    Boolean(projID);
   // return isDrawing;
   if (isDrawing) {
     $("#id2DDiv").removeClass("d-none");
@@ -1339,7 +1366,7 @@ function hasJRD() {
 function hasTOW() {
   var isDrawing = true;
   var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
+    $($("#idProject").find("option:selected")).attr("proj-id"),
   );
   // var projID = $("#idProject").val();
   var selGroup = $("#idGroup").val();
@@ -1401,7 +1428,7 @@ function isWorkDay(location) {
     },
     function (data) {
       isWorkDay = $.parseJSON(data);
-    }
+    },
   );
   $.ajaxSetup({ async: true });
   return isWorkDay;
@@ -1425,6 +1452,10 @@ function getTOWDesc(typesOfWorkID) {
   });
 }
 function copyEntries() {
+  if (evaluateMonthLock()) {
+    alert("Copy is disabled for dates outside the current month.");
+    return;
+  }
   //copy entries from selected date
   var getDate = $("#idDRDate").val();
   var copyDate = $("#idCopyDate").val();
@@ -1440,10 +1471,14 @@ function copyEntries() {
       resetEntry();
       initCalendar();
       getPlans();
-    }
+    },
   );
 }
 function editEntry(currentObject) {
+  if (evaluateMonthLock()) {
+    alert("Editing is locked for dates outside the current month.");
+    return;
+  }
   //edit selected entry
   $("#idAdd").text("Save Changes");
   $("#idReset").text("Cancel");
@@ -1472,7 +1507,7 @@ function editEntry(currentObject) {
         fillProj(projs);
         $($("#idProject").find(`option[proj-id=${dataEdit[2]}]`)).prop(
           "selected",
-          true
+          true,
         );
         isDrawing();
 
@@ -1486,14 +1521,14 @@ function editEntry(currentObject) {
           fillCheckers(checks);
           $($("#idItem").find(`option[item-id=${dataEdit[3]}]`)).prop(
             "selected",
-            true
+            true,
           );
           // Paste Jobs Value
           getJobs(dataEdit[2], dataEdit[3]).then((jobs) => {
             fillJobs(jobs);
             $($("#idJRD").find(`option[job-id=${dataEdit[4]}]`)).prop(
               "selected",
-              true
+              true,
             );
 
             if (dataEdit[3] == 14 && dataEdit[12]) {
@@ -1531,12 +1566,17 @@ function editEntry(currentObject) {
         $("#idRev").click();
       }
       disableTimeInput(dataEdit[2]);
-    }
+    },
   );
   // isDrawing();
 }
 
 function selectEntry(currentObject) {
+  if (evaluateMonthLock()) {
+    alert("Duplicating entries is locked for dates outside the current month.");
+    return;
+  }
+
   //edit selected entry
   var trID = $($(currentObject).parents()[1]).attr("id");
   selectID = trID.split("_")[1];
@@ -1560,7 +1600,7 @@ function selectEntry(currentObject) {
         console.log("pasting proj entry");
         $($("#idProject").find(`option[proj-id=${dataSelect[2]}]`)).prop(
           "selected",
-          true
+          true,
         );
         isDrawing();
 
@@ -1575,7 +1615,7 @@ function selectEntry(currentObject) {
           // console.log("pasting item entry");
           $($("#idItem").find(`option[item-id=${dataSelect[3]}]`)).prop(
             "selected",
-            true
+            true,
           );
           // Paste Jobs Value
           getJobs(dataSelect[2], dataSelect[3]).then((jobs) => {
@@ -1583,7 +1623,7 @@ function selectEntry(currentObject) {
             // console.log("pasting job entry");
             $($("#idJRD").find(`option[job-id=${dataSelect[4]}]`)).prop(
               "selected",
-              true
+              true,
             );
 
             if (dataSelect[3] == 14 && dataSelect[12]) {
@@ -1668,7 +1708,7 @@ function selectEntry(currentObject) {
       //     .change();
       // }
       // $("#trGroup").val(dataSelect[12]);
-    }
+    },
   );
   // isDrawing();
 }
@@ -1736,7 +1776,7 @@ function getCheckers() {
 function fillCheckers(checks) {
   var checkSelect = $("#idChecking");
   checkSelect.html(
-    `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+    `<option selected hidden value=0 chk-id=0>Select Employee</option>`,
   );
   $.each(checks, function (index, item) {
     var option = $("<option>")
@@ -1881,7 +1921,7 @@ function getLabel(itemOfWorkID) {
                 <span class="col-12 alert-primary text-primary" id="labell" role="alert">${data}</span>
                 `);
       }
-    }
+    },
   );
 }
 function getOneBUTrainerID() {
@@ -1914,7 +1954,7 @@ function getPlans() {
       } else {
         $(`#plannedItems`).html(defaultBody);
       }
-    }
+    },
   );
 }
 function fillPlans(planString) {
@@ -1947,7 +1987,7 @@ function getDeets(planID) {
     function (data) {
       deets = $.parseJSON(data);
       deets.map(fillEditPlan);
-    }
+    },
   );
 }
 function fillEditPlan(editDetails) {
@@ -2002,7 +2042,7 @@ function planAccess() {
         // $("#navigationLinks").append(addString);
         $("#drLink").after(addString);
       }
-    }
+    },
   );
 }
 //#endregion
@@ -2220,10 +2260,10 @@ function getDayta(rawDate) {
         projHours.map(fillDayta);
       } else {
         $("#pHoursTable").html(
-          "<tr><td colspan='2' class='text-center'>No entries found</td></tr>"
+          "<tr><td colspan='2' class='text-center'>No entries found</td></tr>",
         );
       }
-    }
+    },
   );
   $.ajaxSetup({ async: true });
   $.post(
@@ -2238,7 +2278,7 @@ function getDayta(rawDate) {
       $("#msvOt").html(mhArr[1].toFixed(2));
       $("#msvLv").html(mhArr[2].toFixed(2));
       $("#msvAms").html(mhArr[3].toFixed(2));
-    }
+    },
   );
 }
 function fillDayta(projectDetailsArrayElement) {
@@ -2271,7 +2311,7 @@ function addColors(currentMonth) {
       greenDates = allDates[0];
       redDates = allDates[1];
       holidates = allDates[2];
-    }
+    },
   );
   $.ajaxSetup({ async: true });
   greenDates.forEach((element) => {
@@ -2340,13 +2380,13 @@ function addColors(currentMonth) {
       $(`.day.next-date:contains(${parseInt(daa)})`).addClass("holiday");
       $(`.day.next-date:contains(${parseInt(daa)})`).prop(
         "title",
-        `${rawHoliday[1]}`
+        `${rawHoliday[1]}`,
       );
     } else if (mm < nowmm) {
       $(`.day.prev-date:contains(${parseInt(daa)})`).addClass("holiday");
       $(`.day.prev-date:contains(${parseInt(daa)})`).prop(
         "title",
-        `${rawHoliday[1]}`
+        `${rawHoliday[1]}`,
       );
     } else {
       $(".day")
@@ -2373,4 +2413,232 @@ $(document).on("click", ".today-btn", function () {
   gotoday();
   $("#gotomonth").val("");
 });
+
+function getTodayLocalDateString() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function isDateInCurrentMonth(dateString) {
+  if (!dateString) return false;
+
+  const selectedDate = new Date(dateString + "T00:00:00");
+  const today = new Date();
+
+  return (
+    selectedDate.getFullYear() === today.getFullYear() &&
+    selectedDate.getMonth() === today.getMonth()
+  );
+}
+
+function getMonthYearLabel(dateString) {
+  if (!dateString) return "Selected Month";
+
+  const selectedDate = new Date(dateString + "T00:00:00");
+  return selectedDate.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function setLockedState(isLocked) {
+  const lockTargets = [
+    "#idGroup",
+    "#idLocation",
+    "#idProject",
+    "#idItem",
+    "#idJRD",
+    "#idTOW",
+    "#idChecking",
+    "#getHour",
+    "#getMin",
+    "#idMH",
+    "#idRemarks",
+    "#idAdd",
+    "#idReset",
+    "#idCopyDate",
+    "#idCopy",
+    "#searchproj",
+    "#searchitem",
+    "#searchjrd",
+    "#idRev",
+    "#towDesc",
+    "#trGroup",
+  ];
+
+  if (isLocked) {
+    $("#lockingOverlay").removeClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", true);
+    });
+    $("#idCopyDate").val("");
+    // Optional: disable edit/delete/duplicate row actions
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry], .delBut")
+      .prop("disabled", true)
+      .addClass("disabled");
+  } else {
+    $("#lockingOverlay").addClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", false);
+    });
+
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry], .delBut")
+      .prop("disabled", false)
+      .removeClass("disabled");
+
+    // restore your normal field logic after unlocking
+    sequenceValidation();
+    MHValidation();
+
+    const projID = $($("#idProject").find("option:selected")).attr("proj-id");
+    const itemID = $($("#idItem").find("option:selected")).attr("item-id");
+
+    if (projID) {
+      disableTimeInput(projID);
+    }
+    if (projID && itemID) {
+      disableInputs(projID, itemID);
+    }
+  }
+}
+
+function updateLockedMonthLabel() {
+  const selectedDate = $("#idDRDate").val();
+  $("#lockedMonthLabel").text(getMonthYearLabel(selectedDate));
+}
+
+function evaluateMonthLock() {
+  const selectedDate = $("#idDRDate").val();
+
+  updateLockedMonthLabel();
+  updateLockingMessage();
+
+  if (!selectedDate) {
+    setLockedState(true);
+    return true;
+  }
+
+  const locked = !canEditSelectedDate(selectedDate);
+  setLockedState(locked);
+
+  return locked;
+}
+function getPHNowParts() {
+  const now = new Date();
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(now);
+
+  const get = (type) => parts.find((p) => p.type === type)?.value;
+
+  return {
+    year: Number(get("year")),
+    month: Number(get("month")),
+    day: Number(get("day")),
+    hour: Number(get("hour")),
+    minute: Number(get("minute")),
+    second: Number(get("second")),
+  };
+}
+
+function parseYMDLocal(dateString) {
+  if (!dateString) return null;
+  const [year, month, day] = dateString.split("-").map(Number);
+  return { year, month, day };
+}
+
+function isCurrentMonth(dateString) {
+  const selected = parseYMDLocal(dateString);
+  if (!selected) return false;
+
+  const phNow = getPHNowParts();
+
+  return selected.year === phNow.year && selected.month === phNow.month;
+}
+
+function isPreviousMonth(dateString) {
+  const selected = parseYMDLocal(dateString);
+  if (!selected) return false;
+
+  const phNow = getPHNowParts();
+
+  let prevMonth = phNow.month - 1;
+  let prevYear = phNow.year;
+
+  if (prevMonth === 0) {
+    prevMonth = 12;
+    prevYear -= 1;
+  }
+
+  return selected.year === prevYear && selected.month === prevMonth;
+}
+
+function hasLeaderPreviousMonthWindowAccess() {
+  const phNow = getPHNowParts();
+  const isLeaderAllowed = Number(empDetails["canPrevMonthOverride"]) === 1;
+
+  if (!isLeaderAllowed) return false;
+
+  const isFirstDay = phNow.day === 1;
+  const before1PM = phNow.hour < 13;
+
+  return isFirstDay && before1PM;
+}
+
+function canEditSelectedDate(dateString) {
+  if (!dateString) return false;
+
+  if (isCurrentMonth(dateString)) {
+    return true;
+  }
+
+  if (isPreviousMonth(dateString) && hasLeaderPreviousMonthWindowAccess()) {
+    return true;
+  }
+
+  return false;
+}
+function updateLockingMessage() {
+  const selectedDate = $("#idDRDate").val();
+  const isPrevMonth = isPreviousMonth(selectedDate);
+  const leaderWindow = hasLeaderPreviousMonthWindowAccess();
+  const isLeaderAllowed = Number(empDetails["canPrevMonthOverride"]) === 1;
+
+  let message = `
+    This Daily Report is outside the current editable month.
+    You may still view the details, but changes are disabled.
+  `;
+
+  if (isPrevMonth && isLeaderAllowed && !leaderWindow) {
+    message = `
+      Previous-month editing is only available to authorized leaders
+      on the 1st day of the current month until 1:00 PM PH time.
+      You may still view the details, but changes are disabled.
+    `;
+  }
+
+  if (isPrevMonth && isLeaderAllowed && leaderWindow) {
+    message = `
+      Authorized leader access is currently active.
+      You may edit entries from the previous month until 1:00 PM PH time today.
+    `;
+  }
+
+  $("#lockingMessage").html(message);
+}
 //#endregion

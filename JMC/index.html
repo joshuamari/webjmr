@@ -1,37 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Job Manhour Category</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
+
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/selectpicker.css" />
     <link rel="stylesheet" href="css/w3-kawasaki.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/jmc.css" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/newmain.js"></script>
 
     <!-- <script src="js/selectpicker.js"></script> -->
     <script src="jquery-ui-1.13.2/jquery-ui.min.js"></script>
-    <!--#region BUSTER CALL  -->
-    <script>
-      var busterCall = ["js/newmain.js", "css/jmc.css"];
-      $.post(
-        "ajax/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Web JMR",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
-    <!--#endregion -->
   </head>
   <body>
     <!--#region MODAL START-->
@@ -470,7 +458,9 @@
                 ></span>
               </div>
               <div class="col-12 mb-2 engr">
-                <label for="jrdPrep" class="form-label">KHI Preparing Manhour</label>
+                <label for="jrdPrep" class="form-label"
+                  >KHI Preparing Manhour</label
+                >
                 <input
                   type="number"
                   placeholder="#"
@@ -869,7 +859,7 @@
                 <h1 class="title ps-2 m-0">JMC</h1>
                 <div
                   class="breadcrumbar text-start pt-2 fs-5"
-                  style="--bs-breadcrumb-divider: '>'"
+                  style="--bs-breadcrumb-divider: &quot;>&quot;"
                 >
                   <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item">
@@ -959,7 +949,7 @@
                 <h1 class="title ps-2 m-0">JMC</h1>
                 <div
                   class="breadcrumbar text-start fs-5"
-                  style="--bs-breadcrumb-divider: '>'"
+                  style="--bs-breadcrumb-divider: &quot;>&quot;"
                 >
                   <ol class="breadcrumb m-0 mt-2">
                     <li class="breadcrumb-item">

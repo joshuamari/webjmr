@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Reports</title>
@@ -8,50 +8,13 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/reports.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
-    <!--#region BUSTER CALL  -->
-    <script>
-      var busterCall = ["js/reports.js", "css/reports.css"];
-      $.post(
-        "ajax/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Reports",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
-    <!--#endregion -->
+    <script src="js/reports.js"></script>
   </head>
   <body>
-    <!--#region MODAL START-->
-    <!--#region Notice to be Described in jmr MODAL -->
-    <!-- <div class="modal fade" id="drInstruction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header" style="background-color: #3980c7;">
-              <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel"><i class='bx bxs-info-circle text-light px-2'></i>JMR Information</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body fs-5 text-center p-lg-5 p-2">
-              Please select the Project with Order Number
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary border-0" id="back2Project" style="background: linear-gradient(45deg, rgba(32,191,85,1) 0%, rgba(1,186,239,1) 100%);
-              ">Got it</button>
-              
-            </div>
-          </div>
-        </div>
-      </div> -->
-    <!--#endregion-->
-    <!--#endregion MODAL END-->
-
     <div class="sidebar close fixed-top">
       <div
         class="position-relative d-flex justify-content-between align-items-center"
@@ -61,7 +24,6 @@
           style="text-decoration: none"
           href="#"
         >
-          <!-- <i class='bx bxs-book-open' ></i> -->
           <div
             class="d-flex justify-content-center align-items-center"
             style="line-height: 50px; min-width: 78px; height: 50px"
@@ -175,7 +137,6 @@
           <h2 class="title ps-2 m-0">Reports</h2>
         </div>
         <div class="content position-relative py-5">
-          
           <div id="cardsContainer" class="d-grid gap-4 w-100">
             <div class="card">
               <a

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Override</title>
@@ -8,26 +8,12 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/override.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
 
     <script src="js/jquery.js"></script>
-
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!--#region BUSTER CALL  -->
-    <script>
-      var busterCall = ["js/override.js", "css/override.css"];
-      $.post(
-        "php/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Override",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
-    <!--#endregion -->
+    <script src="js/override.js"></script>
   </head>
   <body>
     <!--#region MODAL START-->

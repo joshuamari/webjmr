@@ -17,10 +17,6 @@ h6 {
   font-family: "Poppins", sans-serif;
 }
 
-body {
-  background: #ececec;
-}
-
 :root {
   --main-blue: #3980c7;
   --secondary-blue: #395dc7;
@@ -141,7 +137,6 @@ footer {
 }
 
 .home-section .home-content {
-  background: #eeeded;
   align-items: center;
   width: 100%;
   height: 65%;

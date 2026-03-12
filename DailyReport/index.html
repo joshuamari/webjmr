@@ -1,33 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Daily Report</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
+
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/dr.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
 
     <script src="js/jquery.js"></script>
 
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <!--#region BUSTER CALL  -->
-    <script>
-      var busterCall = ["js/newDR.js", "css/dr.css"];
-      $.post(
-        "ajax/get_version.php",
-        {
-          busterCall: busterCall,
-          titleName: "Daily Report",
-        },
-        function (data) {
-          $("head").html(data);
-        }
-      );
-    </script>
-    <!--#endregion -->
+    <script src="js/newDR.js"></script>
   </head>
   <body>
     <!--#region MODAL START-->
@@ -274,7 +262,7 @@
               alt="logo"
             />
           </div>
-          <span class="logo_name text-start">WEB JMR</span>
+          <span class="logo_name text-start whitespace-nowrap">WEB JMR</span>
         </a>
         <div
           class="col-2 align-items-center"
@@ -382,6 +370,8 @@
                 <span><i class="bx bxs-user-detail text-light"></i></span>
               </button> -->
             </div>
+
+            <!-- LEFT SIDE -->
             <div
               class="left col-12 col-xl-4 position-relative d-flex aligns-items-center justify-content-center"
             >
@@ -389,8 +379,8 @@
                 class="shadow m-0 p-0 px-md-3 mb-3 rounded-3 bg-light lefty"
                 style="width: 100%"
               >
-                <div class="left-cont row py-3 px-3">
-                  <div class="col-12 col-md-6 my-2">
+                <div class="left-cont row py-3 px-3 relative">
+                  <div class="col-6 my-2">
                     <label for="idGroup" class="form-label">Group</label>
                     <div class="input-group">
                       <select
@@ -407,7 +397,7 @@
                     ></span>
                   </div>
 
-                  <div class="col-12 col-md-6 my-2 datepicker">
+                  <div class="col-6 my-2 datepicker">
                     <label for="idDRDate" class="form-label">Select Date</label>
                     <input
                       type="date"
@@ -420,6 +410,53 @@
                       id="p2"
                       role="alert"
                     ></span>
+                  </div>
+
+                  <!-- LOCK FEATURE -->
+                  <div
+                    id="lockingOverlay"
+                    class="hidden absolute bottom-0 left-0 w-full h-[calc(100%_-_100px)] z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+                  >
+                    <div
+                      class="flex flex-col items-center justify-center text-center bg-white rounded-xl shadow-xl px-10 py-8 gap-5 max-w-[520px]"
+                    >
+                      <div
+                        class="w-16 h-16 flex items-center justify-center rounded-full bg-yellow-100"
+                      >
+                        <i class="bx bx-lock-alt text-yellow-500 text-3xl"></i>
+                      </div>
+
+                      <h3 class="text-xl font-semibold text-gray-800">
+                        Editing Locked
+                      </h3>
+
+                      <p
+                        id="lockingMessage"
+                        class="text-gray-600 leading-relaxed"
+                      >
+                        This Daily Report is outside the current editable month.
+                      </p>
+
+                      <button
+                        id="btnRequestAccess"
+                        class="btn btn-primary w-full max-w-[280px]"
+                      >
+                        Request 1-Day Access for
+                        <span
+                          id="lockedMonthLabel"
+                          class="font-medium text-white"
+                          >Selected Month</span
+                        >
+                      </button>
+
+                      <button
+                        id="btnGoCurrentMonth"
+                        type="button"
+                        class="text-sm text-blue-500 hover:text-blue-700 transition bg-transparent border-0"
+                      >
+                        Go to Current Month →
+                      </button>
+                    </div>
                   </div>
 
                   <div class="col-12 my-2">
@@ -472,16 +509,6 @@
                     ></span>
                   </div>
 
-                  <!-- <div class="col-12 my-2 iow">
-                  <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
-                  <div class="input-group">
-                    <select class="form-select" id="idItem" required>
-                      <option value="" disabled selected>Select Item of Works</option>
-                      
-                    </select>
-                  </div>
-                  <span class="col-12 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
-                </div> -->
                   <div class="col-12 my-2 iow">
                     <label for="idItem" id="itemlbl" class="form-label"
                       >Item of Works</label

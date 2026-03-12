@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>Monthly Individual Report</title>
@@ -13,10 +13,12 @@
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/individual.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../../tailwindcss/output.css" />
     <script src="js/html2canvas.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/individual.js"></script>
     <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
       var busterCall = [
@@ -32,7 +34,7 @@
         },
         function (data) {
           $("head").html(data);
-        }
+        },
       );
     </script>
   </head>
@@ -537,7 +539,7 @@
                         class="form-control"
                         id="khiPos"
                         placeholder="KHI Representative Designation"
-                        value ="KHI Representative"
+                        value="KHI Representative"
                       />
                     </div>
                   </div>
@@ -563,7 +565,7 @@
           >
             <div
               style="
-                background-image: url('./images/kdt\ logo.png');
+                background-image: url(&quot;./images/kdt\ logo.png&quot;);
                 height: 38px;
                 width: 75px;
                 background-size: cover;
@@ -572,7 +574,7 @@
             ></div>
             <div
               style="
-                background-image: url('./images/Kawasaki.png');
+                background-image: url(&quot;./images/Kawasaki.png&quot;);
                 height: 38px;
                 width: 160px;
                 background-size: cover;
