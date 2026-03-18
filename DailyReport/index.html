@@ -1,316 +1,214 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Daily Report</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta charset="UTF-8" />
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-    <link rel="stylesheet" href="css/dr.css" />
-    <link rel="stylesheet" href="css/boxicons.css" />
-    <link rel="stylesheet" href="../tailwindcss/output.css" />
+<head>
+  <title>Daily Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
 
-    <script src="js/jquery.js"></script>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+  <link rel="stylesheet" href="css/dr.css" />
+  <link rel="stylesheet" href="css/boxicons.css" />
+  <link rel="stylesheet" href="../tailwindcss/output.css" />
 
-    <script src="js/jquery.inview.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/newDR.js"></script>
-  </head>
-  <body>
-    <!--#region MODAL START-->
-    <!--#region Notice to be Described in jmr MODAL -->
-    <div
-      class="modal fade"
-      id="drInstruction"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel2"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header" style="background-color: #3980c7">
-            <h1
-              class="modal-title fs-2 text-light text-center"
-              id="staticBackdropLabel2"
-            >
-              <i class="bx bxs-info-circle text-light px-2"></i>JMR Information
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body fs-5 text-center p-lg-5 p-2">
-            Please select the Project with Order Number
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary border-0"
-              id="back2Project"
-              style="
+  <script src="js/jquery.js"></script>
+
+  <script src="js/jquery.inview.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <!-- <script src="js/DR_v3.js"></script> -->
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/lock.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/form.js"></script>
+  <script src="js/entries.js"></script>
+  <script src="js/planning.js"></script>
+  <script src="js/events.form.js"></script>
+  <script src="js/events.calendar.js"></script>
+  <script src="js/events.dropdown.js"></script>
+  <script src="js/events.search.js"></script>
+  <script src="js/events.utility.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/app.js"></script>
+</head>
+
+<body>
+  <!--#region MODAL START-->
+  <!--#region Notice to be Described in jmr MODAL -->
+  <div class="modal fade" id="drInstruction" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #3980c7">
+          <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel2">
+            <i class="bx bxs-info-circle text-light px-2"></i>JMR Information
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body fs-5 text-center p-lg-5 p-2">
+          Please select the Project with Order Number
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary border-0" id="back2Project" style="
                 background: linear-gradient(
                   45deg,
                   rgba(32, 191, 85, 1) 0%,
                   rgba(1, 186, 239, 1) 100%
                 );
-              "
-            >
-              Got it
-            </button>
-          </div>
+              ">
+            Got it
+          </button>
         </div>
       </div>
     </div>
-    <!--#endregion-->
+  </div>
+  <!--#endregion-->
 
-    <!--#region Planning Modal -->
-    <div
-      class="modal fade"
-      id="drPlanning"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="staticBackdropLabel1"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-          <div class="modal-header" style="background-color: #3980c7">
-            <h1
-              class="modal-title fs-2 text-light text-center"
-              id="staticBackdropLabel1"
-            >
-              My Planned Tasks
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body p-3">
-            <div class="row mb-3 position-relative">
-              <label for="projectPlan" class="col-4 col-form-label"
-                >Project</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="projectPlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="itemPlan" class="col-4 col-form-label"
-                >Item of Works</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="itemPlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="jrdPlan" class="col-4 col-form-label"
-                >Job Request Description</label
-              >
-              <div class="col-8">
-                <input type="text" class="form-control" id="jrdPlan" disabled />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="sDatePlan" class="col-4 col-form-label"
-                >Start Date</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="sDatePlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="eDatePlan" class="col-4 col-form-label"
-                >End Date</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="eDatePlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="mhPlan" class="col-4 col-form-label"
-                >Remaining MH</label
-              >
-              <div class="col-8">
-                <input
-                  type="number"
-                  class="form-control"
-                  id="mhPlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="statusPlan" class="col-4 col-form-label"
-                >Finished Date</label
-              >
-              <div class="col-8" id="statusPlan">
-                <span class="badge text-bg-warning fs-5">Ongoing</span>
-              </div>
-            </div>
-            <hr />
-            <div class="row mb-3 position-relative">
-              <label for="plannerPlan" class="col-4 col-form-label"
-                >Planned by</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="plannerPlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="plannerDatePlan" class="col-4 col-form-label"
-                >Planned date</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="plannerDatePlan"
-                  disabled
-                />
-              </div>
-            </div>
-            <div class="row mb-3 position-relative">
-              <label for="modifiedPlan" class="col-4 col-form-label"
-                >Date Modified</label
-              >
-              <div class="col-8">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="modifiedPlan"
-                  disabled
-                />
-              </div>
+  <!--#region Planning Modal -->
+  <div class="modal fade" id="drPlanning" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: #3980c7">
+          <h1 class="modal-title fs-2 text-light text-center" id="staticBackdropLabel1">
+            My Planned Tasks
+          </h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-3">
+          <div class="row mb-3 position-relative">
+            <label for="projectPlan" class="col-4 col-form-label">Project</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="projectPlan" disabled />
             </div>
           </div>
+          <div class="row mb-3 position-relative">
+            <label for="itemPlan" class="col-4 col-form-label">Item of Works</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="itemPlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="jrdPlan" class="col-4 col-form-label">Job Request Description</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="jrdPlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="sDatePlan" class="col-4 col-form-label">Start Date</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="sDatePlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="eDatePlan" class="col-4 col-form-label">End Date</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="eDatePlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="mhPlan" class="col-4 col-form-label">Remaining MH</label>
+            <div class="col-8">
+              <input type="number" class="form-control" id="mhPlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="statusPlan" class="col-4 col-form-label">Finished Date</label>
+            <div class="col-8" id="statusPlan">
+              <span class="badge text-bg-warning fs-5">Ongoing</span>
+            </div>
+          </div>
+          <hr />
+          <div class="row mb-3 position-relative">
+            <label for="plannerPlan" class="col-4 col-form-label">Planned by</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="plannerPlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="plannerDatePlan" class="col-4 col-form-label">Planned date</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="plannerDatePlan" disabled />
+            </div>
+          </div>
+          <div class="row mb-3 position-relative">
+            <label for="modifiedPlan" class="col-4 col-form-label">Date Modified</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="modifiedPlan" disabled />
+            </div>
+          </div>
+        </div>
 
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary border-0"
-              id="ok"
-              data-bs-dismiss="modal"
-              style="
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary border-0" id="ok" data-bs-dismiss="modal" style="
                 background: linear-gradient(
                   45deg,
                   rgba(32, 191, 85, 1) 0%,
                   rgba(1, 186, 239, 1) 100%
                 );
-              "
-            >
-              Close
-            </button>
-          </div>
+              ">
+            Close
+          </button>
         </div>
       </div>
     </div>
-    <!--#endregion-->
-    <!--#endregion MODAL END-->
+  </div>
+  <!--#endregion-->
+  <!--#endregion MODAL END-->
 
-    <div class="sidebar close fixed-top">
-      <div
-        class="position-relative d-flex justify-content-between align-items-center"
-      >
-        <a
-          class="row-cols-12 logo-details"
-          style="text-decoration: none"
-          href="#"
-        >
-          <!-- <i class='bx bxs-book-open' ></i> -->
-          <div
-            class="d-flex justify-content-center align-items-center"
-            style="line-height: 50px; min-width: 78px; height: 50px"
-          >
-            <img
-              src="../images/logo.png"
-              style="width: 50px; height: 50px"
-              alt="logo"
-            />
-          </div>
-          <span class="logo_name text-start whitespace-nowrap">WEB JMR</span>
-        </a>
-        <div
-          class="col-2 align-items-center"
-          style="font-size: 35px; height: 60px"
-        >
-          <i
-            class="bx bx-menu position-relative menu-two mx-0 px-0"
-            style="top: 10px; color: #fff"
-          ></i>
+  <div class="sidebar close fixed-top">
+    <div class="position-relative d-flex justify-content-between align-items-center">
+      <a class="row-cols-12 logo-details" style="text-decoration: none" href="#">
+        <!-- <i class='bx bxs-book-open' ></i> -->
+        <div class="d-flex justify-content-center align-items-center"
+          style="line-height: 50px; min-width: 78px; height: 50px">
+          <img src="../images/logo.png" style="width: 50px; height: 50px" alt="logo" />
         </div>
+        <span class="logo_name text-start whitespace-nowrap">WEB JMR</span>
+      </a>
+      <div class="col-2 align-items-center" style="font-size: 35px; height: 60px">
+        <i class="bx bx-menu position-relative menu-two mx-0 px-0" style="top: 10px; color: #fff"></i>
       </div>
+    </div>
 
-      <ul class="nav-links m-0" id="navigationLinks">
-        <li id="drLink">
-          <div class="iocn-link">
-            <a class="row-cols-12 ey">
-              <i class="bx bx-calendar-event"></i>
+    <ul class="nav-links m-0" id="navigationLinks">
+      <li id="drLink">
+        <div class="iocn-link">
+          <a class="row-cols-12 ey">
+            <i class="bx bx-calendar-event"></i>
 
-              <span class="link_name col-9">Daily Report</span>
-            </a>
-          </div>
-          <ul class="sub-menu">
-            <li><a class="link_name">Daily Report</a></li>
-          </ul>
-        </li>
-        <li id="jmcLink">
-          <div class="iocn-link">
-            <a class="row-cols-12" href="../JMC">
-              <i class="bx bx-briefcase"></i>
-              <span class="link_name col-9">JMC</span>
-            </a>
-          </div>
-          <ul class="sub-menu">
-            <li><a class="link_name" href="../JMC">Job Manhour Category</a></li>
-          </ul>
-        </li>
-        <li id="repLink">
-          <div class="iocn-link">
-            <a class="row-cols-12" href="../Reports/">
-              <i class="bx bxs-report"></i>
-              <span class="link_name col-9">Reports</span>
-            </a>
-          </div>
-          <ul class="sub-menu">
-            <li><a class="link_name" href="../Reports/">Reports</a></li>
-          </ul>
-        </li>
-        <!-- <li id="ovrLink">
+            <span class="link_name col-9">Daily Report</span>
+          </a>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name">Daily Report</a></li>
+        </ul>
+      </li>
+      <li id="jmcLink">
+        <div class="iocn-link">
+          <a class="row-cols-12" href="../JMC">
+            <i class="bx bx-briefcase"></i>
+            <span class="link_name col-9">JMC</span>
+          </a>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="../JMC">Job Manhour Category</a></li>
+        </ul>
+      </li>
+      <li id="repLink">
+        <div class="iocn-link">
+          <a class="row-cols-12" href="../Reports/">
+            <i class="bx bxs-report"></i>
+            <span class="link_name col-9">Reports</span>
+          </a>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="../Reports/">Reports</a></li>
+        </ul>
+      </li>
+      <!-- <li id="ovrLink">
           <div class="iocn-link">
             <a class="row-cols-12" href="../Override/">
               <i class="bx bxs-user-detail"></i>
@@ -321,252 +219,161 @@
             <li><a class="link_name" href="../Override/">Override</a></li>
           </ul>
         </li> -->
-      </ul>
+    </ul>
 
-      <div class="position-relative">
-        <a
-          class="row-cols-12 logo-details"
-          style="text-decoration: none"
-          href="../../"
-        >
-          <div
-            class="d-flex justify-content-center align-items-center"
-            style="line-height: 50px; min-width: 78px; height: 50px"
-          >
-            <i class="bx bxs-home text-light fs-3"></i>
-          </div>
-          <span class="logo_name home text-start">KDT Portal</span>
-        </a>
-        <div
-          class="col-2 align-items-center"
-          style="font-size: 35px; height: 60px"
-        >
-          <i
-            class="bx bx-menu position-relative menu-two mx-0 px-0"
-            style="top: 10px; color: #fff"
-          ></i>
+    <div class="position-relative">
+      <a class="row-cols-12 logo-details" style="text-decoration: none" href="../../">
+        <div class="d-flex justify-content-center align-items-center"
+          style="line-height: 50px; min-width: 78px; height: 50px">
+          <i class="bx bxs-home text-light fs-3"></i>
+        </div>
+        <span class="logo_name home text-start">KDT Portal</span>
+      </a>
+      <div class="col-2 align-items-center" style="font-size: 35px; height: 60px">
+        <i class="bx bx-menu position-relative menu-two mx-0 px-0" style="top: 10px; color: #fff"></i>
+      </div>
+    </div>
+  </div>
+  <section class="home-section m-0">
+    <div class="home-topbar sticky-top" style="z-index: 1230">
+      <i class="bx bx-menu position-relative menu-one mx-0 px-0"></i>
+
+      <div class="d-flex float-end justify-content-center text-center">
+        <div class="user-name p-2">
+          <h5>Hello, <span class="hello-user">User</span></h5>
         </div>
       </div>
     </div>
-    <section class="home-section m-0">
-      <div class="home-topbar sticky-top" style="z-index: 1230">
-        <i class="bx bx-menu position-relative menu-one mx-0 px-0"></i>
-
-        <div class="d-flex float-end justify-content-center text-center">
-          <div class="user-name p-2">
-            <h5>Hello, <span class="hello-user">User</span></h5>
-          </div>
-        </div>
-      </div>
-      <div class="home-content position-relative p-0 m-0 row" id="home-content">
-        <div class="position-relative cont p-2 m-0">
-          <div class="maindiv position-relative px-0 py-2 m-0 row">
-            <div class="page-title col-12 px-3 pb-3 m-0">
-              <h2 class="title ps-2 m-0">Daily Report</h2>
-              <a class="override-btn" href="../Override/">
-                <span>Override</span>
-              </a>
-              <!-- <button id="button_closed">
+    <div class="home-content position-relative p-0 m-0 row" id="home-content">
+      <div class="position-relative cont p-2 m-0">
+        <div class="maindiv position-relative px-0 py-2 m-0 row">
+          <div class="page-title col-12 px-3 pb-3 m-0">
+            <h2 class="title ps-2 m-0">Daily Report</h2>
+            <a class="override-btn" href="../Override/">
+              <span>Override</span>
+            </a>
+            <!-- <button id="button_closed">
                 <span><i class="bx bxs-user-detail text-light"></i></span>
               </button> -->
-            </div>
+          </div>
 
-            <!-- LEFT SIDE -->
-            <div
-              class="left col-12 col-xl-4 position-relative d-flex aligns-items-center justify-content-center"
-            >
-              <div
-                class="shadow m-0 p-0 px-md-3 mb-3 rounded-3 bg-light lefty"
-                style="width: 100%"
-              >
-                <div class="left-cont row py-3 px-3 relative">
-                  <div class="col-6 my-2">
-                    <label for="idGroup" class="form-label">Group</label>
-                    <div class="input-group">
-                      <select
-                        class="form-select"
-                        id="idGroup"
-                        placeholder="Select Group"
-                        required
-                      ></select>
-                    </div>
-                    <span
-                      class="col-12 col-md-6 mt-1 alert-danger text-danger"
-                      id="p1"
-                      role="alert"
-                    ></span>
+          <!-- LEFT SIDE -->
+          <div class="left col-12 col-xl-4 position-relative d-flex aligns-items-center justify-content-center">
+            <div class="shadow m-0 p-0 px-md-3 mb-3 rounded-3 bg-light lefty" style="width: 100%">
+              <div class="left-cont row py-3 px-3 relative">
+                <div class="col-6 my-2">
+                  <label for="idGroup" class="form-label">Group</label>
+                  <div class="input-group">
+                    <select class="form-select" id="idGroup" placeholder="Select Group" required></select>
                   </div>
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p1" role="alert"></span>
+                </div>
 
-                  <div class="col-6 my-2 datepicker">
-                    <label for="idDRDate" class="form-label">Select Date</label>
-                    <input
-                      type="date"
-                      class="form-control"
-                      id="idDRDate"
-                      required
-                    />
-                    <span
-                      class="col-12 col-md-6 mt-1 alert-danger text-danger"
-                      id="p2"
-                      role="alert"
-                    ></span>
-                  </div>
+                <div class="col-6 my-2 datepicker">
+                  <label for="idDRDate" class="form-label">Select Date</label>
+                  <input type="date" class="form-control" id="idDRDate" required />
+                  <span class="col-12 col-md-6 mt-1 alert-danger text-danger" id="p2" role="alert"></span>
+                </div>
 
-                  <!-- LOCK FEATURE -->
-                  <div
-                    id="lockingOverlay"
-                    class="hidden absolute bottom-0 left-0 z-50 flex h-[calc(100%_-_100px)] w-full items-center justify-center bg-slate-900/18 backdrop-blur-[2px] pb-10"
-                  >
-                    <div
-                      class="relative flex w-full max-w-[470px] justify-center px-5"
-                    >
-                      <!-- Floating shield -->
-                      <div class="absolute -top-9 z-10">
+                <!-- LOCK FEATURE -->
+                <div id="lockingOverlay"
+                  class="hidden absolute bottom-0 left-0 z-50 flex h-[calc(100%_-_100px)] w-full items-center justify-center bg-slate-900/18 backdrop-blur-[2px] pb-10">
+                  <div class="relative flex w-full max-w-[470px] justify-center px-5">
+                    <!-- Floating shield -->
+                    <div class="absolute -top-9 z-10">
+                      <div class="relative flex h-[82px] w-[82px] items-center justify-center">
+                        <div class="absolute inset-0 rounded-full bg-yellow-200/70 blur-[2px]"></div>
                         <div
-                          class="relative flex h-[82px] w-[82px] items-center justify-center"
-                        >
-                          <div
-                            class="absolute inset-0 rounded-full bg-yellow-200/70 blur-[2px]"
-                          ></div>
-                          <div
-                            class="relative flex h-[82px] w-[82px] items-center justify-center rounded-full bg-yellow-100 shadow-[0_12px_28px_rgba(234,179,8,0.28)]"
-                          >
-                            <div
-                              class="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-yellow-400"
-                            >
-                              <i
-                                class="bx bx-lock-alt text-[30px] text-white"
-                              ></i>
-                            </div>
+                          class="relative flex h-[82px] w-[82px] items-center justify-center rounded-full bg-yellow-100 shadow-[0_12px_28px_rgba(234,179,8,0.28)]">
+                          <div class="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-yellow-400">
+                            <i class="bx bx-lock-alt text-[30px] text-white"></i>
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      <!-- Card -->
-                      <div
-                        class="flex w-full flex-col items-center rounded-[22px] bg-white px-10 pb-8 pt-16 text-center shadow-[0_22px_55px_rgba(15,23,42,0.16)]"
-                      >
-                        <h3
-                          class="text-[20px] font-semibold tracking-[0.1px] text-slate-800"
-                        >
-                          Editing Locked
-                        </h3>
+                    <!-- Card -->
+                    <div
+                      class="flex w-full flex-col items-center rounded-[22px] bg-white px-10 pb-8 pt-16 text-center shadow-[0_22px_55px_rgba(15,23,42,0.16)]">
+                      <h3 class="text-[20px] font-semibold tracking-[0.1px] text-slate-800">
+                        Editing Locked
+                      </h3>
 
-                        <p
-                          id="lockingMessage"
-                          class="mt-8 max-w-[360px] text-[15px] leading-8 text-slate-500"
-                        >
-                          This Daily Report is outside the current editable
-                          month.
-                          <br />
-                          You may still view the existing details, but changes
-                          <br />
-                          are disabled. To make updates, request
-                          <br />
-                          1-day temporary access.
-                        </p>
+                      <p id="lockingMessage" class="mt-8 max-w-[360px] text-[15px] leading-8 text-slate-500">
+                        This Daily Report is outside the current editable
+                        month.
+                        <br />
+                        You may still view the existing details, but changes
+                        <br />
+                        are disabled. To make updates, request
+                        <br />
+                        1-day temporary access.
+                      </p>
 
-                        <button
-                          id="btnRequestAccess"
-                          type="button"
-                          class="mt-8 min-h-[42px] w-full max-w-[300px] rounded-[8px] border-0 bg-blue-500 px-5 text-[15px] font-medium text-white shadow-sm transition hover:bg-blue-600"
-                        >
-                          Request 1-Day Access
-                        </button>
+                      <button id="btnRequestAccess" type="button"
+                        class="mt-8 min-h-[42px] w-full max-w-[300px] rounded-[8px] border-0 bg-blue-500 px-5 text-[15px] font-medium text-white shadow-sm transition hover:bg-blue-600">
+                        Request 1-Day Access
+                      </button>
 
-                        <button
-                          id="btnGoCurrentMonth"
-                          type="button"
-                          class="mt-7 border-0 bg-transparent text-[14px] font-medium text-blue-500 transition hover:text-blue-700"
-                        >
-                          Go to Current Month
-                          <span class="ml-1 inline-block">→</span>
-                        </button>
-                      </div>
+                      <button id="btnGoCurrentMonth" type="button"
+                        class="mt-7 border-0 bg-transparent text-[14px] font-medium text-blue-500 transition hover:text-blue-700">
+                        Go to Current Month
+                        <span class="ml-1 inline-block">→</span>
+                      </button>
                     </div>
                   </div>
+                </div>
 
-                  <div class="col-12 my-2">
-                    <label for="idLocation" class="form-label">Location</label>
-                    <div class="input-group">
-                      <select class="form-select" id="idLocation" required>
-                        <option value="" disabled selected>
-                          Select Location
-                        </option>
-                      </select>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p3"
-                      role="alert"
-                    ></span>
-                  </div>
-
-                  <div class="col-12 my-2 proj">
-                    <label for="idProj" id="projlbl" class="form-label"
-                      >Project</label
-                    >
-                    <select
-                      class="select-btn form-select"
-                      id="idProject"
-                      title="."
-                      required
-                    >
-                      <option selected hidden disabled value="">
-                        Select Project
+                <div class="col-12 my-2">
+                  <label for="idLocation" class="form-label">Location</label>
+                  <div class="input-group">
+                    <select class="form-select" id="idLocation" required>
+                      <option value="" disabled selected>
+                        Select Location
                       </option>
                     </select>
-                    <div class="proj content">
-                      <div class="search">
-                        <i class="bx bx-search"></i>
-                        <input
-                          type="search"
-                          class="form-control"
-                          id="searchproj"
-                          placeholder="Search"
-                          style="padding-left: 30px"
-                        />
-                      </div>
-                      <ul id="projOptions" class="options p-0"></ul>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p4"
-                      role="alert"
-                    ></span>
                   </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p3" role="alert"></span>
+                </div>
 
-                  <div class="col-12 my-2 iow">
-                    <label for="idItem" id="itemlbl" class="form-label"
-                      >Item of Works</label
-                    >
-                    <select class="select-btn form-select" id="idItem" required>
-                      <option selected hidden disabled value="">
-                        Select Item of Works
-                      </option>
-                      <!-- <span class="display">Select Item of Works</span> -->
-                    </select>
-                    <div class="content">
-                      <div class="search">
-                        <i class="bx bx-search"></i>
-                        <input
-                          type="search"
-                          class="form-control"
-                          id="searchitem"
-                          placeholder="Search"
-                          style="padding-left: 30px"
-                        />
-                      </div>
-                      <ul id="itemOptions" class="options p-0"></ul>
+                <div class="col-12 my-2 proj">
+                  <label for="idProj" id="projlbl" class="form-label">Project</label>
+                  <select class="select-btn form-select" id="idProject" title="." required>
+                    <option selected hidden disabled value="">
+                      Select Project
+                    </option>
+                  </select>
+                  <div class="proj content">
+                    <div class="search">
+                      <i class="bx bx-search"></i>
+                      <input type="search" class="form-control" id="searchproj" placeholder="Search"
+                        style="padding-left: 30px" />
                     </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p5"
-                      role="alert"
-                    ></span>
+                    <ul id="projOptions" class="options p-0"></ul>
                   </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p4" role="alert"></span>
+                </div>
 
-                  <!-- <div class="col-12 my-2 " id="idJRDDiv">
+                <div class="col-12 my-2 iow">
+                  <label for="idItem" id="itemlbl" class="form-label">Item of Works</label>
+                  <select class="select-btn form-select" id="idItem" required>
+                    <option selected hidden disabled value="">
+                      Select Item of Works
+                    </option>
+                    <!-- <span class="display">Select Item of Works</span> -->
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class="bx bx-search"></i>
+                      <input type="search" class="form-control" id="searchitem" placeholder="Search"
+                        style="padding-left: 30px" />
+                    </div>
+                    <ul id="itemOptions" class="options p-0"></ul>
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p5" role="alert"></span>
+                </div>
+
+                <!-- <div class="col-12 my-2 " id="idJRDDiv">
                   <label for="idJRD" class="form-label">Job Request Description</label>
                   <div class="input-group">
                     <select class="form-select" id="idJRD" required>
@@ -577,549 +384,426 @@
                   <span class="col-12 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
                 </div> -->
 
-                  <div class="col-12 my-2 jord" id="idJRDDiv">
-                    <label for="idJRD" class="form-label"
-                      >Job Request Description</label
-                    >
-                    <select class="form-select" id="idJRD" required>
-                      <option selected hidden disabled value="">
-                        Select Job Request Description
+                <div class="col-12 my-2 jord" id="idJRDDiv">
+                  <label for="idJRD" class="form-label">Job Request Description</label>
+                  <select class="form-select" id="idJRD" required>
+                    <option selected hidden disabled value="">
+                      Select Job Request Description
+                    </option>
+                  </select>
+                  <div class="content">
+                    <div class="search">
+                      <i class="bx bx-search"></i>
+                      <input type="search" class="form-control" id="searchjrd" placeholder="Search"
+                        style="padding-left: 30px" />
+                    </div>
+                    <ul id="jrdOptions" class="options p-0"></ul>
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p6" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 d-none" id="id2DDiv">
+                  <label for="2d3d" class="form-label">2D/3D</label>
+                  <div class="radio-buttons m-0 p-0">
+                    <label class="custom-radio">
+                      <input type="radio" name="radio" id="2D" value="2D" checked />
+                      <span class="radio-btn"><i class="bx bx-check"></i>
+                        <div class="radio-content">
+                          <h5 class="top mb-0">2D</h5>
+                          <small>AutoCad</small>
+                        </div>
+                      </span>
+                    </label>
+                    <label class="custom-radio">
+                      <input type="radio" name="radio" id="3D" value="3D" />
+                      <span class="radio-btn"><i class="bx bx-check"></i>
+                        <div class="radio-content">
+                          <h5 class="top mb-0">3D</h5>
+                          <small style="white-space: nowrap">Navis, Video</small>
+                        </div>
+                      </span>
+                    </label>
+                    <label class="custom-radio">
+                      <input type="radio" name="radio" id="2D3D" value="2D3D" />
+                      <span class="radio-btn"><i class="bx bx-check"></i>
+                        <div class="radio-content">
+                          <h5 class="top mb-0" style="display: inline-flex">
+                            3D<i class="bx bx-right-arrow-alt fs-5"></i>2D
+                          </h5>
+                          <small style="white-space: nowrap"></small>
+                        </div>
+                      </span>
+                    </label>
+                    <label class="custom-radio">
+                      <input type="radio" name="radio" id="3D2D" value="3D2D" />
+                      <span class="radio-btn"><i class="bx bx-check"></i>
+                        <div class="radio-content">
+                          <h5 class="top mb-0" style="display: inline-flex">
+                            2D<i class="bx bx-right-arrow-alt fs-5"></i>3D
+                          </h5>
+                          <small></small>
+                        </div>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-12 col-12 my-2 d-none" id="idRevDiv">
+                  <label for="idRev" class="form-label">Revision</label>
+                  <div class="input-group switch">
+                    <input type="checkbox" class="checkbox" id="idRev" />
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p7" role="alert"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 my-2 d-none" id="idTowDiv">
+                  <label for="idTOW" id="lbltow" class="form-label">Type of Work</label>
+                  <div class="input-group col-8">
+                    <select class="form-select" id="idTOW" required>
+                      <option value="" disabled selected>
+                        Select Type of Work
                       </option>
+                      <option>New - New 2D/3D</option>
+                      <option>KMod</option>
+                      <option>Checker</option>
                     </select>
-                    <div class="content">
-                      <div class="search">
-                        <i class="bx bx-search"></i>
-                        <input
-                          type="search"
-                          class="form-control"
-                          id="searchjrd"
-                          placeholder="Search"
-                          style="padding-left: 30px"
-                        />
-                      </div>
-                      <ul id="jrdOptions" class="options p-0"></ul>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p6"
-                      role="alert"
-                    ></span>
+                  </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p11" role="alert"></span>
+                </div>
+
+                <div class="col-12 col-lg-6 mt-2 checker d-none">
+                  <label for="idChecking" class="form-label">Checking</label>
+                  <div class="input-group col-8">
+                    <select class="form-select" id="idChecking" required>
+                      <option value="" disabled selected>Select...</option>
+                    </select>
                   </div>
 
-                  <div class="col-12 my-2 d-none" id="id2DDiv">
-                    <label for="2d3d" class="form-label">2D/3D</label>
-                    <div class="radio-buttons m-0 p-0">
-                      <label class="custom-radio">
-                        <input
-                          type="radio"
-                          name="radio"
-                          id="2D"
-                          value="2D"
-                          checked
-                        />
-                        <span class="radio-btn"
-                          ><i class="bx bx-check"></i>
-                          <div class="radio-content">
-                            <h5 class="top mb-0">2D</h5>
-                            <small>AutoCad</small>
-                          </div>
-                        </span>
-                      </label>
-                      <label class="custom-radio">
-                        <input type="radio" name="radio" id="3D" value="3D" />
-                        <span class="radio-btn"
-                          ><i class="bx bx-check"></i>
-                          <div class="radio-content">
-                            <h5 class="top mb-0">3D</h5>
-                            <small style="white-space: nowrap"
-                              >Navis, Video</small
-                            >
-                          </div>
-                        </span>
-                      </label>
-                      <label class="custom-radio">
-                        <input
-                          type="radio"
-                          name="radio"
-                          id="2D3D"
-                          value="2D3D"
-                        />
-                        <span class="radio-btn"
-                          ><i class="bx bx-check"></i>
-                          <div class="radio-content">
-                            <h5 class="top mb-0" style="display: inline-flex">
-                              3D<i class="bx bx-right-arrow-alt fs-5"></i>2D
-                            </h5>
-                            <small style="white-space: nowrap"></small>
-                          </div>
-                        </span>
-                      </label>
-                      <label class="custom-radio">
-                        <input
-                          type="radio"
-                          name="radio"
-                          id="3D2D"
-                          value="3D2D"
-                        />
-                        <span class="radio-btn"
-                          ><i class="bx bx-check"></i>
-                          <div class="radio-content">
-                            <h5 class="top mb-0" style="display: inline-flex">
-                              2D<i class="bx bx-right-arrow-alt fs-5"></i>3D
-                            </h5>
-                            <small></small>
-                          </div>
-                        </span>
-                      </label>
-                    </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p8" role="alert"></span>
+                </div>
+
+                <div class="col-12 my-2 d-none" id="idTowDescDiv">
+                  <textarea aria-label="text" class="form-control" id="towDesc" rows="2" disabled></textarea>
+                </div>
+
+                <div class="col-12 col-lg-6 my-2">
+                  <label class="form-label">No. of Hours</label>
+
+                  <div class="d-flex justify-content-start">
+                    <input type="number" placeholder="HH" class="form-control" min="0" max="20" id="getHour"
+                      style="width: 50%" required />
+                    <p class="mx-3 my-0">:</p>
+                    <input type="number" placeholder="MM" class="form-control" min="0" max="59" id="getMin"
+                      style="width: 50%" required />
                   </div>
+                  <span class="col-6 mt-1 alert-danger text-danger" id="p9" role="alert"></span>
+                </div>
 
-                  <div class="col-12 col-12 my-2 d-none" id="idRevDiv">
-                    <label for="idRev" class="form-label">Revision</label>
-                    <div class="input-group switch">
-                      <input type="checkbox" class="checkbox" id="idRev" />
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p7"
-                      role="alert"
-                    ></span>
+                <div class="col-12 col-lg-6 my-2">
+                  <label for="idMH" class="form-label">Manhour Type</label>
+                  <div class="input-group">
+                    <select class="form-select" id="idMH" required>
+                      <option value="" hidden selected>
+                        Select Manhour Type
+                      </option>
+                      <option mhid="0">Regular</option>
+                      <option mhid="1">Overtime</option>
+                    </select>
                   </div>
+                  <span class="col-12 mt-1 alert-danger text-danger" id="p10" role="alert"></span>
+                </div>
 
-                  <div class="col-12 col-lg-6 my-2 d-none" id="idTowDiv">
-                    <label for="idTOW" id="lbltow" class="form-label"
-                      >Type of Work</label
-                    >
-                    <div class="input-group col-8">
-                      <select class="form-select" id="idTOW" required>
-                        <option value="" disabled selected>
-                          Select Type of Work
-                        </option>
-                        <option>New - New 2D/3D</option>
-                        <option>KMod</option>
-                        <option>Checker</option>
-                      </select>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p11"
-                      role="alert"
-                    ></span>
+                <div class="col-12 my-2">
+                  <label for="idRemarks" class="form-label">Remarks</label>
+                  <textarea class="form-control" id="idRemarks" rows="2"></textarea>
+                </div>
+
+                <div class="row col-12 my-4 d-flex" style="margin-top: 40px !important">
+                  <div class="col-md-6 col-12 my-0">
+                    <button type="submit" class="my-2 my-md-0 btn text-uppercase btn-add w-100 fw-bold" id="idAdd">
+                      Add
+                    </button>
                   </div>
-
-                  <div class="col-12 col-lg-6 mt-2 checker d-none">
-                    <label for="idChecking" class="form-label">Checking</label>
-                    <div class="input-group col-8">
-                      <select class="form-select" id="idChecking" required>
-                        <option value="" disabled selected>Select...</option>
-                      </select>
-                    </div>
-
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p8"
-                      role="alert"
-                    ></span>
+                  <div class="col-md-6 col-12 my-0">
+                    <button type="button" class="my-2 my-md-0 btn btn-reset text-uppercase w-100 fw-bold" id="idReset">
+                      Clear
+                    </button>
                   </div>
-
-                  <div class="col-12 my-2 d-none" id="idTowDescDiv">
-                    <textarea
-                      aria-label="text"
-                      class="form-control"
-                      id="towDesc"
-                      rows="2"
-                      disabled
-                    ></textarea>
-                  </div>
-
-                  <div class="col-12 col-lg-6 my-2">
-                    <label class="form-label">No. of Hours</label>
-
-                    <div class="d-flex justify-content-start">
-                      <input
-                        type="number"
-                        placeholder="HH"
-                        class="form-control"
-                        min="0"
-                        max="20"
-                        id="getHour"
-                        style="width: 50%"
-                        required
-                      />
-                      <p class="mx-3 my-0">:</p>
-                      <input
-                        type="number"
-                        placeholder="MM"
-                        class="form-control"
-                        min="0"
-                        max="59"
-                        id="getMin"
-                        style="width: 50%"
-                        required
-                      />
-                    </div>
-                    <span
-                      class="col-6 mt-1 alert-danger text-danger"
-                      id="p9"
-                      role="alert"
-                    ></span>
-                  </div>
-
-                  <div class="col-12 col-lg-6 my-2">
-                    <label for="idMH" class="form-label">Manhour Type</label>
-                    <div class="input-group">
-                      <select class="form-select" id="idMH" required>
-                        <option value="" hidden selected>
-                          Select Manhour Type
-                        </option>
-                        <option mhid="0">Regular</option>
-                        <option mhid="1">Overtime</option>
-                      </select>
-                    </div>
-                    <span
-                      class="col-12 mt-1 alert-danger text-danger"
-                      id="p10"
-                      role="alert"
-                    ></span>
-                  </div>
-
-                  <div class="col-12 my-2">
-                    <label for="idRemarks" class="form-label">Remarks</label>
-                    <textarea
-                      class="form-control"
-                      id="idRemarks"
-                      rows="2"
-                    ></textarea>
-                  </div>
-
-                  <div
-                    class="row col-12 my-4 d-flex"
-                    style="margin-top: 40px !important"
-                  >
-                    <div class="col-md-6 col-12 my-0">
-                      <button
-                        type="submit"
-                        class="my-2 my-md-0 btn text-uppercase btn-add w-100 fw-bold"
-                        id="idAdd"
-                      >
-                        Add
-                      </button>
-                    </div>
-                    <div class="col-md-6 col-12 my-0">
-                      <button
-                        type="button"
-                        class="my-2 my-md-0 btn btn-reset text-uppercase w-100 fw-bold"
-                        id="idReset"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                    <!-- <div class="col-md-3 col-12 my-0">
+                  <!-- <div class="col-md-3 col-12 my-0">
                   <button type="button" class="my-2 my-md-0 btn btn-edit text-uppercase w-100 " id="btn-edit" disabled>
                     Edit
                   </button>
                 </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="right col-12 col-xl-8 position-relative d-flex flex-column aligns-items-center justify-content-center">
+            <div class="top-right position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light righty"
+              style="width: 100%">
+              <div class="right-cont d-flex gap-3 flex-column p-3 h-100">
+                <div class="my-2">
+                  <label for="idCopyDate" class="form-label">Copy From</label>
+                  <div class="row">
+                    <div class="col-8">
+                      <input type="date" class="form-control" id="idCopyDate" required />
+                    </div>
+                    <div class="col-4">
+                      <button id="idCopy" class="btn btn-warning w-100 fw-bold">
+                        COPY
+                      </button>
+                    </div>
                   </div>
+                </div>
+
+                <div class="">
+                  <div class="row position-relative d-flex align-items-center justify-content-center">
+                    <div class="col-12 col-md-4 mb-sm-0">
+                      <div class="card mx-auto row" id="cardReg">
+                        <div class="circle col-6">
+                          <h5 class="card-title" id="regCount">8</h5>
+                        </div>
+                        <div class="content col-6">
+                          <p>REGULAR</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 mb-sm-0">
+                      <div class="card mx-auto row" id="cardOt">
+                        <div class="circle col-6">
+                          <h5 class="card-title" id="otCount">8</h5>
+                        </div>
+                        <div class="content col-6">
+                          <p>OVERTIME</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 mb-sm-0">
+                      <div class="card mx-auto row" id="cardLv">
+                        <div class="circle col-6">
+                          <h5 class="card-title" id="lvCount">8</h5>
+                        </div>
+                        <div class="content col-6">
+                          <p>LEAVE</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table-container p-0 overflow-auto rounded-2 bg-body px-2 pb-2"
+                  style="box-shadow: 0 0 25px rgb(0 0 0/25%)">
+                  <table class="table table-hover overflow-auto">
+                    <thead class="col-header sticky-top bg-body">
+                      <tr>
+                        <th>Location</th>
+                        <th>Group</th>
+                        <th>Project</th>
+                        <th>Item of Works</th>
+
+                        <th>Job Req. Des</th>
+                        <th title="Types of Work">TOW</th>
+                        <th>Hour</th>
+                        <th>MH Type</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="drEntries">
+                      <tr>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                      </tr>
+                      <tr>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="planned p-0 rounded-2 bg-body px-2 pb-2">
+                  <div class="header py-3 px-2">
+                    <div>
+                      <h3>My Planned Tasks Today</h3>
+                      <small><i class="bx bx-info-circle"></i>Please click each
+                        row to see more details about the item.</small>
+                    </div>
+                    <i class="bx bx-chevron-down"></i>
+                  </div>
+                  <table class="table table-hover overflow-auto">
+                    <thead class="col-header sticky-top bg-body">
+                      <tr>
+                        <th>Project</th>
+
+                        <th>Item of Works</th>
+                        <th>Job Req. Des</th>
+                        <th>Planned</th>
+                        <th>Actual</th>
+                      </tr>
+                    </thead>
+                    <tbody id="plannedItems"></tbody>
+                  </table>
                 </div>
               </div>
             </div>
 
-            <div
-              class="right col-12 col-xl-8 position-relative d-flex flex-column aligns-items-center justify-content-center"
-            >
-              <div
-                class="top-right position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light righty"
-                style="width: 100%"
-              >
-                <div class="right-cont d-flex gap-3 flex-column p-3 h-100">
-                  <div class="my-2">
-                    <label for="idCopyDate" class="form-label">Copy From</label>
-                    <div class="row">
-                      <div class="col-8">
-                        <input
-                          type="date"
-                          class="form-control"
-                          id="idCopyDate"
-                          required
-                        />
-                      </div>
-                      <div class="col-4">
-                        <button
-                          id="idCopy"
-                          class="btn btn-warning w-100 fw-bold"
-                        >
-                          COPY
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="">
-                    <div
-                      class="row position-relative d-flex align-items-center justify-content-center"
-                    >
-                      <div class="col-12 col-md-4 mb-sm-0">
-                        <div class="card mx-auto row" id="cardReg">
-                          <div class="circle col-6">
-                            <h5 class="card-title" id="regCount">8</h5>
-                          </div>
-                          <div class="content col-6">
-                            <p>REGULAR</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-12 col-md-4 mb-sm-0">
-                        <div class="card mx-auto row" id="cardOt">
-                          <div class="circle col-6">
-                            <h5 class="card-title" id="otCount">8</h5>
-                          </div>
-                          <div class="content col-6">
-                            <p>OVERTIME</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="col-12 col-md-4 mb-sm-0">
-                        <div class="card mx-auto row" id="cardLv">
-                          <div class="circle col-6">
-                            <h5 class="card-title" id="lvCount">8</h5>
-                          </div>
-                          <div class="content col-6">
-                            <p>LEAVE</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    class="table-container p-0 overflow-auto rounded-2 bg-body px-2 pb-2"
-                    style="box-shadow: 0 0 25px rgb(0 0 0/25%)"
-                  >
-                    <table class="table table-hover overflow-auto">
-                      <thead class="col-header sticky-top bg-body">
-                        <tr>
-                          <th>Location</th>
-                          <th>Group</th>
-                          <th>Project</th>
-                          <th>Item of Works</th>
-
-                          <th>Job Req. Des</th>
-                          <th title="Types of Work">TOW</th>
-                          <th>Hour</th>
-                          <th>MH Type</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody id="drEntries">
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div class="planned p-0 rounded-2 bg-body px-2 pb-2">
-                    <div class="header py-3 px-2">
-                      <div>
-                        <h3>My Planned Tasks Today</h3>
-                        <small
-                          ><i class="bx bx-info-circle"></i>Please click each
-                          row to see more details about the item.</small
-                        >
-                      </div>
-                      <i class="bx bx-chevron-down"></i>
-                    </div>
-                    <table class="table table-hover overflow-auto">
-                      <thead class="col-header sticky-top bg-body">
-                        <tr>
-                          <th>Project</th>
-
-                          <th>Item of Works</th>
-                          <th>Job Req. Des</th>
-                          <th>Planned</th>
-                          <th>Actual</th>
-                        </tr>
-                      </thead>
-                      <tbody id="plannedItems"></tbody>
-                    </table>
-                  </div>
+            <div class="bot-right d-none position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light"
+              style="width: 100%">
+              <div class="row py-4 px-3">
+                <div class="bot-title col-12">
+                  <h2>Calendar</h2>
                 </div>
-              </div>
 
-              <div
-                class="bot-right d-none position-relative shadow m-0 rounded-3 px-md-3 p-0 mb-3 bg-light"
-                style="width: 100%"
-              >
-                <div class="row py-4 px-3">
-                  <div class="bot-title col-12">
-                    <h2>Calendar</h2>
-                  </div>
-
-                  <div class="bot-table-container">
-                    <table
-                      class="table table-striped table-hover overflow-auto"
-                    >
-                      <thead>
-                        <tr id="idDays" class="sticky-top">
-                          <th>Project</th>
-                          <th>01</th>
-                          <th>01</th>
-                          <th>01</th>
-                          <th>01</th>
-                          <th>01</th>
-                          <th>01</th>
-                        </tr>
-                      </thead>
-                      <tbody id="drEntries-bot">
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                        <tr>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                          <td>##</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                <div class="bot-table-container">
+                  <table class="table table-striped table-hover overflow-auto">
+                    <thead>
+                      <tr id="idDays" class="sticky-top">
+                        <th>Project</th>
+                        <th>01</th>
+                        <th>01</th>
+                        <th>01</th>
+                        <th>01</th>
+                        <th>01</th>
+                        <th>01</th>
+                      </tr>
+                    </thead>
+                    <tbody id="drEntries-bot">
+                      <tr>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                      </tr>
+                      <tr>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                        <td>##</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="ms position-absolute p-0">
-          <div class="pindot open position-absolute p-0 m-0">
-            <p
-              class="position-relative m-0 p-3 text-light d-inline-flex justify-content-center"
-              style="width: 100%"
-            >
-              <i class="bx bx-calendar text-light fs-4"></i>
-            </p>
-          </div>
-          <div class="ms-content position-relative d-flex row p-3">
-            <div class="left col-lg-7 col-12 d-flex align-items-center my-3">
-              <div class="calendar">
-                <div class="month">
-                  <i class="bx bx-chevron-left fs-1 prev"></i>
-                  <div class="date">Month</div>
-                  <i class="bx bx-chevron-right fs-1 next"></i>
-                </div>
-                <div class="weekdays">
-                  <div>sun</div>
-                  <div>mon</div>
-                  <div>tue</div>
-                  <div>wed</div>
-                  <div>thu</div>
-                  <div>fri</div>
-                  <div>sat</div>
-                </div>
-                <div class="days">
-                  <!----content here--->
-                </div>
+      </div>
+      <div class="ms position-absolute p-0">
+        <div class="pindot open position-absolute p-0 m-0">
+          <p class="position-relative m-0 p-3 text-light d-inline-flex justify-content-center" style="width: 100%">
+            <i class="bx bx-calendar text-light fs-4"></i>
+          </p>
+        </div>
+        <div class="ms-content position-relative d-flex row p-3">
+          <div class="left col-lg-7 col-12 d-flex align-items-center my-3">
+            <div class="calendar">
+              <div class="month">
+                <i class="bx bx-chevron-left fs-1 prev"></i>
+                <div class="date">Month</div>
+                <i class="bx bx-chevron-right fs-1 next"></i>
+              </div>
+              <div class="weekdays">
+                <div>sun</div>
+                <div>mon</div>
+                <div>tue</div>
+                <div>wed</div>
+                <div>thu</div>
+                <div>fri</div>
+                <div>sat</div>
+              </div>
+              <div class="days">
+                <!----content here--->
+              </div>
 
-                <div class="goto-today">
-                  <div
-                    class="row position-relative w-100 gap-3 d-flex justify-content-between"
-                  >
-                    <div class="col-12 col-lg-6 p-0">
-                      <label class="form-label">Go to month</label>
-                      <div class="goto">
-                        <input
-                          placeholder="month"
-                          type="month"
-                          class="form-control"
-                          id="gotomonth"
-                        />
-                      </div>
+              <div class="goto-today">
+                <div class="row position-relative w-100 gap-3 d-flex justify-content-between">
+                  <div class="col-12 col-lg-6 p-0">
+                    <label class="form-label">Go to month</label>
+                    <div class="goto">
+                      <input placeholder="month" type="month" class="form-control" id="gotomonth" />
                     </div>
-
-                    <button type="button" class="btn today-btn col-12 col-lg-2">
-                      today
-                    </button>
                   </div>
+
+                  <button type="button" class="btn today-btn col-12 col-lg-2">
+                    today
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="right col-lg-5 col-12 my-3 position-relative">
-              <div class="today-date">
-                <div class="event-day">Day</div>
-                <div class="event-date">Date</div>
+          <div class="right col-lg-5 col-12 my-3 position-relative">
+            <div class="today-date">
+              <div class="event-day">Day</div>
+              <div class="event-date">Date</div>
+            </div>
+            <div class="events">
+              <div class="projHr col-12">
+                <table class="table">
+                  <thead class="sticky-top bg-light">
+                    <tr>
+                      <th>Project</th>
+                      <th>Hours</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pHoursTable">
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                    <tr>
+                      <td>GOW</td>
+                      <td>8</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div class="events">
-                <div class="projHr col-12">
-                  <table class="table">
-                    <thead class="sticky-top bg-light">
-                      <tr>
-                        <th>Project</th>
-                        <th>Hours</th>
-                      </tr>
-                    </thead>
-                    <tbody id="pHoursTable">
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                      <tr>
-                        <td>GOW</td>
-                        <td>8</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="card-group row mt-3 g-1">
-                  <!-- <div class="mb-3 col-12">
+              <div class="card-group row mt-3 g-1">
+                <!-- <div class="mb-3 col-12">
                     <label class="form-label text-light">Overtime Hours</label>
                     <input type="text" class="form-control" placeholder="0" disabled>
                   </div>
@@ -1136,41 +820,32 @@
                     <input type="text" class="form-control" placeholder="0" disabled>
                   </div> -->
 
-                  <div class="col-lg-4 col-12 card-cont">
-                    <div
-                      class="card d-flex justify-content-center align-items-center m-0 p-0"
-                      style="height: 80%; width: 100%"
-                    >
-                      <h1 id="msvReg">0.00</h1>
-                      <span>Regular Hours</span>
-                    </div>
+                <div class="col-lg-4 col-12 card-cont">
+                  <div class="card d-flex justify-content-center align-items-center m-0 p-0"
+                    style="height: 80%; width: 100%">
+                    <h1 id="msvReg">0.00</h1>
+                    <span>Regular Hours</span>
                   </div>
-                  <div class="col-lg-4 col-12 card-cont">
-                    <div
-                      class="card d-flex justify-content-center align-items-center m-0 p-0"
-                      style="height: 80%; width: 100%"
-                    >
-                      <h1 id="msvOt">0.00</h1>
-                      <span>Overtime</span>
-                    </div>
+                </div>
+                <div class="col-lg-4 col-12 card-cont">
+                  <div class="card d-flex justify-content-center align-items-center m-0 p-0"
+                    style="height: 80%; width: 100%">
+                    <h1 id="msvOt">0.00</h1>
+                    <span>Overtime</span>
                   </div>
-                  <div class="col-lg-4 col-12 card-cont d-none">
-                    <div
-                      class="card d-flex justify-content-center align-items-center m-0 p-0"
-                      style="height: 80%; width: 100%"
-                    >
-                      <h1 id="msvAms">0.00</h1>
-                      <span>AMS</span>
-                    </div>
+                </div>
+                <div class="col-lg-4 col-12 card-cont d-none">
+                  <div class="card d-flex justify-content-center align-items-center m-0 p-0"
+                    style="height: 80%; width: 100%">
+                    <h1 id="msvAms">0.00</h1>
+                    <span>AMS</span>
                   </div>
-                  <div class="col-lg-4 col-12 card-cont">
-                    <div
-                      class="card d-flex justify-content-center align-items-center m-0 p-0"
-                      style="height: 80%; width: 100%"
-                    >
-                      <h1 id="msvLv">0.00</h1>
-                      <span>Leave</span>
-                    </div>
+                </div>
+                <div class="col-lg-4 col-12 card-cont">
+                  <div class="card d-flex justify-content-center align-items-center m-0 p-0"
+                    style="height: 80%; width: 100%">
+                    <h1 id="msvLv">0.00</h1>
+                    <span>Leave</span>
                   </div>
                 </div>
               </div>
@@ -1178,29 +853,29 @@
           </div>
         </div>
       </div>
-
-      <footer
-        class="align-items-center text-lg-start fixed-bottom d-flex justify-content-end px-2"
-        style="pointer-events: none"
-      >
-        <!-- Copyright -->
-        <div class="p-0 p-md-2 footer-text">
-          <i class="bx bx-copyright"></i>2023 Copyright:
-          <a class="text-dark text-decoration-none">KDTSys</a>
-        </div>
-        <!-- Copyright -->
-      </footer>
-    </section>
-
-    <div class="cs-loader">
-      <div class="cs-loader-inner">
-        <label>●</label>
-        <label>●</label>
-        <label>●</label>
-        <label>●</label>
-        <label>●</label>
-        <label>●</label>
-      </div>
     </div>
-  </body>
+
+    <footer class="align-items-center text-lg-start fixed-bottom d-flex justify-content-end px-2"
+      style="pointer-events: none">
+      <!-- Copyright -->
+      <div class="p-0 p-md-2 footer-text">
+        <i class="bx bx-copyright"></i>2023 Copyright:
+        <a class="text-dark text-decoration-none">KDTSys</a>
+      </div>
+      <!-- Copyright -->
+    </footer>
+  </section>
+
+  <div class="cs-loader">
+    <div class="cs-loader-inner">
+      <label>●</label>
+      <label>●</label>
+      <label>●</label>
+      <label>●</label>
+      <label>●</label>
+      <label>●</label>
+    </div>
+  </div>
+</body>
+
 </html>
