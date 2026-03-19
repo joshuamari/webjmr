@@ -1,38 +1,10 @@
 <?php
-require_once __DIR__ . '/../../dbconn/dbconnectkdtph.php';
-require_once __DIR__ . '/../../dbconn/dbconnectnew.php';
-require_once __DIR__ . '/../../dbconn/dbconnectwebjmr.php';
-
-require_once __DIR__ . '/../services/authService.php';
-require_once __DIR__ . '/../services/employeeService.php';
-require_once __DIR__ . '/../services/prevMonthAccessService.php';
-require_once __DIR__ . '/../services/permissionService.php';
+require_once __DIR__ . '/bootstrap.php';
 
 header('Content-Type: application/json');
 
 try {
-    $userHash = $_COOKIE['userID'] ?? '';
-
-    if ($userHash === '') {
-        http_response_code(401);
-        echo json_encode([
-            'isLoggedIn' => false,
-            'error' => 'Missing user session cookie.'
-        ]);
-        exit;
-    }
-
-    $employeeId = getEmployeeIdByUserHash($userHash);
-
-    if (!$employeeId) {
-        http_response_code(401);
-        echo json_encode([
-            'isLoggedIn' => false,
-            'error' => 'Invalid or expired session.'
-        ]);
-        exit;
-    }
-
+    $employeeId = getCurrentEmployeeId();
     $employee = getEmployeeProfile($employeeId);
 
     if (empty($employee)) {
@@ -44,6 +16,7 @@ try {
         ]);
         exit;
     }
+
     echo json_encode([
         'isLoggedIn' => true,
         'empNum' => $employeeId,
@@ -58,10 +31,11 @@ try {
         'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId)
     ]);
 } catch (Throwable $e) {
+    error_log('session.php error: ' . $e->getMessage());
+
     http_response_code(500);
     echo json_encode([
         'isLoggedIn' => false,
-        'error' => 'Server error in session endpoint.',
-        'message' => $e->getMessage()
+        'error' => 'Server error in session endpoint.'. $e->getMessage()
     ]);
 }
