@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>DR Temporary Access</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/index.css" />
+    <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
+
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/main.js"></script>
+  </head>
+  <body>
+    <div class="sidebar close fixed top-0">
+      <div class="relative flex items-center justify-between">
+        <a class="logo-details" style="text-decoration: none" href="#">
+          <div
+            class="flex min-h-[50px] min-w-[78px] items-center justify-center"
+            style="line-height: 50px"
+          >
+            <img
+              src="../images/logo.png"
+              style="width: 50px; height: 50px"
+              alt="logo"
+            />
+          </div>
+          <span class="logo_name whitespace-nowrap text-left">WEB JMR</span>
+        </a>
+        <div class="menu-two-wrap hidden h-[60px] w-[35px]">
+          <i
+            class="bx bx-menu menu-two relative mx-0 px-0 text-white"
+            style="top: 10px"
+          ></i>
+        </div>
+      </div>
+
+      <ul class="nav-links" id="navigationLinks">
+        <li id="drLink">
+          <div class="iocn-link">
+            <a class="ey" href="../DailyReport/">
+              <i class="bx bx-calendar-event"></i>
+              <span class="link_name">Daily Report</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li>
+              <a class="link_name" href="../DailyReport/">Daily Report</a>
+            </li>
+          </ul>
+        </li>
+
+        <li id="tempAccessLink" class="bg-[#39a4c7]">
+          <div class="iocn-link">
+            <a href="../JMRTemporaryAccess/">
+              <i class="bx bx-lock-open-alt"></i>
+              <span class="link_name">DR Temporary Access</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li>
+              <a class="link_name" href="../JMRTemporaryAccess/">
+                DR Temporary Access
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li id="jmcLink">
+          <div class="iocn-link">
+            <a href="../JMC">
+              <i class="bx bx-briefcase"></i>
+              <span class="link_name">JMC</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="../JMC">Job Manhour Category</a></li>
+          </ul>
+        </li>
+
+        <li id="repLink">
+          <div class="iocn-link">
+            <a href="../Reports/">
+              <i class="bx bxs-report"></i>
+              <span class="link_name">Reports</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li><a class="link_name" href="../Reports/">Reports</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <div class="relative">
+        <a class="logo-details" style="text-decoration: none" href="../../">
+          <div
+            class="flex min-h-[50px] min-w-[78px] items-center justify-center"
+            style="line-height: 50px"
+          >
+            <i class="bx bxs-home text-3xl text-white"></i>
+          </div>
+          <span class="logo_name home text-left">KDT Portal</span>
+        </a>
+        <div class="h-[60px] w-[35px]">
+          <i
+            class="bx bx-menu menu-two relative mx-0 px-0"
+            style="top: 10px; color: #fff"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <section class="home-section">
+      <div class="home-topbar sticky top-0" style="z-index: 1230">
+        <i class="bx bx-menu menu-one relative mx-0 px-0"></i>
+
+        <div class="flex justify-end text-center">
+          <div class="user-name p-2">
+            <h5>Hello, <span class="hello-user">User</span></h5>
+          </div>
+        </div>
+      </div>
+
+      <main class="home-content">
+        <div class="cont px-4 py-3">
+          <div class="maindiv">
+            <div class="pb-3">
+              <h1
+                class="flex items-center text-[28px] font-semibold text-slate-800"
+              >
+                DR Temporary Access
+              </h1>
+              <p class="text-sm text-slate-600">
+                Submit and monitor temporary access requests for locked Daily
+                Reports.
+              </p>
+            </div>
+
+            <!-- REQUEST FORM -->
+            <div class="mb-4 rounded-xl border border-slate-200 bg-white">
+              <div class="border-b border-slate-200 px-5 py-4">
+                <h3 class="text-[16px] font-semibold text-slate-800">
+                  Create Temporary Access Request
+                </h3>
+                <p class="mt-1 text-sm text-slate-500">
+                  Submit a temporary access request for your own Daily Report or
+                  for a member if you have override access.
+                </p>
+              </div>
+
+              <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-2">
+                <!-- LEADER SELECT -->
+                <div id="targetEmployeeWrap" class="hidden">
+                  <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Employee
+                  </label>
+                  <div class="approval-select-wrap relative">
+                    <select
+                      id="targetEmployeeSel"
+                      class="approval-group-filter"
+                    >
+                      <option value="">Select employee</option>
+                    </select>
+                    <i
+                      class="bx bx-user absolute left-2 top-[10px] opacity-75"
+                    ></i>
+                    <i
+                      class="bx bx-chevron-down absolute right-2 top-[10px] opacity-75"
+                    ></i>
+                  </div>
+                </div>
+
+                <!-- NORMAL USER READONLY -->
+                <div id="requestEmployeeReadonlyWrap">
+                  <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Employee
+                  </label>
+                  <input
+                    id="requestEmployeeReadonly"
+                    type="text"
+                    readonly
+                    class="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none"
+                  />
+                </div>
+
+                <!-- CREATE MONTH -->
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Requested Month
+                  </label>
+
+                  <div class="relative approval-month-wrap w-full">
+                    <input
+                      type="month"
+                      id="requestCreateMonthSel"
+                      class="absolute inset-0 opacity-0 pointer-events-none"
+                    />
+
+                    <div
+                      class="mobtn requestCreateMonthCont rounded-md border flex items-center gap-2 h-[38px] cursor-pointer w-full"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <i
+                        class="bx bx-calendar shrink-0 ps-2 text-[#6d7788] opacity-75"
+                      ></i>
+                      <span
+                        id="requestCreateMonthLabel"
+                        class="whitespace-nowrap text-[13px] text-[#6d7788]"
+                      >
+                        Requested Month
+                      </span>
+                      <i
+                        class="bx bx-chevron-down text-[18px] text-[#6d7788] shrink-0"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="flex items-center justify-end border-t border-slate-200 bg-slate-50 px-5 py-4"
+              >
+                <button
+                  type="button"
+                  id="submitRequestBtn"
+                  class="rounded-lg bg-[#3980c7] px-4 py-2 text-sm font-semibold text-white hover:bg-[#2f6dac]"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </div>
+
+            <!-- ACTIVE PANEL -->
+            <div
+              id="activeAccessPanel"
+              class="request-banner-hidden mb-4 rounded-xl border border-slate-200 bg-white"
+            >
+              <div class="border-b border-slate-200 px-5 py-4">
+                <h3 class="text-[16px] font-semibold text-slate-800">
+                  Active Temporary Access
+                </h3>
+                <p class="mt-1 text-sm text-slate-500">
+                  All active temporary access relevant to you.
+                </p>
+              </div>
+
+              <div class="max-h-[260px] overflow-auto p-3">
+                <table
+                  class="w-full min-w-[700px] border-separate border-spacing-0 text-sm"
+                >
+                  <thead class="sticky top-0 z-10 bg-white">
+                    <tr>
+                      <th
+                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Employee
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Requested Month
+                      </th>
+                      <th
+                        class="rounded-tr-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Valid Until
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="activeAccessBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+              <div class="rounded-xl bg-white p-5 shadow">
+                <div class="flex items-center justify-between h-full">
+                  <div class="flex flex-col justify-between h-full">
+                    <p class="text-sm text-slate-500">Pending</p>
+                    <h3
+                      id="cardPending"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 aspect-square"
+                  >
+                    <i class="bx bx-time-five text-3xl text-amber-500"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-white p-5 shadow">
+                <div class="flex items-center justify-between h-full">
+                  <div class="flex flex-col justify-between h-full">
+                    <p class="text-sm text-slate-500">Approved</p>
+                    <h3
+                      id="cardApproved"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 aspect-square"
+                  >
+                    <i class="bx bx-check-circle text-3xl text-emerald-500"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-white p-5 shadow">
+                <div class="flex items-center justify-between h-full">
+                  <div class="flex flex-col justify-between h-full">
+                    <p class="text-sm text-slate-500">Denied</p>
+                    <h3
+                      id="cardDenied"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-rose-100 aspect-square"
+                  >
+                    <i class="bx bx-x-circle text-3xl text-rose-500"></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-white p-5 shadow">
+                <div class="flex items-center justify-between h-full">
+                  <div class="flex flex-col justify-between h-full">
+                    <p class="text-sm text-slate-500">Active</p>
+                    <h3
+                      id="cardActive"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
+                    </h3>
+                  </div>
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 aspect-square"
+                  >
+                    <i class="bx bx-lock-open-alt text-3xl text-sky-500"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- REQUESTS I SUBMITTED -->
+            <div class="mb-4 rounded-xl border border-slate-200 bg-white">
+              <div
+                class="border-b p-3 flex flex-col md:justify-between gap-3 md:items-center md:flex-row"
+              >
+                <div class="flex items-center">
+                  <h3
+                    class="text-[16px] font-semibold text-slate-800 whitespace-nowrap"
+                  >
+                    Requests I Submitted
+                  </h3>
+                </div>
+
+                <div class="flex gap-2 md:justify-end w-full">
+                  <div class="approval-search w-full md:w-auto">
+                    <i class="bx bx-search"></i>
+                    <input
+                      type="search"
+                      class="approval-search-input my-request-search"
+                      placeholder="Search..."
+                    />
+                  </div>
+
+                  <div class="relative approval-month-wrap md:w-auto">
+                    <input
+                      type="month"
+                      id="requestMonthSel"
+                      class="absolute inset-0 opacity-0 pointer-events-none"
+                    />
+
+                    <div
+                      class="mobtn requestMonthCont rounded-md border flex items-center gap-2 h-[38px] cursor-pointer"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <i
+                        class="bx bx-calendar shrink-0 ps-2 text-[#6d7788] opacity-75"
+                      ></i>
+                      <span
+                        id="requestMonthLabel"
+                        class="whitespace-nowrap text-[13px] text-[#6d7788]"
+                      >
+                        Requested Month
+                      </span>
+                      <i
+                        class="bx bx-chevron-down text-[18px] text-[#6d7788] shrink-0"
+                      ></i>
+                    </div>
+                  </div>
+
+                  <div class="approval-select-wrap relative">
+                    <select id="requestStatusSel" class="approval-group-filter">
+                      <option value="">All Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="active">Active</option>
+                      <option value="approved">Approved</option>
+                      <option value="denied">Denied</option>
+                      <option value="expired">Expired</option>
+                    </select>
+                    <i
+                      class="bx bx-filter-alt absolute left-2 top-[10px] opacity-75"
+                    ></i>
+                    <i
+                      class="bx bx-chevron-down absolute right-2 top-[10px] opacity-75"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="max-h-[360px] overflow-auto p-3">
+                <table
+                  class="w-full min-w-[1100px] border-separate border-spacing-0 text-sm"
+                >
+                  <thead class="sticky top-0 z-10 bg-white">
+                    <tr>
+                      <th
+                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Request ID
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Employee
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Requested On
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Requested Month
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Status
+                      </th>
+                      <th
+                        class="rounded-tr-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Valid Until
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="myRequestTableBody">
+                    <tr
+                      class="my-request-row submitted-request-row cursor-pointer"
+                      data-source-table="submitted"
+                      data-request-id="REQ-3001"
+                      data-target-employee="Dexmel Hernandez"
+                      data-target-empid="1051"
+                      data-requested-on="2026-03-19 08:15 AM"
+                      data-requested-month="February 2026"
+                      data-month-value="2026-02"
+                      data-status="active"
+                      data-action-taken-on="2026-03-19 08:45 AM"
+                      data-action-taken-by="Joshua Coquia"
+                      data-valid-until="2026-03-20 08:15 AM"
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-3001
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <div class="font-medium text-slate-800">
+                          Dexmel Hernandez
+                        </div>
+                        <div class="text-xs text-slate-400">EMP-1051</div>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-19 08:15 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        February 2026
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status accepted">Active</span>
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status accepted">2026-03-20 08:15 AM</span>
+                      </td>
+                    </tr>
+
+                    <tr
+                      class="my-request-row submitted-request-row cursor-pointer"
+                      data-source-table="submitted"
+                      data-request-id="REQ-2998"
+                      data-target-employee="Collene Keith"
+                      data-target-empid="1042"
+                      data-requested-on="2026-03-10 09:00 AM"
+                      data-requested-month="January 2026"
+                      data-month-value="2026-01"
+                      data-status="expired"
+                      data-action-taken-on="2026-03-10 09:20 AM"
+                      data-action-taken-by="Joshua Coquia"
+                      data-valid-until="2026-03-11 09:00 AM"
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-2998
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <div class="font-medium text-slate-800">
+                          Collene Keith
+                        </div>
+                        <div class="text-xs text-slate-400">EMP-1042</div>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-10 09:00 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        January 2026
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status expired">Expired</span>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-11 09:00 AM
+                      </td>
+                    </tr>
+
+                    <tr
+                      class="my-request-row submitted-request-row cursor-pointer"
+                      data-source-table="submitted"
+                      data-request-id="REQ-2995"
+                      data-target-employee="Joshua Coquia"
+                      data-target-empid="1038"
+                      data-requested-on="2026-03-05 07:30 AM"
+                      data-requested-month="December 2025"
+                      data-month-value="2025-12"
+                      data-status="denied"
+                      data-action-taken-on="2026-03-05 08:00 AM"
+                      data-action-taken-by="Joshua Coquia"
+                      data-valid-until=""
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-2995
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <div class="font-medium text-slate-800">
+                          Joshua Coquia
+                        </div>
+                        <div class="text-xs text-slate-400">EMP-1038</div>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-05 07:30 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        December 2025
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status cancelled">Denied</span>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-400"
+                      >
+                        —
+                      </td>
+                    </tr>
+
+                    <tr
+                      class="my-request-row submitted-request-row cursor-pointer"
+                      data-source-table="submitted"
+                      data-request-id="REQ-2992"
+                      data-target-employee="Dexmel Hernandez"
+                      data-target-empid="1051"
+                      data-requested-on="2026-03-01 08:05 AM"
+                      data-requested-month="November 2025"
+                      data-month-value="2025-11"
+                      data-status="pending"
+                      data-action-taken-on=""
+                      data-action-taken-by=""
+                      data-valid-until=""
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-2992
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <div class="font-medium text-slate-800">
+                          Dexmel Hernandez
+                        </div>
+                        <div class="text-xs text-slate-400">EMP-1051</div>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-01 08:05 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        November 2025
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status pending">Pending</span>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-400"
+                      >
+                        —
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                id="myRequestPaginationWrap"
+                class="hidden items-center justify-between border-t border-slate-200 px-4 py-3"
+              >
+                <p class="text-sm text-slate-500">
+                  Showing
+                  <span id="myRequestPaginationStart">0</span>
+                  -
+                  <span id="myRequestPaginationEnd">0</span>
+                  of
+                  <span id="myRequestPaginationTotal">0</span>
+                </p>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    id="myRequestPrevPage"
+                    class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+
+                  <span
+                    id="myRequestPageIndicator"
+                    class="min-w-[72px] text-center text-sm font-medium text-slate-600"
+                  >
+                    Page 1
+                  </span>
+
+                  <button
+                    type="button"
+                    id="myRequestNextPage"
+                    class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- REQUESTS FOR ME -->
+            <div class="rounded-xl border border-slate-200 bg-white">
+              <div
+                class="border-b p-3 flex flex-col md:justify-between gap-3 md:items-center md:flex-row"
+              >
+                <div class="flex items-center">
+                  <h3
+                    class="text-[16px] font-semibold text-slate-800 whitespace-nowrap"
+                  >
+                    Requests For Me
+                  </h3>
+                </div>
+
+                <div class="flex gap-2 md:justify-end w-full">
+                  <div class="approval-search w-full md:w-auto">
+                    <i class="bx bx-search"></i>
+                    <input
+                      type="search"
+                      class="approval-search-input my-request-for-me-search"
+                      placeholder="Search..."
+                    />
+                  </div>
+
+                  <div class="relative approval-month-wrap md:w-auto">
+                    <input
+                      type="month"
+                      id="requestForMeMonthSel"
+                      class="absolute inset-0 opacity-0 pointer-events-none"
+                    />
+
+                    <div
+                      class="mobtn requestForMeMonthCont rounded-md border flex items-center gap-2 h-[38px] cursor-pointer"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <i
+                        class="bx bx-calendar shrink-0 ps-2 text-[#6d7788] opacity-75"
+                      ></i>
+                      <span
+                        id="requestForMeMonthLabel"
+                        class="whitespace-nowrap text-[13px] text-[#6d7788]"
+                      >
+                        Requested Month
+                      </span>
+                      <i
+                        class="bx bx-chevron-down text-[18px] text-[#6d7788] shrink-0"
+                      ></i>
+                    </div>
+                  </div>
+
+                  <div class="approval-select-wrap relative">
+                    <select
+                      id="requestForMeStatusSel"
+                      class="approval-group-filter"
+                    >
+                      <option value="">All Status</option>
+                      <option value="pending">Pending</option>
+                      <option value="active">Active</option>
+                      <option value="approved">Approved</option>
+                      <option value="denied">Denied</option>
+                      <option value="expired">Expired</option>
+                    </select>
+                    <i
+                      class="bx bx-filter-alt absolute left-2 top-[10px] opacity-75"
+                    ></i>
+                    <i
+                      class="bx bx-chevron-down absolute right-2 top-[10px] opacity-75"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+
+              <div class="max-h-[360px] overflow-auto p-3">
+                <table
+                  class="w-full min-w-[1100px] border-separate border-spacing-0 text-sm"
+                >
+                  <thead class="sticky top-0 z-10 bg-white">
+                    <tr>
+                      <th
+                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Request ID
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Submitted By
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Requested On
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Requested Month
+                      </th>
+                      <th
+                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Status
+                      </th>
+                      <th
+                        class="rounded-tr-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Valid Until
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="myRequestForMeTableBody">
+                    <tr
+                      class="my-request-row for-me-request-row cursor-pointer"
+                      data-source-table="for-me"
+                      data-request-id="REQ-4001"
+                      data-target-employee="User"
+                      data-target-empid="1001"
+                      data-requested-on="2026-03-18 09:10 AM"
+                      data-requested-month="February 2026"
+                      data-month-value="2026-02"
+                      data-status="active"
+                      data-action-taken-on="2026-03-18 09:25 AM"
+                      data-action-taken-by="Joshua Coquia"
+                      data-valid-until="2026-03-19 09:10 AM"
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-4001
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        Joshua Coquia
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-18 09:10 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        February 2026
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status accepted">Active</span>
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status accepted">2026-03-19 09:10 AM</span>
+                      </td>
+                    </tr>
+
+                    <tr
+                      class="my-request-row for-me-request-row cursor-pointer"
+                      data-source-table="for-me"
+                      data-request-id="REQ-3991"
+                      data-target-employee="User"
+                      data-target-empid="1001"
+                      data-requested-on="2026-03-01 08:00 AM"
+                      data-requested-month="January 2026"
+                      data-month-value="2026-01"
+                      data-status="expired"
+                      data-action-taken-on="2026-03-01 08:20 AM"
+                      data-action-taken-by="Joshua Coquia"
+                      data-valid-until="2026-03-02 08:00 AM"
+                      data-requested-by="Joshua Coquia"
+                    >
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
+                      >
+                        REQ-3991
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        Joshua Coquia
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-01 08:00 AM
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        January 2026
+                      </td>
+                      <td class="border-b border-slate-200 px-4 py-5">
+                        <span class="status expired">Expired</span>
+                      </td>
+                      <td
+                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
+                      >
+                        2026-03-02 08:00 AM
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                id="myRequestForMePaginationWrap"
+                class="hidden items-center justify-between border-t border-slate-200 px-4 py-3"
+              >
+                <p class="text-sm text-slate-500">
+                  Showing
+                  <span id="myRequestForMePaginationStart">0</span>
+                  -
+                  <span id="myRequestForMePaginationEnd">0</span>
+                  of
+                  <span id="myRequestForMePaginationTotal">0</span>
+                </p>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    id="myRequestForMePrevPage"
+                    class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+
+                  <span
+                    id="myRequestForMePageIndicator"
+                    class="min-w-[72px] text-center text-sm font-medium text-slate-600"
+                  >
+                    Page 1
+                  </span>
+
+                  <button
+                    type="button"
+                    id="myRequestForMeNextPage"
+                    class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- DETAILS MODAL -->
+            <div
+              id="requestDetailsModal"
+              class="fixed inset-0 z-[10000] hidden items-center justify-center bg-slate-900/45 px-4 py-6"
+            >
+              <div
+                class="w-full max-w-[820px] overflow-hidden rounded-[22px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.25)]"
+              >
+                <div
+                  class="flex items-start justify-between border-b border-slate-200 px-6 py-5"
+                >
+                  <div>
+                    <div class="mb-2 flex items-center gap-2">
+                      <h3
+                        class="text-[20px] font-semibold leading-none text-slate-800"
+                      >
+                        Request Details
+                      </h3>
+                      <span
+                        id="requestDetailsChip"
+                        class="modal-chip modal-chip-neutral"
+                      >
+                        —
+                      </span>
+                    </div>
+                    <p class="text-sm text-slate-500">
+                      Review the request details and validity information.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="modal-close flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                    data-close="#requestDetailsModal"
+                  >
+                    <i class="bx bx-x text-[28px]"></i>
+                  </button>
+                </div>
+
+                <div class="space-y-5 px-6 py-5">
+                  <div
+                    class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4"
+                  >
+                    <p
+                      class="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-400"
+                    >
+                      Request
+                    </p>
+                    <div class="mt-2 flex items-center justify-between gap-4">
+                      <div>
+                        <p
+                          id="requestDetailsId"
+                          class="text-[20px] font-semibold leading-none text-slate-800"
+                        >
+                          —
+                        </p>
+                        <p
+                          id="requestDetailsTargetEmployee"
+                          class="mt-2 text-sm text-slate-500"
+                        >
+                          —
+                        </p>
+                      </div>
+                      <div
+                        id="requestValidityWrap"
+                        class="items-center gap-2 rounded-full bg-white px-4 py-2 flex"
+                      >
+                        <i class="bx bx-calendar text-[18px] text-sky-500"></i>
+                        <span
+                          id="requestDetailsValidUntil"
+                          class="text-sm font-medium"
+                        >
+                          —
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                      <p
+                        class="mb-3 text-[12px] font-semibold uppercase tracking-[.08em] text-slate-600"
+                      >
+                        Request Information
+                      </p>
+
+                      <div class="space-y-4">
+                        <div>
+                          <p class="modal-info-label">Target Employee</p>
+                          <p
+                            id="requestDetailsTargetEmployeeBody"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Submitted By</p>
+                          <p
+                            id="requestDetailsRequestedBy"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Requested On</p>
+                          <p
+                            id="requestDetailsRequestedOn"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Requested Month</p>
+                          <p
+                            id="requestDetailsRequestedMonth"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="rounded-2xl border border-slate-200 p-4">
+                      <p
+                        class="mb-3 text-[12px] font-semibold uppercase tracking-[.08em] text-slate-600"
+                      >
+                        Action Information
+                      </p>
+
+                      <div class="space-y-4">
+                        <div>
+                          <p class="modal-info-label">Status</p>
+                          <p id="requestDetailsStatus" class="modal-info-value">
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Action Taken On</p>
+                          <p
+                            id="requestDetailsActionTakenOn"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Action Taken By</p>
+                          <p
+                            id="requestDetailsActionTakenBy"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="rounded-2xl border border-sky-100 bg-sky-50 px-5 py-4"
+                  >
+                    <div class="flex items-start gap-3">
+                      <div
+                        class="mt-[2px] flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white"
+                      >
+                        <i
+                          class="bx bx-info-circle text-[18px] text-sky-500"
+                        ></i>
+                      </div>
+                      <div>
+                        <p
+                          class="text-[11px] font-semibold uppercase tracking-[.08em] text-sky-700"
+                        >
+                          Reminder
+                        </p>
+                        <p class="mt-1 text-[14px] leading-6 text-slate-700">
+                          Approved temporary access allows editing of the
+                          selected employee’s locked Daily Report for the
+                          approved month only.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4"
+                >
+                  <button
+                    type="button"
+                    class="modal-btn modal-btn-default modal-close"
+                    data-close="#requestDetailsModal"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex justify-end pb-4">
+              <p class="text-xs text-slate-500">
+                <i class="bx bx-copyright text-slate-500"></i>
+                2023 KDTSys
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <div class="cs-loader">
+      <div class="cs-loader-inner">
+        <label>●</label>
+        <label>●</label>
+        <label>●</label>
+        <label>●</label>
+        <label>●</label>
+        <label>●</label>
+      </div>
+    </div>
+  </body>
+</html>
