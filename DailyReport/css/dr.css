@@ -128,7 +128,8 @@ body {
   display: block;
 }
 
-.sidebar .nav-links li i {
+.sidebar .nav-links li i,
+.sidebar .nav-links li .nav-svg {
   height: 56px;
   min-width: 78px;
   text-align: center;
@@ -151,6 +152,14 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
+}
+
+.sidebar .nav-links li .nav-svg {
+  width: 78px;
+  height: 56px;
+  padding: 16px;
+  box-sizing: border-box;
+  fill: #ffffff !important;
 }
 
 .sidebar .nav-links li a .link_name {
@@ -715,7 +724,9 @@ footer {
   height: 98px;
   overflow: hidden;
   box-shadow: 0 0 25px rgb(0 0 0/25%);
-  transition: height 0.25s ease, background 0.25s ease;
+  transition:
+    height 0.25s ease,
+    background 0.25s ease;
 }
 .right .planned:hover {
   background-color: #dbe7f1 !important;

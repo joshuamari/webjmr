@@ -128,7 +128,8 @@ body {
   display: block;
 }
 
-.sidebar .nav-links li i {
+.sidebar .nav-links li i,
+.sidebar .nav-links li .nav-svg {
   height: 56px;
   min-width: 78px;
   text-align: center;
@@ -151,6 +152,14 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
+}
+
+.sidebar .nav-links li .nav-svg {
+  width: 78px;
+  height: 56px;
+  padding: 16px;
+  box-sizing: border-box;
+  fill: #ffffff !important;
 }
 
 .sidebar .nav-links li a .link_name {
