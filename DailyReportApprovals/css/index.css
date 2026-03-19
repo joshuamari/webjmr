@@ -514,8 +514,8 @@ table thead tr th {
 
 .approval-month-wrap {
   position: relative;
-  width: 100%;
-  min-width: 0;
+  /* width: 100%; */
+  /* min-width: 0; */
 }
 
 .pendingMonthCont,
@@ -597,7 +597,7 @@ table thead tr th {
 }
 
 .approval-select-wrap select {
-  min-width: 150px;
+  /* min-width: 150px; */
   padding: 0 30px 0 30px;
   appearance: none;
 }

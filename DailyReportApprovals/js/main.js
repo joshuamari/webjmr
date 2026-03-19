@@ -209,7 +209,7 @@ function updateMonthDisplay(config) {
   }
 
   $trigger.html(`
-    <i class="bx bx-calendar shrink-0 month-icon"></i>
+    <i class="bx bx-calendar shrink-0 month-icon opacity-75"></i>
     <span id="${config.labelSelector.replace("#", "")}" class="whitespace-nowrap text-[13px] month-text">${display}</span>
     ${iconHtml}
   `);
@@ -250,13 +250,35 @@ function initGroupFilters() {
 
 function toggleGroupActive($select) {
   const $wrap = $select.closest(".approval-select-wrap");
+  const $rightIcon = $wrap.find(".bx-chevron-down, .bx-x").last();
 
   if ($select.val()) {
     $wrap.addClass("active");
+    $rightIcon
+      .removeClass("bx-chevron-down")
+      .addClass("bx-x")
+      .attr("data-clear-group", "1");
   } else {
     $wrap.removeClass("active");
+    $rightIcon
+      .removeClass("bx-x")
+      .addClass("bx-chevron-down")
+      .removeAttr("data-clear-group");
   }
 }
+$(document).on(
+  "click",
+  ".approval-select-wrap i[data-clear-group='1']",
+  function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const $wrap = $(this).closest(".approval-select-wrap");
+    const $select = $wrap.find("select");
+
+    $select.val("").trigger("change");
+  },
+);
 //#endregion
 
 //#region FILTER EVENTS
