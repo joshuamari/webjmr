@@ -16,11 +16,6 @@ function loadSession() {
       AppState.empDetails = data;
       console.log("session:", AppState.empDetails);
 
-      if (!data.isLoggedIn) {
-        window.location.href = rootFolder + "/KDTPortalLogin";
-        return;
-      }
-
       try {
         await loadInitialData();
         startPage();
@@ -35,7 +30,12 @@ function loadSession() {
       console.error("error:", error);
       console.error("response:", xhr.responseText);
 
-      window.location.href = rootFolder + "/KDTPortalLogin";
+      if (xhr.status === 401) {
+        window.location.href = rootFolder + "/KDTPortalLogin";
+        return;
+      }
+
+      alert("Failed to load session.");
     },
   });
 }

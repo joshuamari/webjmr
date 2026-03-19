@@ -138,17 +138,26 @@ function hasValidPrevMonthAccessApproval($userId) {
 
 function getLatestApprovedPrevMonthAccessRequest($userId) {
     global $connwebjmr;
-
+    $unlockDate = date('Y-m', strtotime('-1 month'));
     $query = "
         SELECT
             ua.action_id AS id,
             ur.unlock_id AS request_id,
+            ur.unlock_date,
             ua.action_by AS approved_by,
             ua.action_at AS approved_at
         FROM unlock_request ur
         INNER JOIN unlock_actions ua
-            ON ua.request_id = ur.unlock_id
+            ON ua.unlock_id = ur.unlock_id
         WHERE ur.employee_number = :userId
+          AND ur.unlock_date = :unlockDate
+          AND ua.action_id = (
+              SELECT ua2.action_id
+              FROM unlock_actions ua2
+              WHERE ua2.unlock_id = ur.unlock_id
+              ORDER BY ua2.action_at DESC, ua2.action_id DESC
+              LIMIT 1
+          )
           AND ua.action = 1
         ORDER BY ua.action_at DESC, ua.action_id DESC
         LIMIT 1
@@ -156,7 +165,8 @@ function getLatestApprovedPrevMonthAccessRequest($userId) {
 
     $stmt = $connwebjmr->prepare($query);
     $stmt->execute([
-        ':userId' => $userId
+        ':userId' => $userId,
+        ':unlockDate' => $unlockDate,
     ]);
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
