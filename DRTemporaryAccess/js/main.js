@@ -9,14 +9,9 @@ let myRequestForMeCurrentPage = 1;
 const myRequestForMeRowsPerPage = 10;
 
 checkLogin();
-
-// UI TEST MODE: set to true if you want to force leader UI locally
-const FORCE_LEADER_UI = true;
 //#endregion
 
 $(document).ready(function () {
-  applyUiTestMode();
-
   $(".hello-user").text(empDetails["empFName"] || "User");
 
   ifSmallScreen();
@@ -85,16 +80,6 @@ function checkLogin() {
     },
     async: false,
   });
-}
-
-function applyUiTestMode() {
-  if (!FORCE_LEADER_UI) return;
-
-  empDetails["isLeaderOverride"] = "1";
-  empDetails["empNum"] = "1038";
-  empDetails["empFName"] = "Joshua";
-  empDetails["empLName"] = "Coquia";
-  empDetails["empFullName"] = "Joshua Coquia";
 }
 //#endregion
 
@@ -373,26 +358,15 @@ function setupRequestEmployeeField() {
     if ($leaderWrap.length) $leaderWrap.removeClass("hidden");
     if ($readonlyWrap.length) $readonlyWrap.addClass("hidden");
 
-    $leaderSelect.empty();
-    $leaderSelect.append(`<option value="">Select employee</option>`);
-    $leaderSelect.append(
-      `<option value="1038" data-name="Joshua Coquia">Joshua Coquia</option>`,
-    );
-    $leaderSelect.append(
-      `<option value="1042" data-name="Collene Keith">Collene Keith</option>`,
-    );
-    $leaderSelect.append(
-      `<option value="1051" data-name="Dexmel Hernandez">Dexmel Hernandez</option>`,
-    );
-    $leaderSelect.append(
-      `<option value="1060" data-name="Sample Member A">Sample Member A</option>`,
-    );
-    $leaderSelect.append(
-      `<option value="1061" data-name="Sample Member B">Sample Member B</option>`,
-    );
-    $leaderSelect.append(
-      `<option value="1062" data-name="Sample Member C">Sample Member C</option>`,
-    );
+    if (!$leaderSelect.find(`option[value="${empNum}"]`).length && empNum) {
+      $leaderSelect.prepend(
+        `<option value="${escapeHtml(empNum)}" data-name="${escapeHtml(fullName)}">${escapeHtml(fullName)}</option>`,
+      );
+    }
+
+    if (!$leaderSelect.val() && empNum) {
+      $leaderSelect.val(empNum);
+    }
 
     toggleTargetEmployeeActive($leaderSelect);
   } else {
@@ -473,17 +447,6 @@ function initRequestForm() {
     const formattedNow = formatDateTime(now);
     const requestedMonthLabel = formatMonthValue(requestMonth);
     const empIdLabel = `EMP-${targetEmployeeId}`;
-    const submittedBy =
-      empDetails["empFullName"] ||
-      [
-        empDetails["empFName"] || "",
-        empDetails["empMName"] || "",
-        empDetails["empLName"] || "",
-      ]
-        .join(" ")
-        .replace(/\s+/g, " ")
-        .trim() ||
-      "User";
 
     const submittedRowHtml = `
       <tr
@@ -499,7 +462,18 @@ function initRequestForm() {
         data-action-taken-on=""
         data-action-taken-by=""
         data-valid-until=""
-        data-requested-by="${escapeHtml(submittedBy)}"
+        data-requested-by="${escapeHtml(
+          empDetails["empFullName"] ||
+            [
+              empDetails["empFName"] || "",
+              empDetails["empMName"] || "",
+              empDetails["empLName"] || "",
+            ]
+              .join(" ")
+              .replace(/\s+/g, " ")
+              .trim() ||
+            "User",
+        )}"
       >
         <td class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium">
           ${escapeHtml(requestId)}
@@ -544,13 +518,35 @@ function initRequestForm() {
           data-action-taken-on=""
           data-action-taken-by=""
           data-valid-until=""
-          data-requested-by="${escapeHtml(submittedBy)}"
+          data-requested-by="${escapeHtml(
+            empDetails["empFullName"] ||
+              [
+                empDetails["empFName"] || "",
+                empDetails["empMName"] || "",
+                empDetails["empLName"] || "",
+              ]
+                .join(" ")
+                .replace(/\s+/g, " ")
+                .trim() ||
+              "User",
+          )}"
         >
           <td class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium">
             ${escapeHtml(requestId)}
           </td>
           <td class="border-b border-slate-200 px-4 py-5 text-slate-600">
-            ${escapeHtml(submittedBy)}
+            ${escapeHtml(
+              empDetails["empFullName"] ||
+                [
+                  empDetails["empFName"] || "",
+                  empDetails["empMName"] || "",
+                  empDetails["empLName"] || "",
+                ]
+                  .join(" ")
+                  .replace(/\s+/g, " ")
+                  .trim() ||
+                "User",
+            )}
           </td>
           <td class="border-b border-slate-200 px-4 py-5 text-slate-600">
             ${escapeHtml(formattedNow)}
@@ -1007,11 +1003,11 @@ function renderActivePanel() {
   $body.empty();
 
   if (!activeRows.length) {
-    $panel.addClass("request-banner-hidden");
+    $panel.addClass("hidden");
     return;
   }
 
-  $panel.removeClass("request-banner-hidden");
+  $panel.removeClass("hidden");
 
   activeRows.each(function () {
     const $row = $(this);
@@ -1046,7 +1042,7 @@ function renderActivePanel() {
 function initRequestRowModal() {
   $(document).on("click", ".my-request-row", function () {
     const $row = $(this);
-    const status = (($row.data("status") || "") + "").toLowerCase();
+    const status = (($(this).data("status") || "") + "").toLowerCase();
     const validUntil = $row.data("valid-until") || "—";
     const targetEmployee = $row.data("target-employee") || "—";
     const targetEmpId = $row.data("target-empid") || "—";
