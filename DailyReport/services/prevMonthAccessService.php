@@ -20,7 +20,7 @@ function isSystemUser($userId) {
     global $connnew;
 
     $sysId = 16;
-    $excludedUserId = 498;
+    $excludedUserId = 487;
 
     $query = "
         SELECT EXISTS(
