@@ -4,11 +4,11 @@
     <title>Override</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../tailwindcss/output.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
     <link rel="stylesheet" href="css/override.css" />
     <link rel="stylesheet" href="css/boxicons.css" />
-    <link rel="stylesheet" href="../tailwindcss/output.css" />
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
@@ -754,8 +754,8 @@
                 class="shadow m-0 p-0 px-md-3 mb-3 rounded-3 bg-light lefty"
                 style="width: 100%"
               >
-                <div class="left-cont row py-3 px-3">
-                  <div class="col-12 col-md-6 my-2">
+                <div class="left-cont row py-3 px-3 relative">
+                  <div class="col-6 my-2">
                     <label for="idGroup" class="form-label">Group</label>
                     <div class="input-group">
                       <select
@@ -772,7 +772,7 @@
                     ></span> -->
                   </div>
 
-                  <div class="col-12 col-md-6 my-2 datepicker">
+                  <div class="col-6 my-2 datepicker">
                     <label for="idDRDate" class="form-label">Select Date</label>
                     <input
                       type="date"
@@ -835,6 +835,76 @@
                         />
                       </div>
                       <ul id="empOptions" class="options p-0"></ul>
+                    </div>
+                  </div>
+
+                  <!-- LOCK FEATURE -->
+                  <div
+                    id="lockingOverlay"
+                    class="hidden absolute bottom-0 left-0 z-50 flex h-[calc(100%_-_280px)] w-full items-center justify-center bg-slate-900/20 backdrop-blur-[2px] pb-10"
+                  >
+                    <div
+                      class="relative flex w-full max-w-[470px] justify-center px-5"
+                    >
+                      <!-- Floating shield -->
+                      <div class="absolute -top-9 z-10">
+                        <div
+                          class="relative flex h-[82px] w-[82px] items-center justify-center"
+                        >
+                          <div
+                            class="absolute inset-0 rounded-full bg-yellow-200/70 blur-[2px]"
+                          ></div>
+                          <div
+                            class="relative flex h-[82px] w-[82px] items-center justify-center rounded-full bg-yellow-100 shadow-[0_12px_28px_rgba(234,179,8,0.28)]"
+                          >
+                            <div
+                              class="flex h-[60px] w-[60px] items-center justify-center rounded-full bg-yellow-400"
+                            >
+                              <i
+                                class="bx bx-lock-alt text-[30px] text-white"
+                              ></i>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Card -->
+                      <div
+                        class="flex w-full flex-col items-center rounded-[22px] bg-white px-10 pb-8 pt-16 text-center shadow-[0_22px_55px_rgba(15,23,42,0.16)]"
+                      >
+                        <h3
+                          class="text-[20px] font-semibold tracking-[0.1px] text-slate-800"
+                        >
+                          Editing Locked
+                        </h3>
+
+                        <p
+                          id="lockingMessage"
+                          class="mt-8 max-w-[360px] text-[15px] leading-8 text-slate-500"
+                        >
+                          This Daily Report is outside the current editable
+                          month. You may still view the existing details, but
+                          changes are disabled. To make updates, request 1-day
+                          temporary access.
+                        </p>
+
+                        <button
+                          id="btnRequestAccess"
+                          type="button"
+                          class="mt-8 min-h-[42px] w-full max-w-[300px] rounded-[8px] border-0 bg-blue-500 px-5 text-[15px] font-medium text-white shadow-sm transition hover:bg-blue-600"
+                        >
+                          Request 1-Day Access
+                        </button>
+
+                        <button
+                          id="btnGoCurrentMonth"
+                          type="button"
+                          class="mt-7 border-0 bg-transparent text-[14px] font-medium text-blue-500 transition hover:text-blue-700"
+                        >
+                          Go to Current Month
+                          <span class="ml-1 inline-block">→</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
 

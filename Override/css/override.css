@@ -630,7 +630,7 @@ footer {
 } */
 
 .home-section .home-content {
-  background-color: #eeeded;
+  background-color: var(--arsenic);
   align-items: center;
   width: 100%;
   overflow-x: hidden;

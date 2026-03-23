@@ -33,7 +33,7 @@ function handleRequestAccessClick() {
     return;
   }
 
-  window.location.href = `${rootFolder}/webJMR/DailyReportApprovals/`;
+  window.location.href = `${rootFolder}/webJMR/DRTemporaryAccess/`;
 }
 function resetProjectOptions() {
   $("#projOptions").empty();
