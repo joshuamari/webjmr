@@ -1024,20 +1024,16 @@ video {
   height: calc(100% - 100px);
 }
 
+.h-\[calc\(100\%_-_280px\)\] {
+  height: calc(100% - 280px);
+}
+
 .h-auto {
   height: auto;
 }
 
 .h-full {
   height: 100%;
-}
-
-.h-\[calc\(100\%_-_300px\)\] {
-  height: calc(100% - 300px);
-}
-
-.h-\[calc\(100\%_-_280px\)\] {
-  height: calc(100% - 280px);
 }
 
 .max-h-\[260px\] {
@@ -2200,10 +2196,6 @@ video {
   background-color: rgb(57 164 199 / var(--tw-bg-opacity, 1));
 }
 
-.bg-\[var\(--arsenic\)\] {
-  background-color: var(--arsenic);
-}
-
 .bg-\[var\(--blue-darkest\)\] {
   background-color: var(--blue-darkest);
 }
@@ -2248,6 +2240,10 @@ video {
   background-color: rgb(248 250 252 / var(--tw-bg-opacity, 1));
 }
 
+.bg-slate-900\/20 {
+  background-color: rgb(15 23 42 / 0.2);
+}
+
 .bg-slate-900\/45 {
   background-color: rgb(15 23 42 / 0.45);
 }
@@ -2273,10 +2269,6 @@ video {
 .bg-yellow-400 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1));
-}
-
-.bg-slate-900\/20 {
-  background-color: rgb(15 23 42 / 0.2);
 }
 
 .decoration-slice {
@@ -3221,6 +3213,10 @@ video {
 
 .forced-color-adjust-none {
   forced-color-adjust: none;
+}
+
+.\[hostname\:port\] {
+  hostname: port;
 }
 
 .hover\:bg-\[\#2f6dac\]:hover {

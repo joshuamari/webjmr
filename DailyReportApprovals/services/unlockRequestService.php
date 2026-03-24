@@ -280,3 +280,32 @@ function denyUnlockRequest(int $unlockId, string $actionBy): bool
 
     return $stmt->rowCount() > 0;
 }
+function getUnlockRequestById(int $unlockId): ?array
+{
+    global $connwebjmr;
+
+    $sql = "
+        SELECT
+            unlock_id,
+            employee_number,
+            requested_by,
+            requested_month,
+            date_requested,
+            status,
+            action_by,
+            action_at,
+            expiration_date
+        FROM unlock_requests
+        WHERE unlock_id = :unlockId
+        LIMIT 1
+    ";
+
+    $stmt = $connwebjmr->prepare($sql);
+    $stmt->execute([
+        ':unlockId' => $unlockId,
+    ]);
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row ?: null;
+}

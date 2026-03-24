@@ -1,2 +1,7 @@
 #ignore dbconn folder
 /dbconn
+
+/vendor/
+composer.lock
+
+test_email.php
