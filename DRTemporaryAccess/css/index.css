@@ -905,6 +905,10 @@ table tbody tr:hover td {
     display: none;
   }
 
+  .sidebar.close .menu-two {
+    display: none;
+  }
+
   .sidebar .menu-two {
     display: block;
   }

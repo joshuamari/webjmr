@@ -63,7 +63,9 @@ function startPage() {
   bindPageEvents();
   $(".hello-user").text(AppState.empDetails.empFName || "");
 
-  ifSmallScreen();
+  initSidebar();
+  handleResponsiveSidebar();
+
   initializeDate();
   getMyGroups();
   getDispatchLoc();

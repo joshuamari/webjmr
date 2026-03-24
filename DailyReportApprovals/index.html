@@ -40,8 +40,8 @@
         </a>
         <div class="menu-two-wrap hidden h-[60px] w-[35px]">
           <i
-            class="bx bx-menu menu-two relative mx-0 px-0 text-white"
-            style="top: 10px"
+            class="bx bx-menu menu-two relative mx-0 px-0 text-white text-[35px]"
+            style="top: 10px; right: 10px"
           ></i>
         </div>
       </div>
@@ -60,8 +60,22 @@
             </li>
           </ul>
         </li>
-
-        <li id="drapprovals">
+        <li id="tempAccessLink">
+          <div class="iocn-link">
+            <a href="../DRTemporaryAccess/">
+              <i class="bx bx-lock-open-alt"></i>
+              <span class="link_name">DR Access Request</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li>
+              <a class="link_name" href="../DRTemporaryAccess/">
+                DR Access Request
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li id="drapprovals" class="bg-[#39a4c7]">
           <div class="iocn-link">
             <a href="../DailyReportApprovals/">
               <svg
@@ -128,8 +142,8 @@
         </a>
         <div class="h-[60px] w-[35px]">
           <i
-            class="bx bx-menu menu-two relative mx-0 px-0"
-            style="top: 10px; color: #fff"
+            class="bx bx-menu menu-two relative mx-0 px-0 text-[35px]"
+            style="top: 10px; right: 10px; color: #fff"
           ></i>
         </div>
       </div>
@@ -147,11 +161,11 @@
       </div>
 
       <main class="home-content">
-        <div class="cont px-4 py-3">
+        <div class="cont px-4 py-3 overflow-y-auto">
           <div class="maindiv">
             <div class="pb-3">
               <h1
-                class="flex items-center text-[28px] font-semibold text-slate-800"
+                class="flex items-center text-[28px]/[1.125] font-semibold text-slate-800 mb-2"
               >
                 DR Temporary Access Approvals
               </h1>
@@ -567,10 +581,12 @@
                       </p>
                     </div>
 
-                  <div class="modal-info-card">
-                    <p class="modal-info-label">Requested By</p>
-                    <p id="pendingModalRequestedBy" class="modal-info-value">—</p>
-                  </div>
+                    <div class="modal-info-card">
+                      <p class="modal-info-label">Requested By</p>
+                      <p id="pendingModalRequestedBy" class="modal-info-value">
+                        —
+                      </p>
+                    </div>
                   </div>
 
                   <div
@@ -709,22 +725,39 @@
                       <div class="space-y-4">
                         <div>
                           <p class="modal-info-label">Group</p>
-                          <p id="actionedModalGroup" class="modal-info-value">—</p>
+                          <p id="actionedModalGroup" class="modal-info-value">
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Requested Month</p>
-                          <p id="actionedModalRequestedMonth" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalRequestedMonth"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Requested On</p>
-                          <p id="actionedModalRequestedOn" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalRequestedOn"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Requested By</p>
-                          <p id="actionedModalRequestedBy" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalRequestedBy"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -739,22 +772,39 @@
                       <div class="space-y-4">
                         <div>
                           <p class="modal-info-label">Status</p>
-                          <p id="actionedModalStatus" class="modal-info-value">—</p>
+                          <p id="actionedModalStatus" class="modal-info-value">
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Action Taken On</p>
-                          <p id="actionedModalActionTakenOn" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalActionTakenOn"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Action Taken By</p>
-                          <p id="actionedModalActionTakenBy" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalActionTakenBy"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
 
                         <div>
                           <p class="modal-info-label">Expires On</p>
-                          <p id="actionedModalExpiresOn" class="modal-info-value">—</p>
+                          <p
+                            id="actionedModalExpiresOn"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
                         </div>
                       </div>
                     </div>

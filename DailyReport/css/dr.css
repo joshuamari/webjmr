@@ -167,6 +167,7 @@ body {
   font-weight: 400;
   color: #ffff;
   transition: all 0.4s ease;
+  white-space: nowrap;
 }
 
 .sidebar .logo_name {
@@ -174,6 +175,7 @@ body {
   font-weight: 600;
   color: #ffff;
   transition: all 0.4s ease;
+  white-space: nowrap;
 }
 .sidebar.close .logo_name {
   display: none;
@@ -1385,6 +1387,7 @@ footer {
   .sidebar.close .nav-links li .sub-menu {
     display: none;
   }
+
   .sidebar.close .nav-links li {
     display: none;
   }
@@ -1393,12 +1396,18 @@ footer {
     width: 100%;
     z-index: 10000;
   }
+
   .sidebar.close .logo-details {
     display: none;
   }
+  .sidebar.close .menu-two {
+    display: none;
+  }
+
   .sidebar .menu-two {
     display: block;
   }
+
   .sidebar.close {
     width: 0px;
   }
@@ -1411,6 +1420,7 @@ footer {
     left: 0px;
     width: 425px;
   }
+
   .home-content {
     width: 100vw;
   }
@@ -1419,31 +1429,11 @@ footer {
     width: 100%;
     left: 0px;
   }
-  .sidebar.close ~ .table thead tr {
-    display: none;
-  }
-
-  .ms .pindot {
-    width: 25%;
-  }
-  .ms {
-    left: 75%;
-  }
-  .ms .ms-content {
-    left: 25%;
-  }
-  .ms.open .pindot {
-    width: 15%;
-    z-index: 2000;
-    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
 
   footer {
     height: 25px;
-    background: rgba(219, 217, 217, 0.5);
   }
+
   footer div {
     font-size: 11px;
   }
