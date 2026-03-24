@@ -50,7 +50,7 @@ checkAccess()
       empDetails = emp.result;
       $(".hello-user").text(empDetails["empFName"]);
       var thisEmpID = $($("#idEmployee").find("option:selected")).attr(
-        "emp-id"
+        "emp-id",
       );
       ifSmallScreen();
       initializeDate();
@@ -181,7 +181,7 @@ $(document).on(
     $(this).removeClass("bg-err");
     $(this).removeClass("border border-danger");
     $(".missingInputs").addClass("hidden");
-  }
+  },
 );
 $(document).on(
   "click",
@@ -190,7 +190,7 @@ $(document).on(
     $(".editInputError").removeClass("block").addClass("hidden");
     $(this).removeClass("bg-err");
     $(this).removeClass("border border-danger");
-  }
+  },
 );
 
 //sidebar
@@ -638,7 +638,7 @@ function getMyGroups(myEmpNum) {
 function fillMyGroups(grps) {
   var grpSelect = $("#idGroup");
   grpSelect.html(
-    `<option selected hidden value=0 grp-id=0>Select Group</option>`
+    `<option selected hidden value=0 grp-id=0>Select Group</option>`,
   );
   if (grps.length > 1) {
     //sort group if more than 1
@@ -687,7 +687,7 @@ function fillDispatchLoc(locs, type) {
   var editLocSel = $("#edit-selLoc");
   if (type == 0) {
     locSelect.html(
-      `<option selected hidden value=0 loc-id=0>Select Location</option>`
+      `<option selected hidden value=0 loc-id=0>Select Location</option>`,
     );
     $.each(locs, function (index, item) {
       var option = $("<option>")
@@ -698,7 +698,7 @@ function fillDispatchLoc(locs, type) {
     });
   } else {
     editLocSel.html(
-      `<option selected hidden value=0 loc-id=0>Select Location</option>`
+      `<option selected hidden value=0 loc-id=0>Select Location</option>`,
     );
     $.each(locs, function (index, item) {
       var option = $("<option>")
@@ -742,7 +742,7 @@ function getEmployees() {
 function fillEmployees(emps) {
   var empSelect = $("#idEmployee");
   empSelect.html(
-    `<option selected hidden value=0 emp-id=0>Select Employee</option>`
+    `<option selected hidden value=0 emp-id=0>Select Employee</option>`,
   );
   $.each(emps, function (index, item) {
     var option = $("<option>")
@@ -794,7 +794,7 @@ function getEmpSearch() {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject(
-            "An unspecified error occurred while fetching Employee Search."
+            "An unspecified error occurred while fetching Employee Search.",
           );
         }
       },
@@ -835,7 +835,7 @@ function fillProjects(projs, type) {
   var editProjSel = $("#edit-selProj");
   if (type == 0) {
     projSelect.html(
-      `<option selected hidden value=0 proj-id=0>Select Project</option>`
+      `<option selected hidden value=0 proj-id=0>Select Project</option>`,
     );
     $.each(projs, function (index, item) {
       var option = $("<option>")
@@ -846,7 +846,7 @@ function fillProjects(projs, type) {
     });
   } else {
     editProjSel.html(
-      `<option selected hidden value=0 proj-id=0>Select Project</option>`
+      `<option selected hidden value=0 proj-id=0>Select Project</option>`,
     );
     $.each(projs, function (index, item) {
       var option = $("<option>")
@@ -972,7 +972,7 @@ function fillItems(items, type) {
   var editIOWSel = $("#edit-selIOW");
   if (type == 0) {
     itemSelect.html(
-      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`
+      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`,
     );
     $.each(items, function (index, item) {
       var option = $("<option>")
@@ -983,7 +983,7 @@ function fillItems(items, type) {
     });
   } else {
     editIOWSel.html(
-      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`
+      `<option selected hidden value=0 item-id=0>Select Item of Works</option>`,
     );
     $.each(items, function (index, item) {
       var option = $("<option>")
@@ -1071,7 +1071,7 @@ function fillJobs(jobs, type) {
   var editJobSel = $("#edit-selJRD");
   if (type == 0) {
     jobSelect.html(
-      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`
+      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`,
     );
     $.each(jobs, function (index, item) {
       var option = $("<option>")
@@ -1082,7 +1082,7 @@ function fillJobs(jobs, type) {
     });
   } else {
     editJobSel.html(
-      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`
+      `<option selected hidden value=0 job-id=0>Select Job Request Description</option>`,
     );
     $.each(jobs, function (index, item) {
       var option = $("<option>")
@@ -1114,7 +1114,7 @@ function getNoMoreInputItems() {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject(
-            "An unspecified error occurred while fetching NoMoreInputItems."
+            "An unspecified error occurred while fetching NoMoreInputItems.",
           );
         }
       },
@@ -1156,7 +1156,7 @@ function fillTOW(tows, type) {
   var editTOWSel = $("#edit-selTOW");
   if (type == 0) {
     towSelect.html(
-      `<option selected hidden value=0 tow-id=0>Select...</option>`
+      `<option selected hidden value=0 tow-id=0>Select...</option>`,
     );
     $.each(tows, function (index, item) {
       var option = $("<option>")
@@ -1167,7 +1167,7 @@ function fillTOW(tows, type) {
     });
   } else {
     editTOWSel.html(
-      `<option selected hidden value=0 tow-id=0>Select...</option>`
+      `<option selected hidden value=0 tow-id=0>Select...</option>`,
     );
     $.each(tows, function (index, item) {
       var option = $("<option>")
@@ -1251,7 +1251,7 @@ function fillCheckers(checks, type) {
   var editCheckSel = $("#edit-selCheck");
   if (type == 0) {
     checkSelect.html(
-      `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+      `<option selected hidden value=0 chk-id=0>Select Employee</option>`,
     );
     $.each(checks, function (index, item) {
       var option = $("<option>")
@@ -1262,7 +1262,7 @@ function fillCheckers(checks, type) {
     });
   } else {
     editCheckSel.html(
-      `<option selected hidden value=0 chk-id=0>Select Employee</option>`
+      `<option selected hidden value=0 chk-id=0>Select Employee</option>`,
     );
     $.each(checks, function (index, item) {
       var option = $("<option>")
@@ -1290,10 +1290,10 @@ function isDrawing(type) {
 function isEngineering(type) {
   var isDrawing = true;
   var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
+    $($("#idProject").find("option:selected")).attr("proj-id"),
   );
   var editprojID = parseInt(
-    $($("#edit-selProj").find("option:selected")).attr("proj-id")
+    $($("#edit-selProj").find("option:selected")).attr("proj-id"),
   );
   var selGroup = $("#idGroup").val();
   if (type == 0) {
@@ -1336,10 +1336,10 @@ function isEngineering(type) {
 function hasJRD(type) {
   var isDrawing = true;
   var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
+    $($("#idProject").find("option:selected")).attr("proj-id"),
   );
   var editprojID = parseInt(
-    $($("#edit-selProj").find("option:selected")).attr("proj-id")
+    $($("#edit-selProj").find("option:selected")).attr("proj-id"),
   );
   var selGroup = $("#idGroup").val();
 
@@ -1362,10 +1362,10 @@ function hasJRD(type) {
 function hasTOW(type) {
   var isDrawing = true;
   var projID = parseInt(
-    $($("#idProject").find("option:selected")).attr("proj-id")
+    $($("#idProject").find("option:selected")).attr("proj-id"),
   );
   var editprojID = parseInt(
-    $($("#edit-selProj").find("option:selected")).attr("proj-id")
+    $($("#edit-selProj").find("option:selected")).attr("proj-id"),
   );
   var selGroup = $("#idGroup").val();
   if (type == 0) {
@@ -1446,7 +1446,7 @@ function fillTRGroups(allgrps, type) {
   var editTRGrpSel = $("#edit-trGroup");
   if (type == 0) {
     trgrpSelect.html(
-      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`
+      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`,
     );
     $.each(allgrps, function (index, item) {
       var option = $("<option>")
@@ -1457,7 +1457,7 @@ function fillTRGroups(allgrps, type) {
     });
   } else {
     editTRGrpSel.html(
-      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`
+      `<option selected hidden value=0 trgrp-id=0>Select Training Group</option>`,
     );
     $.each(allgrps, function (index, item) {
       var option = $("<option>")
@@ -1487,7 +1487,7 @@ function getTRGroups() {
           reject("Internal Server Error: There was a server error.");
         } else {
           reject(
-            "An unspecified error occurred while fetching Training Groups."
+            "An unspecified error occurred while fetching Training Groups.",
           );
         }
       },
@@ -1556,7 +1556,7 @@ function fillMHType(type) {
 
   if (type == 0) {
     mhTypeSelect.html(
-      `<option selected hidden value=null mhid=null>Select Manhour Type</option>`
+      `<option selected hidden value=null mhid=null>Select Manhour Type</option>`,
     );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
@@ -1567,7 +1567,7 @@ function fillMHType(type) {
     });
   } else {
     editMHTypeSel.html(
-      `<option selected hidden value=null edtmhid=null>Select Manhour Type</option>`
+      `<option selected hidden value=null edtmhid=null>Select Manhour Type</option>`,
     );
     $.each(mhtypes, function (index, item) {
       var option = $("<option>")
@@ -1592,7 +1592,7 @@ function resetEntry() {
   $("#idRev").prop("checked", false);
   $("#edit-rev").prop("checked", false);
   $(
-    "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup"
+    "#idGroup,#idEmployee,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
@@ -2086,8 +2086,7 @@ function fillEditFields(editData) {
             $("#edit-newHour").val(newhrs);
             $("#edit-newMin").val(newmins);
             $("#edit-selMHType").val(mhtype).change();
-          }
-          else{
+          } else {
             $("#edit-newHour").val(newhrs);
             $("#edit-newMin").val(newmins);
             $("#edit-selMHType").val(mhtype).change();
@@ -2304,36 +2303,36 @@ function fillEntries(entryList) {
         }
         var row = $(`<tr entry-id=${item.id}>`);
         row.append(
-          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.location}</td>`
+          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.location}</td>`,
         );
         row.append(
-          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.group}</td>`
+          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.group}</td>`,
         );
         row.append(
-          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.projName}</td>`
+          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.projName}</td>`,
         );
         row.append(
           `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${
             item.itemName ? item.itemName : "-"
-          }</td>`
+          }</td>`,
         );
         row.append(
           `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${
             item.jobName ? item.jobName : "-"
-          }</td>`
+          }</td>`,
         );
         row.append(
           `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${
             item.towName ? item.towName : "-"
-          }</td>`
+          }</td>`,
         );
         row.append(
-          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.duration}</td>`
+          `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${item.duration}</td>`,
         );
         row.append(
           `<td  data-f-name="Arial" data-f-sz="9"  data-a-h="center" data-a-v="middle" 	data-b-a-s="thin" data-b-a-c="000000">${
             mhtyp[item.MHType]
-          }</td>`
+          }</td>`,
         );
 
         row.append(`<td>
@@ -2495,7 +2494,7 @@ function resetSelection(num, type) {
 }
 function removeOutlines() {
   $(
-    "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin"
+    "#edit-selLoc, #edit-selProj, #edit-selIOW, #edit-selJRD, #edit-2d3d, #edit-rev, #edit-selTOW, #edit-selCheck, #edit-selMHType, #edit-newRemarks, #edit-trGroup, #edit-newHour, #edit-newMin",
   )
     .removeClass("border border-danger")
     .removeClass("bg-err");
@@ -2520,7 +2519,7 @@ function isWorkDay(location) {
     },
     function (data) {
       isWorkDay = $.parseJSON(data);
-    }
+    },
   );
   $.ajaxSetup({ async: true });
   return isWorkDay;
@@ -2559,6 +2558,327 @@ function getDefaults() {
     async: false,
   });
   return defaultsArray;
+}
+
+//#endregion
+
+//#region LOCKING
+$(document).on("change", "#idDRDate", handleDateChange);
+
+function handleDateChange() {
+  const isLocked = evaluateMonthLock();
+
+  // getEntries();
+  // getPlans();
+
+  if (!isLocked) {
+    MHValidation().catch((error) => {
+      console.error(error);
+      alert(error);
+    });
+    sequenceValidation();
+  }
+}
+
+function setLockedState(isLocked) {
+  const lockTargets = [
+    "#idGroup",
+    "#idLocation",
+    "#idProject",
+    "#idItem",
+    "#idJRD",
+    "#idTOW",
+    "#idChecking",
+    "#getHour",
+    "#getMin",
+    "#idMH",
+    "#idRemarks",
+    "#idAdd",
+    "#idReset",
+    "#idCopyDate",
+    "#idCopy",
+    "#searchproj",
+    "#searchitem",
+    "#searchjrd",
+    "#idRev",
+    "#towDesc",
+    "#trGroup",
+  ];
+
+  if (isLocked) {
+    $("#lockingOverlay").removeClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", true);
+    });
+
+    $("#idCopyDate").val("");
+
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry]")
+      .prop("disabled", true)
+      .addClass("disabled");
+  } else {
+    $("#lockingOverlay").addClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", false);
+    });
+
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry]")
+      .prop("disabled", false)
+      .removeClass("disabled");
+
+    sequenceValidation();
+    MHValidation().catch((error) => {
+      console.error("MHValidation failed in setLockedState:", error);
+    });
+
+    const projID = $($("#idProject").find("option:selected")).attr("proj-id");
+    const itemID = $($("#idItem").find("option:selected")).attr("item-id");
+
+    if (projID) {
+      disableTimeInput(projID);
+    }
+
+    if (projID && itemID) {
+      disableInputs(projID, itemID);
+    }
+  }
+}
+
+function getTodayLocalDateString() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getMonthYearLabel(dateString) {
+  if (!dateString) return "Selected Month";
+
+  const selectedDate = new Date(dateString + "T00:00:00");
+  return selectedDate.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function setLockedState(isLocked) {
+  const lockTargets = [
+    "#idGroup",
+    "#idLocation",
+    "#idProject",
+    "#idItem",
+    "#idJRD",
+    "#idTOW",
+    "#idChecking",
+    "#getHour",
+    "#getMin",
+    "#idMH",
+    "#idRemarks",
+    "#idAdd",
+    "#idReset",
+    "#idCopyDate",
+    "#idCopy",
+    "#searchproj",
+    "#searchitem",
+    "#searchjrd",
+    "#idRev",
+    "#towDesc",
+    "#trGroup",
+  ];
+
+  if (isLocked) {
+    $("#lockingOverlay").removeClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", true);
+    });
+
+    $("#idCopyDate").val("");
+
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry]")
+      .prop("disabled", true)
+      .addClass("disabled");
+  } else {
+    $("#lockingOverlay").addClass("hidden");
+
+    lockTargets.forEach((selector) => {
+      $(selector).prop("disabled", false);
+    });
+
+    $("#drEntries")
+      .find(".selectBut, .edit, .delBut, button[edit-entry]")
+      .prop("disabled", false)
+      .removeClass("disabled");
+
+    sequenceValidation();
+    Promise.resolve(MHValidation()).catch((error) => {
+      console.error("MHValidation failed in setLockedState:", error);
+    });
+
+    const projID = $($("#idProject").find("option:selected")).attr("proj-id");
+    const itemID = $($("#idItem").find("option:selected")).attr("item-id");
+
+    if (projID) {
+      disableTimeInput(projID);
+    }
+
+    if (projID && itemID) {
+      disableInputs(projID, itemID);
+    }
+  }
+}
+
+function updateLockedMonthLabel() {
+  const selectedDate = $("#idDRDate").val();
+  $("#lockedMonthLabel").text(getMonthYearLabel(selectedDate));
+}
+
+function evaluateMonthLock() {
+  const selectedDate = $("#idDRDate").val();
+
+  updateLockedMonthLabel();
+  updateLockingMessage();
+
+  if (!selectedDate) {
+    setLockedState(true);
+    return true;
+  }
+
+  const locked = !canEditSelectedDate(selectedDate);
+  setLockedState(locked);
+
+  return locked;
+}
+
+function getPHNowParts() {
+  const now = new Date();
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  }).formatToParts(now);
+
+  const get = (type) => parts.find((p) => p.type === type)?.value;
+
+  return {
+    year: Number(get("year")),
+    month: Number(get("month")),
+    day: Number(get("day")),
+    hour: Number(get("hour")),
+    minute: Number(get("minute")),
+    second: Number(get("second")),
+  };
+}
+
+function parseYMDLocal(dateString) {
+  if (!dateString) return null;
+
+  const [year, month, day] = dateString.split("-").map(Number);
+  return { year, month, day };
+}
+
+function isCurrentMonth(dateString) {
+  const selected = parseYMDLocal(dateString);
+  if (!selected) return false;
+
+  const phNow = getPHNowParts();
+
+  return selected.year === phNow.year && selected.month === phNow.month;
+}
+
+function isPreviousMonth(dateString) {
+  const selected = parseYMDLocal(dateString);
+  if (!selected) return false;
+
+  const phNow = getPHNowParts();
+
+  let prevMonth = phNow.month - 1;
+  let prevYear = phNow.year;
+
+  if (prevMonth === 0) {
+    prevMonth = 12;
+    prevYear -= 1;
+  }
+
+  return selected.year === prevYear && selected.month === prevMonth;
+}
+
+function canEditSelectedDate(dateString) {
+  if (!dateString) return false;
+
+  if (isCurrentMonth(dateString)) {
+    return true;
+  }
+
+  if (isPreviousMonth(dateString)) {
+    // return !!AppState.empDetails.canAccessPreviousMonth;
+  }
+
+  return false;
+}
+
+function updateLockingMessage() {
+  const selectedDate = $("#idDRDate").val();
+  const isPrevMonth = isPreviousMonth(selectedDate);
+  // const canAccessPreviousMonth = !!AppState.empDetails.canAccessPreviousMonth;
+
+  let message = `
+    This Daily Report is outside the current editable month.
+    You may still view the details, but changes are disabled.
+  `;
+
+  if (isPrevMonth && !canAccessPreviousMonth) {
+    message = `
+      Previous-month editing is currently disabled for your account.
+      You may still view the details, but changes are disabled.
+    `;
+  }
+
+  if (isPrevMonth && canAccessPreviousMonth) {
+    message = `
+      Previous-month access is currently active for your account.
+      You may edit entries for the selected previous-month date.
+    `;
+  }
+
+  $("#lockingMessage").html(message);
+}
+$(document).on(
+  "click",
+  "#idGroup,#idLocation,#getHour,#getMin,#idProject,#idItem,#idJRD,#idTOW,#idMH,#idRemarks,#idDRDate,#trGroup",
+  clearInputErrorState,
+);
+$(document).on("click", "#btnRequestAccess", handleRequestAccessClick);
+function handleRequestAccessClick() {
+  const selectedDate = $("#idDRDate").val();
+
+  if (!selectedDate) {
+    alert("Please select a date first.");
+    return;
+  }
+
+  window.location.href = `${rootFolder}/webJMR/DRTemporaryAccess/`;
+}
+function clearInputErrorState() {
+  $(this).removeClass("bg-err");
+}
+
+$(document).on("click", "#btnGoCurrentMonth", handleGoCurrentMonthClick);
+function handleGoCurrentMonthClick() {
+  const todayString = getTodayLocalDateString();
+  $("#idDRDate").val(todayString).trigger("change");
 }
 
 //#endregion
