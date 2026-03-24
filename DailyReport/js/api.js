@@ -322,13 +322,3 @@ function fetchEntryDetails(primaryID) {
     "Failed to load entry.",
   );
 }
-function requestUnlockAccess({ employeeNumber, unlockDate }) {
-  return postJson(
-    "api/request_unlock.php",
-    {
-      employeeNumber,
-      unlockDate,
-    },
-    "Failed to submit access request.",
-  );
-}

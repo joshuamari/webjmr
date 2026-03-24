@@ -687,14 +687,6 @@ video {
   top: 10px;
 }
 
-.left-10 {
-  left: 2.5rem;
-}
-
-.right-10 {
-  right: 2.5rem;
-}
-
 .isolate {
   isolation: isolate;
 }
