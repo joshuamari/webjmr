@@ -56,18 +56,7 @@ function fillCheckers(checks) {
     checkSelect.append(option);
   });
 }
-function ifSmallScreen() {
-  if ($(window).width() < 550) {
-    if ($(".sidebar").hasClass("close")) {
-      $(".menu-two").addClass("d-none");
-    } else {
-      $(".menu-two").removeClass("d-none");
-    }
-    return;
-  }
 
-  $(".menu-two").addClass("d-none");
-}
 function refreshDailyReportView() {
   getEntries();
   initCalendar();
