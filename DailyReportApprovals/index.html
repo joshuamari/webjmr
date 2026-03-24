@@ -10,7 +10,17 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
-    <script src="js/main.js"></script>
+
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/mock.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main2.js"></script>
   </head>
   <body>
     <div class="sidebar close fixed top-0">
@@ -155,8 +165,14 @@
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
                     <p class="text-sm text-slate-500">Pending Requests</p>
-                    <h3 class="mt-2 text-3xl font-semibold text-slate-700">
+                    <!-- <h3 class="mt-2 text-3xl font-semibold text-slate-700">
                       12
+                    </h3> -->
+                    <h3
+                      id="summaryPendingCount"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
                     </h3>
                   </div>
                   <div
@@ -171,8 +187,11 @@
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
                     <p class="text-sm text-slate-500">Approved Today</p>
-                    <h3 class="mt-2 text-3xl font-semibold text-slate-700">
-                      5
+                    <h3
+                      id="summaryApprovedToday"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
                     </h3>
                   </div>
                   <div
@@ -186,9 +205,12 @@
               <div class="rounded-xl bg-white p-5 shadow">
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
-                    <p class="text-sm text-slate-500">Cancelled Today</p>
-                    <h3 class="mt-2 text-3xl font-semibold text-slate-700">
-                      2
+                    <p class="text-sm text-slate-500">Denied Today</p>
+                    <h3
+                      id="summaryDeniedToday"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
                     </h3>
                   </div>
                   <div
@@ -203,8 +225,11 @@
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
                     <p class="text-sm text-slate-500">Expiring Today</p>
-                    <h3 class="mt-2 text-3xl font-semibold text-slate-700">
-                      3
+                    <h3
+                      id="summaryExpiringToday"
+                      class="mt-2 text-3xl font-semibold text-slate-700"
+                    >
+                      0
                     </h3>
                   </div>
                   <div
@@ -271,9 +296,6 @@
                   <div class="approval-select-wrap relative">
                     <select id="pendingGroupSel" class="approval-group-filter">
                       <option value="">All Groups</option>
-                      <option value="env">ENV</option>
-                      <option value="elec">ELEC</option>
-                      <option value="pmd">PMD</option>
                     </select>
                     <i
                       class="bx bx-group absolute left-2 top-[10px] opacity-75"
@@ -314,39 +336,7 @@
                     </tr>
                   </thead>
 
-                  <tbody id="pendingApprovalTableBody">
-                    <tr
-                      class="bg-white pending-row cursor-pointer"
-                      data-request-id="REQ-1001"
-                      data-employee="Collene Keith"
-                      data-empid="1042"
-                      data-group="env"
-                      data-requested-on="2026-03-01 08:15 AM"
-                      data-requested-month="February 2026"
-                      data-month-value="2026-02"
-                      data-status="pending"
-                    >
-                      <td class="border-b border-slate-200 px-4 py-5 align-top">
-                        <div class="font-medium text-slate-800">
-                          Collene Keith
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1042</div>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-01 08:15 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        February 2026
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status pending">Pending</span>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="pendingApprovalTableBody"></tbody>
                 </table>
               </div>
             </div>
@@ -404,9 +394,6 @@
                   <div class="approval-select-wrap relative">
                     <select id="actionedGroupSel" class="approval-group-filter">
                       <option value="">All Groups</option>
-                      <option value="env">ENV</option>
-                      <option value="elec">ELEC</option>
-                      <option value="pmd">PMD</option>
                     </select>
                     <i
                       class="bx bx-group absolute left-2 top-[10px] opacity-75"
@@ -447,110 +434,7 @@
                     </tr>
                   </thead>
 
-                  <tbody id="actionedApprovalTableBody">
-                    <tr
-                      class="bg-white actioned-row cursor-pointer"
-                      data-request-id="REQ-1002"
-                      data-employee="Collene Keith"
-                      data-empid="1042"
-                      data-group="env"
-                      data-requested-on="2026-03-01 08:15 AM"
-                      data-requested-month="February 2026"
-                      data-month-value="2026-02"
-                      data-status="active"
-                      data-action-taken-on="2026-03-01 09:02 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-expiring-on="2026-03-02 08:15 AM"
-                    >
-                      <td class="border-b border-slate-200 px-4 py-5 align-top">
-                        <div class="font-medium text-slate-800">
-                          Collene Keith
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1042</div>
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="">2026-03-05 10:35 AM</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        February 2026
-                      </td>
-
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status accepted">March 2, 08:15 AM</span>
-                      </td>
-                    </tr>
-
-                    <tr
-                      class="bg-white actioned-row cursor-pointer"
-                      data-request-id="REQ-1003"
-                      data-employee="Joshua Coquia"
-                      data-empid="1038"
-                      data-group="elec"
-                      data-requested-on="2026-03-01 07:45 AM"
-                      data-requested-month="January 2026"
-                      data-month-value="2026-01"
-                      data-status="cancelled"
-                      data-action-taken-on="2026-03-01 08:10 AM"
-                      data-action-taken-by="Collene Keith"
-                      data-expiring-on=""
-                    >
-                      <td class="border-b border-slate-200 px-4 py-5 align-top">
-                        <div class="font-medium text-slate-800">
-                          Joshua Coquia
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1038</div>
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="">2026-03-01 08:15 AM</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        January 2026
-                      </td>
-
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-400"
-                      >
-                        —
-                      </td>
-                    </tr>
-                    <tr
-                      class="bg-white actioned-row cursor-pointer"
-                      data-request-id="REQ-1004"
-                      data-employee="Dexmel Hernandez"
-                      data-empid="1051"
-                      data-group="pmd"
-                      data-requested-on="2026-02-27 03:30 PM"
-                      data-requested-month="January 2026"
-                      data-month-value="2026-01"
-                      data-status="expired"
-                      data-action-taken-on="2026-02-27 03:45 PM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-expiring-on="2026-02-28 03:45 PM"
-                    >
-                      <td class="border-b border-slate-200 px-4 py-5 align-top">
-                        <div class="font-medium text-slate-800">
-                          Dexmel Hernandez
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1051</div>
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="">2026-03-10 09:04 AM</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        January 2026
-                      </td>
-
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status cancelled">Feb 28, 03:45 PM</span>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="actionedApprovalTableBody"></tbody>
                 </table>
               </div>
               <div
@@ -683,10 +567,10 @@
                       </p>
                     </div>
 
-                    <div class="modal-info-card">
-                      <p class="modal-info-label">Access Type</p>
-                      <p class="modal-info-value">1-Day Temporary Access</p>
-                    </div>
+                  <div class="modal-info-card">
+                    <p class="modal-info-label">Requested By</p>
+                    <p id="pendingModalRequestedBy" class="modal-info-value">—</p>
+                  </div>
                   </div>
 
                   <div
@@ -825,27 +709,22 @@
                       <div class="space-y-4">
                         <div>
                           <p class="modal-info-label">Group</p>
-                          <p id="actionedModalGroup" class="modal-info-value">
-                            —
-                          </p>
+                          <p id="actionedModalGroup" class="modal-info-value">—</p>
                         </div>
+
                         <div>
                           <p class="modal-info-label">Requested Month</p>
-                          <p
-                            id="actionedModalRequestedMonth"
-                            class="modal-info-value"
-                          >
-                            —
-                          </p>
+                          <p id="actionedModalRequestedMonth" class="modal-info-value">—</p>
                         </div>
+
                         <div>
                           <p class="modal-info-label">Requested On</p>
-                          <p
-                            id="actionedModalRequestedOn"
-                            class="modal-info-value"
-                          >
-                            —
-                          </p>
+                          <p id="actionedModalRequestedOn" class="modal-info-value">—</p>
+                        </div>
+
+                        <div>
+                          <p class="modal-info-label">Requested By</p>
+                          <p id="actionedModalRequestedBy" class="modal-info-value">—</p>
                         </div>
                       </div>
                     </div>
@@ -860,27 +739,22 @@
                       <div class="space-y-4">
                         <div>
                           <p class="modal-info-label">Status</p>
-                          <p id="actionedModalStatus" class="modal-info-value">
-                            —
-                          </p>
+                          <p id="actionedModalStatus" class="modal-info-value">—</p>
                         </div>
+
                         <div>
                           <p class="modal-info-label">Action Taken On</p>
-                          <p
-                            id="actionedModalActionTakenOn"
-                            class="modal-info-value"
-                          >
-                            —
-                          </p>
+                          <p id="actionedModalActionTakenOn" class="modal-info-value">—</p>
                         </div>
+
                         <div>
                           <p class="modal-info-label">Action Taken By</p>
-                          <p
-                            id="actionedModalActionTakenBy"
-                            class="modal-info-value"
-                          >
-                            —
-                          </p>
+                          <p id="actionedModalActionTakenBy" class="modal-info-value">—</p>
+                        </div>
+
+                        <div>
+                          <p class="modal-info-label">Expires On</p>
+                          <p id="actionedModalExpiresOn" class="modal-info-value">—</p>
                         </div>
                       </div>
                     </div>
@@ -892,7 +766,7 @@
             <div class="mt-6 flex justify-end pb-4">
               <p class="text-xs text-slate-500">
                 <i class="bx bx-copyright text-slate-500"></i>
-                2023 KDTSys
+                2026 KDTSys
               </p>
             </div>
           </div>
