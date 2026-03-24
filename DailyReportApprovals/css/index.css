@@ -986,6 +986,10 @@ table thead tr th {
     display: none;
   }
 
+  .sidebar.close .menu-two {
+    display: none;
+  }
+
   .sidebar .menu-two {
     display: block;
   }

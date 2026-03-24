@@ -687,6 +687,14 @@ video {
   top: 10px;
 }
 
+.left-10 {
+  left: 2.5rem;
+}
+
+.right-10 {
+  right: 2.5rem;
+}
+
 .isolate {
   isolation: isolate;
 }
@@ -2631,8 +2639,17 @@ video {
   font-size: 28px;
 }
 
+.text-\[28px\]\/\[1\.125\] {
+  font-size: 28px;
+  line-height: 1.125;
+}
+
 .text-\[30px\] {
   font-size: 30px;
+}
+
+.text-\[35px\] {
+  font-size: 35px;
 }
 
 .text-sm {
