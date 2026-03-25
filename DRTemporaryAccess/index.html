@@ -178,7 +178,24 @@
                 </p>
               </div>
 
-              <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-2">
+              <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-3">
+                <!-- LEADER GROUP SELECT -->
+                <div id="targetGroupWrap" class="hidden">
+                  <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Group
+                  </label>
+                  <div class="approval-select-wrap relative">
+                    <select id="targetGroupSel" class="approval-group-filter">
+                      <option value="">Select group</option>
+                    </select>
+                    <i
+                      class="bx bx-group absolute left-2 top-[10px] opacity-75"
+                    ></i>
+                    <i
+                      class="bx bx-chevron-down absolute right-2 top-[10px] opacity-75"
+                    ></i>
+                  </div>
+                </div>
                 <!-- LEADER SELECT -->
                 <div id="targetEmployeeWrap" class="hidden">
                   <label class="mb-2 block text-sm font-medium text-slate-700">
