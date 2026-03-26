@@ -10,7 +10,16 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
-    <script src="js/main.js"></script>
+    <!-- <script src="js/main.js"></script> -->
+         <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/main2.js"></script>
   </head>
   <body>
     <div class="sidebar close fixed top-0">
@@ -180,7 +189,7 @@
 
               <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-3">
                 <!-- LEADER GROUP SELECT -->
-                <div id="targetGroupWrap" class="hidden">
+                <div id="targetGroupWrap" class="">
                   <label class="mb-2 block text-sm font-medium text-slate-700">
                     Group
                   </label>
@@ -382,7 +391,7 @@
               <div class="rounded-xl bg-white p-5 shadow">
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
-                    <p class="text-sm text-slate-500">Active</p>
+                    <p class="text-sm text-slate-500">Expiring Today</p>
                     <h3
                       id="cardActive"
                       class="mt-2 text-3xl font-semibold text-slate-700"
@@ -393,7 +402,7 @@
                   <div
                     class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 aspect-square"
                   >
-                    <i class="bx bx-lock-open-alt text-3xl text-sky-500"></i>
+                    <i class="bx bx-calendar-exclamation text-3xl text-sky-500"></i>
                   </div>
                 </div>
               </div>
@@ -453,10 +462,10 @@
                     <select id="requestStatusSel" class="approval-group-filter">
                       <option value="">All Status</option>
                       <option value="pending">Pending</option>
-                      <option value="active">Active</option>
                       <option value="approved">Approved</option>
-                      <option value="denied">Denied</option>
+                      <option value="expiring_today">Expiring Today</option>
                       <option value="expired">Expired</option>
+                      <option value="denied">Denied</option>
                     </select>
                     <i
                       class="bx bx-filter-alt absolute left-2 top-[10px] opacity-75"
@@ -507,189 +516,7 @@
                     </tr>
                   </thead>
 
-                  <tbody id="myRequestTableBody">
-                    <tr
-                      class="my-request-row submitted-request-row cursor-pointer"
-                      data-source-table="submitted"
-                      data-request-id="REQ-3001"
-                      data-target-employee="Dexmel Hernandez"
-                      data-target-empid="1051"
-                      data-requested-on="2026-03-19 08:15 AM"
-                      data-requested-month="February 2026"
-                      data-month-value="2026-02"
-                      data-status="active"
-                      data-action-taken-on="2026-03-19 08:45 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-valid-until="2026-03-20 08:15 AM"
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-3001
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <div class="font-medium text-slate-800">
-                          Dexmel Hernandez
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1051</div>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-19 08:15 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        February 2026
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status accepted">Active</span>
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status accepted">2026-03-20 08:15 AM</span>
-                      </td>
-                    </tr>
-
-                    <tr
-                      class="my-request-row submitted-request-row cursor-pointer"
-                      data-source-table="submitted"
-                      data-request-id="REQ-2998"
-                      data-target-employee="Collene Keith"
-                      data-target-empid="1042"
-                      data-requested-on="2026-03-10 09:00 AM"
-                      data-requested-month="January 2026"
-                      data-month-value="2026-01"
-                      data-status="expired"
-                      data-action-taken-on="2026-03-10 09:20 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-valid-until="2026-03-11 09:00 AM"
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-2998
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <div class="font-medium text-slate-800">
-                          Collene Keith
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1042</div>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-10 09:00 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        January 2026
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status expired">Expired</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-11 09:00 AM
-                      </td>
-                    </tr>
-
-                    <tr
-                      class="my-request-row submitted-request-row cursor-pointer"
-                      data-source-table="submitted"
-                      data-request-id="REQ-2995"
-                      data-target-employee="Joshua Coquia"
-                      data-target-empid="1038"
-                      data-requested-on="2026-03-05 07:30 AM"
-                      data-requested-month="December 2025"
-                      data-month-value="2025-12"
-                      data-status="denied"
-                      data-action-taken-on="2026-03-05 08:00 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-valid-until=""
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-2995
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <div class="font-medium text-slate-800">
-                          Joshua Coquia
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1038</div>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-05 07:30 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        December 2025
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status cancelled">Denied</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-400"
-                      >
-                        —
-                      </td>
-                    </tr>
-
-                    <tr
-                      class="my-request-row submitted-request-row cursor-pointer"
-                      data-source-table="submitted"
-                      data-request-id="REQ-2992"
-                      data-target-employee="Dexmel Hernandez"
-                      data-target-empid="1051"
-                      data-requested-on="2026-03-01 08:05 AM"
-                      data-requested-month="November 2025"
-                      data-month-value="2025-11"
-                      data-status="pending"
-                      data-action-taken-on=""
-                      data-action-taken-by=""
-                      data-valid-until=""
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-2992
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <div class="font-medium text-slate-800">
-                          Dexmel Hernandez
-                        </div>
-                        <div class="text-xs text-slate-400">EMP-1051</div>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-01 08:05 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        November 2025
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status pending">Pending</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-400"
-                      >
-                        —
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="myRequestTableBody"></tbody>
                 </table>
               </div>
 
@@ -790,10 +617,10 @@
                     >
                       <option value="">All Status</option>
                       <option value="pending">Pending</option>
-                      <option value="active">Active</option>
                       <option value="approved">Approved</option>
-                      <option value="denied">Denied</option>
+                      <option value="expiring_today">Expiring Today</option>
                       <option value="expired">Expired</option>
+                      <option value="denied">Denied</option>
                     </select>
                     <i
                       class="bx bx-filter-alt absolute left-2 top-[10px] opacity-75"
@@ -844,95 +671,7 @@
                     </tr>
                   </thead>
 
-                  <tbody id="myRequestForMeTableBody">
-                    <tr
-                      class="my-request-row for-me-request-row cursor-pointer"
-                      data-source-table="for-me"
-                      data-request-id="REQ-4001"
-                      data-target-employee="User"
-                      data-target-empid="1001"
-                      data-requested-on="2026-03-18 09:10 AM"
-                      data-requested-month="February 2026"
-                      data-month-value="2026-02"
-                      data-status="active"
-                      data-action-taken-on="2026-03-18 09:25 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-valid-until="2026-03-19 09:10 AM"
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-4001
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        Joshua Coquia
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-18 09:10 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        February 2026
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status accepted">Active</span>
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status accepted">2026-03-19 09:10 AM</span>
-                      </td>
-                    </tr>
-
-                    <tr
-                      class="my-request-row for-me-request-row cursor-pointer"
-                      data-source-table="for-me"
-                      data-request-id="REQ-3991"
-                      data-target-employee="User"
-                      data-target-empid="1001"
-                      data-requested-on="2026-03-01 08:00 AM"
-                      data-requested-month="January 2026"
-                      data-month-value="2026-01"
-                      data-status="expired"
-                      data-action-taken-on="2026-03-01 08:20 AM"
-                      data-action-taken-by="Joshua Coquia"
-                      data-valid-until="2026-03-02 08:00 AM"
-                      data-requested-by="Joshua Coquia"
-                    >
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium"
-                      >
-                        REQ-3991
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        Joshua Coquia
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-01 08:00 AM
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        January 2026
-                      </td>
-                      <td class="border-b border-slate-200 px-4 py-5">
-                        <span class="status expired">Expired</span>
-                      </td>
-                      <td
-                        class="border-b border-slate-200 px-4 py-5 text-slate-600"
-                      >
-                        2026-03-02 08:00 AM
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody id="myRequestForMeTableBody"></tbody>
                 </table>
               </div>
 

@@ -3248,6 +3248,10 @@ video {
   forced-color-adjust: none;
 }
 
+.\[hostname\:port\] {
+  hostname: port;
+}
+
 .hover\:bg-\[\#2f6dac\]:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(47 109 172 / var(--tw-bg-opacity, 1));

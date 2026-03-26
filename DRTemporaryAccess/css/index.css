@@ -43,8 +43,8 @@ p {
   --tableheader: #f1f4f7;
   --tablehover: #f9fbfd;
 
-  --accepted-bg: #c9f3d7;
-  --accepted-text: #138a4c;
+  --approved-bg: #c9f3d7;
+  --approved-text: #138a4c;
   --pending-bg: #f8e7b1;
   --pending-text: #b67800;
   --cancelled-bg: #f8d8de;
@@ -648,9 +648,13 @@ table tbody tr:hover td {
   color: var(--pending-text) !important;
 }
 
-.status.accepted {
-  background-color: var(--accepted-bg);
-  color: var(--accepted-text) !important;
+.status.approved {
+  background-color: var(--approved-bg);
+  color: var(--approved-text) !important;
+}
+.status.expiring_today {
+  background-color: var(--approved-bg);
+  color: var(--approved-text) !important;
 }
 
 .status.cancelled,
