@@ -1,5 +1,6 @@
 //#region SIDEBAR
 function initSidebar() {
+  applySidebarVisibility()
   $(document).on("click", ".arrow", function (e) {
     const $arrowParent = $(e.target).closest(".iocn-link").parent();
     $arrowParent.toggleClass("showMenu");
@@ -20,7 +21,12 @@ function initSidebar() {
     updateSidebarResponsiveState();
   });
 }
-
+function applySidebarVisibility() {
+  const hasPlanning = RequestPageState.auth?.empDetails?.hasPlanning === true;
+  const hasUnlock = RequestPageState.auth?.empDetails?.hasUnlock === true;
+  $("#planningLink").toggle(hasPlanning);
+  $("#drapprovals").toggle(hasUnlock);
+}
 function updateSidebarResponsiveState() {
   if ($(window).width() < 550) {
     if ($(".sidebar").hasClass("close")) {
