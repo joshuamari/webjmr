@@ -13,6 +13,7 @@ try {
     if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $requestedMonth)) {
         jsonError('Invalid requested month format.', 400);
     }
+
     $currentMonth = date('Y-m');
     if ($requestedMonth >= $currentMonth) {
         jsonError('Requested month must be before the current month.', 400);
@@ -57,8 +58,36 @@ try {
     $employeeNameMap = buildEmployeeNameMap($employeeIds);
     $request = mapUnlockRequestRow($createdRow, $employeeNameMap);
 
+    $emailSent = false;
+
+    try {
+        $approverEmployeeIds = getEmployeesWithUnlockPermission();
+
+        $toEmailMap = getEmployeeEmailsByIds($approverEmployeeIds);
+        $ccEmailMap = getEmployeeEmailsByIds([
+            (string)($createdRow['employee_number'] ?? ''),
+            (string)($createdRow['requested_by'] ?? ''),
+        ]);
+
+        $nameMap = getEmployeeNamesByIds([
+            (string)($createdRow['employee_number'] ?? ''),
+            (string)($createdRow['requested_by'] ?? ''),
+        ]);
+
+        $emailSent = sendUnlockRequestSubmittedEmail(
+            $createdRow,
+            $toEmailMap,
+            $ccEmailMap,
+            $nameMap
+        );
+    } catch (Throwable $mailError) {
+        error_log('request_unlock.php mail error: ' . $mailError->getMessage());
+        $emailSent = false;
+    }
+
     jsonSuccess([
         'request' => $request,
+        'emailSent' => $emailSent,
     ], 'Temporary access request submitted.');
 } catch (Throwable $e) {
     error_log('request_unlock.php error: ' . $e->getMessage());

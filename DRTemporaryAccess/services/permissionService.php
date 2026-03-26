@@ -36,3 +36,32 @@ function hasPermission($empNum, int $permissionId): bool
 
     return (int) $stmt->fetchColumn() > 0;
 }
+
+function getEmployeesWithUnlockPermission(): array
+{
+    global $connkdt;
+
+    $stmt = $connkdt->prepare("
+        SELECT DISTINCT up.fldEmployeeNum
+        FROM user_permissions up
+        INNER JOIN emp_prof el
+            ON el.fldEmployeeNum = up.fldEmployeeNum
+        WHERE up.permission_id = :permissionID
+          AND (
+                el.fldResignDate IS NULL
+                OR el.fldResignDate = '0000-00-00'
+                OR el.fldResignDate >= CURDATE()
+          )
+    ");
+
+    $stmt->execute([
+        ':permissionID' => PERMISSION_UNLOCK,
+    ]);
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    return array_values(array_filter(array_map(
+        fn($row) => (string)($row['fldEmployeeNum'] ?? ''),
+        $rows
+    )));
+}

@@ -2,12 +2,16 @@
 
 date_default_timezone_set('Asia/Manila');
 
+define('WEBJMR_ENABLE_EMAILS', true);
+
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 require_once __DIR__ . '/../../dbconn/dbconnectwebjmr.php';
 require_once __DIR__ . '/../../dbconn/dbconnectnew.php';
 require_once __DIR__ . '/../../dbconn/dbconnectkdtph.php';
 
 require_once __DIR__ . '/../services/authService.php';
+require_once __DIR__ . '/../services/emailService.php';
 require_once __DIR__ . '/../services/employeeService.php';
 require_once __DIR__ . '/../services/permissionService.php';
 require_once __DIR__ . '/../services/requestFormService.php';

@@ -6,18 +6,12 @@ function bindRequestFormEvents() {
     const isLeader = hasOverridePermission(empDetails);
 
     let targetEmployeeId = "";
-    let targetEmployeeName = "";
 
     const $targetSel = $("#targetEmployeeSel");
     targetEmployeeId = ($targetSel.val() || "").toString().trim();
-    targetEmployeeName =
-      $targetSel.find("option:selected").data("name") ||
-      $targetSel.find("option:selected").text() ||
-      "";
 
-    if (!targetEmployeeId && !hasOverridePermission(empDetails)) {
+    if (!targetEmployeeId && !isLeader) {
       targetEmployeeId = empDetails.empNum || "";
-      targetEmployeeName = getEmployeeFullName(empDetails);
     }
 
     const requestMonth = ($("#requestCreateMonthSel").val() || "")
@@ -90,7 +84,11 @@ function bindRequestFormEvents() {
 
       renderPage();
 
-      alert("Temporary access request submitted.");
+      if (result.emailSent === false) {
+        alert("Temporary access request submitted, but email notification was not sent.");
+      } else {
+        alert("Temporary access request submitted.");
+      }
     } catch (error) {
       const message =
         error?.responseJSON?.message ||

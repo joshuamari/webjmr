@@ -94,22 +94,22 @@ function getEmployeeProfilesByIds(array $employeeIds): array
 {
     global $connkdt;
 
-    $employeeIds = array_values(array_unique(array_filter(array_map('strval', $employeeIds))));
-    if (empty($employeeIds)) {
-        return [];
-    }
+        $employeeIds = array_values(array_unique(array_filter(array_map('strval', $employeeIds))));
+        if (empty($employeeIds)) {
+            return [];
+        }
 
-    $placeholders = implode(',', array_fill(0, count($employeeIds), '?'));
+        $placeholders = implode(',', array_fill(0, count($employeeIds), '?'));
 
-    $sql = "
-        SELECT
-            fldEmployeeNum,
-            fldFirstname,
-            fldSurname,
-            fldNick
-        FROM emp_prof
-        WHERE fldEmployeeNum IN ($placeholders)
-    ";
+            $sql = "
+                SELECT
+                    fldEmployeeNum,
+                    fldFirstname,
+                    fldSurname,
+                    fldNick
+                FROM emp_prof
+                WHERE fldEmployeeNum IN ($placeholders)
+            ";
 
     $stmt = $connkdt->prepare($sql);
     $stmt->execute($employeeIds);
