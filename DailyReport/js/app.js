@@ -74,7 +74,6 @@ function startPage() {
   sequenceValidation();
   initCalendar();
   getPlans();
-  planAccess();
 
   $(".cs-loader").fadeOut(1000);
 

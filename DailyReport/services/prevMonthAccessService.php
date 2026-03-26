@@ -20,7 +20,7 @@ function isSystemUser($userId) {
     global $connnew;
 
     $sysId = 16;
-    $excludedUserId = 487;
+    $excludedUserId = 464;
 
     $query = "
         SELECT EXISTS(
@@ -133,40 +133,38 @@ function hasValidPrevMonthAccessApproval($userId) {
         return false;
     }
 
-    return isApprovalStillValid($approvedRequest['approved_at']);
+    return isApprovalStillValid($approvedRequest['expiration_date']);
 }
 
 function getLatestApprovedPrevMonthAccessRequest($userId) {
     global $connwebjmr;
-    $unlockDate = date('Y-m', strtotime('-1 month'));
+
+    $requestedMonth = date('Y-m', strtotime('-1 month'));
+
     $query = "
         SELECT
-            ua.action_id AS id,
-            ur.unlock_id AS request_id,
-            ur.unlock_date,
-            ua.action_by AS approved_by,
-            ua.action_at AS approved_at
-        FROM unlock_request ur
-        INNER JOIN unlock_actions ua
-            ON ua.unlock_id = ur.unlock_id
-        WHERE ur.employee_number = :userId
-          AND ur.unlock_date = :unlockDate
-          AND ua.action_id = (
-              SELECT ua2.action_id
-              FROM unlock_actions ua2
-              WHERE ua2.unlock_id = ur.unlock_id
-              ORDER BY ua2.action_at DESC, ua2.action_id DESC
-              LIMIT 1
-          )
-          AND ua.action = 1
-        ORDER BY ua.action_at DESC, ua.action_id DESC
+            unlock_id,
+            employee_number,
+            requested_by,
+            requested_month,
+            date_requested,
+            status,
+            action_by,
+            action_at,
+            expiration_date
+        FROM unlock_requests
+        WHERE employee_number = :userId
+          AND requested_month = :requestedMonth
+          AND status = :status
+        ORDER BY action_at DESC, unlock_id DESC
         LIMIT 1
     ";
 
     $stmt = $connwebjmr->prepare($query);
     $stmt->execute([
         ':userId' => $userId,
-        ':unlockDate' => $unlockDate,
+        ':requestedMonth' => $requestedMonth,
+        ':status' => 'approved',
     ]);
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -174,16 +172,13 @@ function getLatestApprovedPrevMonthAccessRequest($userId) {
     return $row ?: null;
 }
 
-function isApprovalStillValid($approvedAt) {
-    if (empty($approvedAt)) {
+function isApprovalStillValid($expirationDate) {
+    if (empty($expirationDate)) {
         return false;
     }
 
-    $approvedDateTime = new DateTime($approvedAt);
-    $expiryDateTime = clone $approvedDateTime;
-    $expiryDateTime->modify('+1 day');
-
     $now = new DateTime();
+    $expiryDateTime = new DateTime($expirationDate);
 
     return $now < $expiryDateTime;
 }

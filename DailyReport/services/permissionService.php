@@ -1,8 +1,26 @@
 <?php
-function checkAccess($empNum) {
-    global $connkdt;
+const PERMISSION_UNLOCK = 53;
+const PERMISSION_OVERRIDE = 50;
+const PERMISSION_PLANNING = 5;
 
-    $permissionID = 50;
+function hasUnlockPermission($empNum): bool
+{
+    return hasPermission($empNum, PERMISSION_UNLOCK);
+}
+
+function hasOverridePermission($empNum): bool
+{
+    return hasPermission($empNum, PERMISSION_OVERRIDE);
+}
+
+function hasPlanningPermission($empNum): bool
+{
+    return hasPermission($empNum, PERMISSION_PLANNING);
+}
+
+function hasPermission($empNum, int $permissionId): bool
+{
+    global $connkdt;
 
     $stmt = $connkdt->prepare("
         SELECT COUNT(*)
@@ -13,8 +31,8 @@ function checkAccess($empNum) {
 
     $stmt->execute([
         ':empID' => $empNum,
-        ':permissionID' => $permissionID
+        ':permissionID' => $permissionId
     ]);
 
-    return (int)$stmt->fetchColumn() > 0;
+    return (int) $stmt->fetchColumn() > 0;
 }
