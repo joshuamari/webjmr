@@ -275,33 +275,6 @@ $(document).on("change", "#idEmployee", function () {
 
   $(this).removeClass("border-danger");
 });
-// $(document).on("click", "#idEmployee", function (event) {
-//   event.stopPropagation();
-//   $(".emp").toggleClass("active");
-//   // $(".proj").removeClass("active");
-//   // $(".jord").removeClass("active");
-//   // $(".iow").removeClass("active");
-//   $(this).blur();
-// });
-// $(document).on("click", "#empOptions li", function () {
-//   $(".emp").removeClass("active");
-//   var empID = $(this).attr("emp-id");
-//   $($("#idEmployee").find(`option[emp-id=${empID}]`))
-//     .prop("selected", true)
-//     .change();
-// });
-// $(document).on("keyup", "#searchEmp", function () {
-//   var empID = $($("#idEmployee").find("option:selected")).attr("emp-id");
-//   getEmpSearch().then((empSearch) => {
-//     fillEmployees(empSearch);
-//   });
-// });
-// $(document).on("search", "#searchEmp", function () {
-//   var empID = $($("#idEmployee").find("option:selected")).attr("emp-id");
-//   getEmpSearch().then((empSearch) => {
-//     fillEmployees(empSearch);
-//   });
-// });
 
 // FOR PROJECTS LIST
 $(document).on("change", "#idProject", function () {
@@ -2245,28 +2218,6 @@ function getEntries(thisEmpID) {
       });
     }
   });
-
-  // $("#drEntries").empty();
-  // $.post(
-  //   "php/get_entries.php",
-  //   {
-  //     curDay: $("#idDRDate").val(),
-  //     empNum: empDetails["empNum"],
-  //   },
-  //   function (data) {
-  //     var entries = $.parseJSON(data);
-  //     if (entries.length > 0) {
-  //       entries.map(addRow);
-  //     } else {
-  //       var addString = `<tr><td colspan='9'class="text-center py-5 "><h3>No Entries Found</h3></td></tr>`;
-  //       $("#drEntries").append(addString);
-  //     }
-  //     getMHCount();
-  //   }
-  // );
-  // return new Promise((resolve, reject) => {
-
-  // });
 }
 function fillEntries(entryList) {
   regCount = 0;
@@ -2420,9 +2371,6 @@ function initializeDate() {
 
 //Others
 function sequenceValidation(type) {
-  //sequence checking Project->Item->Job
-  // $("#id2DDiv").addClass("d-none");
-  // $("#idRevDiv").addClass("d-none");
   if (type == 0) {
     $("#idEmployee").prop("disabled", true);
     $("#idProject").prop("disabled", true);
@@ -2567,9 +2515,6 @@ $(document).on("change", "#idDRDate", handleDateChange);
 
 function handleDateChange() {
   const isLocked = evaluateMonthLock();
-
-  // getEntries();
-  // getPlans();
 
   if (!isLocked) {
     MHValidation().catch((error) => {
