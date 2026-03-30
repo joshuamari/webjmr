@@ -91,6 +91,10 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
 
     $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+		$checkIcon = '<img src="../public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+		$denyIcon = '<img src="../public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
     
 
     $title = $isApproved
@@ -110,37 +114,90 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
 
     $statusCopy ="";
     if($isApproved && $expirationLabel !== '—'){
-        $statusCopy = "
+      $statusCopy = "
         <td
-                            style=\"margin-bottom: 18px;
-                              padding: 16px 18px;
-                              background: #eff7ee;
-                              border: 1px solid #d7ead3;
-                            \"
-                            colspan=\"2\"
-                          >
-                            <div style=\"font-size:13px; color:#4b7d58; font-weight:700; letter-spacing:0.2px; margin-bottom:6px;\">
-                                VALID UNTIL
-                            </div>
-                            <div style=\"font-size:22px; font-weight:700; color:#1f9d55;\">
-                                {$expirationLabel}
-                            </div>
-                        </td>";
+        	style=\"
+        	margin-bottom: 18px;
+          padding: 16px 18px;
+          background: #eff7ee;
+          border: 1px solid #d7ead3;
+          \"
+          colspan=\"2\"
+         >
+          <table
+            role=\"presentation\"
+            cellpadding=\"0\"
+            cellspacing=\"0\"
+            border=\"0\"
+          >
+            <tr>
+              <td
+                style=\"
+                  font-size: 13px;
+                  color: #4b7d58;
+                  font-weight: 700;
+                  letter-spacing: 0.2px;
+                  margin-bottom: 6px;
+                \"
+              >
+                VALID UNTIL
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table>
+                  <tr>
+                    <td>
+                      <img
+                        src=\"../public/check.png\"
+                        width=\"20\"
+                        height=\"20\"
+                        style=\"
+                          display: block;
+                          width: 20px;
+                          height: 20px;
+                          border: 0;
+                        \"
+                      />
+                    </td>
+                    <td style=\"width: 8px\"></td>
+                    <td
+                      style=\"
+                      font-size: 22px;
+                      font-weight: 700;
+                      color: #1f9d55;
+                      \"
+                    >
+                      {$expirationLabel}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>";
     }else{
 			$statusCopy = 
 			"<td style=\"margin-bottom: 18px; padding: 16px 18px; background: #f7efee; border: 1px solid #ebd4d1; \"
       colspan=\"2\"
       >
-        <div
-          style=\"
-            font-size: 18px;
-            font-weight: 700;
-            color: #d64545;
-            padding: 12px 16px;
-          \"
-        >
-          DENIED
-        </div>
+			<table>
+				<tr>
+					<td style=\"vertical-align: middle\">
+							 {$denyIcon}
+						/>
+						 </td>
+						 <td style=\"width: 8px\"></td>
+						 <td style=\"
+									 font-size: 18px;
+									 font-weight: 700;
+									 color: #d64545;
+								 \"
+						 >
+							 DENIED
+						 </td>
+				</tr>
+			</table>
       </td>";
 		}
 
