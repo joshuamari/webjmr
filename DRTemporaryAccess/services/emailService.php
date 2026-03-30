@@ -68,7 +68,7 @@ function sendUnlockRequestSubmittedEmail(array $request, array $toEmailMap, arra
     error_log('sendUnlockRequestSubmittedEmail: subject=' . $subject);
 
     return sendSystemEmail([
-        'from' => 'kdt-ph_webjmr@global.kawasaki.com',
+        'from' => 'sh.kdt_sys_helpdesk@global.kawasaki.com',
         'fromName' => 'WEB JMR',
         'to' => $primaryTo,
         'cc' => array_merge($toEmails, $cc),
