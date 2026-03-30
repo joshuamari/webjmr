@@ -367,3 +367,58 @@ function getEntries(thisEmpID) {
     }
   });
 }
+function loadSessionPermissions() {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: "api/fetch_access.php",
+      method: "GET",
+      dataType: "json",
+      success: function (res) {
+        if (!res || res.success !== true) {
+          resolve(null);
+          return;
+        }
+
+        const data = {
+          hasUnlock: !!res.hasUnlock,
+          hasPlanning: !!res.hasPlanning,
+        };
+
+        // optional: still update global state
+        overrideAccessState.hasUnlock = data.hasUnlock;
+        overrideAccessState.hasPlanning = data.hasPlanning;
+
+        resolve(data);
+      },
+      error: function (err) {
+        console.error("Session permission fetch failed:", err);
+        reject(err);
+      },
+    });
+  });
+}
+function getEditStatus(yearMonth, employeeNumber) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      type: "POST",
+      url: "api/get_edit_status.php",
+      data: {
+        yearMonth: yearMonth,
+        employeeNumber: employeeNumber,
+      },
+      dataType: "json",
+      success: function (response) {
+        resolve(response);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          reject("Not Found Error");
+        } else if (xhr.status === 500) {
+          reject("Server Error");
+        } else {
+          reject(error);
+        }
+      },
+    });
+  });
+}

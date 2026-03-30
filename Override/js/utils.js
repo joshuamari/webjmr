@@ -128,16 +128,20 @@ function isPreviousMonth(dateString) {
   return selected.year === prevYear && selected.month === prevMonth;
 }
 
-function canEditSelectedDate(dateString) {
-  if (!dateString) return false;
+async function canEditSelectedDate(yearMonth) {
+  if (!yearMonth) return true;
 
-  if (isCurrentMonth(dateString)) {
+  const employeeNumber = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
+  if (!employeeNumber || employeeNumber == 0) {
     return true;
   }
 
-  if (isPreviousMonth(dateString)) {
-    return false;
+  try {
+    const response = await getEditStatus(yearMonth, employeeNumber);
+    return response?.canEdit === true;
+  } catch (error) {
+    console.error("canEditSelectedDate failed:", error);
+    return true;
   }
-
-  return false;
 }

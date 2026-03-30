@@ -713,25 +713,23 @@ function dupeEntry(entryData) {
 }
 
 // LOCKING
-function handleDateChange() {
-  const isLocked = evaluateMonthLock();
+async function handleDateChange() {
+  const isLocked = await evaluateMonthLock();
 
   if (!isLocked) {
     try {
-      Promise.resolve(MHValidation()).catch((error) => {
-        console.error(error);
-        alert(error);
-      });
+      await Promise.resolve(MHValidation());
     } catch (error) {
       console.error(error);
+      alert(error);
     }
+
     sequenceValidation(0);
   }
 }
 
 function setLockedState(isLocked) {
   const lockTargets = [
-    "#idGroup",
     "#idLocation",
     "#idProject",
     "#idItem",
@@ -794,17 +792,21 @@ function updateLockedMonthLabel() {
   $("#lockedMonthLabel").text(getMonthYearLabel(selectedDate));
 }
 
-function evaluateMonthLock() {
-  const selectedDate = $("#idDRDate").val();
+async function evaluateMonthLock() {
+  const yearMonth = $("#idDRDate").val();
+  const employeeNumber = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
   updateLockedMonthLabel();
   updateLockingMessage();
 
-  if (!selectedDate) {
-    setLockedState(true);
-    return true;
+  if (!yearMonth || !employeeNumber || employeeNumber == 0) {
+    setLockedState(false);
+    return false;
   }
 
-  const locked = !canEditSelectedDate(selectedDate);
+  const canEdit = await canEditSelectedDate(yearMonth);
+  const locked = !canEdit;
+
   setLockedState(locked);
   return locked;
 }

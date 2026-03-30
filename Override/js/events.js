@@ -95,71 +95,81 @@ function bindEvents() {
     },
   );
 
-  $(document).on("change.override", "#idDRDate", function () {
-    var thisEmpID = $($("#idEmployee").find("option:selected")).attr("emp-id");
-    Promise.all([getEntries(thisEmpID)])
-      .then(([entryList]) => {
+$(document).on("change.override", "#idDRDate", function () {
+  var thisEmpID = $($("#idEmployee").find("option:selected")).attr("emp-id");
+
+  Promise.all([getEntries(thisEmpID)])
+    .then(async ([entryList]) => {
+      fillEntries(entryList);
+      MHValidation();
+      getMHCount();
+      sequenceValidation(0);
+      await handleDateChange();
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
+});
+
+$(document).on("change.override", "#idGroup", function () {
+  resetEntry();
+  sequenceValidation(0);
+
+  getEmployees()
+    .then((emps) => {
+      fillEmployees(emps);
+
+      let thisEmpID = $("#idEmployee").val();
+
+      return getEntries(thisEmpID).then((entryList) => {
         fillEntries(entryList);
-        MHValidation();
         getMHCount();
-        sequenceValidation(0);
-        handleDateChange();
-      })
-      .catch((error) => {
-        alert(`${error}`);
       });
-  });
+    })
+    .then(async () => {
+      await evaluateMonthLock();
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
 
-  $(document).on("change.override", "#idGroup", function () {
-    resetEntry();
-    sequenceValidation(0);
-
-    getEmployees()
-      .then((emps) => {
-        fillEmployees(emps);
-        let thisEmpID = $("#idEmployee").val();
-        return getEntries(thisEmpID);
-      })
-      .then((entryList) => {
-        fillEntries(entryList);
-        getMHCount();
-      })
-      .catch((error) => {
-        alert(`${error}`);
-      });
-
-    $(this).removeClass("border-danger");
-  });
+  $(this).removeClass("border-danger");
+});
 
   $(document).on("change.override", "#idLocation", function () {
     MHValidation();
     $(this).removeClass("border-danger");
   });
 
-  $(document).on("change.override", "#idEmployee", function () {
-    var thisEmpID = $($(this).find("option:selected")).attr("emp-id");
-    var groupID = $("#idGroup").val();
+$(document).on("change.override", "#idEmployee", function () {
+  var thisEmpID = $($(this).find("option:selected")).attr("emp-id");
+  var groupID = $("#idGroup").val();
 
-    sequenceValidation(0);
+  sequenceValidation(0);
 
-    if (thisEmpID != 0 || thisEmpID != undefined) {
-      Promise.all([getProjects(thisEmpID, groupID), getEntries(thisEmpID)])
-        .then(([projs, entryList]) => {
-          resetSelection(1, 0);
-          fillProjects(projs, 0);
-          fillEntries(entryList);
-          getMHCount(thisEmpID);
-        })
-        .catch((error) => {
-          alert(`${error}`);
-        });
-    }
+  if (thisEmpID != 0 && thisEmpID != undefined) {
+    Promise.all([getProjects(thisEmpID, groupID), getEntries(thisEmpID)])
+      .then(async ([projs, entryList]) => {
+        resetSelection(1, 0);
+        fillProjects(projs, 0);
+        fillEntries(entryList);
+        getMHCount(thisEmpID);
+        await evaluateMonthLock();
+      })
+      .catch((error) => {
+        alert(`${error}`);
+      });
+  } else {
+    evaluateMonthLock().catch((error) => {
+      console.error("evaluateMonthLock failed:", error);
+    });
+  }
 
-    $("#idProject").prop("disabled", true);
-    $("#idItem").prop("disabled", true);
-    $("#idJRD").prop("disabled", true);
-    $(this).removeClass("border-danger");
-  });
+  $("#idProject").prop("disabled", true);
+  $("#idItem").prop("disabled", true);
+  $("#idJRD").prop("disabled", true);
+  $(this).removeClass("border-danger");
+});
 
   $(document).on("change.override", "#idProject", function () {
     var thisEmpID = $("#idEmployee").val();

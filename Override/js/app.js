@@ -5,6 +5,7 @@ async function initPage() {
     defaults = getDefaults();
 
     const emp = await checkAccess();
+    await loadSessionPermissions();
 
     if (emp.isSuccess) {
       empDetails = emp.result;

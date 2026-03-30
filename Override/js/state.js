@@ -41,7 +41,10 @@ const months = [
   "November",
   "December",
 ];
-
+const overrideAccessState = {
+  hasUnlock: false,
+  hasPlanning: false
+}
 function initStateRefs() {
   calendar = document.querySelector(".calendar");
 }

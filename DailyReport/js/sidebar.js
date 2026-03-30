@@ -1,5 +1,11 @@
 //#region SIDEBAR
 function initSidebar() {
+  applySidebarVisibility();
+  bindSidebarEvents();
+  handleResponsiveSidebar();
+}
+
+function bindSidebarEvents() {
   $(document).on("click", ".arrow", function (e) {
     const $arrowParent = $(e.target).closest(".iocn-link").parent();
     $arrowParent.toggleClass("showMenu");
@@ -19,6 +25,13 @@ function initSidebar() {
     $(".sidebar").addClass("close");
     handleResponsiveSidebar();
   });
+}
+
+function applySidebarVisibility() {
+  const hasPlanning = AppState?.empDetails?.hasPlanning === true;
+  const hasUnlock = AppState?.empDetails?.hasUnlock === true;
+  $("#planningLink").toggle(hasPlanning);
+  $("#drapprovals").toggle(hasUnlock);
 }
 
 function handleResponsiveSidebar() {

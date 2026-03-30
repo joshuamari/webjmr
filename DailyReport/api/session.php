@@ -27,8 +27,10 @@ try {
         'empGroup' => $employee['fldGroup'] ?? '',
         'empGender' => $employee['fldGender'] ?? '',
         'empPos' => $employee['fldDesig'] ?? '',
-        'hasOverride' => checkAccess($employeeId),
-        'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId)
+        'hasOverride' => hasOverridePermission($employeeId),
+        'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId),
+        'hasUnlock' => hasUnlockPermission($employeeId),
+        'hasPlanning' => hasPlanningPermission($employeeId)
     ]);
 } catch (Throwable $e) {
     error_log('session.php error: ' . $e->getMessage());
