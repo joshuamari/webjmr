@@ -1,4 +1,5 @@
 function initSidebar() {
+  applySidebarPermissions()
   $(document).off(".sidebar");
 
   $(document).on("click.sidebar", ".menu-one", function () {
@@ -32,4 +33,10 @@ function handleResponsiveSidebar() {
   } else {
     $(".menu-two").addClass("d-none");
   }
+}
+function applySidebarPermissions() {
+  const hasPlanning = overrideAccessState?.hasPlanning === true;
+  const hasUnlock = overrideAccessState?.hasUnlock === true;
+  $("#planningLink").toggle(hasPlanning);
+  $("#drapprovals").toggle(hasUnlock);
 }
