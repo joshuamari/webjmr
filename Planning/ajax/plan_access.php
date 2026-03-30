@@ -8,31 +8,43 @@ date_default_timezone_set('Asia/Manila');
 #endregion
 
 #region initialize variables
-$empNum = NULL;
+$empNum = null;
 if (!empty($_POST['empNum'])) {
     $empNum = $_POST['empNum'];
 }
-$pID = 5; //PLANNING UI MODULE PERMISSION ID kdtphdb>>>>p_permissions
-$access = FALSE;
+
+$planningPID = 5;   // Planning UI module permission
+$drApprovalsPID = 53; // DR Approvals permission
+
+$response = [
+    "hasPlanning" => false,
+    "hasDRApprovals" => false,
+];
 #endregion
 
 #region main query
-#region lumang access control
-// $accessQ="SELECT fldJMCImport FROM kdtoptions WHERE fldEmployeeNumber='$empNum'";
-// $accessStmt=$connkdt->query($accessQ);
-// $access=$accessStmt->fetchColumn();
-#endregion
-$accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
+$accessQ = "
+    SELECT permission_id
+    FROM user_permissions
+    WHERE fldEmployeeNum = :empNum
+      AND permission_id IN (:planningPID, :drApprovalsPID)
+";
 $accessStmt = $connkdt->prepare($accessQ);
-$accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);
-$ac = $accessStmt->fetchColumn();
-if ($ac) {
-    $access = TRUE;
+$accessStmt->execute([
+    ":empNum" => $empNum,
+    ":planningPID" => $planningPID,
+    ":drApprovalsPID" => $drApprovalsPID,
+]);
+
+$permissions = $accessStmt->fetchAll(PDO::FETCH_COLUMN);
+
+if (in_array($planningPID, $permissions)) {
+    $response["hasPlanning"] = true;
+}
+
+if (in_array($drApprovalsPID, $permissions)) {
+    $response["hasDRApprovals"] = true;
 }
 #endregion
 
-#region function
-
-#endregion
-
-echo json_encode($access);
+echo json_encode($response);

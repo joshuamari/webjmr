@@ -360,22 +360,18 @@ function planAccess() {
       empNum: empDetails["empNum"],
     },
     function (data) {
-      var addString = "";
       var access = $.parseJSON(data);
-      if (access) {
-        addString += `<li>
-        <div class="iocn-link">
-          <a class="row-cols-12" href="../Planning/">
-            <i class="bx bx-book-bookmark"></i>
-            <span class="link_name col-9">Planning</span>
-          </a>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="../Planning/">Planning</a></li>
-        </ul>
-      </li>`;
-        // $("#navigationLinks").append(addString);
-        $("#drLink").after(addString);
+
+      if (access && access.hasPlanning) {
+        $("#planningLink").show();
+      } else {
+        $("#planningLink").hide();
+      }
+
+      if (access && access.hasDRApprovals) {
+        $("#drapprovals").show();
+      } else {
+        $("#drapprovals").hide();
       }
     }
   );
