@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{$title}</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background: #f3f5fb;
+      font-family:
+        Segoe UI,
+        Arial,
+        Helvetica,
+        sans-serif;
+      color: #25324b;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+      style="background: #eeedf8; margin: 0; padding: 32px 0"
+    >
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            width="840"
+            cellpadding="0"
+            cellspacing="0"
+            border="0"
+            style="
+              width: 840px;
+              max-width: 840px;
+              background: #f7f6fd;
+              border: 1px solid #d9ddf1;
+              border-radius: 22px;
+              overflow: hidden;
+            "
+          >
+            <tr>
+              <td
+                style="
+                  padding: 24px 28px 22px 28px;
+                  background-color: #4f78d9;
+                  background-image: url(&quot;../public/bg.png&quot;);
+                  background-repeat: no-repeat;
+                  background-position: right center;
+                  background-size: cover;
+                "
+              >
+                <div
+                  style="font-size: 15px; color: #eaf1ff; margin-bottom: 10px"
+                >
+                  Web JMR System
+                </div>
+                <div
+                  style="
+                    font-size: 28px;
+                    line-height: 1.25;
+                    font-weight: 500;
+                    color: #ffffff;
+                    margin-bottom: 10px;
+                  "
+                >
+                  {$title}
+                </div>
+                <div style="font-size: 15px; line-height: 1.6; color: #eaf1ff">
+                  Temporary Daily Report access request update
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding: 30px 36px 30px 36px">
+                <div
+                  style="
+                    font-size: 18px;
+                    font-weight: 700;
+                    color: #25324b;
+                    margin-bottom: 20px;
+                  "
+                >
+                  Dear {$employeeSurname}-san,
+                </div>
+
+                <div
+                  style="
+                    font-size: 16px;
+                    line-height: 1.7;
+                    color: #3d4a63;
+                    margin-bottom: 18px;
+                  "
+                >
+                  Good day.
+                </div>
+                <div
+                  style="
+                    font-size: 16px;
+                    line-height: 1.7;
+                    color: #3d4a63;
+                    margin-bottom: 18px;
+                  "
+                >
+                  The temporary access request for the Daily Report for
+                  <strong>{$requestedMonthLabel}</strong> was not approved.
+                </div>
+
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    border: 1px solid #d9ddf1;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    background: #ffffff;
+                  "
+                >
+                  <tr>
+                    <td>
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        style="
+                          border-collapse: collapse;
+                          border: 1px solid #dbe3ef;
+                          border-radius: 14px;
+                          overflow: hidden;
+                        "
+                      >
+                        <tr>
+                          <td
+                            style="
+                              margin-bottom: 18px;
+                              padding: 16px 18px;
+                              background: #f7efee;
+                              border: 1px solid #ebd4d1;
+                            "
+                            colspan="2"
+                          >
+                            <div
+                              style="
+                                font-size: 18px;
+                                font-weight: 700;
+                                color: #d64545;
+                                padding: 12px 16px;
+                              "
+                            >
+                              DENIED
+                            </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              width: 50%;
+                              padding: 14px 18px;
+                              border-bottom: 1px solid #e4e8f4;
+                            "
+                          >
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <img
+                                    src="../public/user.png"
+                                    width="20"
+                                    height="20"
+                                    alt=""
+                                    style="
+                                      display: block;
+                                      width: 20px;
+                                      height: 20px;
+                                      border: 0;
+                                    "
+                                  />
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Employee
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                              border-bottom: 1px solid #e8eef7;
+                            "
+                          >
+                            <strong>{$employeeName}</strong>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              width: 50%;
+                              padding: 14px 18px;
+                              border-bottom: 1px solid #e4e8f4;
+                            "
+                          >
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <img
+                                    src="../public/user.png"
+                                    width="20"
+                                    height="20"
+                                    alt=""
+                                    style="
+                                      display: block;
+                                      width: 20px;
+                                      height: 20px;
+                                      border: 0;
+                                    "
+                                  />
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Requested By
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                              border-bottom: 1px solid #e8eef7;
+                            "
+                          >
+                            {$requestedByName}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              width: 50%;
+                              padding: 14px 18px;
+                              border-bottom: 1px solid #e4e8f4;
+                            "
+                          >
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <img
+                                    src="../public/calendar.png"
+                                    width="20"
+                                    height="20"
+                                    alt=""
+                                    style="
+                                      display: block;
+                                      width: 20px;
+                                      height: 20px;
+                                      border: 0;
+                                    "
+                                  />
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Requested Month
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                              border-bottom: 1px solid #e8eef7;
+                            "
+                          >
+                            {$requestedMonthLabel}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              width: 50%;
+                              padding: 14px 18px;
+                              border-bottom: 1px solid #e4e8f4;
+                            "
+                          >
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <img
+                                    src="../public/user.png"
+                                    width="20"
+                                    height="20"
+                                    alt=""
+                                    style="
+                                      display: block;
+                                      width: 20px;
+                                      height: 20px;
+                                      border: 0;
+                                    "
+                                  />
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Processed By
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                              border-bottom: 1px solid #e8eef7;
+                            "
+                          >
+                            {$approverName}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="width: 50%; padding: 14px 18px">
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  <img
+                                    src="../public/clock.png"
+                                    width="20"
+                                    height="20"
+                                    alt=""
+                                    style="
+                                      display: block;
+                                      width: 20px;
+                                      height: 20px;
+                                      border: 0;
+                                    "
+                                  />
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Processed On
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                            "
+                          >
+                            {$actionAtLabel}
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    border: 1px solid #d9ddf1;
+                    border-radius: 16px;
+                    overflow: hidden;
+                    background: #ffffff;
+                  "
+                >
+                  <div
+                    style="
+                      margin: 18px 0;
+                      border: 1px solid #f5d7a1;
+                      background: #fff6e7;
+                      border-radius: 14px;
+                      overflow: hidden;
+                    "
+                  >
+                    <div
+                      style="
+                        padding: 14px 18px;
+                        border-bottom: 1px solid #f2dfbb;
+                        color: #7a4b00;
+                        font-weight: 700;
+                        font-size: 14px;
+                      "
+                    >
+                      NOTICE
+                    </div>
+                    <div
+                      style="
+                        padding: 14px 18px;
+                        color: #5f4b21;
+                        font-size: 15px;
+                        line-height: 1.65;
+                      "
+                    >
+                      Access was not granted for this request.<br />
+                      Please coordinate with the approver if you believe the
+                      request should be reconsidered.
+                    </div>
+                  </div>
+                </table>
+
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="
+                    margin-top: 14px;
+                    background: #eff3ff;
+                    border: 1px solid #d8e1f5;
+                    border-radius: 12px;
+                  "
+                >
+                  <tr>
+                    <td style="padding: 14px 16px">
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td style="vertical-align: middle">
+                            <img
+                              src="../public/info.png"
+                              width="20"
+                              height="20"
+                              alt=""
+                              style="
+                                display: block;
+                                width: 20px;
+                                height: 20px;
+                                border: 0;
+                              "
+                            />
+                          </td>
+                          <td style="width: 12px"></td>
+                          <td
+                            style="
+                              vertical-align: middle;
+                              font-size: 14px;
+                              line-height: 1.7;
+                              color: #4b5c82;
+                            "
+                          >
+                            You can review the full request details and current
+                            status anytime on the
+                            <span style="color: #355fd1; font-weight: 500"
+                              >Temporary Access Request</span
+                            >
+                            page.
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin: 18px auto 0 auto"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      bgcolor="#3F6FE4"
+                      style="
+                        border-radius: 10px;
+                        line-height: 1.7;
+                        padding: 14px 28px;
+                      "
+                    >
+                      <a
+                        href="{$tempAccessUrl}"
+                        target="_blank"
+                        style="
+                          display: inline-block;
+                          min-width: 260px;
+                          text-align: center;
+                          font-size: 16px;
+                          font-weight: 600;
+                          color: #ffffff;
+                          text-decoration: none;
+                        "
+                      >
+                        Review Request Details
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin: 18px auto 0 auto; width: 100%"
+                >
+                  <tr>
+                    <td>
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        style="
+                          border-top: 1px solid #e1e9f5;
+                          border-radius: 0 0 14px 14px;
+                        "
+                      >
+                        <tr>
+                          <td
+                            align="center"
+                            style="
+                              padding: 18px 20px;
+                              font-size: 13px;
+                              color: #6a7a94;
+                            "
+                          >
+                            This is an automated notification from the Web JMR
+                            System.
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
