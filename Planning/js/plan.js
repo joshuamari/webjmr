@@ -7,9 +7,10 @@ var TRow = "";
 var _selectedEmployees = [];
 
 //#endregion
-checkLogin();
+// checkLogin();
 //#region BINDS
 $(document).ready(function () {
+  checkLogin();
   //page Initialize Event
   $(".hello-user").text(empDetails["empFName"]);
   ifSmallScreen();
@@ -700,7 +701,14 @@ function planAccess() {
     },
     function (data) {
       var access = $.parseJSON(data);
-      if (!access) {
+
+      if (access && access.hasDRApprovals) {
+        $("#drapprovals").show();
+      } else {
+        $("#drapprovals").hide();
+      }
+
+      if (!access || !access.hasPlanning) {
         alert("Access denied");
         window.location.href = "../DailyReport";
       }
@@ -1529,7 +1537,6 @@ function fillPlans(planString) {
   $("#planningTable tr").each(function () {
     var buttons = $(this).find("button");
     var planner = $(this).attr("planner");
-    console.log(planner);
     if (planner != eid) {
       buttons.prop("disabled", true);
     }
