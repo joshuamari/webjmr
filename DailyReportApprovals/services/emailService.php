@@ -441,6 +441,7 @@ return <<<HTML
                                 font-size: 15px;
                                 color: #eaf1ff;
                                 margin-bottom: 10px;">
+                              
                               Web JMR System
                             </div>
                             <div
