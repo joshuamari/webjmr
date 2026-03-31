@@ -4,7 +4,9 @@ function showLoader() {
 }
 
 function hideLoader() {
-  $(".cs-loader").fadeOut(300);
+  return new Promise((resolve) => {
+    $(".cs-loader").fadeOut(300, resolve);
+  });
 }
 //#endregion
 

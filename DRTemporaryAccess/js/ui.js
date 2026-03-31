@@ -1,4 +1,14 @@
 //#region MONTH PICKER UI
+function showLoader() {
+  $(".cs-loader").stop(true, true).show();
+}
+
+function hideLoader() {
+  return new Promise((resolve) => {
+    $(".cs-loader").fadeOut(300, resolve);
+  });
+}
+
 function initMonthPickers() {
   bindMonthPicker({
     inputSelector: "#requestMonthSel",
@@ -318,7 +328,10 @@ function renderTargetEmployeeOptions(groupId) {
     `);
   });
 
-  if (defaultEmployeeId && employees.some((emp) => String(emp.value) === String(defaultEmployeeId))) {
+  if (
+    defaultEmployeeId &&
+    employees.some((emp) => String(emp.value) === String(defaultEmployeeId))
+  ) {
     $employeeSel.val(defaultEmployeeId);
   } else if (employees.length === 1) {
     $employeeSel.val(employees[0].value);

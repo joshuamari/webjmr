@@ -436,14 +436,8 @@ return <<<HTML
                       >
                         <tr>
                           <td valign="top" style="color: #ffffff">
-                            <div
-                              style="
-                                font-size: 15px;
-                                color: #eaf1ff;
-                                margin-bottom: 10px;">
-                              
-                              Web JMR System
-                            </div>
+                            <div style=" font-size: 15px; color: #eaf1ff; margin-bottom: 10px;">Web JMR Systems</div> 
+                           
                             <div
                               style="
                                 font-size: 28px;

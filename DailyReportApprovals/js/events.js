@@ -186,6 +186,8 @@ function bindModalEvents() {
 
   $(document).on("click", "#pendingAcceptBtn", async function () {
     const requestId = $(this).attr("data-request-id");
+    const $denyBtn = $("#pendingDenyBtn");
+    const $acceptBtn = $("#pendingAcceptBtn");
 
     if (
       !confirm(
@@ -195,33 +197,58 @@ function bindModalEvents() {
       return;
     }
 
+    $denyBtn.prop("disabled", true);
+    $acceptBtn.prop("disabled", true);
+    showLoader();
+
     try {
       const response = await approveRequest(requestId);
-      alert(response.message || "Request approved.");
+
       closeModal("#pendingRequestModal");
       await refreshApprovalData();
+      await hideLoader();
+
+      alert(response.message || "Request approved.");
     } catch (error) {
       console.error("APPROVE FAILED:", error);
+      await hideLoader();
       alert(error || "Failed to approve request.");
+    } finally {
+      $denyBtn.prop("disabled", false);
+      $acceptBtn.prop("disabled", false);
     }
   });
 
-  $(document).on("click", "#pendingDenyBtn", async function () {
+  $(document).on("click", "#pendingDenyBtn", function () {
     const requestId = $(this).attr("data-request-id");
+    const $denyBtn = $("#pendingDenyBtn");
+    const $acceptBtn = $("#pendingAcceptBtn");
 
     if (!confirm("Deny this request?")) {
       return;
     }
+    $denyBtn.prop("disabled", true);
+    $acceptBtn.prop("disabled", true);
+    showLoader();
 
-    try {
-      const response = await denyRequest(requestId);
-      alert(response.message || "Request denied.");
-      closeModal("#pendingRequestModal");
-      await refreshApprovalData();
-    } catch (error) {
-      console.error("DENY FAILED:", error);
-      alert(error || "Failed to deny request.");
-    }
+    setTimeout(async () => {
+      try {
+        const response = await denyRequest(requestId);
+
+        closeModal("#pendingRequestModal");
+        await refreshApprovalData();
+        await hideLoader();
+
+        alert(response.message || "Request denied.");
+      } catch (error) {
+        await hideLoader();
+        console.error("DENY FAILED:", error);
+        alert(error || "Failed to deny request.");
+      } finally {
+        $denyBtn.prop("disabled", false);
+        $acceptBtn.prop("disabled", false);
+      }
+    }, 0);
   });
 }
 //#endregion

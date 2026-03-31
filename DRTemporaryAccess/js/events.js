@@ -38,7 +38,7 @@ function bindRequestFormEvents() {
       employee_number: targetEmployeeId,
       requested_month: requestMonth,
     };
-
+    showLoader();
     $submitBtn.prop("disabled", true);
 
     try {
@@ -85,11 +85,16 @@ function bindRequestFormEvents() {
       renderPage();
 
       if (result.emailSent === false) {
-        alert("Temporary access request submitted, but email notification was not sent.");
+        await hideLoader();
+        alert(
+          "Temporary access request submitted, but email notification was not sent.",
+        );
       } else {
+        await hideLoader();
         alert("Temporary access request submitted.");
       }
     } catch (error) {
+      await hideLoader();
       const message =
         error?.responseJSON?.message ||
         error?.message ||
@@ -99,6 +104,7 @@ function bindRequestFormEvents() {
       console.error("REQUEST SUBMIT FAILED:", error);
     } finally {
       $submitBtn.prop("disabled", false);
+      await hideLoader();
     }
   });
 }
