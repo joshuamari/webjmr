@@ -57,7 +57,7 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
     ]);
 
     return sendSystemEmail([
-        'from' => 'kdt-ph_webjmr@global.kawasaki.com',
+        'from' => 'sh.kdt_sys_helpdesk@global.kawasaki.com',
         'fromName' => 'WEB JMR',
         'to' => $to,
         'cc' => $cc,
