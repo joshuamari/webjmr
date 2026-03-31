@@ -86,17 +86,29 @@ function buildUnlockRequestSubmittedEmailBody(array $data): string
     $approvalUrl = htmlspecialchars((string)($data['approvalUrl'] ?? '#'));
     $approverName = htmlspecialchars((string)($data['approverName'] ?? 'Approver'));
 
-    $backgroundImg = '../public/bg.png';
+    // $backgroundImg = '../public/bg.png';
 
-    $pendingIcon = '<img src="../public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $pendingIcon = '<img src="../public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $personIcon = '<img src="../public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $personIcon = '<img src="../public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $calendarIcon = '<img src="../public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+    // $calendarIcon = '<img src="../public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
-    $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+    // $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+
+    $backgroundImg = 'http://kdt-ph/webjmr/DRTemporaryAccess/public/bg.png';
+
+    $pendingIcon = '<img src="http://kdt-ph/webjmr/DRTemporaryAccess/public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $personIcon = '<img src="http://kdt-ph/webjmr/DRTemporaryAccess/public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $calendarIcon = '<img src="http://kdt-ph/webjmr/DRTemporaryAccess/public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+
+    $clockIcon = '<img src="http://kdt-ph/webjmr/DRTemporaryAccess/public/clock.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $infoIcon = '<img src="http://kdt-ph/webjmr/DRTemporaryAccess/public/info.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
     return <<<HTML
 <!DOCTYPE html>

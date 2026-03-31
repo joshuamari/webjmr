@@ -53,7 +53,7 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
         'approverName' => $approverName,
         'actionAtLabel' => $actionAtLabel,
         'expirationLabel' => $expirationLabel,
-        'tempAccessUrl' => 'http://kdt-ph/webJMR/DailyReportApprovals/',
+        'tempAccessUrl' => 'http://kdt-ph/webJMR/DRTemporaryAccess/',
     ]);
 
     return sendSystemEmail([
@@ -80,21 +80,37 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $expirationLabel = htmlspecialchars((string)($data['expirationLabel'] ?? '—'));
     $tempAccessUrl = htmlspecialchars((string)($data['tempAccessUrl'] ?? '#'));
     
-    $backgroundImg = '../public/bg.png';
+    // $backgroundImg = '../public/bg.png';
 
-    $pendingIcon = '<img src="../public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $pendingIcon = '<img src="../public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $personIcon = '<img src="../public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $personIcon = '<img src="../public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $calendarIcon = '<img src="../public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+    // $calendarIcon = '<img src="../public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
-    $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
+    // $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
 
-    $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    // $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-		$checkIcon = '<img src="../public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+		// $checkIcon = '<img src="../public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-		$denyIcon = '<img src="../public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+		// $denyIcon = '<img src="../public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $backgroundImg = 'http://kdt-ph/webjmr/DailyReportApprovals/public/bg.png';
+
+    $pendingIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $personIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $calendarIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+
+    $clockIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
+
+    $infoIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+		$checkIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+		$denyIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
     
 
     $title = $isApproved
@@ -147,18 +163,8 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
               <td>
                 <table>
                   <tr>
-                    <td>
-                      <img
-                        src=\"../public/check.png\"
-                        width=\"20\"
-                        height=\"20\"
-                        style=\"
-                          display: block;
-                          width: 20px;
-                          height: 20px;
-                          border: 0;
-                        \"
-                      />
+                    <td style=\"vertical-align: middle\">
+                      {$checkIcon}
                     </td>
                     <td style=\"width: 8px\"></td>
                     <td
@@ -185,17 +191,17 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
 				<tr>
 					<td style=\"vertical-align: middle\">
 							 {$denyIcon}
-						/>
-						 </td>
-						 <td style=\"width: 8px\"></td>
-						 <td style=\"
-									 font-size: 18px;
-									 font-weight: 700;
-									 color: #d64545;
-								 \"
-						 >
-							 DENIED
-						 </td>
+					
+					</td>
+					<td style=\"width: 8px\"></td>
+					<td style=\"
+							 font-size: 18px;
+							 font-weight: 700;
+							 color: #d64545;
+						\"
+					>
+						DENIED
+					</td>
 				</tr>
 			</table>
       </td>";
@@ -215,9 +221,10 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                     border-radius: 16px;
                     overflow: hidden;
                     background: #ffffff;
+                    margin-top:14px;
                   \"
                 >
-                  <div
+                  <tr
                     style=\"
                       margin: 18px 0;
                       border: 1px solid #f5d7a1;
@@ -226,7 +233,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                       overflow: hidden;
                     \"
                   >
-                    <div
+                    <td
                       style=\"
                         padding: 14px 18px;
                         border-bottom: 1px solid #f2dfbb;
@@ -236,8 +243,10 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                       \"
                     >
                       IMPORTANT
-                    </div>
-                    <div
+                    </td>
+                  </tr>
+                  <tr style=\" background: #fff6e7;\">
+                    <td
                       style=\"
                         padding: 14px 18px;
                         color: #5f4b21;
@@ -249,8 +258,9 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                       at
                       <strong>{$expirationLabel}</strong>.<br />
                       Please complete all necessary updates before this time.
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
+                 
                 </table>
         ";
     } else {
@@ -266,9 +276,10 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
            border-radius: 16px;
            overflow: hidden;
            background: #ffffff;
+           margin-top:14px;
          \"
         >
-          <div
+          <tr
             style=\"
               margin: 18px 0;
               border: 1px solid #f5d7a1;
@@ -277,7 +288,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
               overflow: hidden;
             \"
           >
-           <div
+           <td
              style=\"
                padding: 14px 18px;
                border-bottom: 1px solid #f2dfbb;
@@ -287,8 +298,10 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
              \"
            >
              NOTICE
-           </div>
-            <div
+           </td>
+          </tr>
+          <tr style=\" background: #fff6e7;\">
+            <td
               style=\"
                 padding: 14px 18px;
                 color: #5f4b21;
@@ -299,8 +312,8 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
               Access was not granted for this request.<br />
               Please coordinate with the approver if you believe the
               request should be reconsidered.
-            </div>
-          </div>
+            </td>
+          </tr>
         </table>
       ";
     }
@@ -589,7 +602,8 @@ return <<<HTML
               </table>
                                 
               {$urgentBox}
-							<!-- CTA button -->
+							
+
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px; background:#EFF3FF; border:1px solid #D8E1F5; border-radius:12px;">
                 <tr>
                                     <td style="padding:14px 16px;">
@@ -606,6 +620,42 @@ return <<<HTML
                 </tr>
               </table>
               
+              <!-- CTA button -->
+              <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="margin: 18px auto 0 auto"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      bgcolor="#3F6FE4"
+                      style="
+                        border-radius: 10px;
+                        line-height: 1.7;
+                        padding: 14px 28px;
+                      "
+                    >
+                      <a
+                        href="{$tempAccessUrl}"
+                        target="_blank"
+                        style="
+                          display: inline-block;
+                          min-width: 260px;
+                          text-align: center;
+                          font-size: 16px;
+                          font-weight: 600;
+                          color: #ffffff;
+                          text-decoration: none;
+                        "
+                      >
+                        Review Request Details
+                      </a>
+                    </td>
+                  </tr>
+              </table>
 							<!-- footer text -->
              <table
                   role="presentation"
