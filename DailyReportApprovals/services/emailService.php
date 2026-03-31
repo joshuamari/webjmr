@@ -63,6 +63,47 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
         'cc' => $cc,
         'subject' => $subject,
         'html' => $body,
+        'embedded_images' => [
+    [
+        'path' => __DIR__ . '/../public/bg.png',
+        'cid' => 'header_bg',
+        'name' => 'bg.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/pending.png',
+        'cid' => 'pending_icon',
+        'name' => 'pending.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/user.png',
+        'cid' => 'person_icon',
+        'name' => 'user.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/calendar.png',
+        'cid' => 'calendar_icon',
+        'name' => 'calendar.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/clock.png',
+        'cid' => 'clock_icon',
+        'name' => 'clock.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/info.png',
+        'cid' => 'info_icon',
+        'name' => 'info.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/check.png',
+        'cid' => 'check_icon',
+        'name' => 'check.png',
+    ],
+    [
+        'path' => __DIR__ . '/../public/denied.png',
+        'cid' => 'deny_icon',
+        'name' => 'denied.png',
+    ],],
     ]);
 }
 
@@ -79,54 +120,31 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $actionAtLabel = htmlspecialchars((string)($data['actionAtLabel'] ?? '—'));
     $expirationLabel = htmlspecialchars((string)($data['expirationLabel'] ?? '—'));
     $tempAccessUrl = htmlspecialchars((string)($data['tempAccessUrl'] ?? '#'));
-    
-    // $backgroundImg = '../public/bg.png';
 
-    // $pendingIcon = '<img src="../public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    $backgroundImg = '<img src="cid:header_bg" width="100%" style=" position: absolute; display: block; width: 100%; height: auto; border: 0; outline: none; text-decoration: none; top: 0; left: 0; bottom: 0; right: 0; " />';
 
-    // $personIcon = '<img src="../public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    $pendingIcon = '<img src="cid:pending_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    // $calendarIcon = '<img src="../public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+    $personIcon = '<img src="cid:person_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    // $clockIcon = '<img src="../public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
+    $calendarIcon = '<img src="cid:calendar_icon" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
-    // $infoIcon = '<img src="../public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    $clockIcon = '<img src="cid:clock_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-		// $checkIcon = '<img src="../public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    $infoIcon = '<img src="cid:info_icon" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
-		// $denyIcon = '<img src="../public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+		$checkIcon = '<img src="cid:check_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-    $backgroundImg = 'http://kdt-ph/webjmr/DailyReportApprovals/public/bg.png';
-
-    $pendingIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/pending.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
-
-    $personIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/user.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
-
-    $calendarIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/calendar.png" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
-
-    $clockIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/clock.png" width="20" height="20" alt="" style="display:block; width:20px; height:20px; border:0;">';
-
-    $infoIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/info.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
-
-		$checkIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/check.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
-
-		$denyIcon = '<img src="http://kdt-ph/webjmr/DailyReportApprovals/public/denied.png" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+		$denyIcon = '<img src="cid:deny_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
     
 
     $title = $isApproved
         ? 'Access Request Approved'
         : 'Access Request Denied';
 
-    $statusChipBg = $isApproved ? '#e9f8ef' : '#fdecec';
-    $statusChipColor = $isApproved ? '#1f9d55' : '#d64545';
-    $statusText = $isApproved ? 'APPROVED' : 'DENIED';
-
     $headlineCopy = $isApproved
         ? "You can now access and update the Daily Report for <strong>{$requestedMonthLabel}</strong>."
         : "The temporary access request for the Daily Report for <strong>{$requestedMonthLabel}</strong> was not approved.";
-
-		
-
 
     $statusCopy ="";
     if($isApproved && $expirationLabel !== '—'){
@@ -330,30 +348,134 @@ return <<<HTML
   <table  role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#eeedf8; margin:0; padding:32px 0;">
     <tr>
       <td align="center">
-        <table role="presentation" width="840" cellpadding="0" cellspacing="0" border="0" style="width:840px; max-width:840px; background:#f7f6fd; border:1px solid #d9ddf1; border-radius:22px; overflow:hidden;"
+        <table role="presentation" width="840" cellpadding="0" cellspacing="0" border="0" style="width:840px; max-width:840px;  background: #f7f6fd; border:1px solid #d9ddf1; border-radius:22px; overflow:hidden;"
 				>
           <!-- HEADER     -->
           <tr>
-            <td style="padding:24px 28px 22px 28px; background-color:#4F78D9; background-image:url('{$backgroundImg}');background-repeat:no-repeat;background-position:right center; background-size:cover;"
-						>
-                          
-              <div style="font-size:15px; color:#EAF1FF; margin-bottom:10px;">
-								Web JMR System
-							</div>
+              <td>
+                <table
+                  role="presentation"
+                  width="100%"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="position: relative"
+                >
+                  <!-- <tr>
+                    <td>
+                      {$backgroundImg}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="
+                        padding: 24px 28px 22px 28px;
+                        border-top-left-radius: 22px;
+                        border-top-right-radius: 22px;
+                        position: fixed;
+                      "
+                    >
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td valign="top" style="color: #ffffff">
+                            <div
+                              style="
+                                font-size: 15px;
+                                color: #eaf1ff;
+                                margin-bottom: 10px;
+                              "
+                            >
+                              Web JMR System
+                            </div>
+                            <div
+                              style="
+                                font-size: 28px;
+                                line-height: 1.25;
+                                font-weight: 500;
+                                color: #ffffff;
+                                margin-bottom: 10px;
+                              "
+                            >
+                              {$title}
+                            </div>
+                            <div
+                              style="
+                                font-size: 15px;
+                                line-height: 1.6;
+                                color: #eaf1ff;
+                              "
+                            >
+                              Temporary Daily Report access request update
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr> -->
 
-              <div style="font-size:28px; line-height:1.25; font-weight:500; color:#FFFFFF;margin-bottom:10px;">
-								{$title}
-							</div>
-              <div style="font-size:15px; line-height:1.6; color:#EAF1FF; ">
-              	Temporary Daily Report access request update
-              </div>
-                         
-            </td>
+                  <tr>
+                    <td
+                      style="
+                        padding: 24px 28px 22px 28px;
+                        border-top-left-radius: 22px;
+                        border-top-right-radius: 22px;
+                        background-color:#6887d3">
+                    >
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                      >
+                        <tr>
+                          <td valign="top" style="color: #ffffff">
+                            <div
+                              style="
+                                font-size: 15px;
+                                color: #eaf1ff;
+                                margin-bottom: 10px;">
+                              Web JMR System
+                            </div>
+                            <div
+                              style="
+                                font-size: 28px;
+                                line-height: 1.25;
+                                font-weight: 500;
+                                color: #ffffff;
+                                margin-bottom: 10px;
+                              "
+                            >
+                              {$title}
+                            </div>
+                            <div
+                              style="
+                                font-size: 15px;
+                                line-height: 1.6;
+                                color: #eaf1ff;
+                              "
+                            >
+                              Temporary Daily Report access request update
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+                </table>
+              </td>
           </tr>
           
           <tr>
 						<!-- TOP TEXT -->
-            <td style="padding:30px 36px 30px 36px; ">
+            <td style="padding:30px 36px 30px 36px; background: #f7f6fd">
               <div style="font-size:18px; font-weight:700; color:#25324b; margin-bottom:20px;">
                   Dear {$employeeSurname}-san,
               </div>
@@ -367,7 +489,7 @@ return <<<HTML
                        
 							<!-- MAIN INFO TABLE -->
               <table
-                role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #d9ddf1; border-radius: 16px;overflow: hidden; background: #ffffff;">
+                role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #d9ddf1; border-radius: 16px; overflow: hidden; background: #ffffff;">
                   <tr>
                     <td >
                       <table
@@ -657,13 +779,12 @@ return <<<HTML
                   </tr>
               </table>
 							<!-- footer text -->
-             <table
+              <table
                   role="presentation"
                   cellpadding="0"
                   cellspacing="0"
                   border="0"
-                  style="margin: 18px auto 0 auto; width: 100%"
-                >
+                  style="margin: 18px auto 0 auto; width: 100%; background: #f7f6fd">
                   <tr>
                     <td>
                       <table
@@ -693,7 +814,7 @@ return <<<HTML
                       </table>
                     </td>
                   </tr>
-                </table>
+              </table>
             </td>
           </tr>
         </table>
@@ -730,6 +851,7 @@ function sendSystemEmail(array $payload): bool
         $subject = (string)($payload['subject'] ?? '');
         $html = (string)($payload['html'] ?? '');
         $ccList = $payload['cc'] ?? [];
+        $embeddedImages = $payload['embedded_images'] ?? [];
 
         if ($from === '' || $to === '' || $subject === '' || $html === '') {
             error_log('sendSystemEmail skipped: missing required payload fields.');
@@ -745,6 +867,24 @@ function sendSystemEmail(array $payload): bool
                 if ($ccEmail !== '' && strcasecmp($ccEmail, $to) !== 0) {
                     $mail->addCC($ccEmail);
                 }
+            }
+        }
+        if (is_array($embeddedImages)) {
+            foreach ($embeddedImages as $img) {
+                $path = (string)($img['path'] ?? '');
+                $cid = (string)($img['cid'] ?? '');
+                $name = (string)($img['name'] ?? basename($path));
+
+                if ($path === '' || $cid === '') {
+                    continue;
+                }
+
+                if (!file_exists($path)) {
+                    error_log("Embedded image missing: {$path}");
+                    continue;
+                }
+
+                $mail->addEmbeddedImage($path, $cid, $name);
             }
         }
 
