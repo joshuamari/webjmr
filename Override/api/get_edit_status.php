@@ -100,7 +100,7 @@ try {
     }
 
     echo json_encode([
-        "canEdit" => $canEdit,
+        "canEdit" => $canEdit, #edit if revert
         "decision" => $decision,
         "debug" => $debug,
     ]);

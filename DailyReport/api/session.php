@@ -28,7 +28,7 @@ try {
         'empGender' => $employee['fldGender'] ?? '',
         'empPos' => $employee['fldDesig'] ?? '',
         'hasOverride' => hasOverridePermission($employeeId),
-        'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId),
+        'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId), #edit if revert
         'hasUnlock' => hasUnlockPermission($employeeId),
         'hasPlanning' => hasPlanningPermission($employeeId)
     ]);

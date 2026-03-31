@@ -195,7 +195,7 @@ function formatRequestedMonthLabel(string $requestedMonth): string
         return '—';
     }
 
-    $date = DateTime::createFromFormat('Y-m', $requestedMonth);
+    $date = DateTime::createFromFormat('!Y-m', $requestedMonth);
     if (!$date) {
         return '—';
     }
