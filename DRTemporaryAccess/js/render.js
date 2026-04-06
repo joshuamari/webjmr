@@ -85,13 +85,14 @@ function buildForMeRequestRow(request) {
 function getAllUniqueRequests() {
   const map = new Map();
 
-  [...RequestPageState.data.submittedRequests, ...RequestPageState.data.requestsForMe].forEach(
-    function (request) {
-      const requestId = String(request.requestId || "");
-      if (!requestId) return;
-      map.set(requestId, request);
-    },
-  );
+  [
+    ...RequestPageState.data.submittedRequests,
+    ...RequestPageState.data.requestsForMe,
+  ].forEach(function (request) {
+    const requestId = String(request.requestId || "");
+    if (!requestId) return;
+    map.set(requestId, request);
+  });
 
   return Array.from(map.values());
 }
@@ -211,10 +212,10 @@ function renderActivePanel() {
 
   if (!$panel.length || !$body.length) return;
 
-const activeRequests = getAllUniqueRequests().filter(function (request) {
-  const status = ((request.status || "") + "").toLowerCase();
-  return status === "approved" || status === "expiring_today";
-});
+  const activeRequests = getAllUniqueRequests().filter(function (request) {
+    const status = ((request.status || "") + "").toLowerCase();
+    return status === "approved" || status === "expiring_today";
+  });
 
   $body.empty();
 
@@ -249,7 +250,12 @@ const activeRequests = getAllUniqueRequests().filter(function (request) {
 //#endregion
 
 //#region PAGINATION META
-function renderSubmittedPaginationMeta(totalRows, totalPages, currentPage, rowsPerPage) {
+function renderSubmittedPaginationMeta(
+  totalRows,
+  totalPages,
+  currentPage,
+  rowsPerPage,
+) {
   const shouldShowPagination = totalRows > rowsPerPage;
 
   if (totalRows === 0) {
@@ -286,7 +292,12 @@ function renderSubmittedPaginationMeta(totalRows, totalPages, currentPage, rowsP
   $("#myRequestNextPage").prop("disabled", currentPage === totalPages);
 }
 
-function renderForMePaginationMeta(totalRows, totalPages, currentPage, rowsPerPage) {
+function renderForMePaginationMeta(
+  totalRows,
+  totalPages,
+  currentPage,
+  rowsPerPage,
+) {
   const shouldShowPagination = totalRows > rowsPerPage;
 
   if (totalRows === 0) {
@@ -318,7 +329,9 @@ function renderForMePaginationMeta(totalRows, totalPages, currentPage, rowsPerPa
   $("#myRequestForMePaginationStart").text(visibleStart);
   $("#myRequestForMePaginationEnd").text(visibleEnd);
   $("#myRequestForMePaginationTotal").text(totalRows);
-  $("#myRequestForMePageIndicator").text(`Page ${currentPage} of ${totalPages}`);
+  $("#myRequestForMePageIndicator").text(
+    `Page ${currentPage} of ${totalPages}`,
+  );
   $("#myRequestForMePrevPage").prop("disabled", currentPage === 1);
   $("#myRequestForMeNextPage").prop("disabled", currentPage === totalPages);
 }
@@ -353,7 +366,12 @@ function renderSubmittedTable() {
     });
   }
 
-  renderSubmittedPaginationMeta(totalRows, totalPages, currentPage, rowsPerPage);
+  renderSubmittedPaginationMeta(
+    totalRows,
+    totalPages,
+    currentPage,
+    rowsPerPage,
+  );
 }
 
 function renderForMeTable() {
