@@ -11,7 +11,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <!-- <script src="js/main.js"></script> -->
-         <script src="js/state.js"></script>
+    <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
@@ -85,7 +85,7 @@
             </li>
           </ul>
         </li>
-        <li id="drapprovals" style="display: none;">
+        <li id="drapprovals" style="display: none">
           <div class="iocn-link">
             <a href="../DailyReportApprovals/">
               <svg
@@ -412,7 +412,9 @@
                   <div
                     class="flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 aspect-square"
                   >
-                    <i class="bx bx-calendar-exclamation text-3xl text-sky-500"></i>
+                    <i
+                      class="bx bx-calendar-exclamation text-3xl text-sky-500"
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -771,7 +773,10 @@
                     <p
                       class="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-400"
                     >
-                      Request
+                      Request#<span
+                        id="requestDetailsId"
+                        class="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-400"
+                      ></span>
                     </p>
                     <div class="mt-2 flex items-center justify-between gap-4">
                       <div>
@@ -782,7 +787,7 @@
                           —
                         </p>
                         <p
-                          id="requestDetailsId"
+                          id="requestDetailsEmpId"
                           class="mt-2 text-sm text-slate-500"
                         >
                           —
