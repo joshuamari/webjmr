@@ -267,8 +267,7 @@ function denyUnlockRequest(int $unlockId, string $actionBy): bool
         SET
             status = 'denied',
             action_by = :actionBy,
-            action_at = NOW(),
-            expiration_date = DATE_ADD(NOW(), INTERVAL 1 DAY)
+            action_at = NOW()
         WHERE unlock_id = :unlockId
           AND status = 'pending'
     ");

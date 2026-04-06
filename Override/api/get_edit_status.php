@@ -20,9 +20,9 @@ try {
         exit;
     }
 
-    $selectedTimestamp = strtotime($selectedDate);
+    $dt = DateTime::createFromFormat('Y-m-d', $selectedDate);
 
-    if ($selectedTimestamp === false) {
+    if (!$dt || $dt->format('Y-m-d') !== $selectedDate) {
         echo json_encode([
             "canEdit" => true,
             "message" => "Invalid selectedDate format",
@@ -34,7 +34,7 @@ try {
         exit;
     }
 
-    $selectedYearMonth = date('Y-m', $selectedTimestamp);
+    $selectedYearMonth = $dt->format('Y-m');
     $currentYearMonth = date('Y-m');
 
     list($selectedYear, $selectedMonth) = array_map('intval', explode('-', $selectedYearMonth));
@@ -42,6 +42,9 @@ try {
 
     $selectedIndex = ($selectedYear * 12) + $selectedMonth;
     $currentIndex = ($currentYear * 12) + $currentMonth;
+
+    $isSystemUser = isSystemUser($employeeNumber);
+    $isManager = isManager($employeeNumber);
 
     $canEdit = false;
     $decision = 'default_false';
@@ -57,41 +60,35 @@ try {
             "selectedIndex" => $selectedIndex,
             "currentIndex" => $currentIndex,
         ],
+        "checks" => [
+            "isSystemUser" => $isSystemUser,
+            "isManager" => $isManager,
+        ],
         "branch" => null,
-        "canAccessPreviousMonth" => null,
-        "checks" => null,
     ];
 
-    if ($selectedIndex === $currentIndex) {
+    // Absolute overrides first
+    if ($isSystemUser) {
+        $canEdit = true;
+        $decision = 'system_user_override';
+        $debug["branch"] = "system_user_override";
+
+    } elseif ($isManager) {
+        $canEdit = true;
+        $decision = 'manager_override';
+        $debug["branch"] = "manager_override";
+
+    } elseif ($selectedIndex === $currentIndex) {
         $canEdit = true;
         $decision = 'current_month';
         $debug["branch"] = "current_month";
 
-    } elseif ($selectedIndex === $currentIndex - 1) {
-        $debug["branch"] = "previous_month";
-
-        $isSystemUser = isSystemUser($employeeNumber);
-        $isManager = isManager($employeeNumber);
-        $isLockedBySchedule = isPreviousMonthLockedBySchedule();
-        $hasValidApproval = hasValidPrevMonthAccessApproval($employeeNumber);
-
-        $debug["checks"] = [
-            "isSystemUser" => $isSystemUser,
-            "isManager" => $isManager,
-            "isPreviousMonthLockedBySchedule" => $isLockedBySchedule,
-            "hasValidPrevMonthAccessApproval" => $hasValidApproval,
-        ];
-
-        $previousMonthAccess = canAccessPreviousMonth($employeeNumber);
-        $debug["canAccessPreviousMonth"] = $previousMonthAccess;
-
-        $canEdit = $previousMonthAccess;
-        $decision = 'previous_month_rule';
-
-    } elseif ($selectedIndex < $currentIndex - 1) {
-        $canEdit = false;
-        $decision = 'older_than_previous_month';
-        $debug["branch"] = "older_than_previous_month";
+    } elseif ($selectedIndex < $currentIndex) {
+        $canEdit = canAccessPreviousMonth($employeeNumber, $selectedYearMonth);
+        $decision = $canEdit
+            ? 'past_month_allowed'
+            : 'past_month_denied';
+        $debug["branch"] = "past_month";
 
     } else {
         $canEdit = true;
@@ -100,14 +97,14 @@ try {
     }
 
     echo json_encode([
-        "canEdit" => $canEdit, #edit if revert
+        "canEdit" => $canEdit,
         "decision" => $decision,
         "debug" => $debug,
     ]);
 
 } catch (Exception $e) {
     echo json_encode([
-        "canEdit" => true,
+        "canEdit" => false,
         "error" => $e->getMessage(),
     ]);
 }

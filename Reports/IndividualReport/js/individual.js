@@ -708,7 +708,7 @@ function checkLogin() {
   });
 }
 function checkLoc() {
-  var local = [0, 1, 2];
+  var local = [0, 1, 2, -1];
   var loc = parseInt($("#idLoc").find(":selected").attr("loc-id"));
   if (local.includes(loc)) {
     $(".checker, .approver").removeClass("d-none");
@@ -745,7 +745,7 @@ function getGroups() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.1");
         }
       },
     });
@@ -782,7 +782,7 @@ function getMembers() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.2");
         }
       },
     });
@@ -825,7 +825,7 @@ function getLocations() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.3");
         }
       },
     });
@@ -863,7 +863,7 @@ function getCheckers() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.4");
         }
       },
     });
@@ -938,7 +938,7 @@ function getCoretime() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.5");
         }
       },
     });
@@ -1020,7 +1020,7 @@ function getReportData() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred hehe.");
+          reject("An unspecified error occurred hehe.6");
         }
       },
     });
@@ -1048,7 +1048,7 @@ function getHolidays() {
         } else if (xhr.status === 500) {
           reject("Internal Server Error: There was a server error.");
         } else {
-          reject("An unspecified error occurred.");
+          reject("An unspecified error occurred.7");
         }
       },
     });

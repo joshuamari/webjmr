@@ -10,6 +10,7 @@ date_default_timezone_set('Asia/Manila');
 #region Initialize Variable
 $locations = [];
 $extraLocation = ["name" => "KDT/WFH", "id" => 0];
+$KDTHWFH = ["name" => "KDT/HWFH", "id" => -1];
 
 
 #endregion
@@ -29,6 +30,9 @@ try {
             array_push($locations, $output);
             if ($name == "WFH") {
                 $locations[] = $extraLocation;
+            }
+            if ($name == "HWFH") {
+                $locations[] = $KDTHWFH;
             }
         }
     }

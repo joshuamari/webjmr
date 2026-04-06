@@ -154,15 +154,13 @@ function isPreviousMonth(dateString) {
 
   const phNow = getPHNowParts();
 
-  let prevMonth = phNow.month - 1;
-  let prevYear = phNow.year;
+  if (selected.year < phNow.year) return true;
 
-  if (prevMonth === 0) {
-    prevMonth = 12;
-    prevYear -= 1;
+  if (selected.year === phNow.year && selected.month < phNow.month) {
+    return true;
   }
 
-  return selected.year === prevYear && selected.month === prevMonth;
+  return false;
 }
 
 function canEditSelectedDate(dateString) {

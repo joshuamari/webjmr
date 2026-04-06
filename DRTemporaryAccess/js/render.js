@@ -396,14 +396,14 @@ function renderRequestDetailsModal($row) {
   const validUntil = $row.data("valid-until") || "—";
   const targetEmployee = $row.data("target-employee") || "—";
   const targetEmpId = $row.data("target-empid") || "—";
-  const requestedBy = $row.data("requested-by") || getEmployeeFullName(empDetails);
+  const requestedBy =
+    $row.data("requested-by") || getEmployeeFullName(empDetails);
 
   $("#requestDetailsId").text($row.data("request-id") || "—");
 
   if ($("#requestDetailsTargetEmployee").length) {
-    $("#requestDetailsTargetEmployee").text(
-      `${targetEmployee} (EMP-${targetEmpId})`,
-    );
+    $("#requestDetailsTargetEmployee").text(`${targetEmployee}`);
+    $("#requestDetailsEmpId").text(`EMP-${targetEmpId}`);
   }
 
   if ($("#requestDetailsTargetEmployeeBody").length) {
@@ -430,9 +430,9 @@ function renderRequestDetailsModal($row) {
     )
     .text(statusLabel);
 
-if (status === "approved" || status === "expiring_today") {
-  $chip.addClass("modal-chip-success");
-} else if (status === "pending") {
+  if (status === "approved" || status === "expiring_today") {
+    $chip.addClass("modal-chip-success");
+  } else if (status === "pending") {
     $chip.addClass("modal-chip-pending");
   } else if (status === "denied" || status === "expired") {
     $chip.addClass("modal-chip-danger");
@@ -451,11 +451,11 @@ if (status === "approved" || status === "expiring_today") {
   } else {
     $validityWrap.css("display", "flex");
 
-if (status === "expired") {
-  $validityWrap.addClass("request-validity-expired");
-} else if (status === "approved" || status === "expiring_today") {
-  $validityWrap.addClass("request-validity-active");
-}
+    if (status === "expired") {
+      $validityWrap.addClass("request-validity-expired");
+    } else if (status === "approved" || status === "expiring_today") {
+      $validityWrap.addClass("request-validity-active");
+    }
   }
 
   $("#requestDetailsModal").removeClass("hidden").addClass("flex");
