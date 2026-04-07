@@ -436,9 +436,11 @@ function renderRequestDetailsModal($row) {
 
   $("#requestDetailsRequestedOn").text($row.data("requested-on") || "—");
   $("#requestDetailsRequestedMonth").text($row.data("requested-month") || "—");
+  $("#requestDetailsReason").text($row.data("reason") || "—");
   $("#requestDetailsStatus").text(statusLabel);
   $("#requestDetailsActionTakenOn").text($row.data("action-taken-on") || "—");
   $("#requestDetailsActionTakenBy").text($row.data("action-taken-by") || "—");
+  $("#requestDetailsRemarks").text($row.data("remarks") || "—");
   $("#requestDetailsValidUntil").text(validUntil || "—");
 
   const $chip = $("#requestDetailsChip");

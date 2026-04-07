@@ -197,7 +197,7 @@
                 </p>
               </div>
 
-              <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-3">
+              <div class="grid grid-cols-1 gap-4 p-5 md:grid-cols-4">
                 <!-- LEADER GROUP SELECT -->
                 <div id="targetGroupWrap" class="">
                   <label class="mb-2 block text-sm font-medium text-slate-700">
@@ -280,6 +280,22 @@
                         class="bx bx-chevron-down text-[18px] text-[#6d7788] shrink-0"
                       ></i>
                     </div>
+                  </div>
+                </div>
+
+                <!-- REASON -->
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-slate-700">
+                    Reason
+                  </label>
+
+                  <div class="relative approval-month-wrap w-full">
+                    <textarea
+                      id="requestCreateReason"
+                      rows="1"
+                      class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none resize-none"
+                      placeholder="Provide a reason for request..."
+                    ></textarea>
                   </div>
                 </div>
               </div>
@@ -846,6 +862,12 @@
                           </p>
                         </div>
                         <div>
+                          <p class="modal-info-label">Reason for Request</p>
+                          <p id="requestDetailsReason" class="modal-info-value">
+                            —
+                          </p>
+                        </div>
+                        <div>
                           <p class="modal-info-label">Submitted By</p>
                           <p
                             id="requestDetailsRequestedBy"
@@ -884,6 +906,15 @@
                           <p class="modal-info-label">Action Taken By</p>
                           <p
                             id="requestDetailsActionTakenBy"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+                        <div>
+                          <p class="modal-info-label">Remarks</p>
+                          <p
+                            id="requestDetailsRemarks"
                             class="modal-info-value"
                           >
                             —
