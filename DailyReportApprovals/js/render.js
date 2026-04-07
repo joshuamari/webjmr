@@ -1,7 +1,6 @@
 //#region PAGE RENDER
 function renderPage() {
   renderHelloUser();
-  renderPlanningLink();
   renderSummaryCards();
   renderGroupFilters();
   renderPendingTable();
@@ -13,28 +12,6 @@ function renderPage() {
 //#region HEADER / NAV RENDER
 function renderHelloUser() {
   $(".hello-user").text(DRApprovalsState.auth.empDetails.empFName || "User");
-}
-
-function renderPlanningLink() {
-  $("#planningNavItem").remove();
-
-  if (!DRApprovalsState.auth.canAccessPlanning) return;
-
-  const planningHtml = `
-    <li id="planningNavItem">
-      <div class="iocn-link">
-        <a class="row-cols-12" href="../Planning/">
-          <i class="bx bx-book-bookmark"></i>
-          <span class="link_name col-9">Planning</span>
-        </a>
-      </div>
-      <ul class="sub-menu">
-        <li><a class="link_name" href="../Planning/">Planning</a></li>
-      </ul>
-    </li>
-  `;
-
-  $("#drLink").after(planningHtml);
 }
 //#endregion
 

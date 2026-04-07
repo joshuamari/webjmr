@@ -2,6 +2,7 @@
 
 const PERMISSION_UNLOCK = 53;
 const PERMISSION_PLANNING = 5;
+const PERMISSION_OVERRIDE = 50;
 
 function hasUnlockPermission($empNum): bool
 {
@@ -11,6 +12,11 @@ function hasUnlockPermission($empNum): bool
 function hasPlanningPermission($empNum): bool
 {
     return hasPermission($empNum, PERMISSION_PLANNING);
+}
+
+function hasOverridePermission($empNum): bool
+{
+    return hasPermission($empNum, PERMISSION_OVERRIDE);
 }
 
 function hasPermission($empNum, int $permissionId): bool
