@@ -75,11 +75,13 @@ function startPage() {
   getPlans();
 
   $(".cs-loader").fadeOut(1000);
+  const btn = document.getElementById("btnRequestAccess");
 
   if (AppState.empDetails.hasOverride) {
     $(".override-btn").show();
   } else {
     $(".override-btn").hide();
+    if (btn) btn.remove();
   }
 
   updateLockedMonthLabel();

@@ -15,10 +15,12 @@ if (!empty($_POST['empNum'])) {
 
 $planningPID = 5;   // Planning UI module permission
 $drApprovalsPID = 53; // DR Approvals permission
+$overridePID = 50; // DR Approvals permission
 
 $response = [
     "hasPlanning" => false,
     "hasDRApprovals" => false,
+    "hasOverride" => false
 ];
 #endregion
 
@@ -27,13 +29,14 @@ $accessQ = "
     SELECT permission_id
     FROM user_permissions
     WHERE fldEmployeeNum = :empNum
-      AND permission_id IN (:planningPID, :drApprovalsPID)
+      AND permission_id IN (:planningPID, :drApprovalsPID, :overridePID)
 ";
 $accessStmt = $connkdt->prepare($accessQ);
 $accessStmt->execute([
     ":empNum" => $empNum,
     ":planningPID" => $planningPID,
     ":drApprovalsPID" => $drApprovalsPID,
+    ":overridePID" => $overridePID
 ]);
 
 $permissions = $accessStmt->fetchAll(PDO::FETCH_COLUMN);
@@ -44,6 +47,10 @@ if (in_array($planningPID, $permissions)) {
 
 if (in_array($drApprovalsPID, $permissions)) {
     $response["hasDRApprovals"] = true;
+}
+
+if (in_array($overridePID, $permissions)) {
+    $response["hasOverride"] = true;
 }
 #endregion
 

@@ -22,6 +22,7 @@ try {
         'empPos' => $employee['fldDesig'] ?? '',
         'hasPlanning' => hasPlanningPermission($employeeId),
         'hasUnlock' => hasUnlockPermission($employeeId),
+        'hasOverride' => hasOverridePermission($employeeId)
     ]);
 } catch (Throwable $e) {
     error_log('check_login.php error: ' . $e->getMessage());

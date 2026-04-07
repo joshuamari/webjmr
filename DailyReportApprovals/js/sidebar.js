@@ -19,6 +19,7 @@ function initSidebar() {
     $(".sidebar").addClass("close");
     handleResponsiveSidebar();
   });
+  applySidebarVisibility();
 }
 
 function handleResponsiveSidebar() {
@@ -31,5 +32,10 @@ function handleResponsiveSidebar() {
   } else {
     $(".menu-two-wrap").addClass("hidden");
   }
+}
+
+function applySidebarVisibility(){
+  const hasPlanning = DRApprovalsState.auth.canAccessPlanning === true;
+  $("#planningLink").toggle(hasPlanning);
 }
 //#endregion

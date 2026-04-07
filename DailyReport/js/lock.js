@@ -181,6 +181,7 @@ function updateLockingMessage() {
   const selectedDate = $("#idDRDate").val();
   const isPrevMonth = isPreviousMonth(selectedDate);
   const canAccessPreviousMonth = !!AppState.empDetails.canAccessPreviousMonth;
+  const canRequestAccess = !!AppState.empDetails.hasOverride;
 
   let message = `
     This Daily Report is outside the current editable month.
@@ -188,10 +189,17 @@ function updateLockingMessage() {
   `;
 
   if (isPrevMonth && !canAccessPreviousMonth) {
-    message = `
-      Previous-month editing is currently disabled for your account.
-      You may still view the details, but changes are disabled.
-    `;
+    if (canRequestAccess) {
+      message = `
+        Previous-month editing is currently disabled for your account.
+        You may still view the details, but changes are disabled.
+      `;
+    } else {
+      message = `
+        Previous-month editing is currently disabled for your account.
+        You cannot request access. Please coordinate with your group leader.
+      `;
+    }
   }
 
   if (isPrevMonth && canAccessPreviousMonth) {

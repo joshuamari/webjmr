@@ -361,7 +361,6 @@ function planAccess() {
     },
     function (data) {
       var access = $.parseJSON(data);
-
       if (access && access.hasPlanning) {
         $("#planningLink").show();
       } else {
