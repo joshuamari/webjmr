@@ -170,7 +170,7 @@
         </div>
       </div>
 
-      <main class="home-content">
+      <main class="home-content relative">
         <div class="cont px-4 py-3 overflow-auto">
           <div class="maindiv">
             <div class="pb-3">
@@ -186,7 +186,9 @@
             </div>
 
             <!-- REQUEST FORM -->
-            <div class="mb-4 rounded-xl border border-slate-200 bg-white">
+            <div
+              class="mb-4 rounded-xl border border-slate-200 bg-white z-[1] relative"
+            >
               <div class="border-b border-slate-200 px-5 py-4">
                 <h3 class="text-[16px] font-semibold text-slate-800">
                   Create Temporary Access Request
@@ -313,50 +315,10 @@
               </div>
             </div>
 
-            <!-- ACTIVE PANEL -->
-            <div
-              id="activeAccessPanel"
-              class="request-banner-hidden mb-4 rounded-xl border border-slate-200 bg-white"
-            >
-              <div class="border-b border-slate-200 px-5 py-4">
-                <h3 class="text-[16px] font-semibold text-slate-800">
-                  Active Temporary Access
-                </h3>
-                <p class="mt-1 text-sm text-slate-500">
-                  All active temporary access relevant to you.
-                </p>
-              </div>
-
-              <div class="max-h-[260px] overflow-auto p-3 pt-0 mt-3">
-                <table
-                  class="w-full min-w-[700px] border-separate border-spacing-0 text-sm"
-                >
-                  <thead class="sticky top-0 z-10 bg-white">
-                    <tr>
-                      <th
-                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
-                      >
-                        Employee
-                      </th>
-                      <th
-                        class="border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
-                      >
-                        Requested Month
-                      </th>
-                      <th
-                        class="rounded-tr-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
-                      >
-                        Valid Until
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="activeAccessBody"></tbody>
-                </table>
-              </div>
-            </div>
-
             <!-- SUMMARY CARDS -->
-            <div class="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+            <div
+              class="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4 relative z-1"
+            >
               <div class="rounded-xl bg-white p-5 shadow">
                 <div class="flex items-center justify-between h-full">
                   <div class="flex flex-col justify-between h-full">
@@ -437,7 +399,9 @@
             </div>
 
             <!-- REQUESTS I SUBMITTED -->
-            <div class="mb-4 rounded-xl border border-slate-200 bg-white">
+            <div
+              class="mb-4 rounded-xl border border-slate-200 bg-white relative z-[1]"
+            >
               <div
                 class="border-b p-3 flex flex-col md:justify-between gap-3 md:items-center md:flex-row"
               >
@@ -589,7 +553,9 @@
             </div>
 
             <!-- REQUESTS FOR ME -->
-            <div class="rounded-xl border border-slate-200 bg-white">
+            <div
+              class="rounded-xl border border-slate-200 bg-white relative z-[1] mb-10"
+            >
               <div
                 class="border-b p-3 flex flex-col md:justify-between gap-3 md:items-center md:flex-row"
               >
@@ -660,7 +626,9 @@
                 </div>
               </div>
 
-              <div class="max-h-[360px] overflow-auto p-3 pt-0 mt-3">
+              <div
+                class="min-h-[360px] max-h-[850px] overflow-auto p-3 pt-0 mt-3"
+              >
                 <table
                   class="w-full min-w-[1100px] border-separate border-spacing-0 text-sm"
                 >
@@ -783,7 +751,7 @@
                 </div>
 
                 <div class="space-y-5 px-6 py-5">
-<div
+                  <div
                     class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4"
                   >
                     <p
@@ -965,13 +933,19 @@
               </div>
             </div>
 
-            <div class="mt-6 flex justify-end pb-4">
+            <!-- <div class="mt-6 flex justify-end pb-4">
               <p class="text-xs text-slate-500">
                 <i class="bx bx-copyright text-slate-500"></i>
                 2023 KDTSys
               </p>
-            </div>
+            </div> -->
           </div>
+        </div>
+        <div class="absolute bottom-3 right-7">
+          <p class="text-xs text-slate-500">
+            <i class="bx bx-copyright text-slate-500"></i>
+            2023 KDTSys
+          </p>
         </div>
       </main>
     </section>
