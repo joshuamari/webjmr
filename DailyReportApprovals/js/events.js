@@ -221,21 +221,53 @@ function bindModalEvents() {
 
   $(document).on("click", "#pendingDenyBtn", function () {
     const requestId = $(this).attr("data-request-id");
-    const $denyBtn = $("#pendingDenyBtn");
-    const $acceptBtn = $("#pendingAcceptBtn");
 
-    if (!confirm("Deny this request?")) {
+    const employee = $("#pendingModalEmployee").text();
+    const month = $("#pendingModalRequestedMonth").text();
+    const requestedBy = $("#pendingModalRequestedBy").text();
+
+    $("#denyConfirmRequestId").val(requestId || "");
+
+    $("#denyModalEmployee").text(employee || "—");
+    $("#denyModalMonth").text(month || "—");
+    $("#denyModalRequestedBy").text(requestedBy || "—");
+
+    $("#denyReasonInput").val("");
+    $("#denyReasonError").addClass("hidden");
+
+    closeModal("#pendingRequestModal");
+    openModal("#denyConfirmModal");
+  });
+
+  $(document).on("click", "#cancelConfirmDenyBtn", function () {
+    closeModal("#denyConfirmModal");
+    openModal("#pendingRequestModal");
+  });
+
+  $(document).on("click", "#confirmDenyBtn", function () {
+    const requestId = ($("#denyConfirmRequestId").val() || "")
+      .toString()
+      .trim();
+    const reason = ($("#denyReasonInput").val() || "").toString().trim();
+
+    if (!reason) {
+      $("#denyReasonError").removeClass("hidden");
+      $("#denyReasonInput").focus();
       return;
     }
-    $denyBtn.prop("disabled", true);
-    $acceptBtn.prop("disabled", true);
+
+    $("#denyReasonError").addClass("hidden");
+    $("#confirmDenyBtn").prop("disabled", true);
+    $("#pendingAcceptBtn").prop("disabled", true);
+    $("#pendingDenyBtn").prop("disabled", true);
+
     showLoader();
 
     setTimeout(async () => {
       try {
-        const response = await denyRequest(requestId);
+        const response = await denyRequest(requestId, reason);
 
-        closeModal("#pendingRequestModal");
+        closeModal("#denyConfirmModal");
         await refreshApprovalData();
         await hideLoader();
 
@@ -245,10 +277,43 @@ function bindModalEvents() {
         console.error("DENY FAILED:", error);
         alert(error || "Failed to deny request.");
       } finally {
-        $denyBtn.prop("disabled", false);
-        $acceptBtn.prop("disabled", false);
+        $("#confirmDenyBtn").prop("disabled", false);
+        $("#pendingAcceptBtn").prop("disabled", false);
+        $("#pendingDenyBtn").prop("disabled", false);
       }
     }, 0);
   });
+
+  // $(document).on("click", "#pendingDenyBtn", function () {
+  //   const requestId = $(this).attr("data-request-id");
+  //   const $denyBtn = $("#pendingDenyBtn");
+  //   const $acceptBtn = $("#pendingAcceptBtn");
+
+  //   if (!confirm("Deny this request?")) {
+  //     return;
+  //   }
+  //   $denyBtn.prop("disabled", true);
+  //   $acceptBtn.prop("disabled", true);
+  //   showLoader();
+
+  //   setTimeout(async () => {
+  //     try {
+  //       const response = await denyRequest(requestId);
+
+  //       closeModal("#pendingRequestModal");
+  //       await refreshApprovalData();
+  //       await hideLoader();
+
+  //       alert(response.message || "Request denied.");
+  //     } catch (error) {
+  //       await hideLoader();
+  //       console.error("DENY FAILED:", error);
+  //       alert(error || "Failed to deny request.");
+  //     } finally {
+  //       $denyBtn.prop("disabled", false);
+  //       $acceptBtn.prop("disabled", false);
+  //     }
+  //   }, 0);
+  // });
 }
 //#endregion

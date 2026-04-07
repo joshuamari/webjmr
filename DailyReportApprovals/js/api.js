@@ -163,10 +163,10 @@ function approveRequest(requestId) {
   );
 }
 
-function denyRequest(requestId) {
+function denyRequest(requestId, reason) {
   return postJson(
     "api/deny_request.php",
-    { unlockId: requestId },
+    { unlockId: requestId, remarks: reason },
     "Failed to deny request.",
   );
 }

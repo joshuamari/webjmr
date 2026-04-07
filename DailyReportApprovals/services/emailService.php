@@ -150,6 +150,11 @@ error_log('sendUnlockRequestDecisionEmail: to=' . $to);
                 'cid' => 'deny_icon',
                 'name' => 'denied.png',
             ],
+            [
+                'path' => __DIR__ . '/../public/remarks.png',
+                'cid' => 'remarks_icon',
+                'name' => 'remarks.png',
+            ],
         ],
     ]);
 }
@@ -165,6 +170,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $requestedMonthLabel = htmlspecialchars((string)($data['requestedMonthLabel'] ?? '—'));
     $approverName = htmlspecialchars((string)($data['approverName'] ?? '—'));
     $actionAtLabel = htmlspecialchars((string)($data['actionAtLabel'] ?? '—'));
+    $remarks = htmlspecialchars((string)($data['remarks'] ?? '—'));//ADD REMARKS DITO
     $expirationLabel = htmlspecialchars((string)($data['expirationLabel'] ?? '—'));
     $tempAccessUrl = htmlspecialchars((string)($data['tempAccessUrl'] ?? '#'));
 
@@ -183,6 +189,8 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $checkIcon = '<img src="cid:check_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
     $denyIcon = '<img src="cid:deny_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+
+    $remarksIcon = '<img src="cid:remarks_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
     $title = $isApproved
         ? 'Access Request Approved'
@@ -702,6 +710,42 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                             "
                           >
                             {$actionAtLabel}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="width: 50%; padding: 14px 18px">
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td style="vertical-align: middle">
+                                  {$remarksIcon}
+                                </td>
+                                <td style="width: 12px"></td>
+                                <td
+                                  style="
+                                    vertical-align: middle;
+                                    font-size: 15px;
+                                    font-weight: 700;
+                                    color: #2f3c56;
+                                  "
+                                >
+                                  Remarks
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td
+                            style="
+                              padding: 14px 16px;
+                              font-size: 15px;
+                              color: #25324b;
+                            "
+                          >
+                            {$remarks}
                           </td>
                         </tr>
                       </table>

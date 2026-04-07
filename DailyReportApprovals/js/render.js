@@ -64,6 +64,9 @@ function renderPendingTable() {
           class="bg-white pending-row cursor-pointer"
           data-request-id="${escapeHtml(request.requestId)}"
         >
+        <td class="border-b border-slate-200 px-4 py-5 text-slate-600">
+            ${escapeHtml(request.requestId)}
+          </td>
           <td class="border-b border-slate-200 px-4 py-5 align-top">
             <div class="font-medium text-slate-800">${escapeHtml(request.employeeName)}</div>
             <div class="text-xs text-slate-400">EMP-${escapeHtml(request.employeeId)}</div>
@@ -101,6 +104,9 @@ function renderActionedTable() {
           class="bg-white actioned-row cursor-pointer"
           data-request-id="${escapeHtml(request.requestId)}"
         >
+          <td class="border-b border-slate-200 px-4 py-5 text-slate-600">
+            ${escapeHtml(request.requestId)}
+          </td>
           <td class="border-b border-slate-200 px-4 py-5 align-top">
             <div class="font-medium text-slate-800">${escapeHtml(request.employeeName)}</div>
             <div class="text-xs text-slate-400">EMP-${escapeHtml(request.employeeId)}</div>
@@ -153,7 +159,9 @@ function renderActionedPagination() {
 
 //#region MODAL RENDER
 function renderPendingModal() {
-  const request = findPendingRequestById(DRApprovalsState.ui.pendingModalRequestId);
+  const request = findPendingRequestById(
+    DRApprovalsState.ui.pendingModalRequestId,
+  );
   if (!request) return;
 
   $("#pendingModalEmployee").text(request.employeeName || "—");

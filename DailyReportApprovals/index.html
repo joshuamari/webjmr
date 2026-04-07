@@ -330,6 +330,11 @@
                       <th
                         class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
                       >
+                        Request ID
+                      </th>
+                      <th
+                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
                         Employee
                       </th>
                       <th
@@ -419,12 +424,17 @@
                 </div>
               </div>
 
-              <div class="max-h-[360px] overflow-auto p-3 pt-0 mt-3">
+              <div class="max-h-[850px] overflow-auto p-3 pt-0 mt-3">
                 <table
                   class="w-full min-w-[900px] border-separate border-spacing-0 text-sm"
                 >
                   <thead class="sticky top-0 z-10 bg-white">
                     <tr>
+                      <th
+                        class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
+                      >
+                        Request id
+                      </th>
                       <th
                         class="rounded-tl-lg border-b border-slate-200 bg-slate-100 px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[.03em] text-slate-600"
                       >
@@ -588,6 +598,15 @@
                       </p>
                     </div>
                   </div>
+                  <div class="modal-info-card">
+                    <p class="modal-info-label">Reason for Request</p>
+                    <p
+                      id="pendingModalReasonForRequest"
+                      class="modal-info-value"
+                    >
+                      —
+                    </p>
+                  </div>
 
                   <div
                     class="rounded-2xl border border-sky-100 bg-sky-50 px-5 py-4"
@@ -740,6 +759,16 @@
                         </div>
 
                         <div>
+                          <p class="modal-info-label">Reason for Request</p>
+                          <p
+                            id="actionedModalReasonForRequest"
+                            class="modal-info-value"
+                          >
+                            —
+                          </p>
+                        </div>
+
+                        <div>
                           <p class="modal-info-label">Requested On</p>
                           <p
                             id="actionedModalRequestedOn"
@@ -777,6 +806,13 @@
                         </div>
 
                         <div>
+                          <p class="modal-info-label">Remarks</p>
+                          <p id="actionedModalRemarks" class="modal-info-value">
+                            —
+                          </p>
+                        </div>
+
+                        <div>
                           <p class="modal-info-label">Action Taken On</p>
                           <p
                             id="actionedModalActionTakenOn"
@@ -808,6 +844,156 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- DENY CONFIRMATION MODAL -->
+            <div
+              id="denyConfirmModal"
+              class="fixed inset-0 z-[10000] hidden items-center justify-center bg-slate-900/45 px-4 py-6"
+            >
+              <div
+                class="w-full max-w-[560px] overflow-hidden rounded-[22px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.25)]"
+              >
+                <div
+                  class="flex items-start justify-between border-b border-slate-200 px-6 py-5"
+                >
+                  <div>
+                    <div class="mb-2 flex items-center gap-2">
+                      <h3
+                        class="text-[20px] font-semibold leading-none text-slate-800"
+                      >
+                        Confirm Denial
+                      </h3>
+                      <span class="modal-chip modal-chip-danger"
+                        >Deny Request</span
+                      >
+                    </div>
+                    <p class="text-sm text-slate-500">
+                      Please provide the reason for denying this request.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="modal-close flex h-10 w-10 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                    data-close="#denyConfirmModal"
+                  >
+                    <i class="bx bx-x text-[28px]"></i>
+                  </button>
+                </div>
+
+                <div class="space-y-5 px-6 py-5">
+                  <input type="hidden" id="denyConfirmRequestId" />
+
+                  <div
+                    class="rounded-2xl border border-rose-100 bg-rose-50 px-5 py-4 mt-0"
+                    style="margin-top: 0"
+                  >
+                    <div class="flex items-start gap-3">
+                      <div
+                        class="mt-[2px] flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white"
+                      >
+                        <i
+                          class="bx bx-error-circle text-[18px] text-rose-500"
+                        ></i>
+                      </div>
+                      <div>
+                        <p
+                          class="text-[11px] font-semibold uppercase tracking-[.08em] text-rose-700"
+                        >
+                          Important
+                        </p>
+                        <p class="mt-1 text-[14px] leading-6 text-slate-700">
+                          This action will deny the request and notify the
+                          employee by email.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4"
+                  >
+                    <p
+                      class="text-[11px] font-semibold uppercase tracking-[.08em] text-slate-400"
+                    >
+                      Request Summary
+                    </p>
+
+                    <div class="mt-3 space-y-2 text-sm text-slate-700">
+                      <div class="flex justify-between gap-3">
+                        <span class="text-slate-500">Employee</span>
+                        <span
+                          id="denyModalEmployee"
+                          class="font-medium text-slate-800"
+                          >—</span
+                        >
+                      </div>
+
+                      <div class="flex justify-between gap-3">
+                        <span class="text-slate-500">Requested Month</span>
+                        <span
+                          id="denyModalMonth"
+                          class="font-medium text-slate-800"
+                          >—</span
+                        >
+                      </div>
+
+                      <div class="flex justify-between gap-3">
+                        <span class="text-slate-500">Requested By</span>
+                        <span
+                          id="denyModalRequestedBy"
+                          class="font-medium text-slate-800"
+                          >—</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      for="denyReasonInput"
+                      class="mb-2 block text-sm font-medium text-slate-700"
+                    >
+                      Reason for Denial <span class="text-rose-500">*</span>
+                    </label>
+
+                    <textarea
+                      id="denyReasonInput"
+                      rows="5"
+                      class="w-full resize-none rounded-xl border border-slate-300 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-100"
+                      placeholder="Enter the reason for denial..."
+                    ></textarea>
+
+                    <p
+                      id="denyReasonError"
+                      class="mt-2 hidden text-sm text-rose-500"
+                    >
+                      Please enter the reason for denial.
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  class="flex items-center justify-end gap-3 border-t border-slate-200 bg-slate-50 px-6 py-4"
+                >
+                  <button
+                    type="button"
+                    id="cancelConfirmDenyBtn"
+                    class="modal-btn modal-btn-secondary"
+                    data-close="#denyConfirmModal"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    id="confirmDenyBtn"
+                    class="modal-btn modal-btn-danger disabled:opacity-70"
+                  >
+                    Confirm Denial
+                  </button>
                 </div>
               </div>
             </div>
