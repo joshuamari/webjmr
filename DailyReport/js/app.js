@@ -14,7 +14,6 @@ function loadSession() {
     dataType: "json",
     success: async function (data) {
       AppState.empDetails = data;
-      console.log("session:", AppState.empDetails);
 
       try {
         await loadInitialData();

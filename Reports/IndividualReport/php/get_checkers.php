@@ -12,6 +12,9 @@ $empGroup = NULL;
 if (!empty($_POST['empGroup'])) {
     $empGroup = $_POST['empGroup'];
 }
+if($empGroup == "SHIP"){
+    $empGroup = "SYS";
+}
 $ymSelect = date("Y-m");
 if (!empty($_POST['ymSelect'])) {
     $ymSelect = $_POST['ymSelect'];

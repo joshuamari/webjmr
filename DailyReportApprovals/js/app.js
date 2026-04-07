@@ -70,7 +70,7 @@ async function loadInitialData() {
 
   const pageData = requestsResponse.data || {};
   const groupsData = groupsResponse.data || {};
-console.log(groupsData)
+
   DRApprovalsState.data.pendingRequests = pageData.pendingRequests || [];
   DRApprovalsState.data.actionedRequests = pageData.actionedRequests || [];
   DRApprovalsState.summary = pageData.summary || {

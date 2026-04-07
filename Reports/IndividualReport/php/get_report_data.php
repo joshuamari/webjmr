@@ -28,6 +28,9 @@ if (!empty($_POST['locSelect'])) {
     $locSelect = (int)$_POST['locSelect'];
     $locStmt = " AND dr.fldLocation =$locSelect";
 }
+if($locSelect == -1){
+    $locStmt = ' AND dr.fldLocation IN (1,8)';
+}
 $uniqueCols = ["pt.fldProject", "it.fldItem", "jrd.fldJob"];
 $columnMap = [
     'proj' => 'pt.fldProject',

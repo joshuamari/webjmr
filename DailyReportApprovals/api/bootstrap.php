@@ -2,7 +2,7 @@
 
 date_default_timezone_set('Asia/Manila');
 
-define('WEBJMR_ENABLE_EMAILS', true);
+define('WEBJMR_ENABLE_EMAILS', false);
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 

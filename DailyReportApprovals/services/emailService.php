@@ -6,8 +6,8 @@ use PHPMailer\PHPMailer\Exception;
 function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $nameMap, array $surnameMap): bool
 {
     if (!isUnlockEmailEnabled()) {
-        error_log('Unlock email skipped: email sending is disabled.');
-        return true;
+        error_log('Unlock decision email skipped: email sending is disabled.');
+        return false;
     }
 
     $employeeId = (string)($request['employee_number'] ?? '');
@@ -15,21 +15,48 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
     $approverId = (string)($request['action_by'] ?? '');
     $status = strtolower(trim((string)($request['status'] ?? '')));
 
+    error_log('sendUnlockRequestDecisionEmail: employeeId=' . $employeeId . ', requesterId=' . $requesterId . ', approverId=' . $approverId . ', status=' . $status);
+    error_log('sendUnlockRequestDecisionEmail: raw emailMap=' . json_encode($emailMap));
+    error_log('sendUnlockRequestDecisionEmail: raw nameMap=' . json_encode($nameMap));
+    error_log('sendUnlockRequestDecisionEmail: raw surnameMap=' . json_encode($surnameMap));
+
     $to = trim((string)($emailMap[$employeeId] ?? ''));
     if ($to === '') {
-        error_log("Unlock email skipped: missing employee email for employee_number={$employeeId}");
+        error_log("Unlock decision email skipped: missing employee email for employee_number={$employeeId}");
         return false;
     }
+error_log('sendUnlockRequestDecisionEmail: raw emailMap=' . json_encode($emailMap));
 
+$requesterEmail = trim((string)($emailMap[$requesterId] ?? ''));
+$approverEmail = trim((string)($emailMap[$approverId] ?? ''));
+
+error_log('sendUnlockRequestDecisionEmail: requesterEmail=' . $requesterEmail);
+error_log('sendUnlockRequestDecisionEmail: approverEmail=' . $approverEmail);
+error_log('sendUnlockRequestDecisionEmail: to=' . $to);
     $cc = [];
 
-    // CC only the requester when the requester is different from the employee.
+    // CC requester if different from employee
     $requesterEmail = trim((string)($emailMap[$requesterId] ?? ''));
     if ($requesterId !== '' && $requesterId !== $employeeId && $requesterEmail !== '') {
         $cc[] = $requesterEmail;
     }
 
-    $cc = array_values(array_unique($cc));
+    // CC approver if different from employee
+    $approverEmail = trim((string)($emailMap[$approverId] ?? ''));
+    if ($approverId !== '' && $approverId !== $employeeId && $approverEmail !== '') {
+        $cc[] = $approverEmail;
+    }
+
+    // dedupe + remove blanks
+    $cc = array_values(array_unique(array_filter($cc)));
+
+    // remove TO from CC just in case
+    $cc = array_values(array_filter($cc, function ($email) use ($to) {
+        return strcasecmp($email, $to) !== 0;
+    }));
+
+    error_log('sendUnlockRequestDecisionEmail: normalized to=' . json_encode($to));
+    error_log('sendUnlockRequestDecisionEmail: normalized cc=' . json_encode($cc));
 
     $employeeName = $nameMap[$employeeId] ?? $employeeId;
     $employeeSurname = $surnameMap[$employeeId] ?? $employeeId;
@@ -55,14 +82,25 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
         'expirationLabel' => $expirationLabel,
         'tempAccessUrl' => 'http://kdt-ph/webJMR/DRTemporaryAccess/',
     ]);
-file_put_contents(__DIR__ . '/email-debug.html', $body);
-$altBody = trim(strip_tags(str_replace(
-    ['<br>', '<br/>', '<br />', '</p>'],
-    ["\n", "\n", "\n", "\n"],
-    $body
-)));
 
-file_put_contents(__DIR__ . '/email-debug.txt', $altBody);
+    file_put_contents(__DIR__ . '/email-debug.html', $body);
+
+    $altBody = trim(strip_tags(str_replace(
+        ['<br>', '<br/>', '<br />', '</p>'],
+        ["\n", "\n", "\n", "\n"],
+        $body
+    )));
+
+    file_put_contents(__DIR__ . '/email-debug.txt', $altBody);
+
+    error_log('sendUnlockRequestDecisionEmail: requestedMonthLabel=' . $requestedMonthLabel);
+    error_log('sendUnlockRequestDecisionEmail: actionAtLabel=' . $actionAtLabel);
+    error_log('sendUnlockRequestDecisionEmail: expirationLabel=' . $expirationLabel);
+    error_log('sendUnlockRequestDecisionEmail: subject=' . $subject);
+    error_log('sendUnlockRequestDecisionEmail: final to=' . json_encode($to));
+    error_log('sendUnlockRequestDecisionEmail: final cc=' . json_encode($cc));
+    error_log('sendUnlockRequestDecisionEmail: email-debug.html written to ' . __DIR__ . '/email-debug.html');
+    error_log('sendUnlockRequestDecisionEmail: email-debug.txt written to ' . __DIR__ . '/email-debug.txt');
 
     return sendSystemEmail([
         'from' => 'sh.kdt_sys_helpdesk@global.kawasaki.com',
@@ -72,46 +110,47 @@ file_put_contents(__DIR__ . '/email-debug.txt', $altBody);
         'subject' => $subject,
         'html' => $body,
         'embedded_images' => [
-    [
-        'path' => __DIR__ . '/../public/bg.png',
-        'cid' => 'header_bg',
-        'name' => 'bg.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/pending.png',
-        'cid' => 'pending_icon',
-        'name' => 'pending.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/user.png',
-        'cid' => 'person_icon',
-        'name' => 'user.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/calendar.png',
-        'cid' => 'calendar_icon',
-        'name' => 'calendar.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/clock.png',
-        'cid' => 'clock_icon',
-        'name' => 'clock.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/info.png',
-        'cid' => 'info_icon',
-        'name' => 'info.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/check.png',
-        'cid' => 'check_icon',
-        'name' => 'check.png',
-    ],
-    [
-        'path' => __DIR__ . '/../public/denied.png',
-        'cid' => 'deny_icon',
-        'name' => 'denied.png',
-    ],],
+            [
+                'path' => __DIR__ . '/../public/bg.png',
+                'cid' => 'header_bg',
+                'name' => 'bg.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/pending.png',
+                'cid' => 'pending_icon',
+                'name' => 'pending.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/user.png',
+                'cid' => 'person_icon',
+                'name' => 'user.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/calendar.png',
+                'cid' => 'calendar_icon',
+                'name' => 'calendar.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/clock.png',
+                'cid' => 'clock_icon',
+                'name' => 'clock.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/info.png',
+                'cid' => 'info_icon',
+                'name' => 'info.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/check.png',
+                'cid' => 'check_icon',
+                'name' => 'check.png',
+            ],
+            [
+                'path' => __DIR__ . '/../public/denied.png',
+                'cid' => 'deny_icon',
+                'name' => 'denied.png',
+            ],
+        ],
     ]);
 }
 
@@ -141,10 +180,9 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
 
     $infoIcon = '<img src="cid:info_icon" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
 
-		$checkIcon = '<img src="cid:check_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
+    $checkIcon = '<img src="cid:check_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
-		$denyIcon = '<img src="cid:deny_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
-    
+    $denyIcon = '<img src="cid:deny_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
     $title = $isApproved
         ? 'Access Request Approved'
@@ -154,13 +192,13 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
         ? "You can now access and update the Daily Report for <strong>{$requestedMonthLabel}</strong>."
         : "The temporary access request for the Daily Report for <strong>{$requestedMonthLabel}</strong> was not approved.";
 
-    $statusCopy ="";
-    if($isApproved && $expirationLabel !== '—'){
-      $statusCopy = "
+    $statusCopy = "";
+    if ($isApproved && $expirationLabel !== '—') {
+        $statusCopy = "
         <td
           bgcolor=\"#eff7ee\"
-        	style=\"
-        	margin-bottom: 18px;
+            style=\"
+            margin-bottom: 18px;
           padding: 16px 18px;
           background: #eff7ee;
           border: 1px solid #d7ead3;
@@ -209,30 +247,30 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
             </tr>
           </table>
         </td>";
-    }else{
-			$statusCopy = 
-			"<td bgcolor=\"#f7efee\" style=\"margin-bottom: 18px; padding: 16px 18px; background: #f7efee; border: 1px solid #ebd4d1; \"
+    } else {
+        $statusCopy =
+            "<td bgcolor=\"#f7efee\" style=\"margin-bottom: 18px; padding: 16px 18px; background: #f7efee; border: 1px solid #ebd4d1; \"
       colspan=\"2\"
       >
-			<table>
-				<tr>
-					<td style=\"vertical-align: middle\">
-							 {$denyIcon}
-					
-					</td>
-					<td style=\"width: 8px\"></td>
-					<td style=\"
-							 font-size: 18px;
-							 font-weight: 700;
-							 color: #d64545;
-						\"
-					>
-						DENIED
-					</td>
-				</tr>
-			</table>
+            <table>
+                <tr>
+                    <td style=\"vertical-align: middle\">
+                             {$denyIcon}
+                    
+                    </td>
+                    <td style=\"width: 8px\"></td>
+                    <td style=\"
+                             font-size: 18px;
+                             font-weight: 700;
+                             color: #d64545;
+                        \"
+                    >
+                        DENIED
+                    </td>
+                </tr>
+            </table>
       </td>";
-		}
+    }
 
     $urgentBox = '';
     if ($isApproved) {
@@ -293,7 +331,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                 </table>
         ";
     } else {
-      $urgentBox = "
+        $urgentBox = "
         <table
          bgcolor=\"#ffffff\"
          role=\"presentation\"
@@ -349,7 +387,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
       ";
     }
 
-return <<<HTML
+    return <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -362,7 +400,7 @@ return <<<HTML
     <tr>
       <td align="center">
         <table role="presentation" width="840" cellpadding="0" bgcolor="#f7f6fd" cellspacing="0" border="0" style="width:840px; max-width:840px;  background: #f7f6fd; border:1px solid #d9ddf1; border-radius:22px; overflow:hidden;"
-				>
+                >
           <!-- HEADER     -->
           <tr>
               <td>
@@ -374,8 +412,6 @@ return <<<HTML
                   border="0"
                   style="position: relative"
                 >
-
-
                   <tr>
                     <td
                      bgcolor="#6887d3"
@@ -426,7 +462,7 @@ return <<<HTML
           </tr>
           
           <tr>
-						<!-- TOP TEXT -->
+                        <!-- TOP TEXT -->
             <td style="padding:30px 36px 30px 36px; background: #f7f6fd">
               <div style="font-size:18px; font-weight:700; color:#25324b; margin-bottom:20px;">
                   Dear {$employeeSurname}-san,
@@ -439,7 +475,7 @@ return <<<HTML
               </div>
                     
                        
-							<!-- MAIN INFO TABLE -->
+                            <!-- MAIN INFO TABLE -->
               <table
                 role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border: 1px solid #d9ddf1; border-radius: 16px; overflow: hidden; background: #ffffff;">
                   <tr>
@@ -489,8 +525,6 @@ return <<<HTML
                             Employee
                               </td>
                             </tr>
-                              
-                              
                             </table>
                             </td>
                             <td
@@ -676,7 +710,7 @@ return <<<HTML
               </table>
                                 
               {$urgentBox}
-							
+                            
 
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:14px; background:#EFF3FF; border:1px solid #D8E1F5; border-radius:12px;">
                 <tr>
@@ -730,7 +764,7 @@ return <<<HTML
                     </td>
                   </tr>
               </table>
-							<!-- footer text -->
+                            <!-- footer text -->
               <table
                   bgcolor="#f7f6fd"
                   role="presentation"
@@ -806,8 +840,11 @@ function sendSystemEmail(array $payload): bool
         $ccList = $payload['cc'] ?? [];
         $embeddedImages = $payload['embedded_images'] ?? [];
 
+        error_log('sendSystemEmail(decision): payload from=' . $from . ', to=' . json_encode($to) . ', subject=' . $subject);
+        error_log('sendSystemEmail(decision): payload cc=' . json_encode($ccList));
+
         if ($from === '' || $to === '' || $subject === '' || $html === '') {
-            error_log('sendSystemEmail skipped: missing required payload fields.');
+            error_log('sendSystemEmail(decision) skipped: missing required payload fields.');
             return false;
         }
 
@@ -822,6 +859,7 @@ function sendSystemEmail(array $payload): bool
                 }
             }
         }
+
         if (is_array($embeddedImages)) {
             foreach ($embeddedImages as $img) {
                 $path = (string)($img['path'] ?? '');
@@ -844,15 +882,23 @@ function sendSystemEmail(array $payload): bool
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body = $html;
-        $mail->AltBody = trim(strip_tags(str_replace(['<br>', '<br/>', '<br />', '</p>'], ["\n", "\n", "\n", "\n"], $html)));
+        $mail->AltBody = trim(strip_tags(str_replace(
+            ['<br>', '<br/>', '<br />', '</p>'],
+            ["\n", "\n", "\n", "\n"],
+            $html
+        )));
+
+        error_log('sendSystemEmail(decision): attempting SMTP send to=' . json_encode($to));
 
         $mail->send();
+
+        error_log('sendSystemEmail(decision): mail sent successfully to=' . json_encode($to));
         return true;
     } catch (Exception $e) {
-        error_log('PHPMailer send failed: ' . $e->getMessage());
+        error_log('PHPMailer send failed (decision): ' . $e->getMessage());
         return false;
     } catch (Throwable $e) {
-        error_log('sendSystemEmail fatal: ' . $e->getMessage());
+        error_log('sendSystemEmail(decision) fatal: ' . $e->getMessage());
         return false;
     }
 }
