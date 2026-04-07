@@ -34,9 +34,16 @@ function bindRequestFormEvents() {
       return;
     }
 
+    const requestReason = $("#requestCreateReason").val() || "";
+    if (!requestReason.trim()) {
+      alert("Please provide a reason for the temporary access request.");
+      return;
+    }
+
     const payload = {
       employee_number: targetEmployeeId,
       requested_month: requestMonth,
+      reason: requestReason.trim(),
     };
     showLoader();
     $submitBtn.prop("disabled", true);
@@ -71,6 +78,8 @@ function bindRequestFormEvents() {
           "";
         renderTargetEmployeeOptions(currentGroup);
       }
+
+      $("#requestCreateReason").val("");
 
       $("#requestCreateMonthSel").val("");
       updateMonthDisplay({

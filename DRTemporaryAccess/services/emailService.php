@@ -115,6 +115,11 @@ function sendUnlockRequestSubmittedEmail(array $request, array $toEmailMap, arra
                 'cid' => 'deny_icon',
                 'name' => 'denied.png',
             ],
+              [
+                'path' => __DIR__ . '/../public/reason.png',
+                'cid' => 'reason_icon',
+                'name' => 'reason.png',
+            ],
         ],
     ]);
 }
@@ -122,6 +127,7 @@ function sendUnlockRequestSubmittedEmail(array $request, array $toEmailMap, arra
 function buildUnlockRequestSubmittedEmailBody(array $data): string
 {
     $employeeName = htmlspecialchars((string)($data['employeeName'] ?? '—'));
+    $requesterReason = htmlspecialchars((string)($data['requesterReason'] ?? '—'));//REASON FOR REQUEST DAPAT
     $requesterName = htmlspecialchars((string)($data['requesterName'] ?? '—'));
     $requestedMonthLabel = htmlspecialchars((string)($data['requestedMonthLabel'] ?? '—'));
     $dateRequestedLabel = htmlspecialchars((string)($data['dateRequestedLabel'] ?? '—'));
@@ -140,6 +146,8 @@ function buildUnlockRequestSubmittedEmailBody(array $data): string
     $clockIcon = '<img src="cid:clock_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
     $infoIcon = '<img src="cid:info_icon" width="20" height="20" alt=""    style="display:block; width:20px; height:20px; border:0;">';
+
+    $reasonIcon = '<img src="cid:reason_icon" width="20" height="20" alt=""  style="display:block; width:20px; height:20px; border:0;">';
 
     return <<<HTML
 <!DOCTYPE html>
@@ -311,6 +319,23 @@ function buildUnlockRequestSubmittedEmailBody(array $data): string
                         </td>
                         <td style="width:50%; padding:14px 18px; border-bottom:1px solid #E4E8F4; font-size:15px; color:#2F3C56;">
                           {$employeeName}
+                        </td>
+                      </tr>
+
+                       <tr>
+                        <td style="width:50%; padding:14px 18px; border-bottom:1px solid #E4E8F4;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="vertical-align:middle;">{$reasonIcon}</td>
+                              <td style="width:12px;"></td>
+                              <td style="vertical-align:middle; font-size:15px; font-weight:700; color:#2F3C56;">
+																Reason for Request:
+															</td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td style="width:50%; padding:14px 18px; border-bottom:1px solid #E4E8F4; font-size:15px; color:#2F3C56;">
+                          {$requesterReason}
                         </td>
                       </tr>
 
