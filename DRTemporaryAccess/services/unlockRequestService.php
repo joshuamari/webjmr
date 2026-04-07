@@ -10,10 +10,12 @@ function getUnlockRequestsSubmittedBy(string $employeeId): array
             ur.employee_number,
             ur.requested_by,
             ur.requested_month,
+            ur.request_reason,
             ur.date_requested,
             ur.status,
             ur.action_by,
             ur.action_at,
+            ur.action_reason,
             ur.expiration_date
         FROM unlock_requests ur
         WHERE ur.requested_by = :employeeId
@@ -38,10 +40,12 @@ function getUnlockRequestsForEmployee(string $employeeId): array
             ur.employee_number,
             ur.requested_by,
             ur.requested_month,
+            ur.request_reason,
             ur.date_requested,
             ur.status,
             ur.action_by,
             ur.action_at,
+            ur.action_reason,
             ur.expiration_date
         FROM unlock_requests ur
         WHERE ur.employee_number = :employeeId
@@ -115,11 +119,13 @@ function mapUnlockRequestRow(array $row, array $employeeNameMap = []): array
         'requestedOn' => formatDateTimeDisplay($row['date_requested'] ?? null),
         'requestedMonth' => (string)($row['requested_month'] ?? ''),
         'requestedMonthLabel' => formatRequestedMonthLabel($row['requested_month'] ?? ''),
+        'requestReason' => (string)($row['request_reason'] ?? ''),
         'status' => $effectiveStatus,
         'rawStatus' => strtolower(trim((string)($row['status'] ?? 'pending'))),
         'actionTakenById' => $actionById,
         'actionTakenBy' => $actionById !== '' ? ($employeeNameMap[$actionById] ?? $actionById) : '',
         'actionTakenOn' => formatDateTimeDisplay($row['action_at'] ?? null),
+        'actionReason' => (string)($row['action_reason'] ?? ''),
         'validUntil' => formatDateTimeDisplay($row['expiration_date'] ?? null),
         'validUntilRaw' => (string)($row['expiration_date'] ?? ''),
         'statusLabel' => formatUnlockRequestStatusLabel($effectiveStatus),
@@ -184,7 +190,7 @@ function canCreateUnlockRequest(string $employeeNumber, string $requestedMonth):
     return !in_array($effectiveStatus, $blockedStatuses, true);
 }
 
-function createUnlockRequest(string $employeeNumber, string $requestedBy, string $requestedMonth): string
+function createUnlockRequest(string $employeeNumber, string $requestedBy, string $requestedMonth, string $requestReason): string
 {
     global $connwebjmr;
 
@@ -193,6 +199,7 @@ function createUnlockRequest(string $employeeNumber, string $requestedBy, string
             employee_number,
             requested_by,
             requested_month,
+            request_reason,
             date_requested,
             status,
             action_by,
@@ -202,6 +209,7 @@ function createUnlockRequest(string $employeeNumber, string $requestedBy, string
             :employeeNumber,
             :requestedBy,
             :requestedMonth,
+            :requestReason,
             NOW(),
             'pending',
             NULL,
@@ -215,6 +223,7 @@ function createUnlockRequest(string $employeeNumber, string $requestedBy, string
         ':employeeNumber' => $employeeNumber,
         ':requestedBy' => $requestedBy,
         ':requestedMonth' => $requestedMonth,
+        ':requestReason' => $requestReason,
     ]);
 
     return (string)$connwebjmr->lastInsertId();
@@ -230,6 +239,7 @@ function getUnlockRequestById(string $unlockId): ?array
             employee_number,
             requested_by,
             requested_month,
+            request_reason,
             date_requested,
             status,
             action_by,

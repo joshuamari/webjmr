@@ -11,15 +11,15 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <!-- <script src="js/main.js"></script> -->
-    <script src="js/state.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/sidebar.js"></script>
-    <script src="js/render.js"></script>
-    <script src="js/events.js"></script>
+    <script src="js/state.js?v=20260407"></script>
+    <script src="js/utils.js?v=20260407"></script>
+    <script src="js/api.js?v=20260407"></script>
+    <script src="js/ui.js?v=20260407"></script>
+    <script src="js/sidebar.js?v=20260407"></script>
+    <script src="js/render.js?v=20260407"></script>
+    <script src="js/events.js?v=20260407"></script>
     <script src="js/app.js?v=20260407"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=20260407"></script>
   </head>
   <body>
     <div class="sidebar close fixed top-0">
@@ -180,13 +180,14 @@
                 DR Temporary Access Request
               </h1>
               <p class="text-sm text-slate-600">
-                Submit and monitor temporary access requests for locked Daily
+                Monitor temporary access requests for locked Daily
                 Reports.
               </p>
             </div>
 
             <!-- REQUEST FORM -->
             <div
+              id="createRequestFormCard"
               class="mb-4 rounded-xl border border-slate-200 bg-white z-[1] relative"
             >
               <div class="border-b border-slate-200 px-5 py-4">
@@ -400,6 +401,7 @@
 
             <!-- REQUESTS I SUBMITTED -->
             <div
+              id="myRequestsPanel"
               class="mb-4 rounded-xl border border-slate-200 bg-white relative z-[1]"
             >
               <div

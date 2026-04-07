@@ -6,6 +6,7 @@ header('Content-Type: application/json');
 try {
     $employeeId = getCurrentEmployeeId();
     $employee = getEmployeeProfile($employeeId);
+    $prevMonthAccess = getPreviousMonthAccessInfo($employeeId);
 
     if (empty($employee)) {
         http_response_code(404);
@@ -28,7 +29,9 @@ try {
         'empGender' => $employee['fldGender'] ?? '',
         'empPos' => $employee['fldDesig'] ?? '',
         'hasOverride' => hasOverridePermission($employeeId),
-        'canAccessPreviousMonth' => canAccessPreviousMonth($employeeId), #edit if revert
+        'canAccessPreviousMonth' => $prevMonthAccess['canAccessPreviousMonth'],
+        'canAccessAllMonths' => $prevMonthAccess['canAccessAllMonths'],
+        'accessibleRequestedMonth' => $prevMonthAccess['requestedMonth'],
         'hasUnlock' => hasUnlockPermission($employeeId),
         'hasPlanning' => hasPlanningPermission($employeeId)
     ]);
@@ -38,6 +41,6 @@ try {
     http_response_code(500);
     echo json_encode([
         'isLoggedIn' => false,
-        'error' => 'Server error in session endpoint.'. $e->getMessage()
+        'error' => 'Server error in session endpoint.' . $e->getMessage()
     ]);
 }

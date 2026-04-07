@@ -34,11 +34,13 @@ function getUnlockRequestDashboardData(string $viewerEmpNum): array
             'requestedOn' => formatDateTimeDisplay($row['date_requested'] ?? null),
             'requestedMonthLabel' => formatRequestedMonthLabel((string)($row['requested_month'] ?? '')),
             'requestedMonthValue' => (string) ($row['requested_month'] ?? ''),
+            'requestReason' => (string) ($row['request_reason'] ?? ''),
             'status' => $effectiveStatus,
             'requestedBy' => (string) ($row['requested_by'] ?? ''),
             'requestedByName' => buildEmployeeFullName($requesterProfile),
             'actionTakenOn' => formatDateTimeDisplay($row['action_at'] ?? null),
             'actionTakenBy' => buildEmployeeFullName($approverProfile),
+            'actionReason' => (string) ($row['action_reason'] ?? ''),
             'expiringOn' => formatDateTimeDisplay($row['expiration_date'] ?? null),
         ];
 
@@ -85,10 +87,12 @@ function getVisibleUnlockRequests(string $viewerEmpNum): array
             ur.employee_number,
             ur.requested_by,
             ur.requested_month,
+            ur.request_reason,
             ur.date_requested,
             ur.status,
             ur.action_by,
             ur.action_at,
+            ur.action_reason,
             ur.expiration_date
         FROM unlock_requests ur
         ORDER BY
@@ -258,7 +262,7 @@ function approveUnlockRequest(int $unlockId, string $actionBy): bool
 
     return $stmt->rowCount() > 0;
 }
-function denyUnlockRequest(int $unlockId, string $actionBy): bool
+function denyUnlockRequest(int $unlockId, string $actionBy, string $actionReason): bool
 {
     global $connwebjmr;
 
@@ -267,7 +271,8 @@ function denyUnlockRequest(int $unlockId, string $actionBy): bool
         SET
             status = 'denied',
             action_by = :actionBy,
-            action_at = NOW()
+            action_at = NOW(),
+            action_reason = :actionReason
         WHERE unlock_id = :unlockId
           AND status = 'pending'
     ");
@@ -275,6 +280,7 @@ function denyUnlockRequest(int $unlockId, string $actionBy): bool
     $stmt->execute([
         ':unlockId' => $unlockId,
         ':actionBy' => $actionBy,
+        ':actionReason' => $actionReason,
     ]);
 
     return $stmt->rowCount() > 0;
@@ -293,6 +299,7 @@ function getUnlockRequestById(int $unlockId): ?array
             status,
             action_by,
             action_at,
+            action_reason,
             expiration_date
         FROM unlock_requests
         WHERE unlock_id = :unlockId

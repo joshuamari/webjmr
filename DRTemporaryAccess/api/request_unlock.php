@@ -5,6 +5,7 @@ try {
     $requestedBy = getCurrentEmployeeId();
     $employeeNumber = trim((string)requireRequestValue('employee_number', 'Employee is required.'));
     $requestedMonth = trim((string)requireRequestValue('requested_month', 'Requested month is required.'));
+    $requestReason = trim((string)requireRequestValue('request_reason', 'Reason is required.'));
 
     if (!preg_match('/^\d+$/', $employeeNumber)) {
         jsonError('Invalid employee number.', 400);
@@ -12,6 +13,14 @@ try {
 
     if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $requestedMonth)) {
         jsonError('Invalid requested month format.', 400);
+    }
+
+    if ($requestReason === '') {
+        jsonError('Reason is required.', 400);
+    }
+
+    if (mb_strlen($requestReason) > 500) {
+        jsonError('Reason is too long.', 400);
     }
 
     $currentMonth = date('Y-m');
@@ -42,7 +51,7 @@ try {
         jsonError('A request already exists for this employee and month.', 409);
     }
 
-    $newId = createUnlockRequest($employeeNumber, $requestedBy, $requestedMonth);
+    $newId = createUnlockRequest($employeeNumber, $requestedBy, $requestedMonth, $requestReason);
     $createdRow = getUnlockRequestById($newId);
 
     if (!$createdRow) {

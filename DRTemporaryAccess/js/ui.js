@@ -228,7 +228,6 @@ function setupRequestEmployeeField() {
     $readonlyInput.val(`${fullName}${empNum ? ` (EMP-${empNum})` : ""}`);
   }
 
-  // keep hidden because select-based flow is now used for both roles
   $("#requestEmployeeReadonlyWrap").addClass("hidden");
 }
 
@@ -300,9 +299,6 @@ function renderTargetGroupOptions() {
   if (hasOverride) {
     $groupSel.prop("disabled", false);
     $("#targetGroupWrap").removeClass("hidden");
-  } else {
-    $groupSel.prop("disabled", true);
-    $("#targetGroupWrap").removeClass("hidden");
   }
 }
 
@@ -343,16 +339,20 @@ function renderTargetEmployeeOptions(groupId) {
     $employeeSel.prop("disabled", false);
     $("#targetEmployeeWrap").removeClass("hidden");
     $("#requestEmployeeReadonlyWrap").addClass("hidden");
-  } else {
-    $employeeSel.prop("disabled", true);
-    $("#targetEmployeeWrap").removeClass("hidden");
-    $("#requestEmployeeReadonlyWrap").addClass("hidden");
   }
 
   toggleTargetEmployeeActive($employeeSel);
 }
 
 function setupRequestFormSelectors() {
+  const hasOverride = hasOverridePermission(RequestPageState.auth.empDetails);
+
+  if (!hasOverride) {
+    $("#createRequestFormCard").remove();
+    $("#myRequestsPanel").remove();
+    return;
+  }
+
   renderTargetGroupOptions();
   toggleTargetGroupActive($("#targetGroupSel"));
 
@@ -361,6 +361,7 @@ function setupRequestFormSelectors() {
 
   renderTargetEmployeeOptions(selectedGroup);
 }
+
 function initTargetGroupFieldUI() {
   $(document).on("change", "#targetGroupSel", function () {
     toggleTargetGroupActive($(this));

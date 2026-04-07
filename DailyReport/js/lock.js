@@ -16,6 +16,14 @@ function getMonthYearLabel(dateString) {
   });
 }
 
+function getYearMonth(dateString) {
+  if (!dateString || typeof dateString !== "string" || dateString.length < 7) {
+    return "";
+  }
+
+  return dateString.slice(0, 7);
+}
+
 function setLockedState(isLocked) {
   const lockTargets = [
     "#idGroup",
@@ -166,47 +174,85 @@ function isPreviousMonth(dateString) {
 function canEditSelectedDate(dateString) {
   if (!dateString) return false;
 
+  const canAccessAllMonths = !!AppState.empDetails.canAccessAllMonths;
+  const canAccessPreviousMonth = !!AppState.empDetails.canAccessPreviousMonth;
+  const accessibleRequestedMonth =
+    AppState.empDetails.accessibleRequestedMonth || "";
+
   if (isCurrentMonth(dateString)) {
     return true;
   }
 
-  if (isPreviousMonth(dateString)) {
-    return !!AppState.empDetails.canAccessPreviousMonth;
+  if (!isPreviousMonth(dateString)) {
+    return false;
   }
 
-  return false;
+  if (canAccessAllMonths) {
+    return true;
+  }
+
+  if (!canAccessPreviousMonth) {
+    return false;
+  }
+
+  return getYearMonth(dateString) === accessibleRequestedMonth;
 }
 
 function updateLockingMessage() {
   const selectedDate = $("#idDRDate").val();
-  const isPrevMonth = isPreviousMonth(selectedDate);
-  const canAccessPreviousMonth = !!AppState.empDetails.canAccessPreviousMonth;
+  const selectedYearMonth = getYearMonth(selectedDate);
+
+  const isPastMonth = isPreviousMonth(selectedDate);
   const canRequestAccess = !!AppState.empDetails.hasOverride;
+  const canAccessAllMonths = !!AppState.empDetails.canAccessAllMonths;
+  const canAccessPreviousMonth = !!AppState.empDetails.canAccessPreviousMonth;
+  const accessibleRequestedMonth =
+    AppState.empDetails.accessibleRequestedMonth || "";
 
   let message = `
     This Daily Report is outside the current editable month.
     You may still view the details, but changes are disabled.
   `;
 
-  if (isPrevMonth && !canAccessPreviousMonth) {
+  if (isPastMonth && canAccessAllMonths) {
+    message = `
+      Past-month access is currently active for your account.
+      You may edit entries for the selected date.
+    `;
+  } else if (isPastMonth && canAccessPreviousMonth) {
+    if (
+      accessibleRequestedMonth &&
+      selectedYearMonth === accessibleRequestedMonth
+    ) {
+      message = `
+        Temporary access is currently active for your account.
+        You may edit entries for ${getMonthYearLabel(selectedDate)} only.
+      `;
+    } else {
+      if (canRequestAccess) {
+        message = `
+          Your temporary access does not cover ${getMonthYearLabel(selectedDate)}.
+          You may still view the details, but changes are disabled.
+        `;
+      } else {
+        message = `
+          Your temporary access does not cover ${getMonthYearLabel(selectedDate)}.
+          You cannot request access. Please coordinate with your group leader.
+        `;
+      }
+    }
+  } else if (isPastMonth && !canAccessPreviousMonth) {
     if (canRequestAccess) {
       message = `
-        Previous-month editing is currently disabled for your account.
+        Past-month editing is currently disabled for your account.
         You may still view the details, but changes are disabled.
       `;
     } else {
       message = `
-        Previous-month editing is currently disabled for your account.
+        Past-month editing is currently disabled for your account.
         You cannot request access. Please coordinate with your group leader.
       `;
     }
-  }
-
-  if (isPrevMonth && canAccessPreviousMonth) {
-    message = `
-      Previous-month access is currently active for your account.
-      You may edit entries for the selected previous-month date.
-    `;
   }
 
   $("#lockingMessage").html(message);

@@ -1,4 +1,4 @@
-Access Request Denied
+Access Request Approved
 
 
   
@@ -9,8 +9,6 @@ Access Request Denied
           
               
                 
-
-
                   
                     
                       
@@ -19,7 +17,7 @@ Access Request Denied
                             Web JMR Systems 
                            
                             
-                              Access Request Denied
+                              Access Request Approved
                             
                             
                               Temporary Daily Report access request update
@@ -35,39 +33,50 @@ Access Request Denied
           
           
           
-						
+                        
             
               
-                  Dear Medrano-san,
+                  Dear Hernandez-san,
               
               
                   Good day.
               
               
-                  The temporary access request for the Daily Report for February 2026 was not approved.
+                  You can now access and update the Daily Report for March 2026.
               
                     
                        
-							
+                            
               
                   
                     
                       
                         
                           
-			
-				
-					
-							 
-					
-					
-					
-					
-						DENIED
-					
-				
-			
-      
+        
+          
+            
+              
+                VALID UNTIL
+              
+            
+            
+              
+                
+                  
+                    
+                      
+                    
+                    
+                    
+                      2026-04-08 04:24 PM
+                    
+                  
+                
+              
+            
+          
+        
                         
                         
                            
@@ -81,12 +90,10 @@ Access Request Denied
                             Employee
                               
                             
-                              
-                              
                             
                             
                             
-                            Collene Keith Medrano
+                            Dexmel Mico Hernandez
                             
                         
                         
@@ -122,7 +129,7 @@ Access Request Denied
                           
                           
                           
-                            February 2026
+                            March 2026
                           
                         
                         
@@ -159,7 +166,25 @@ Access Request Denied
                             
                           
                           
-                            2026-04-07 09:57 AM
+                            2026-04-07 04:24 PM
+                          
+                        
+                        
+                          
+                            
+                              
+                                
+                                  
+                                
+                                
+                                
+                                  Remarks
+                                
+                              
+                            
+                          
+                          
+                            -
                           
                         
                       
@@ -168,23 +193,25 @@ Access Request Denied
               
                                 
               
-        
-          
-           
-             NOTICE
-           
-          
-          
             
-              Access was not granted for this request.
+                  
+                    
+                      IMPORTANT
+                    
+                  
+                  
+                    
+                      This access is temporary and will be automatically locked
+                      at
+                      2026-04-08 04:24 PM.
 
-              Please coordinate with the approver if you believe the
-              request should be reconsidered.
-            
-          
+                      Please complete all necessary updates before this time.
+                    
+                  
+                 
+                
         
-      
-							
+                            
 
               
                 
@@ -212,7 +239,7 @@ Access Request Denied
                     
                   
               
-							
+                            
               
                   
                     

@@ -16,6 +16,8 @@ function buildSubmittedRequestRow(request) {
       data-action-taken-by="${escapeHtml(request.actionTakenBy || "")}"
       data-valid-until="${escapeHtml(request.validUntil || "")}"
       data-requested-by="${escapeHtml(request.requestedByName || "")}"
+      data-request-reason="${escapeHtml(request.requestReason || "")}"
+      data-action-reason="${escapeHtml(request.actionReason || "-")}"
     >
       <td class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium">
         ${escapeHtml(request.requestId)}
@@ -57,6 +59,8 @@ function buildForMeRequestRow(request) {
       data-action-taken-by="${escapeHtml(request.actionTakenBy || "")}"
       data-valid-until="${escapeHtml(request.validUntil || "")}"
       data-requested-by="${escapeHtml(request.requestedByName || "")}"
+      data-request-reason="${escapeHtml(request.requestReason || "")}"
+      data-action-reason="${escapeHtml(request.actionReason || "-")}"
     >
       <td class="border-b border-slate-200 px-4 py-5 text-slate-700 font-medium">
         ${escapeHtml(request.requestId)}
@@ -436,11 +440,11 @@ function renderRequestDetailsModal($row) {
 
   $("#requestDetailsRequestedOn").text($row.data("requested-on") || "—");
   $("#requestDetailsRequestedMonth").text($row.data("requested-month") || "—");
-  $("#requestDetailsReason").text($row.data("reason") || "—");
+  $("#requestDetailsReason").text($row.data("request-reason") || "—");
   $("#requestDetailsStatus").text(statusLabel);
   $("#requestDetailsActionTakenOn").text($row.data("action-taken-on") || "—");
   $("#requestDetailsActionTakenBy").text($row.data("action-taken-by") || "—");
-  $("#requestDetailsRemarks").text($row.data("remarks") || "—");
+  $("#requestDetailsRemarks").text($row.data("action-reason") || "—");
   $("#requestDetailsValidUntil").text(validUntil || "—");
 
   const $chip = $("#requestDetailsChip");

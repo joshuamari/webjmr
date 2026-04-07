@@ -52,6 +52,7 @@ function sendUnlockRequestSubmittedEmail(array $request, array $toEmailMap, arra
     $requesterName = $nameMap[$requesterId] ?? $requesterId;
     $requestedMonthLabel = formatRequestedMonthEmailLabel((string)($request['requested_month'] ?? ''));
     $dateRequestedLabel = formatDateTimeEmailLabel($request['date_requested'] ?? null);
+    $requestReason = $request['request_reason'];
 
     $subject = 'Daily Report Temporary Access Request Submitted';
 
@@ -60,6 +61,7 @@ function sendUnlockRequestSubmittedEmail(array $request, array $toEmailMap, arra
         'requesterName' => $requesterName,
         'requestedMonthLabel' => $requestedMonthLabel,
         'dateRequestedLabel' => $dateRequestedLabel,
+        'requesterReason' => $requestReason,
         'approvalUrl' => 'http://kdt-ph/webJMR/DailyReportApprovals/',
     ]);
 

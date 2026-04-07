@@ -30,7 +30,7 @@ function renderPendingTable() {
   const $tbody = $("#pendingApprovalTableBody");
 
   if (!requests.length) {
-    $tbody.html(renderEmptyRow(4, "No requests found."));
+    $tbody.html(renderEmptyRow(5, "No requests found."));
     return;
   }
 
@@ -70,7 +70,7 @@ function renderActionedTable() {
   const $tbody = $("#actionedApprovalTableBody");
 
   if (!requests.length) {
-    $tbody.html(renderEmptyRow(4, "No requests found."));
+    $tbody.html(renderEmptyRow(5, "No requests found."));
     return;
   }
 
@@ -147,10 +147,12 @@ function renderPendingModal() {
   $("#pendingModalRequestedOn").text(request.requestedOn || "—");
   $("#pendingModalRequestedMonth").text(request.requestedMonthLabel || "—");
 
-  $("#pendingModalRequestedBy").text(request.requestedByName || "—"); // ✅ ADD THIS
+  $("#pendingModalRequestedBy").text(request.requestedByName || "—");
 
   $("#pendingAcceptBtn").attr("data-request-id", request.requestId || "");
   $("#pendingDenyBtn").attr("data-request-id", request.requestId || "");
+  
+  $("#pendingModalReasonForRequest").text(request.requestReason || "—");
 }
 
 function renderActionedModal() {
@@ -172,6 +174,8 @@ function renderActionedModal() {
   $("#actionedModalActionTakenBy").text(request.actionTakenBy || "—");
   $("#actionedModalRequestedBy").text(request.requestedByName || "—");
   $("#actionedModalExpiresOn").text(request.expiringOn || "—");
+  $("#actionedModalReasonForRequest").text(request.requestReason || "—");
+  $("#actionedModalRemarks").text(request.actionReason || "—");
 
   const $chip = $("#actionedModalStatusChip");
   $chip

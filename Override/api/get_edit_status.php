@@ -48,6 +48,7 @@ try {
 
     $canEdit = false;
     $decision = 'default_false';
+    $accessInfo = null;
 
     $debug = [
         "input" => [
@@ -64,10 +65,10 @@ try {
             "isSystemUser" => $isSystemUser,
             "isManager" => $isManager,
         ],
+        "accessInfo" => null,
         "branch" => null,
     ];
 
-    // Absolute overrides first
     if ($isSystemUser) {
         $canEdit = true;
         $decision = 'system_user_override';
@@ -84,11 +85,11 @@ try {
         $debug["branch"] = "current_month";
 
     } elseif ($selectedIndex < $currentIndex) {
-        $canEdit = canAccessPreviousMonth($employeeNumber, $selectedYearMonth);
-        $decision = $canEdit
-            ? 'past_month_allowed'
-            : 'past_month_denied';
+        $accessInfo = getPastMonthAccessInfo($employeeNumber, $selectedYearMonth);
+        $canEdit = !empty($accessInfo['canEditSelectedMonth']);
+        $decision = $canEdit ? 'past_month_allowed' : 'past_month_denied';
         $debug["branch"] = "past_month";
+        $debug["accessInfo"] = $accessInfo;
 
     } else {
         $canEdit = true;
@@ -99,6 +100,8 @@ try {
     echo json_encode([
         "canEdit" => $canEdit,
         "decision" => $decision,
+        "selectedYearMonth" => $selectedYearMonth,
+        "accessInfo" => $accessInfo,
         "debug" => $debug,
     ]);
 

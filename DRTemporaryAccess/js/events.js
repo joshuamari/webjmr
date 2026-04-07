@@ -34,8 +34,8 @@ function bindRequestFormEvents() {
       return;
     }
 
-    const requestReason = $("#requestCreateReason").val() || "";
-    if (!requestReason.trim()) {
+    const requestReason = ($("#requestCreateReason").val() || "").trim();
+    if (!requestReason) {
       alert("Please provide a reason for the temporary access request.");
       return;
     }
@@ -43,7 +43,7 @@ function bindRequestFormEvents() {
     const payload = {
       employee_number: targetEmployeeId,
       requested_month: requestMonth,
-      reason: requestReason.trim(),
+      request_reason: requestReason,
     };
     showLoader();
     $submitBtn.prop("disabled", true);

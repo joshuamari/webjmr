@@ -49,11 +49,12 @@ Format is based on a simplified version of Keep a Changelog.
 - Fixed incorrect month label display (Feb showing as March)
 - Fixed locking message not updating correctly
 - Fixed email recipient issue (approver not included in CC)
+- Fixed month accessing for approved request enabled editing all previous months
 
 ### Notes
 
-- Requires DB column `request_reason`
-- Ensure frontend uses updated textarea ID: `requestCreateReason`
+- Requires DB column `request_reason` and `action_reason`
+- Ensure frontend uses updated textarea ID: `requestReason` and `actionReason`
 
 ---
 

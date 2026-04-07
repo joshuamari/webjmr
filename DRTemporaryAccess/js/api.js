@@ -48,7 +48,6 @@ function createTemporaryAccessRequest(payload) {
     dataType: "json",
     data: payload,
   }).then(function (response) {
-    console.log(response)
     if (!response || response.success !== true) {
       throw response;
     }

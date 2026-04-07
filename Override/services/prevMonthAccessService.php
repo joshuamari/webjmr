@@ -1,26 +1,51 @@
 <?php
 
-function canAccessPreviousMonth($userId) {
-    if (isSystemUser($userId)) {
-        return true;
-    }
-
-    if (isManager($userId)) {
-        return true;
+function getPastMonthAccessInfo($userId, $selectedYearMonth) {
+    if (isSystemUser($userId) || isManager($userId)) {
+        return [
+            'canAccessAllMonths' => true,
+            'canEditSelectedMonth' => true,
+            'requestedMonth' => null,
+        ];
     }
 
     if (!isPreviousMonthLockedBySchedule()) {
-        return true;
+        return [
+            'canAccessAllMonths' => false,
+            'canEditSelectedMonth' => true,
+            'requestedMonth' => $selectedYearMonth,
+        ];
     }
 
-    return hasValidPrevMonthAccessApproval($userId);
+    $approvedRequest = getLatestApprovedPastMonthAccessRequest($userId, $selectedYearMonth);
+
+    if (!$approvedRequest) {
+        return [
+            'canAccessAllMonths' => false,
+            'canEditSelectedMonth' => false,
+            'requestedMonth' => null,
+        ];
+    }
+
+    $isValid = isApprovalStillValid($approvedRequest['expiration_date'] ?? null);
+
+    return [
+        'canAccessAllMonths' => false,
+        'canEditSelectedMonth' => $isValid,
+        'requestedMonth' => $isValid ? (string)($approvedRequest['requested_month'] ?? null) : null,
+    ];
+}
+
+function canAccessPreviousMonth($userId, $selectedYearMonth) {
+    $info = getPastMonthAccessInfo($userId, $selectedYearMonth);
+    return !empty($info['canEditSelectedMonth']);
 }
 
 function isSystemUser($userId) {
     global $connnew;
 
     $sysId = 16;
-    $excludedUserId = 464;
+    $excludedUserId = 510;
 
     $query = "
         SELECT EXISTS(
@@ -126,20 +151,18 @@ function getFirstWorkingDayOfMonth() {
     return null;
 }
 
-function hasValidPrevMonthAccessApproval($userId) {
-    $approvedRequest = getLatestApprovedPrevMonthAccessRequest($userId);
+function hasValidPrevMonthAccessApproval($userId, $selectedYearMonth) {
+    $approvedRequest = getLatestApprovedPastMonthAccessRequest($userId, $selectedYearMonth);
 
     if (!$approvedRequest) {
         return false;
     }
 
-    return isApprovalStillValid($approvedRequest['expiration_date']);
+    return isApprovalStillValid($approvedRequest['expiration_date'] ?? null);
 }
 
-function getLatestApprovedPrevMonthAccessRequest($userId) {
+function getLatestApprovedPastMonthAccessRequest($userId, $selectedYearMonth) {
     global $connwebjmr;
-
-    $requestedMonth = date('Y-m', strtotime('-1 month'));
 
     $query = "
         SELECT
@@ -163,7 +186,7 @@ function getLatestApprovedPrevMonthAccessRequest($userId) {
     $stmt = $connwebjmr->prepare($query);
     $stmt->execute([
         ':userId' => $userId,
-        ':requestedMonth' => $requestedMonth,
+        ':requestedMonth' => $selectedYearMonth,
         ':status' => 'approved',
     ]);
 

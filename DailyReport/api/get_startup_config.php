@@ -6,7 +6,7 @@ try {
     $systemIds = getSystemIds($connwebjmr);
 
     $startupConfig = [
-        ...$systemIds,
+        $systemIds,
 
         'kdtwAccess' => $KDTW_ACCESS,
         'managementPositions' => $MANAGEMENT_POSITIONS,

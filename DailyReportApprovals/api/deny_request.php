@@ -14,7 +14,13 @@ try {
         jsonError('Invalid unlock request ID.', 400);
     }
 
-    $updated = denyUnlockRequest($unlockId, $employeeId);
+    $actionReason = trim((string) requireRequestValue('action_reason', 'Denial reason is required.'));
+
+    if ($actionReason === '') {
+        jsonError('Denial reason cannot be empty.', 400);
+    }
+
+    $updated = denyUnlockRequest($unlockId, $employeeId, $actionReason);
 
     if (!$updated) {
         jsonError('Request was already processed or not found.', 409);

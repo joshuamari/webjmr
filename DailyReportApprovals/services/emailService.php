@@ -14,6 +14,7 @@ function sendUnlockRequestDecisionEmail(array $request, array $emailMap, array $
     $requesterId = (string)($request['requested_by'] ?? '');
     $approverId = (string)($request['action_by'] ?? '');
     $status = strtolower(trim((string)($request['status'] ?? '')));
+    $actionReason = strtolower(trim((string)($request['action_reason'] ?? '-')));
 
     error_log('sendUnlockRequestDecisionEmail: employeeId=' . $employeeId . ', requesterId=' . $requesterId . ', approverId=' . $approverId . ', status=' . $status);
     error_log('sendUnlockRequestDecisionEmail: raw emailMap=' . json_encode($emailMap));
@@ -79,6 +80,7 @@ error_log('sendUnlockRequestDecisionEmail: to=' . $to);
         'requestedMonthLabel' => $requestedMonthLabel,
         'approverName' => $approverName,
         'actionAtLabel' => $actionAtLabel,
+        'actionReason' => $actionReason,
         'expirationLabel' => $expirationLabel,
         'tempAccessUrl' => 'http://kdt-ph/webJMR/DRTemporaryAccess/',
     ]);
@@ -170,7 +172,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
     $requestedMonthLabel = htmlspecialchars((string)($data['requestedMonthLabel'] ?? '—'));
     $approverName = htmlspecialchars((string)($data['approverName'] ?? '—'));
     $actionAtLabel = htmlspecialchars((string)($data['actionAtLabel'] ?? '—'));
-    $remarks = htmlspecialchars((string)($data['remarks'] ?? '—'));//ADD REMARKS DITO
+    $remarks = htmlspecialchars((string)($data['actionReason'] ?? '—'));//ADD REMARKS DITO
     $expirationLabel = htmlspecialchars((string)($data['expirationLabel'] ?? '—'));
     $tempAccessUrl = htmlspecialchars((string)($data['tempAccessUrl'] ?? '#'));
 
@@ -677,7 +679,11 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                           </td>
                         </tr>
                         <tr>
-                          <td style="width: 50%; padding: 14px 18px">
+                          <td style="
+                              width: 50%;
+                              padding: 14px 18px;
+                              border-bottom: 1px solid #e4e8f4;
+                            ">
                             <table
                               role="presentation"
                               cellpadding="0"
@@ -707,6 +713,7 @@ function buildUnlockRequestDecisionEmailBody(array $data): string
                               padding: 14px 16px;
                               font-size: 15px;
                               color: #25324b;
+                              border-bottom: 1px solid #e4e8f4;
                             "
                           >
                             {$actionAtLabel}

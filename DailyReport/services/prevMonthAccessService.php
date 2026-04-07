@@ -1,26 +1,51 @@
 <?php
 
-function canAccessPreviousMonth($userId) {
-    if (isSystemUser($userId)) {
-        return true;
-    }
-
-    if (isManager($userId)) {
-        return true;
+function getPreviousMonthAccessInfo($userId) {
+    if (isSystemUser($userId) || isManager($userId)) {
+        return [
+            'canAccessAllMonths' => true,
+            'canAccessPreviousMonth' => true,
+            'requestedMonth' => null,
+        ];
     }
 
     if (!isPreviousMonthLockedBySchedule()) {
-        return true;
+        return [
+            'canAccessAllMonths' => false,
+            'canAccessPreviousMonth' => true,
+            'requestedMonth' => date('Y-m', strtotime('-1 month')),
+        ];
     }
 
-    return hasValidPrevMonthAccessApproval($userId);
+    $approvedRequest = getLatestApprovedPrevMonthAccessRequest($userId);
+
+    if (!$approvedRequest) {
+        return [
+            'canAccessAllMonths' => false,
+            'canAccessPreviousMonth' => false,
+            'requestedMonth' => null,
+        ];
+    }
+
+    $isValid = isApprovalStillValid($approvedRequest['expiration_date'] ?? null);
+
+    return [
+        'canAccessAllMonths' => false,
+        'canAccessPreviousMonth' => $isValid,
+        'requestedMonth' => $isValid ? (string)($approvedRequest['requested_month'] ?? null) : null,
+    ];
+}
+
+function canAccessPreviousMonth($userId) {
+    $info = getPreviousMonthAccessInfo($userId);
+    return !empty($info['canAccessPreviousMonth']);
 }
 
 function isSystemUser($userId) {
     global $connnew;
 
     $sysId = 16;
-    $excludedUserId = 464;
+    $excludedUserId = 510;
 
     $query = "
         SELECT EXISTS(
@@ -133,7 +158,7 @@ function hasValidPrevMonthAccessApproval($userId) {
         return false;
     }
 
-    return isApprovalStillValid($approvedRequest['expiration_date']);
+    return isApprovalStillValid($approvedRequest['expiration_date'] ?? null);
 }
 
 function getLatestApprovedPrevMonthAccessRequest($userId) {

@@ -166,7 +166,7 @@ function approveRequest(requestId) {
 function denyRequest(requestId, reason) {
   return postJson(
     "api/deny_request.php",
-    { unlockId: requestId, remarks: reason },
+    { unlockId: requestId, action_reason: reason },
     "Failed to deny request.",
   );
 }
