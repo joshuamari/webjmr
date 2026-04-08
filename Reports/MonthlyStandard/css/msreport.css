@@ -21,27 +21,12 @@ h6 {
 }
 td,
 th {
-  border: 0.5px solid #a19f9f !important;
+  border: 0.5px solid #777 !important;
   color: #333;
   text-align: center;
   vertical-align: middle;
   white-space: nowrap;
-  min-width: 40px;
-  padding: 8px 4px !important;
-  font-size: 14px;
 }
-th,
-td {
-  border-left: 0.5px !important;
-  border-bottom: 0.5px !important;
-  text-align: center !important;
-}
-#mainTable,
-#subTable {
-  border-left: 0.5px solid #a19f9f !important;
-  border-bottom: 0.5px solid #a19f9f !important;
-}
-
 .table.ayos thead tr th {
   background-color: #fff !important;
 }
@@ -167,8 +152,7 @@ body {
   padding: 10px 20px;
   border-radius: 8px;
 }
-.lower .noShow,
-.lottieCont {
+.lower .noShow {
   background-color: #ededed;
   width: calc(100% - 300px);
 }
@@ -195,8 +179,7 @@ body {
   display: flex;
   justify-content: center;
 }
-.wfh {
-}
+
 .cs-loader-inner {
   transform: translateY(-50%);
   top: 50%;
@@ -212,34 +195,6 @@ body {
   opacity: 0;
   display: inline-block;
   color: var(--main-blue);
-}
-
-.halfDay {
-  background-color: #ffa500 !important;
-}
-.holiday {
-  background-color: #f08080;
-}
-.jmrHours {
-  background-color: #a80000;
-}
-.invalid {
-  background-color: #ff0000;
-}
-.noInOut {
-  background-color: #ffff00 !important;
-}
-.ams {
-  background-color: #ff6cff;
-}
-.wfh {
-  background-color: #ffc0cb;
-}
-.amsSelected {
-  background-color: #d3d3d3;
-}
-.overStay {
-  background-color: #00ffff;
 }
 
 /* checkbox */
@@ -392,8 +347,7 @@ body {
     margin-top: 20px;
   }
   .lower .right,
-  .lower .noShow,
-  .lower .lottieCont {
+  .lower .noShow {
     height: 100%;
     width: 100%;
   }

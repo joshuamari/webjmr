@@ -33,9 +33,6 @@ try {
   $solProjQ = "SELECT fldID FROM projectstable WHERE fldProject='Development, Analysis & IT'";
   $solProjStmt = $connwebjmr->query($solProjQ);
   $solProjID = $solProjStmt->fetchColumn();
-  $wfhQ = "SELECT fldID FROM dispatch_locations WHERE fldLocation = 'WFH'";
-  $wfhStmt = $connwebjmr->query($wfhQ);
-  $wfhID = $wfhStmt->fetchColumn();
 } catch (PDOException $e) {
   echo "Connection failed: " . $e->getMessage();
 }

@@ -9,9 +9,9 @@ date_default_timezone_set('Asia/Manila');
 
 #region initialize variables
 $output = array();
-$empNum = 0;
-if (!empty($_POST['empNum'])) {
-    $empNum = (int)$_POST['empNum'];
+$empNum = '';
+if (isset($_REQUEST['empNum'])) {
+    $empNum = $_REQUEST['empNum'];
 }
 #endregion
 

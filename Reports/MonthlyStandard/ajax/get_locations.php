@@ -13,14 +13,18 @@ $output = array();
 
 #region main
 
-$locationQ = "SELECT * FROM dispatch_locations ORDER BY fldCode,fldID";
+$locationQ = "SELECT * FROM dispatch_locations WHERE fldActive=1 ORDER BY fldCode,fldID";
 $locationStmt = $connwebjmr->query($locationQ);
 if ($locationStmt->rowCount() > 0) {
     $locArr = $locationStmt->fetchAll();
     foreach ($locArr as $locs) {
         $locID = $locs['fldID'];
         $locName = $locs['fldLocation'];
-        $output[$locID] = $locName;
+        // $output[$locID] = $locName;
+        $output[] = [
+            'id' => $locID,
+            'name' => $locName
+        ];
     }
 }
 #endregion
