@@ -29,6 +29,29 @@ Format is based on a simplified version of Keep a Changelog.
 - Optional context, warnings, or migration notes
 
 ---
+## [2026-04-08] - Startup Config Fix & Management Item Update
+
+### Added
+
+- Added new item selection for Management projects (for GM use case)
+- Inserted corresponding records in itemofworkstable, itemlabels, and drawingreference
+- Updated item priority for proper ordering
+
+### Changed
+
+- Aligned local MonthlyStandard folder with deployed server version to prevent environment mismatch
+
+### Fixed
+
+- Fixed broken get_startup_config.php response caused by removing array unpacking (...$systemIds)
+- Restored correct data structure being sent to frontend
+
+### Notes
+
+- Backend compatibility issue identified (older PHP version does not support array unpacking)
+- Be careful when modifying data structures shared with frontend — silent breakages will cascade
+
+---
 
 ## [2026-04-07] - DR Unlock Improvements
 
