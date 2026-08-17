@@ -86,6 +86,7 @@ function startPage() {
 
   updateLockedMonthLabel();
   evaluateMonthLock();
+  hideOvertimeButton();
 }
 
 function initializeDate() {
