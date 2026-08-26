@@ -45,24 +45,26 @@ function isSystemUser($userId) {
     global $connnew;
 
     $sysId = 16;
-    $excludedUserId = 510;
+    $excludedUserIds = [464,212]; // add more here later
+
+    $placeholders = implode(',', array_fill(0, count($excludedUserIds), '?'));
 
     $query = "
         SELECT EXISTS(
             SELECT 1
             FROM employee_list
-            WHERE group_id = :sysId
-              AND id = :userId
-              AND id <> :excluded
+            WHERE group_id = ?
+              AND id = ?
+              AND id NOT IN ($placeholders)
         )
     ";
 
     $stmt = $connnew->prepare($query);
-    $stmt->execute([
-        ':sysId' => $sysId,
-        ':userId' => $userId,
-        ':excluded' => $excludedUserId
-    ]);
+
+    // Merge params in correct order
+    $params = array_merge([$sysId, $userId], $excludedUserIds);
+
+    $stmt->execute($params);
 
     return (bool)$stmt->fetchColumn();
 }

@@ -171,6 +171,22 @@ function isPreviousMonth(dateString) {
   return false;
 }
 
+function isFutureMonth(dateString) {
+  const selected = parseYMDLocal(dateString);
+  if (!selected) return false;
+
+  const phNow = getPHNowParts();
+
+  if (selected.year > phNow.year) return true;
+
+  if (selected.year === phNow.year && selected.month > phNow.month) {
+    return true;
+  }
+
+  return false;
+}
+
+
 function canEditSelectedDate(dateString) {
   if (!dateString) return false;
 
@@ -182,6 +198,11 @@ function canEditSelectedDate(dateString) {
   if (isCurrentMonth(dateString)) {
     return true;
   }
+
+  if (isFutureMonth(dateString)) {
+    return true;
+  }
+
 
   if (!isPreviousMonth(dateString)) {
     return false;
