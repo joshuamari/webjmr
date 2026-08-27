@@ -29,6 +29,20 @@ Format is based on a simplified version of Keep a Changelog.
 - Optional context, warnings, or migration notes
 
 ---
+## [2026-08-27] - Add Research & Development Item (KIA)
+
+### Added
+
+- Added shared Item of Work `Research & Development` under KDT Internal Activities (project ID 2)
+- Added idempotent migration under `SQL/migrations/` for other developers to apply
+
+### Notes
+
+- Item uses `fldGroup = NULL` (visible to all groups) and `fldPriority = 0`
+- No JRDs are seeded; each group will manage their own JRDs via JMC in a later phase
+- Run: `php SQL/migrations/20260827_add_research_and_development_item.php`
+
+---
 ## [2026-04-08] - Startup Config Fix & Management Item Update
 
 ### Added

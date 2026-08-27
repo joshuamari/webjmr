@@ -44,6 +44,7 @@ date_default_timezone_set('Asia/Manila');
     (7, '2', 'Meeting (Kaizen, Outing or Year-end party related to KDT)', NULL, 1, 0, 0),
     (8, '2', 'Kaizen', NULL, 1, 0, 0),
     (9, '2', 'Presentation', NULL, 1, 0, 0),
+    (32, '2', 'Research & Development', NULL, 1, 0, 0),
     (10, '3', 'Training for KDT engineer (Prior approval from KHI)', NULL, 1, 0, 0),
     (11, '3', 'Training for New Employee (3 Months)', NULL, 1, 0, 0),
     (12, '3', 'Trainer for KHI Engineer', NULL, 1, 0, 0),
