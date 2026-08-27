@@ -42,6 +42,11 @@ Format is based on a simplified version of Keep a Changelog.
 - JMC exception for R&D under KIA: drill-down + Add/Edit/Delete/Activate JRD enabled; other KIA items unchanged
 - JMC: fixed default-project ID checks so Meeting/Kaizen/Presentation/Hiring no longer show clickable JRD drill-down (R&D only)
 - Daily Report: R&D under KIA requires manual JRD selection; lists only the selected group's JRDs (other KIA items still auto-select)
+- Daily Report: automatic cache-busting via `filemtime` (`index.php` + `lib/assets.php`) so users do not need hard refresh after deploys
+
+### Removed
+
+- Daily Report unused leftovers: `DR_v3.js`, `newDR.js`, `jquery.table2excel.js`, `neoBootstrap.css`, `index.css`, `fonts/font/demo.html`
 
 ### Notes
 
@@ -49,6 +54,8 @@ Format is based on a simplified version of Keep a Changelog.
 - No JRDs are seeded; each group will manage their own JRDs via JMC
 - Run: `php SQL/migrations/20260827_add_research_and_development_item.php`
 - R&D item ID resolved by name via `JMC/ajax/get_rditem_id.php`
+- Kept `overtimeTest.js` (still referenced / may be re-enabled)
+- Open Daily Report via `/DailyReport/` (serves `index.php`); old `index.html` redirects there
 
 ---
 ## [2026-04-08] - Startup Config Fix & Management Item Update
