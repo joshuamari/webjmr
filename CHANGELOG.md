@@ -35,12 +35,19 @@ Format is based on a simplified version of Keep a Changelog.
 
 - Added shared Item of Work `Research & Development` under KDT Internal Activities (project ID 2)
 - Added idempotent migration under `SQL/migrations/` for other developers to apply
+- JMC: managers can open R&D and manage group-owned JRDs (title only; scoped by `#myGroup`)
+
+### Changed
+
+- JMC exception for R&D under KIA: drill-down + Add/Edit/Delete/Activate JRD enabled; other KIA items unchanged
+- JMC: fixed default-project ID checks so Meeting/Kaizen/Presentation/Hiring no longer show clickable JRD drill-down (R&D only)
 
 ### Notes
 
 - Item uses `fldGroup = NULL` (visible to all groups) and `fldPriority = 0`
-- No JRDs are seeded; each group will manage their own JRDs via JMC in a later phase
+- No JRDs are seeded; each group will manage their own JRDs via JMC
 - Run: `php SQL/migrations/20260827_add_research_and_development_item.php`
+- R&D item ID resolved by name via `JMC/ajax/get_rditem_id.php`
 
 ---
 ## [2026-04-08] - Startup Config Fix & Management Item Update

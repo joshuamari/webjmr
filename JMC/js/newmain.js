@@ -18,6 +18,7 @@ var buicEdit = ``;
 var shareAccess = ``;
 const solProjID = getSolProjID();
 const trainingProjID = getTrainingProjID();
+const rdItemID = getRdItemID();
 const noMoreInputItems = getNoMoreInputItems();
 const allAccess = getAllAccess();
 //#endregion
@@ -480,11 +481,57 @@ function projRow(projArrayElement) {
 }
 function ifEditable(trID) {
   //check if non default
-  var vool = false;
-  if (!defaults.includes(trID)) {
-    vool = true;
-  }
-  return vool;
+  return !isDefaultProject(trID);
+}
+function normalizeId(id) {
+  return String(id ?? "");
+}
+function isDefaultProject(projectId) {
+  return defaults.some(function (project) {
+    return normalizeId(project) === normalizeId(projectId);
+  });
+}
+function isNoMoreInputItem(itemId) {
+  return noMoreInputItems.some(function (item) {
+    return normalizeId(item) === normalizeId(itemId);
+  });
+}
+function isSolProject(projectId) {
+  return normalizeId(projectId) === normalizeId(solProjID);
+}
+function isTrainingProject(projectId) {
+  return normalizeId(projectId) === normalizeId(trainingProjID);
+}
+function canManageItemsForProject(projectId) {
+  return (
+    !isDefaultProject(projectId) ||
+    isSolProject(projectId) ||
+    isTrainingProject(projectId)
+  );
+}
+function isResearchAndDevelopmentItem(itemID) {
+  return Boolean(rdItemID) && normalizeId(itemID) === normalizeId(rdItemID);
+}
+function canOpenItemJrdPage(itemId) {
+  return (
+    (canManageItemsForProject(selectedProject) &&
+      !isNoMoreInputItem(itemId)) ||
+    isResearchAndDevelopmentItem(itemId)
+  );
+}
+function canManageItemRow(itemId) {
+  return (
+    canManageItemsForProject(selectedProject) && !isNoMoreInputItem(itemId)
+  );
+}
+function canManageJrdForSelection() {
+  return (
+    ifEditable(selectedProject) ||
+    isSolProject(selectedProject) ||
+    (isTrainingProject(selectedProject) &&
+      allAccess.includes(empDetails["empNum"])) ||
+    isResearchAndDevelopmentItem(selectedItems)
+  );
 }
 function getGOWJob() {
   //get draw ref for GOW
@@ -725,14 +772,12 @@ function itemRow(itemArrayElement) {
     draggable = "dontMove";
   }
   var nonDefaults = ``;
-  var clickable = `hoverItemNext`;
-  var title = `Click to go to Job Request Description`;
-  if (
-    (!defaults.includes(selectedProject) ||
-      selectedProject == solProjID ||
-      selectedProject == trainingProjID) &&
-    !noMoreInputItems.includes(trID)
-  ) {
+  var canManageItem = canManageItemRow(trID);
+  var canOpenJrd = canOpenItemJrdPage(trID);
+  var clickable = canOpenJrd ? `hoverItemNext` : ``;
+  var title = canOpenJrd ? `Click to go to Job Request Description` : ``;
+
+  if (canManageItem) {
     nonDefaults = `
     <td>
       <div class="form-check form-switch p-0">
@@ -746,8 +791,6 @@ function itemRow(itemArrayElement) {
   } else {
     nonDefaults = `<td></td><td></td>`;
     draggable = "dontMove";
-    clickable = ``;
-    title = ``;
   }
 
   var addString = `<tr class=" text-center ${draggable}" id="i_${trID}">
@@ -894,12 +937,7 @@ function jobRow(jobArrayElement) {
     draggable = "dontMove";
   }
   var nonDefaults = ``;
-  if (
-    ifEditable(selectedProject) ||
-    (selectedProject == trainingProjID &&
-      allAccess.includes(empDetails["empNum"])) ||
-    selectedProject == solProjID
-  ) {
+  if (canManageJrdForSelection()) {
     nonDefaults = `
     <td>
       <div class="form-check form-switch p-0">
@@ -937,14 +975,7 @@ function jobRow(jobArrayElement) {
 }
 function defaultDrawref() {
   //check if drawref for non engineering
-  var sProj = selectedProject;
-  var isSame = false;
-  defaults.forEach((element) => {
-    if (sProj == element) {
-      isSame = true;
-    }
-  });
-  return isSame;
+  return isDefaultProject(selectedProject);
 }
 function addJob() {
   //add jrd to database
@@ -1003,7 +1034,7 @@ function deleteJob(jobID) {
 function checkJRDADD() {
   //check if jrd add has engineering fields
   $(".engr").remove();
-  if (!defaults.includes(selectedProject)) {
+  if (!isDefaultProject(selectedProject)) {
     $("#afterEngr").after(`<div class="col-12 mb-2 engr">
     <label for="jrdSheet" class="form-label">No. of Sheet</label>
     <input type="number" placeholder="#" class="form-control" id="jrdSheet"  min="0" required/>
@@ -1062,7 +1093,7 @@ function checkJRDADD() {
 function checkItemAdd() {
   //check if selected project can add itemofworks
   $("#divAddItem").remove();
-  if (!defaults.includes(selectedProject)) {
+  if (!isDefaultProject(selectedProject)) {
     $("#afteritem").after(
       `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddItem">
       <button class="btn btn-add fw-bold text-center shadow w-100"
@@ -1075,12 +1106,7 @@ function checkJRDAddDiv() {
   //check if selected project can add jrd
   $("#divAddJRD").remove();
   // console.log(!defaults.includes(selectedProject) || selectedProject==solProjID || (selectedProject==trainingProjID && allAccess.includes(empDetails['empNum'])))
-  if (
-    !defaults.includes(selectedProject) ||
-    selectedProject == solProjID ||
-    (selectedProject == trainingProjID &&
-      allAccess.includes(empDetails["empNum"]))
-  ) {
+  if (canManageJrdForSelection()) {
     $("#afterjrd").after(
       `<div class="col-12 col-lg-2 d-flex justify-content-end" id="divAddJRD">
       <button class="btn btn-add fw-bold text-center shadow w-100"
@@ -1093,7 +1119,7 @@ function checkJRDEdit() {
   //check if jrd edit has engineering fields
   var vool = true;
   // var defs=['1','2','3','4','5']
-  if (defaults.includes(selectedProject)) {
+  if (isDefaultProject(selectedProject)) {
     vool = false;
   }
   return vool;
@@ -1236,6 +1262,18 @@ function getTrainingProjID() {
     async: false,
   });
   return trID;
+}
+function getRdItemID() {
+  //get database id of Research & Development item under KIA
+  var itemID = ``;
+  $.ajax({
+    url: "ajax/get_rditem_id.php",
+    success: function (data) {
+      itemID = data.trim();
+    },
+    async: false,
+  });
+  return itemID;
 }
 function getNoMoreInputItems() {
   //get ids of no more input items
