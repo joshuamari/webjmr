@@ -43,10 +43,12 @@ Format is based on a simplified version of Keep a Changelog.
 - JMC: fixed default-project ID checks so Meeting/Kaizen/Presentation/Hiring no longer show clickable JRD drill-down (R&D only)
 - Daily Report: R&D under KIA requires manual JRD selection; lists only the selected group's JRDs (other KIA items still auto-select)
 - Daily Report: automatic cache-busting via `filemtime` (`index.php` + `lib/assets.php`) so users do not need hard refresh after deploys
+- JMC: automatic cache-busting via `filemtime` (`index.php` + `lib/assets.php`)
 
 ### Removed
 
 - Daily Report unused leftovers: `DR_v3.js`, `newDR.js`, `jquery.table2excel.js`, `neoBootstrap.css`, `index.css`, `fonts/font/demo.html`
+- JMC unused leftovers: `selectpicker.js/css`, `w3-kawasaki.css`, `bootstrap.bundle.min.js`, `get_version.php`, `fonts/font/demo.html`, unused jQuery UI package extras (kept `jquery-ui.min.js`)
 
 ### Notes
 
