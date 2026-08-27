@@ -19,6 +19,7 @@ if ($itemID <= 0) {
 try {
     $systemIds = getSystemIds($connwebjmr);
     $trainProjID = (int) ($systemIds['trainProjID'] ?? 0);
+    $rdItemID = (int) ($systemIds['rdItemID'] ?? 0);
     $empGroupAbbr = $empGroupId > 0 ? getGroupAbbreviation($connnew, $empGroupId) : '';
     $sharedProjectIds = getSharedProjectIds($connwebjmr, $empNum);
 
@@ -47,7 +48,11 @@ try {
         "fldGroup IS NULL",
     ];
 
-    if (!empty($sharedProjectIds)) {
+    if ($itemID === $rdItemID) {
+        $groupConditions = [
+            "fldGroup = :empGroup",
+        ];
+    } elseif (!empty($sharedProjectIds)) {
         $sharedPlaceholders = [];
 
         foreach ($sharedProjectIds as $index => $sharedProjectId) {

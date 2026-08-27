@@ -48,6 +48,7 @@ async function loadInitialData() {
   AppState.otherID = config.otherID || null;
   AppState.mngID = config.mngID || null;
   AppState.kiaID = config.kiaID || null;
+  AppState.rdItemID = config.rdItemID || null;
   AppState.noMoreInputItems = config.noMoreInputItems || [];
   AppState.oneBUTrainerID = config.oneBUTrainerID || null;
 

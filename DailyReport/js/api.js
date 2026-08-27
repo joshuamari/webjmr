@@ -157,7 +157,7 @@ function getJobs(projID, itemID) {
     const jobs = response.data || [];
     sequenceValidation();
 
-    if (projID == AppState.mngID || projID == AppState.kiaID) {
+    if (shouldAutoSelectJrd(projID, itemID)) {
       $($("#idJRD").children()[1]).prop("selected", true).change();
     }
 

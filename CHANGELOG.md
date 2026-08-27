@@ -41,6 +41,7 @@ Format is based on a simplified version of Keep a Changelog.
 
 - JMC exception for R&D under KIA: drill-down + Add/Edit/Delete/Activate JRD enabled; other KIA items unchanged
 - JMC: fixed default-project ID checks so Meeting/Kaizen/Presentation/Hiring no longer show clickable JRD drill-down (R&D only)
+- Daily Report: R&D under KIA requires manual JRD selection; lists only the selected group's JRDs (other KIA items still auto-select)
 
 ### Notes
 

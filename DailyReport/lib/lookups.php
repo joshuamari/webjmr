@@ -38,6 +38,20 @@ function getItemIdByName(PDO $conn, string $itemName): int
     );
 }
 
+function getRdItemId(PDO $conn): int
+{
+    return fetchSingleId(
+        $conn,
+        "SELECT i.fldID
+         FROM itemofworkstable AS i
+         JOIN projectstable AS p ON p.fldID = i.fldProject
+         WHERE p.fldProject = 'KDT Internal Activities'
+           AND i.fldItem = 'Research & Development'
+           AND i.fldDelete = '0'
+         LIMIT 1"
+    );
+}
+
 function getSystemIds(PDO $conn): array
 {
     static $cache = null;
@@ -56,6 +70,7 @@ function getSystemIds(PDO $conn): array
             $conn,
             'Trainer for One BU Participants- [100% KHI]'
         ),
+        'rdItemID' => getRdItemId($conn),
         'defaults' => fetchIntList(
             $conn,
             "SELECT fldID FROM projectstable WHERE fldDirect = 0 AND fldDelete = 0"

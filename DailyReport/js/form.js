@@ -436,3 +436,25 @@ function resetDependentSelectionsAfterGroupChange() {
   $("#idRev").prop("checked", false);
   sequenceValidation();
 }
+
+function normalizeConfigId(id) {
+  return String(id ?? "");
+}
+
+function isResearchAndDevelopmentItem(itemID) {
+  return (
+    Boolean(AppState.rdItemID) &&
+    normalizeConfigId(itemID) === normalizeConfigId(AppState.rdItemID)
+  );
+}
+
+function shouldAutoSelectJrd(projID, itemID) {
+  if (isResearchAndDevelopmentItem(itemID)) {
+    return false;
+  }
+
+  return (
+    normalizeConfigId(projID) === normalizeConfigId(AppState.mngID) ||
+    normalizeConfigId(projID) === normalizeConfigId(AppState.kiaID)
+  );
+}

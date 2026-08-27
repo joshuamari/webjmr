@@ -10,6 +10,7 @@ const AppState = {
   otherID: null,
   mngID: null,
   kiaID: null,
+  rdItemID: null,
   solProjID: null,
   trainProjID: null,
   noMoreInputItems: [],
