@@ -73,6 +73,7 @@ function startPage() {
   sequenceValidation();
   initCalendar();
   getPlans();
+  // hideOvertimeButton();
 
   $(".cs-loader").fadeOut(1000);
   const btn = document.getElementById("btnRequestAccess");
