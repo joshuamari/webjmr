@@ -35,10 +35,12 @@ checkAccess()
                 .find(`option[grp-id="${empDetails.group_id}"]`)
                 .prop("selected", true);
               $("#buSel").change();
+              return;
             }
+            alert(grps.message || "Could not load groups.");
           })
           .catch((error) => {
-            alert(error);
+            alert(mhAlertText(error));
           });
       });
     } else {
@@ -47,7 +49,7 @@ checkAccess()
     }
   })
   .catch((error) => {
-    alert(error);
+    alert(mhAlertText(error));
   });
 
 //#region BINDS
@@ -76,6 +78,56 @@ $(document).on("change", "#CO", function () {
 //#endregion
 
 //#region FUNCTIONS
+function mhAlertText(error) {
+  if (!error) {
+    return "Could not load MH Report data.";
+  }
+  if (typeof error === "string") {
+    return error;
+  }
+  return error.message || "Could not load MH Report data.";
+}
+
+function mhAjaxMessage(xhr, fallback) {
+  if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+    return xhr.responseJSON.message;
+  }
+  if (xhr && xhr.responseText) {
+    try {
+      var parsed = JSON.parse(xhr.responseText);
+      if (parsed && parsed.message) {
+        return parsed.message;
+      }
+    } catch (ignore) {}
+  }
+  if (xhr && xhr.status === 404) {
+    return "Not Found Error: The requested resource was not found.";
+  }
+  return fallback;
+}
+
+function mhPostJson(url, data) {
+  var result = null;
+  var failedMessage = null;
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: data,
+    dataType: "json",
+    async: false,
+    success: function (response) {
+      result = response;
+    },
+    error: function (xhr) {
+      failedMessage = mhAjaxMessage(xhr, "Could not load MH Report data.");
+    },
+  });
+  if (failedMessage) {
+    throw new Error(failedMessage);
+  }
+  return result;
+}
+
 function checkAccess() {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -83,19 +135,15 @@ function checkAccess() {
       url: "php/get_mh_access.php",
       dataType: "json",
       success: function (response) {
-        const emp = response;
-        resolve(emp);
+        resolve(response);
       },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          reject("Not Found Error: The requested resource was not found.");
-        } else if (xhr.status === 500) {
-          reject("Internal Server Error: There was a server error.");
-        } else {
-          reject(
+      error: function (xhr) {
+        reject(
+          mhAjaxMessage(
+            xhr,
             "An error occurred in the PHP script while checking login details."
-          );
-        }
+          )
+        );
       },
     });
   });
@@ -118,16 +166,13 @@ function getGroups() {
         const grps = response;
         resolve(grps);
       },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          reject("Not Found Error: The requested resource was not found.");
-        } else if (xhr.status === 500) {
-          reject("Internal Server Error: There was a server error.");
-        } else {
-          reject(
+      error: function (xhr) {
+        reject(
+          mhAjaxMessage(
+            xhr,
             "An error occurred in the PHP script while fetching group details."
-          );
-        }
+          )
+        );
       },
     });
   });
@@ -141,146 +186,62 @@ function fillGroups(grps) {
     );
   });
 }
+function mhReportFilters() {
+  return {
+    getYMSel: $("#monthSel").val(),
+    getHalfSel: $("#CO").val(),
+    getGroup: $("#buSel").val(),
+  };
+}
+
 function getTable() {
-  $.ajaxSetup({ async: false });
-  var _testHeader = getTestHeader();
-  var _empList = getEmplist();
-  var _entries = getEntries();
-  var _mgaNahiram = getMgaNahiram();
-  var _hiramEntries = getHiramEntries();
-  var _mngkdt = getMngKdt();
-  var _getGroup = $("#buSel").val();
-  createTable(
-    _testHeader,
-    _empList,
-    _entries,
-    _mgaNahiram,
-    _hiramEntries,
-    _mngkdt,
-    _getGroup
-  );
-  $(".xTot").each(function () {
-    var content = $(this).text();
-    // Check if the content is numerical
-    if ($.isNumeric(content)) {
-      $(this).attr("data-t", "n"); // Change the 'data-t' attribute to 'n'
-    }
-  });
-  $.ajaxSetup({ async: true });
+  if (!$("#buSel").val()) {
+    return;
+  }
+  try {
+    var _testHeader = getTestHeader();
+    var _empList = getEmplist();
+    var _entries = getEntries();
+    var _mgaNahiram = getMgaNahiram();
+    var _hiramEntries = getHiramEntries();
+    var _mngkdt = getMngKdt();
+    var _getGroup = $("#buSel").val();
+    createTable(
+      _testHeader,
+      _empList,
+      _entries,
+      _mgaNahiram,
+      _hiramEntries,
+      _mngkdt,
+      _getGroup
+    );
+    $(".xTot").each(function () {
+      var content = $(this).text();
+      if ($.isNumeric(content)) {
+        $(this).attr("data-t", "n");
+      }
+    });
+  } catch (error) {
+    alert(mhAlertText(error));
+  }
 }
 function getTestHeader() {
-  var tHeader = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_testheader.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      tHeader = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return tHeader;
+  return mhPostJson("php/get_testheader.php", mhReportFilters()) || [];
 }
 function getEmplist() {
-  var eList = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_emplist.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      eList = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return eList;
+  return mhPostJson("php/get_emplist.php", mhReportFilters()) || [];
 }
 function getEntries() {
-  var entrs = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_entries.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      entrs = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return entrs;
+  return mhPostJson("php/get_entries.php", mhReportFilters()) || [];
 }
 function getMgaNahiram() {
-  var mgaNhiram = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_mganahiram.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      mgaNhiram = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return mgaNhiram;
+  return mhPostJson("php/get_mganahiram.php", mhReportFilters()) || [];
 }
 function getHiramEntries() {
-  var hramEntries = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_hiram_entries.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      hramEntries = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return hramEntries;
+  return mhPostJson("php/get_hiram_entries.php", mhReportFilters()) || [];
 }
 function getMngKdt() {
-  var mngakdt = [];
-  var getYMSel = $(`#monthSel`).val();
-  var getHalfSel = $(`#CO`).val();
-  $.post(
-    "php/get_mngkdt.php",
-    {
-      getYMSel: getYMSel,
-      getHalfSel: getHalfSel,
-      getGroup: $("#buSel").val(),
-    },
-    function (data) {
-      // console.log(data);
-      mngakdt = $.parseJSON(data);
-    },
-    (async = false)
-  );
-  return mngakdt;
+  return mhPostJson("php/get_mngkdt.php", mhReportFilters()) || [];
 }
 function createTable(
   mainProjects,
@@ -591,7 +552,8 @@ $(document).on("click", "#btnPrint", function () {
 });
 
 $(document).on("click", "#btnExport", function () {
-  var addString = `
+  try {
+    var addString = `
   <tr class="fx" style="display:none">
   <th data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-a-h="center" data-a-v="middle">${$(
     "#buSel"
@@ -619,24 +581,34 @@ $(document).on("click", "#btnExport", function () {
   });
   $(".fx").remove();
   $("#mainTable").addClass("ayos");
+  } catch (error) {
+    $(".fx").remove();
+    alert(mhAlertText(error));
+  }
 });
 
 function exportName() {
-  $.ajaxSetup({ async: false });
-  var expName = ``;
-  var ymSel = $("#monthSel").val();
-  var cOff = $("#CO").val();
-  $.post(
-    "php/get_exportname.php",
-    {
-      ymSel: ymSel,
-      cOff: cOff,
+  var expName = "";
+  var failedMessage = null;
+  $.ajax({
+    type: "POST",
+    url: "php/get_exportname.php",
+    data: {
+      ymSel: $("#monthSel").val(),
+      cOff: $("#CO").val(),
     },
-    function (data) {
+    dataType: "text",
+    async: false,
+    success: function (data) {
       expName = data;
-    }
-  );
-  $.ajaxSetup({ async: true });
+    },
+    error: function (xhr) {
+      failedMessage = mhAjaxMessage(xhr, "Could not build export file name.");
+    },
+  });
+  if (failedMessage) {
+    throw new Error(failedMessage);
+  }
   return expName;
 }
 

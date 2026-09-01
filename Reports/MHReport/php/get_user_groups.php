@@ -1,44 +1,31 @@
 <?php
-#region DB Connect
-require_once '../../../dbconn/dbconnectkdtph.php';
-require_once '../../../dbconn/dbconnectnew.php';
-require_once '../../../global/globalFunctions.php';
-#endregion
+require_once __DIR__ . '/bootstrap.php';
+mhRequireConnections();
 
-#region set timezone
-date_default_timezone_set('Asia/Manila');
-#endregion
-
-#region Initialize Variable
 $result = [
-    'isSuccess' => FALSE,
+    'isSuccess' => false,
     'message' => 'No access',
 ];
-$login = checkAuthentication();
 $mhAllGroupAccess = 51;
-#endregion
 
-#region get data values
-
-#endregion
-
-#region main function
 try {
-    if ($login['isSuccess'] == FALSE) {
-        $result["message"] = $login['message'];
-        die(json_encode($result));
+    $login = checkAuthentication();
+    if ($login['isSuccess'] == false) {
+        $result['message'] = $login['message'];
+        mhJsonHeaders();
+        echo json_encode($result);
+        exit(0);
     }
+
     $ac = getMHReportAccess($login['data']['id']);
     if ($ac) {
         $result['data'] = getGroups($login['data']['id'], $mhAllGroupAccess);
-        $result['isSuccess'] = TRUE;
-        $result['message'] = "Groups fetched";
+        $result['isSuccess'] = true;
+        $result['message'] = 'Groups fetched';
     }
-} catch (Exception $e) {
-    $result['isSuccess'] = FALSE;
-    $result['message'] = "Connection failed: " . $e->getMessage();
-    die(json_encode($result));
-}
-#endregion
 
-echo json_encode($result, JSON_PRETTY_PRINT);
+    mhJsonHeaders();
+    echo json_encode($result);
+} catch (Throwable $e) {
+    mhJsonFail($e);
+}

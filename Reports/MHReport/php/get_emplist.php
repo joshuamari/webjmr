@@ -1,17 +1,9 @@
 <?php
-#region Require Database Connections
-require_once '../../../dbconn/dbconnectkdtph.php';
-require_once '../../../dbconn/dbconnectnew.php';
-require_once '../../../dbconn/dbconnectwebjmr.php';
-require_once '../../../global/globalFunctions.php';
+require_once __DIR__ . '/bootstrap.php';
+mhRequireConnections();
 require_once __DIR__ . '/mh_billing.php';
-#endregion
 
-#region set timezone
-date_default_timezone_set('Asia/Manila');
-#endregion
-
-#region initialize variables
+try {
 $group = "";
 if (!empty($_POST['getGroup'])) {
     $group = $_POST['getGroup'];
@@ -98,4 +90,6 @@ if ($elStmt->rowCount() > 0) {
 #endregion
 //$.ajaxSetup({async: false});
 echo json_encode($eList);
-// echo $elQ;
+} catch (Throwable $e) {
+    mhJsonFail($e);
+}
