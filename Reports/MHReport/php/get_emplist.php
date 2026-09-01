@@ -4,6 +4,7 @@ require_once '../../../dbconn/dbconnectkdtph.php';
 require_once '../../../dbconn/dbconnectnew.php';
 require_once '../../../dbconn/dbconnectwebjmr.php';
 require_once '../../../global/globalFunctions.php';
+require_once __DIR__ . '/mh_billing.php';
 #endregion
 
 #region set timezone
@@ -29,6 +30,9 @@ $lastDay = getLastday($ymSel, $cutOff, $firstDay);
 $dateCompare = " AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $selYearMonth = date("Y-m-01", strtotime($ymSel));
 $eList = array();
+$billing = mhBillingContext($connwebjmr, $connkdt);
+$mngProjID = $billing['mngProjID'];
+$solProjID = $billing['solProjID'];
 #endregion
 
 #region main

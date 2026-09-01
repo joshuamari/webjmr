@@ -4,6 +4,7 @@ require_once '../../../dbconn/dbconnectkdtph.php';
 require_once '../../../dbconn/dbconnectnew.php';
 require_once '../../../dbconn/dbconnectwebjmr.php';
 require_once '../../../global/globalFunctions.php';
+require_once __DIR__ . '/mh_billing.php';
 #endregion
 
 #region set timezone
@@ -28,7 +29,9 @@ $firstDay = getFirstday($ymSel, $cutOff);
 $lastDay = getLastday($ymSel, $cutOff, $firstDay);
 $dateCompare = " AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $hiramEntries = array();
-$projExcept = $defaultProjID;
+$billing = mhBillingContext($connwebjmr, $connkdt);
+$mngProjID = $billing['mngProjID'];
+$projExcept = $billing['allDefaultProjectIds'];
 $proj = "";
 $projsQ = "SELECT DISTINCT(dr.fldProject) FROM dailyreport AS dr JOIN projectstable AS pt ON dr.fldProject=pt.fldID WHERE (dr.fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$group') OR fldTrGroup='$group') $dateCompare";
 $projStmt = $connwebjmr->prepare($projsQ);

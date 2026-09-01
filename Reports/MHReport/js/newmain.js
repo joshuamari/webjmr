@@ -627,7 +627,7 @@ function exportName() {
   var ymSel = $("#monthSel").val();
   var cOff = $("#CO").val();
   $.post(
-    "ajax/get_exportname.php",
+    "php/get_exportname.php",
     {
       ymSel: ymSel,
       cOff: cOff,

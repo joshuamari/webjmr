@@ -124,7 +124,7 @@ function getkiaProjID()
 function getOneBUTrainerID()
 {
   global $connwebjmr;
-  $obuTrainQ = "SELECT fldID FROM itemofworkstable WHERE fldItem='Trainer for One BU Participants'";
+  $obuTrainQ = "SELECT fldID FROM itemofworkstable WHERE fldDelete='0' AND fldItem IN ('Trainer for One BU Participants','Trainer for One BU Participants- [100% KHI]') ORDER BY CASE WHEN fldItem='Trainer for One BU Participants' THEN 0 ELSE 1 END LIMIT 1";
   $obuTrainStmt = $connwebjmr->prepare($obuTrainQ);
   $obuTrainStmt->execute([]);
   $oneBUTrainerID = $obuTrainStmt->fetchColumn();

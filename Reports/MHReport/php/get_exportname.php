@@ -1,5 +1,5 @@
 <?php
-require_once '../Includes/globalFunctions.php';
+require_once '../../../global/globalFunctions.php';
 
 #region set timezone
 date_default_timezone_set('Asia/Manila');
@@ -16,7 +16,6 @@ if (isset($_POST['cOff'])) {
 }
 $cOff = "Monthly";
 $firstDay = getFirstday($ymSel, $cutOff);
-// $lastDay = getLastday($ymSel, $cutOff, $firstDay);
 #endregion
 
 switch ($cutOff) {
@@ -36,6 +35,7 @@ switch ($cutOff) {
         break;
 }
 echo $ymSel . "_" . $cOff;
+
 #region function
 function getWeekNumberInMonth($myDate)
 {

@@ -38,6 +38,23 @@ function getItemIdByName(PDO $conn, string $itemName): int
     );
 }
 
+function getOneBuTrainerId(PDO $conn): int
+{
+    foreach (
+        [
+            'Trainer for One BU Participants',
+            'Trainer for One BU Participants- [100% KHI]',
+        ] as $itemName
+    ) {
+        $id = getItemIdByName($conn, $itemName);
+        if ($id > 0) {
+            return $id;
+        }
+    }
+
+    return 0;
+}
+
 function getSystemIds(PDO $conn): array
 {
     static $cache = null;
@@ -52,10 +69,7 @@ function getSystemIds(PDO $conn): array
         'otherID' => getProjectIdByName($conn, 'Business Trip & Other'),
         'kiaID' => getProjectIdByName($conn, 'KDT Internal Activities'),
         'trainProjID' => getProjectIdByName($conn, 'Training'),
-        'oneBUTrainerID' => getItemIdByName(
-            $conn,
-            'Trainer for One BU Participants- [100% KHI]'
-        ),
+        'oneBUTrainerID' => getOneBuTrainerId($conn),
         'defaults' => fetchIntList(
             $conn,
             "SELECT fldID FROM projectstable WHERE fldDirect = 0 AND fldDelete = 0"
