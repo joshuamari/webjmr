@@ -557,6 +557,59 @@ input:checked + .slider:before {
   color: var(--darkest-blue);
 }
 
+.jmc-search {
+  position: relative;
+  width: 100%;
+}
+
+.jmc-search i {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #97a1b2;
+  font-size: 18px;
+  pointer-events: none;
+}
+
+.jmc-search input {
+  height: 42px;
+  padding: 0 12px 0 38px;
+  border: 1px solid #d7dde5;
+  border-radius: 8px;
+  font-size: 16px;
+  color: var(--text-color);
+  background: #fff;
+}
+
+.jmc-search input:focus {
+  border-color: var(--main-blue);
+  box-shadow: 0 0 0 3px rgba(57, 128, 199, 0.15);
+  outline: none;
+}
+
+.jmc-search input::placeholder {
+  color: #a1a9b7;
+}
+
+.jmc-no-results td {
+  color: #888 !important;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.project .content .table-container table tbody tr.jmc-no-results:hover,
+.item .content .table-container table tbody tr.jmc-no-results:hover,
+.jrd .content .table-container table tbody tr.jmc-no-results:hover {
+  background: transparent;
+}
+
+.project .content .table-container table tbody tr.jmc-no-results:hover td,
+.item .content .table-container table tbody tr.jmc-no-results:hover td,
+.jrd .content .table-container table tbody tr.jmc-no-results:hover td {
+  color: #888 !important;
+}
+
 /* ITEM OF WORKS */
 
 .item .page-title .title {

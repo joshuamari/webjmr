@@ -187,6 +187,15 @@ $(document).on("click", "#projectPage", function () {
   $(".item").addClass("d-none");
   $(".jrd").addClass("d-none");
 });
+$(document).on("input search", "#searchProj", function () {
+  applyTableSearch($("#projTable"), $(this).val());
+});
+$(document).on("input search", "#searchItem", function () {
+  applyTableSearch($("#itemTable"), $(this).val());
+});
+$(document).on("input search", "#searchJrd", function () {
+  applyTableSearch($("#jrdTable"), $(this).val());
+});
 $(document).on("click", ".hoverProjNext", function () {
   getProjects();
   $(".project").addClass("d-none");
@@ -197,6 +206,7 @@ $(document).on("click", ".hoverProjNext", function () {
   selectedProject = getID.split("_")[1];
   selectedProjectString = getTitle;
   $("#selectedProject").html(selectedProjectString);
+  $("#searchItem").val("");
   getItems();
 });
 $(document).on("click", ".hoverItemNext", function () {
@@ -207,6 +217,7 @@ $(document).on("click", ".hoverItemNext", function () {
   var getTitle = $($($(this).parent()).nextAll()[0]).text();
   var getID = $($(this).parent()).attr("id");
   selectedItems = getID.split("_")[1];
+  $("#searchJrd").val("");
   selectedItemsString = getTitle;
   $("#selectedItem").html(selectedItemsString);
   getJobs();
@@ -408,10 +419,10 @@ function getProjects() {
       selectedProject = "";
       // $('.projIcon').hide();
       $("#projTable").sortable({
-        items: "tr:not(.dontMove)",
+        items: "tr.mover:visible",
         update: function (event, ui) {
           var page_id_array = new Array();
-          $("#projTable tr.mover").each(function () {
+          $("#projTable tr.mover:visible").each(function () {
             var trID = $(this).attr("id").split("_")[1];
             page_id_array.push(trID);
           });
@@ -426,6 +437,7 @@ function getProjects() {
           );
         },
       });
+      applyTableSearch($("#projTable"), $("#searchProj").val());
     }
   );
   $.ajaxSetup({ async: true });
@@ -434,7 +446,29 @@ function fillProj() {
   //set items to lay
   $("#projTable").empty();
   projects.map(projRow);
+  applyTableSearch($("#projTable"), $("#searchProj").val());
   // defaults.map(projRow); //pang defaults lang to
+}
+function applyTableSearch($table, query) {
+  var q = (query || "").toLowerCase().trim();
+  $table.find("tr.jmc-no-results").remove();
+  var visible = 0;
+  $table.children("tr").each(function () {
+    var match = !q || $(this).text().toLowerCase().indexOf(q) !== -1;
+    $(this).toggle(match);
+    if (match) {
+      visible++;
+    }
+  });
+  if (q && visible === 0) {
+    var cols = $table.closest("table").find("thead th").length || 1;
+    $table.append(
+      `<tr class="jmc-no-results"><td colspan="${cols}" class="text-center py-4">No matching entries</td></tr>`
+    );
+  }
+  if ($table.hasClass("ui-sortable")) {
+    $table.sortable("option", "disabled", !!q);
+  }
 }
 function projRow(projArrayElement) {
   //lay project table
@@ -726,10 +760,10 @@ function getItems() {
       fillItem();
       $(".itemIcon").hide();
       $("#itemTable").sortable({
-        items: "tr:not(.dontMove)",
+        items: "tr.mover:visible",
         update: function (event, ui) {
           var page_id_array = new Array();
-          $("#itemTable tr.mover").each(function () {
+          $("#itemTable tr.mover:visible").each(function () {
             var trID = $(this).attr("id").split("_")[1];
             page_id_array.push(trID);
           });
@@ -746,6 +780,7 @@ function getItems() {
       });
 
       checkItemAdd();
+      applyTableSearch($("#itemTable"), $("#searchItem").val());
     }
   );
   $.ajaxSetup({ async: true });
@@ -754,6 +789,7 @@ function fillItem() {
   //set item to lay
   $("#itemTable").empty();
   items.map(itemRow);
+  applyTableSearch($("#itemTable"), $("#searchItem").val());
 }
 function itemRow(itemArrayElement) {
   //lay item table
@@ -889,10 +925,10 @@ function getJobs() {
       jobs = $.parseJSON(data);
       fillJob();
       $("#jrdTable").sortable({
-        items: "tr:not(.dontMove)",
+        items: "tr.mover:visible",
         update: function (event, ui) {
           var page_id_array = new Array();
-          $("#jrdTable tr.mover").each(function () {
+          $("#jrdTable tr.mover:visible").each(function () {
             var trID = $(this).attr("id").split("_")[1];
             page_id_array.push(trID);
           });
@@ -907,6 +943,7 @@ function getJobs() {
           );
         },
       });
+      applyTableSearch($("#jrdTable"), $("#searchJrd").val());
     }
   );
 }
@@ -914,6 +951,7 @@ function fillJob() {
   //set draw refs to lay
   $("#jrdTable").empty();
   jobs.map(jobRow);
+  applyTableSearch($("#jrdTable"), $("#searchJrd").val());
   getGOWJob();
 }
 function jobRow(jobArrayElement) {

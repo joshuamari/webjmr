@@ -794,6 +794,18 @@ require_once __DIR__ . '/lib/assets.php';
                       <i class="bx bxs-plus-circle p-0"></i> ADD ENTRY
                     </button>
                   </div>
+                  <div class="col-12 mt-2">
+                    <div class="jmc-search">
+                      <i class="bx bx-search"></i>
+                      <input
+                        type="search"
+                        id="searchProj"
+                        class="form-control"
+                        placeholder="Search project, order #, or BU..."
+                        aria-label="Search projects"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div class="table-container overflow-auto">
                   <table class="table table-striped table-hover">
@@ -954,6 +966,18 @@ require_once __DIR__ . '/lib/assets.php';
                       40ft Liquid Hydrogen Container
                     </h2>
                   </div>
+                  <div class="col-12 mt-2">
+                    <div class="jmc-search">
+                      <i class="bx bx-search"></i>
+                      <input
+                        type="search"
+                        id="searchItem"
+                        class="form-control"
+                        placeholder="Search item of works..."
+                        aria-label="Search items of works"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div class="table-container overflow-auto">
                   <table class="table table-striped">
@@ -1053,6 +1077,18 @@ require_once __DIR__ . '/lib/assets.php';
                     class="col-12 m-0 selectedCont d-flex align-items-center justify-content-start"
                   >
                     <h2 class="m-0 p-0" id="selectedItem">W.O NO. 221115</h2>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <div class="jmc-search">
+                      <i class="bx bx-search"></i>
+                      <input
+                        type="search"
+                        id="searchJrd"
+                        class="form-control"
+                        placeholder="Search job request..."
+                        aria-label="Search job request descriptions"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div class="table-container overflow-auto">
