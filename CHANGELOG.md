@@ -8,7 +8,7 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ## [Unreleased]
 
-R&D hours input and R&D Manhour Report. No release date yet.
+R&D hours input, R&D Manhour Report, and MH Report billing shares. No release date yet.
 
 ### Added
 
@@ -17,10 +17,19 @@ R&D hours input and R&D Manhour Report. No release date yet.
 - Reports hub card for R&D Manhour Report
 - Report permissions: R&D Report Access (54) and R&D Report All Group Access (55). Idempotent migration copies current Man-Hour Report grants
 
+### Changed
+
+- **Man-Hour Report billing:** KDT vs BU split is no longer read from item-name suffixes (`[50% KDT]`, `[100% KHI]`). Shares live in `Reports/MHReport/php/mh_billing.php` (0–100 = KDT share; BU gets the remainder)
+- Training / KIA items that used to split 50/50 now bill **100% KDT** (K1/K2), including Training for New Employee, Trainer for Multiple BU, Trainer for One BU, and Research & Development. **Trainer for KHI Engineer** stays 100% BU
+- Training item labels dropped the percent suffix (name only). Daily Report rows are unchanged (`fldID` stays the same)
+- Groups with no KHI counterpart: any remaining partial share still goes 100% to KDT (same rule as before)
+
 ### Notes
 
 - Depends on the shared R&D item of work (see 2026-08-27)
+- To change a split later, edit `mhKdtShareByItemName()` — do not put `%` back in the item name
 - Run: `php SQL/migrations/20260901_copy_mh_report_permissions_to_rd_report.php`
+- Run: `php SQL/migrations/20260901_rename_trainer_for_one_bu.php`
 
 ---
 
