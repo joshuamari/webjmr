@@ -1,34 +1,29 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+Notable changes to Web JMR.
 
-Format is based on a simplified version of Keep a Changelog.
+Newest work sits under **[Unreleased]** until a version is tagged. Dated sections below are notes from before versioning.
 
 ---
 
-## [YYYY-MM-DD] - Release Title
+## [Unreleased]
+
+R&D hours input and R&D Manhour Report. No release date yet.
 
 ### Added
 
-- New features
-
-### Changed
-
-- Changes in existing behavior
-
-### Fixed
-
-- Bug fixes
-
-### Removed
-
-- Removed features or deprecated logic
+- Daily Report: employees can log **Research & Development** hours under KDT Internal Activities. Unlike other KIA items, the JRD is not auto-selected; only the selected group's JRDs are listed (groups manage those JRDs in JMC)
+- **R&D Manhour Report** (`Reports/RDReport/`): monthly R&D hours by employee, grouped by BU, with print and Excel export. Groups are multi-select; users with all-group access can include several BUs
+- Reports hub card for R&D Manhour Report
+- Report permissions: R&D Report Access (54) and R&D Report All Group Access (55). Idempotent migration copies current Man-Hour Report grants
 
 ### Notes
 
-- Optional context, warnings, or migration notes
+- Depends on the shared R&D item of work (see 2026-08-27)
+- Run: `php SQL/migrations/20260901_copy_mh_report_permissions_to_rd_report.php`
 
 ---
+
 ## [2026-08-27] - Add Research & Development Item (KIA)
 
 ### Added
