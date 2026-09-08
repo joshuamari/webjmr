@@ -1138,7 +1138,7 @@ function renderGroupDetailTable(group, jrds, tableId) {
           <tr>
             <th class="rd-col-empno rd-sticky-1" ${cellAttrs(
               'data-a-h="left" data-fill-color="E8F1FB" data-f-bold="true"'
-            )}>EMPLOYEE NO.</th>
+            )}>EMP NO.</th>
             <th class="rd-col-emp rd-sticky-2" ${cellAttrs(
               'data-a-h="left" data-fill-color="E8F1FB" data-f-bold="true"'
             )}>Employee</th>
