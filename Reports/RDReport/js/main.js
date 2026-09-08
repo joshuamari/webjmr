@@ -1,6 +1,4 @@
 const rootFolder = `//${document.location.hostname}`;
-const ALL_GROUPS = "__all__";
-
 let empDetails = [];
 let allowedGroups = [];
 let reportData = null;
@@ -39,10 +37,47 @@ checkAccess()
     alert(rdAlertText(error));
   });
 
-$(document).on("change", "#monthSel, #buSel", function () {
-  if (this.id === "monthSel") {
-    syncMonthDisplay();
+$(document).on("change", "#monthSel", function () {
+  syncMonthDisplay();
+  scheduleTable();
+});
+
+$(document).on("click", "#groupControl", function (e) {
+  e.stopPropagation();
+  toggleGroupMenu();
+});
+
+$(document).on("keydown", "#groupControl", function (e) {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    toggleGroupMenu();
   }
+});
+
+$(document).on("click", "#groupMenu", function (e) {
+  e.stopPropagation();
+});
+
+$(document).on("click", function () {
+  closeGroupMenu();
+});
+
+$(document).on("keydown", function (e) {
+  if (e.key === "Escape") {
+    closeGroupMenu();
+  }
+});
+
+$(document).on("change", ".grp-check", function () {
+  syncGroupDisplay();
+  scheduleTable();
+});
+
+$(document).on("change", "#chkAllGroups", function () {
+  var selectAll = $(this).prop("checked");
+  $(".grp-check").prop("checked", selectAll);
+  this.indeterminate = false;
+  syncGroupDisplay();
   scheduleTable();
 });
 
@@ -66,6 +101,7 @@ $(document).on("input", "#jrdFocusInput", function () {
 });
 
 $(document).on("focus", "#jrdFocusInput", function () {
+  closeGroupMenu();
   renderJrdSuggestions($(this).val());
 });
 
@@ -251,29 +287,73 @@ function defaultCustomize(jrds) {
   };
 }
 
-function selectedGroupValue() {
-  return $("#buSel").val() || ALL_GROUPS;
+function checkedGroupAbbrevs() {
+  var groups = [];
+  $(".grp-check:checked").each(function () {
+    groups.push($(this).val());
+  });
+  return groups;
 }
 
 function selectedGroups() {
-  var value = selectedGroupValue();
-  if (value === ALL_GROUPS) {
+  var checked = checkedGroupAbbrevs();
+  if (checked.length === 0) {
     return allowedGroups.map(function (group) {
       return group.abbreviation;
     });
   }
-  return [value];
+  return checked;
 }
 
 function selectedGroupLabel() {
-  var value = selectedGroupValue();
-  if (value === ALL_GROUPS) {
+  var checked = checkedGroupAbbrevs();
+  if (checked.length === 0 || checked.length === allowedGroups.length) {
     return "All Groups";
   }
-  var match = allowedGroups.find(function (group) {
-    return group.abbreviation === value;
-  });
-  return (match && (match.name || match.abbreviation)) || value;
+  if (checked.length === 1) {
+    return checked[0];
+  }
+  if (checked.length === 2) {
+    return checked[0] + ", " + checked[1];
+  }
+  return checked.length + " Groups Selected";
+}
+
+function isGroupMenuOpen() {
+  return !$("#groupMenu").hasClass("d-none");
+}
+
+function closeGroupMenu() {
+  $("#groupMenu").addClass("d-none");
+  $("#groupControl").attr("aria-expanded", "false");
+  $(".rd-field-group").removeClass("is-open");
+}
+
+function openGroupMenu() {
+  $("#groupMenu").removeClass("d-none");
+  $("#groupControl").attr("aria-expanded", "true");
+  $(".rd-field-group").addClass("is-open");
+}
+
+function toggleGroupMenu() {
+  if (isGroupMenuOpen()) {
+    closeGroupMenu();
+  } else {
+    openGroupMenu();
+  }
+}
+
+function syncGroupDisplay() {
+  var label = selectedGroupLabel();
+  var total = $(".grp-check").length;
+  var checked = $(".grp-check:checked").length;
+  var selectAll = document.getElementById("chkAllGroups");
+  $("#buSelDisplay").text(label);
+  $("#groupControl").attr("aria-label", "Group: " + label);
+  if (selectAll) {
+    selectAll.indeterminate = checked > 0 && checked < total;
+    selectAll.checked = total > 0 && checked === total;
+  }
 }
 
 function groupTitle(group) {
@@ -534,14 +614,19 @@ function fillGroups(grps) {
   allowedGroups = (grps || []).filter(function (group) {
     return group && group.abbreviation;
   });
-  var html = `<option value="${ALL_GROUPS}">All Groups</option>`;
+  var html = "";
   allowedGroups.forEach(function (group) {
-    html += `<option value="${escapeHtml(group.abbreviation)}">${escapeHtml(
+    html += `<label class="rd-group-option" title="${escapeHtml(
       group.name || group.abbreviation
-    )}</option>`;
+    )}">
+      <input type="checkbox" class="rd-checkbox grp-check" value="${escapeHtml(
+        group.abbreviation
+      )}" data-grp-id="${escapeHtml(group.group_id || "")}" checked />
+      <span>${escapeHtml(group.abbreviation)}</span>
+    </label>`;
   });
-  $("#buSel").html(html);
-  $("#buSel").val(ALL_GROUPS);
+  $("#groupChecks").html(html);
+  syncGroupDisplay();
 }
 
 function cellAttrs(extra) {
@@ -613,13 +698,14 @@ function hideJrdSuggestions() {
 
 function matchingJrds(query) {
   var jrds = (reportData && reportData.jrds) || [];
-  var groupValue = selectedGroupValue();
+  var checked = checkedGroupAbbrevs();
+  var restrictGroups = checked.length > 0 && checked.length < allowedGroups.length;
   var needle = String(query || "").trim().toLowerCase();
   if (jrdFocus && needle === jrdFocusLabel(jrdFocus).toLowerCase()) {
     needle = "";
   }
   return jrds.filter(function (jrd) {
-    if (groupValue !== ALL_GROUPS && String(jrd.group) !== String(groupValue)) {
+    if (restrictGroups && checked.indexOf(String(jrd.group)) === -1) {
       return false;
     }
     if (!needle) {
@@ -738,6 +824,43 @@ function computePivotGroupColumn(data) {
   var rawNeeded = Math.ceil(widest + padding + safety);
   var minWidth = 120;
   var maxWidth = 280;
+  var width = Math.max(minWidth, Math.min(maxWidth, rawNeeded));
+  return {
+    width: width,
+    wrap: rawNeeded > maxWidth,
+    rawNeeded: rawNeeded,
+  };
+}
+
+function computeByGroupEmployeeColumn(group) {
+  var bodyFont = {
+    fontFamily: "Poppins, sans-serif",
+    fontSize: "13px",
+    fontWeight: "400",
+  };
+  var headerFont = {
+    fontFamily: "Poppins, sans-serif",
+    fontSize: "12px",
+    fontWeight: "700",
+    letterSpacing: "0.04em",
+    textTransform: "uppercase",
+  };
+  var widest = measureTextWidth("EMPLOYEE", headerFont);
+  ((group && group.employees) || []).forEach(function (emp) {
+    var name = emp && emp.name ? String(emp.name) : "";
+    if (!name) {
+      return;
+    }
+    var width = measureTextWidth(name, bodyFont);
+    if (width > widest) {
+      widest = width;
+    }
+  });
+  var padding = 24;
+  var safety = 8;
+  var rawNeeded = Math.ceil(widest + padding + safety);
+  var minWidth = 160;
+  var maxWidth = 240;
   var width = Math.max(minWidth, Math.min(maxWidth, rawNeeded));
   return {
     width: width,
@@ -948,6 +1071,18 @@ function renderGroupSummary(data, viewStats) {
 
 function renderGroupDetailTable(group, jrds, tableId) {
   var employees = group.employees || [];
+  var empCol = computeByGroupEmployeeColumn(group);
+  var empNoWidth = 80;
+  var totalWidth = 100;
+  var jrdMin = 150;
+  var jrdCount = Math.max(jrds.length, 1);
+  var minWidth = empNoWidth + empCol.width + totalWidth + jrdCount * jrdMin;
+  var wrapClass = empCol.wrap ? " rd-emp-col-wrap" : "";
+  var jrdCols = jrds
+    .map(function () {
+      return '<col class="bygroup-jrd-col" />';
+    })
+    .join("");
   var jrdHeaders = jrds
     .map(function (jrd) {
       return `<th class="rd-jrd" ${cellAttrs(
@@ -971,7 +1106,7 @@ function renderGroupDetailTable(group, jrds, tableId) {
             'data-a-h="left" data-a-wrap="false"'
           )}>${escapeHtml(emp.name)}</td>
           ${jrdCells}
-          <td class="rd-total" ${cellAttrs(
+          <td class="rd-total rd-col-total" ${cellAttrs(
             'data-t="n" data-a-h="center" data-f-bold="true"'
           )}>${formatHours(emp.hours)}</td>
         </tr>`;
@@ -990,17 +1125,25 @@ function renderGroupDetailTable(group, jrds, tableId) {
 
   return `
     <div class="rd-table-wrap">
-      <table class="${tableClassNames("rd-group-detail-table")}" id="${tableId}">
+      <table class="${tableClassNames(
+        "rd-group-detail-table" + wrapClass
+      )}" id="${tableId}" style="--bygroup-empno-width:${empNoWidth}px;--bygroup-employee-width:${empCol.width}px;--bygroup-total-width:${totalWidth}px;--bygroup-jrd-min:${jrdMin}px;min-width:${minWidth}px">
+        <colgroup>
+          <col class="bygroup-empno-col" />
+          <col class="bygroup-employee-col" />
+          ${jrdCols}
+          <col class="bygroup-total-col" />
+        </colgroup>
         <thead>
           <tr>
             <th class="rd-col-empno rd-sticky-1" ${cellAttrs(
               'data-a-h="left" data-fill-color="E8F1FB" data-f-bold="true"'
-            )}>Employee No.</th>
+            )}>EMPLOYEE NO.</th>
             <th class="rd-col-emp rd-sticky-2" ${cellAttrs(
               'data-a-h="left" data-fill-color="E8F1FB" data-f-bold="true"'
             )}>Employee</th>
             ${jrdHeaders}
-            <th class="rd-total" ${cellAttrs(
+            <th class="rd-total rd-col-total" ${cellAttrs(
               'data-a-h="center" data-fill-color="E8F1FB" data-f-bold="true"'
             )}>Total MH</th>
           </tr>
@@ -1008,12 +1151,11 @@ function renderGroupDetailTable(group, jrds, tableId) {
         <tbody>
           ${bodyHtml}
           <tr class="rd-group-total">
-            <td class="rd-sticky-1" ${cellAttrs(
+            <td class="rd-bygroup-total-label" colspan="2" ${cellAttrs(
               'data-a-h="left" data-f-bold="true" data-fill-color="EEF5FD"'
             )}>${escapeHtml(groupTitle(group) + " Total")}</td>
-            <td class="rd-sticky-2" ${cellAttrs('data-fill-color="EEF5FD"')}></td>
             ${subJrd}
-            <td class="rd-total" ${cellAttrs(
+            <td class="rd-total rd-col-total" ${cellAttrs(
               'data-t="n" data-a-h="center" data-f-bold="true" data-fill-color="EEF5FD"'
             )}>${formatHours(group.totalHours)}</td>
           </tr>
@@ -1103,11 +1245,11 @@ function renderReport(data) {
     var stillThere = (data.jrds || []).some(function (jrd) {
       return String(jrd.id) === String(jrdFocus.id);
     });
-    var groupValue = selectedGroupValue();
-    if (
-      !stillThere ||
-      (groupValue !== ALL_GROUPS && String(jrdFocus.group) !== String(groupValue))
-    ) {
+    var checked = checkedGroupAbbrevs();
+    var restrictGroups = checked.length > 0 && checked.length < allowedGroups.length;
+    var groupOk =
+      !restrictGroups || checked.indexOf(String(jrdFocus.group)) !== -1;
+    if (!stillThere || !groupOk) {
       jrdFocus = null;
     }
   }
@@ -1135,8 +1277,8 @@ function getTable() {
   if (!$("#monthSel").val()) {
     return;
   }
-  if (groups.length === 0) {
-    renderEmpty("Select at least one group.");
+  if (allowedGroups.length === 0 || groups.length === 0) {
+    renderEmpty("No groups available.");
     return;
   }
 
@@ -1145,7 +1287,6 @@ function getTable() {
     url: "php/get_rd_hours.php",
     data: {
       getGroups: groups,
-      getGroup: selectedGroupValue(),
       getYMSel: $("#monthSel").val(),
     },
     dataType: "json",

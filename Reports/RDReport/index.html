@@ -38,12 +38,25 @@
               </div>
             </div>
             <div class="rd-field rd-field-group">
-              <label class="rd-field-label" for="buSel">Group</label>
-              <div class="rd-control rd-control-select">
-                <select class="rd-select" id="buSel" aria-label="Select Group">
-                  <option value="__all__">All Groups</option>
-                </select>
+              <label class="rd-field-label" id="groupFieldLabel">Group</label>
+              <div
+                class="rd-control rd-control-select"
+                id="groupControl"
+                role="combobox"
+                tabindex="0"
+                aria-expanded="false"
+                aria-labelledby="groupFieldLabel"
+                aria-controls="groupMenu"
+              >
+                <span id="buSelDisplay" class="rd-group-display">All Groups</span>
                 <i class="bx bx-chevron-down rd-control-icon rd-control-icon-right"></i>
+              </div>
+              <div class="rd-group-menu d-none" id="groupMenu" role="listbox" aria-multiselectable="true">
+                <label class="rd-group-option rd-group-select-all">
+                  <input type="checkbox" class="rd-checkbox" id="chkAllGroups" />
+                  Select all
+                </label>
+                <div class="rd-group-option-list" id="groupChecks"></div>
               </div>
             </div>
             <div class="rd-field rd-field-jrd rd-jrd-search-wrap">

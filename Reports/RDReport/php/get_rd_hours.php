@@ -59,7 +59,8 @@ try {
         ];
     }
 
-    if ($requestedGroups === [] && isset($_POST['getGroup']) && trim((string) $_POST['getGroup']) === RD_ALL_GROUPS) {
+    // Empty selection means All Groups (still intersected with permitted groups).
+    if ($requestedGroups === []) {
         $requestedGroups = array_keys($allowedByAbbrev);
     }
 
