@@ -17,61 +17,237 @@
   <body>
     <div class="home-content position-relative">
       <div class="title xPrint">
-        <h1>R&D Manhour Report</h1>
+        <h1>R&amp;D Manhour Report</h1>
 
         <a href="../" class="backbtn">
           <i class="bx bx-left-arrow-alt fs-5"></i>
           <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
         </a>
       </div>
+
       <div class="content">
         <div class="upper py-3">
-          <div class="row left pe-md-2">
-            <div class="form-floating col-12 col-sm-4 col-xl-2 my-1 my-md-0 rd-group-dropdown xPrint">
-              <input
-                type="text"
-                class="form-select"
-                id="buSelDisplay"
-                readonly
-                placeholder="Select Group"
-                aria-expanded="false"
-              />
-              <label for="buSelDisplay">Select Group</label>
-              <div class="rd-dropdown-menu" id="groupMenu">
-                <label class="rd-dropdown-item rd-select-all">
-                  <input type="checkbox" id="chkAllGroups" />
-                  Select all
-                </label>
-                <div id="groupChecks"></div>
+          <div class="rd-filter-left">
+            <div class="rd-field rd-field-month">
+              <label class="rd-field-label" for="monthSel">Month</label>
+              <div class="rd-control">
+                <i class="bx bx-calendar rd-control-icon rd-control-icon-left"></i>
+                <span id="monthDisplay" class="rd-month-display"></span>
+                <input type="month" id="monthSel" class="rd-month-input" />
+                <i class="bx bx-chevron-down rd-control-icon rd-control-icon-right"></i>
               </div>
             </div>
-            <div class="form-floating col-12 col-sm-4 col-xl-2 my-1 my-md-0">
-              <input type="month" id="monthSel" class="form-control" />
-              <label for="monthSel">Select Month</label>
+            <div class="rd-field rd-field-group">
+              <label class="rd-field-label" for="buSel">Group</label>
+              <div class="rd-control rd-control-select">
+                <select class="rd-select" id="buSel" aria-label="Select Group">
+                  <option value="__all__">All Groups</option>
+                </select>
+                <i class="bx bx-chevron-down rd-control-icon rd-control-icon-right"></i>
+              </div>
+            </div>
+            <div class="rd-field rd-field-jrd rd-jrd-search-wrap">
+              <label class="rd-field-label" for="jrdFocusInput">
+                Focus on R&amp;D Activity (JRD)...
+              </label>
+              <div class="rd-control">
+                <input
+                  type="text"
+                  class="rd-input"
+                  id="jrdFocusInput"
+                  placeholder="Search JRD..."
+                  autocomplete="off"
+                />
+                <i class="bx bx-search rd-jrd-search-icon"></i>
+                <button
+                  type="button"
+                  id="btnClearJrdFocus"
+                  class="rd-jrd-clear d-none"
+                  title="Clear JRD focus"
+                >
+                  <i class="bx bx-x"></i>
+                </button>
+              </div>
+              <div id="jrdFocusMenu" class="rd-jrd-suggest d-none"></div>
             </div>
           </div>
 
-          <div class="right pe-2 pe-lg-0">
-            <button
-              id="btnPrint"
-              class="xPrint btn btn-primary"
-              style="background-color: #395dc7"
-              disabled
-            >
-              PRINT
+          <div class="rd-filter-actions">
+            <div class="rd-filter-buttons">
+              <button
+                id="btnPrint"
+                class="xPrint btn rd-btn-print"
+                disabled
+              >
+                <i class="bx bx-printer"></i>
+                PRINT
+              </button>
+              <button id="btnExport" class="xPrint btn rd-btn-export" disabled>
+                <i class="bx bx-spreadsheet"></i>
+                EXPORT
+              </button>
+            </div>
+            <p class="rd-print-hint xPrint">
+              <i class="bx bx-info-circle"></i>
+              Print and Export apply to all visible columns and rows in this
+              report.
+            </p>
+          </div>
+        </div>
+
+        <div class="rd-print-header">
+          <h2>R&amp;D Manhour Report</h2>
+          <p id="printMeta"></p>
+        </div>
+
+        <div id="summaryCards" class="rd-summary-cards d-none">
+          <div class="rd-summary-card">
+            <div class="rd-summary-icon rd-icon-blue">
+              <i class="bx bx-time-five"></i>
+            </div>
+            <div>
+              <div class="rd-summary-label">Total R&amp;D Manhour</div>
+              <div class="rd-summary-value">
+                <span id="sumHours">0.00</span>
+                <span class="rd-summary-unit">Hours</span>
+              </div>
+            </div>
+          </div>
+          <div class="rd-summary-card">
+            <div class="rd-summary-icon rd-icon-green">
+              <i class="bx bx-test-tube"></i>
+            </div>
+            <div>
+              <div class="rd-summary-label">R&amp;D Activities</div>
+              <div class="rd-summary-value">
+                <span id="sumActivities">0</span>
+                <span class="rd-summary-unit">Activities</span>
+              </div>
+            </div>
+          </div>
+          <div class="rd-summary-card">
+            <div class="rd-summary-icon rd-icon-purple">
+              <i class="bx bx-user"></i>
+            </div>
+            <div>
+              <div class="rd-summary-label">Total Contributors</div>
+              <div class="rd-summary-value">
+                <span id="sumContributors">0</span>
+                <span class="rd-summary-unit">Employees</span>
+              </div>
+            </div>
+          </div>
+          <div class="rd-summary-card">
+            <div class="rd-summary-icon rd-icon-orange">
+              <i class="bx bx-group"></i>
+            </div>
+            <div>
+              <div class="rd-summary-label">Groups</div>
+              <div class="rd-summary-value">
+                <span id="sumGroups">0</span>
+                <span class="rd-summary-unit">Groups</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="viewToolbar" class="rd-view-toolbar xPrint d-none">
+          <div class="rd-view-mode">
+            <span class="rd-view-label">View Mode:</span>
+            <div class="rd-view-toggle" role="tablist">
+              <button
+                type="button"
+                class="rd-view-btn active"
+                data-view="pivot"
+                id="btnViewPivot"
+              >
+                Pivot Table (One Table)
+              </button>
+              <button
+                type="button"
+                class="rd-view-btn"
+                data-view="bygroup"
+                id="btnViewByGroup"
+              >
+                By Group (Separated Tables)
+              </button>
+            </div>
+            <span id="viewHint" class="rd-view-hint">
+              <i class="bx bx-info-circle"></i>
+              <span id="viewHintText"></span>
+            </span>
+          </div>
+          <div id="pivotActions" class="rd-pivot-actions">
+            <button type="button" id="btnResetTable" class="btn rd-btn-reset">
+              <i class="bx bx-reset"></i>
+              RESET TABLE
             </button>
-            <button id="btnExport" class="xPrint btn btn-outline-success" disabled>
-              EXPORT
+            <button type="button" id="btnCustomize" class="btn btn-primary">
+              <i class="bx bx-cog"></i>
+              CUSTOMIZE TABLE
             </button>
           </div>
         </div>
 
         <div class="lower">
-          <p id="reportCaption" class="rd-caption d-none"></p>
           <p id="emptyState" class="rd-empty d-none"></p>
-          <table id="mainTable" class="rd-table"></table>
+          <div id="reportView"></div>
         </div>
       </div>
     </div>
+
+    <div id="customizeOverlay" class="rd-drawer-overlay d-none"></div>
+    <aside id="customizeDrawer" class="rd-drawer" aria-hidden="true">
+      <div class="rd-drawer-header">
+        <h3>CUSTOMIZE TABLE</h3>
+        <button type="button" id="btnCloseCustomize" class="rd-drawer-close">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+      <div class="rd-drawer-body">
+        <h4>JRD Columns</h4>
+        <p class="rd-drawer-help">
+          Select and order the JRD columns to display.
+        </p>
+        <div class="rd-drawer-search">
+          <i class="bx bx-search"></i>
+          <input
+            type="search"
+            id="customizeSearch"
+            placeholder="Search JRD columns..."
+          />
+        </div>
+        <div id="jrdColumnList" class="rd-jrd-column-list"></div>
+        <div class="rd-display-settings">
+          <h4>Table display</h4>
+          <div class="rd-check-row">
+            <input type="checkbox" class="rd-checkbox" id="optShowTotalRow" checked />
+            <label for="optShowTotalRow">Show Total Row</label>
+          </div>
+          <div class="rd-check-row">
+            <input type="checkbox" class="rd-checkbox" id="optShowGroupSubtotal" checked />
+            <label for="optShowGroupSubtotal">Show Group Subtotal</label>
+          </div>
+          <div class="rd-check-row">
+            <input type="checkbox" class="rd-checkbox" id="optCompactRows" />
+            <label for="optCompactRows">Compact Rows</label>
+          </div>
+          <div class="rd-check-row">
+            <input type="checkbox" class="rd-checkbox" id="optWrapJrdTitles" checked />
+            <label for="optWrapJrdTitles">Wrap Long JRD Titles</label>
+          </div>
+        </div>
+      </div>
+      <div class="rd-drawer-footer">
+        <button type="button" id="btnCancelCustomize" class="btn btn-outline-secondary">
+          CANCEL
+        </button>
+        <button type="button" id="btnApplyCustomize" class="btn btn-primary">
+          APPLY
+        </button>
+      </div>
+    </aside>
+
+    <table id="rdExportTable" class="d-none"></table>
   </body>
 </html>
