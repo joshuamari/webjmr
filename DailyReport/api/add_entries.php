@@ -48,6 +48,31 @@ $checker = normalizeNullableValue($checker);
 $remarks = normalizeNullableValue($remarks);
 $trGrp = normalizeNullableValue($trGrp);
 
+$actorNum = getCurrentEmployeeId();
+$overrideReason = trim((string) requestValue('overrideReason', ''));
+
+ensureDailyReportHistoryTable();
+assertDailyReportDateEditable($actorNum, $getDate);
+
+$writeRow = buildDailyReportRowFromWrite([
+    'empNum' => $empNum,
+    'grpAbbrev' => $grpAbbrev,
+    'grpID' => $grpNum,
+    'drDate' => $getDate,
+    'location' => $getLocation,
+    'project' => $getProject,
+    'item' => $getItem,
+    'job' => $jobReqDesc,
+    'twoThree' => $twoDthreeD,
+    'revision' => $revisions,
+    'tow' => $typeOfWork,
+    'checker' => $checker,
+    'duration' => $getDuration,
+    'mhType' => $getMHType,
+    'remarks' => $remarks,
+    'trGroup' => $trGrp,
+]);
+
 try {
     $params = [
         ':empNum' => $empNum,
@@ -70,6 +95,7 @@ try {
     ];
 
     if ($addType === '0') {
+        $connwebjmr->beginTransaction();
         $query = "
             INSERT INTO dailyreport (
                 fldEmployeeNum,
@@ -114,12 +140,18 @@ try {
         $stmt->execute($params);
 
         if ($stmt->rowCount() === 0) {
+            $connwebjmr->rollBack();
             jsonError('Failed to add entry.', 500);
         }
 
+        $entryId = (int) $connwebjmr->lastInsertId();
+        recordDailyReportCreatedHistory($entryId, $writeRow, $actorNum, $overrideReason);
+
+        $connwebjmr->commit();
+
         jsonSuccess([
             'mode' => 'create',
-            'entryId' => (int) $connwebjmr->lastInsertId(),
+            'entryId' => $entryId,
         ], 'Entry added successfully.');
     }
 
@@ -128,6 +160,16 @@ try {
     if ($entryId <= 0) {
         jsonError('Valid entry ID is required for update.', 400);
     }
+
+    $oldRow = fetchDailyReportRowById($entryId);
+
+    if (!$oldRow) {
+        jsonError('Entry not found or no changes were made.', 404);
+    }
+
+    assertDailyReportDateEditable($actorNum, (string) ($oldRow['fldDate'] ?? ''));
+
+    $connwebjmr->beginTransaction();
 
     $query = "
         UPDATE dailyreport
@@ -158,13 +200,30 @@ try {
     $stmt->execute($params);
 
     if ($stmt->rowCount() === 0) {
+        $connwebjmr->rollBack();
         jsonError('Entry not found or no changes were made.', 404);
     }
+
+    $didChange = recordDailyReportUpdatedHistory($entryId, $oldRow, $writeRow, $actorNum, $overrideReason);
+
+    if (!$didChange) {
+        $connwebjmr->rollBack();
+        jsonSuccess([
+            'mode' => 'update',
+            'entryId' => $entryId,
+        ], 'Entry updated successfully.');
+    }
+
+    $connwebjmr->commit();
 
     jsonSuccess([
         'mode' => 'update',
         'entryId' => $entryId,
     ], 'Entry updated successfully.');
 } catch (Throwable $e) {
+    if ($connwebjmr->inTransaction()) {
+        $connwebjmr->rollBack();
+    }
+
     jsonError('Failed to save entry.', 500);
 }

@@ -10,6 +10,7 @@ require_once __DIR__ . '/../services/authService.php';
 require_once __DIR__ . '/../services/employeeService.php';
 require_once __DIR__ . '/../services/prevMonthAccessService.php';
 require_once __DIR__ . '/../services/permissionService.php';
+require_once __DIR__ . '/../services/auditHistoryService.php';
 
 require_once __DIR__ . '/../config/config.php';
 

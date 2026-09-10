@@ -35,9 +35,13 @@ require_once __DIR__ . '/lib/assets.php';
     <script src="<?= asset_url('js/events.dropdown.js') ?>"></script>
     <script src="<?= asset_url('js/events.search.js') ?>"></script>
     <script src="<?= asset_url('js/events.utility.js') ?>"></script>
+    <script src="<?= asset_url('js/history.js') ?>"></script>
     <script src="<?= asset_url('js/overtimeTest.js') ?>"></script>
     <script src="<?= asset_url('js/main.js') ?>"></script>
     <script src="<?= asset_url('js/app.js') ?>"></script>
+    <link rel="stylesheet" href="../css/whats-new.css" />
+    <script src="../js/release-history.js"></script>
+    <script src="../js/whats-new.js"></script>
   </head>
 
   <body>
@@ -263,6 +267,153 @@ require_once __DIR__ . '/lib/assets.php';
       </div>
     </div>
     <!--#endregion-->
+
+    <!-- Daily Report History Modal -->
+    <div
+      id="drHistoryModal"
+      class="dr-history-modal fixed inset-0 items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="drHistoryTitle"
+      aria-hidden="true"
+    >
+      <div class="dr-history-dialog w-full overflow-hidden">
+        <div class="dr-history-header">
+          <div class="min-w-0 flex-1">
+            <h3
+              id="drHistoryTitle"
+              class="dr-history-title"
+            >
+              Daily Report History
+            </h3>
+            <p class="dr-history-subtitle">
+              View the history of changes made to daily report entries.
+            </p>
+          </div>
+          <button
+            type="button"
+            id="drHistoryClose"
+            class="dr-history-close shrink-0"
+            aria-label="Close"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="dr-history-body">
+          <div class="dr-history-filters">
+            <div class="dr-history-filter-row w-full">
+              <div class="dr-history-employee">
+                <p class="dr-history-field-label">Employee</p>
+                <p
+                  id="drHistoryEmployeeName"
+                  class="dr-history-employee-name break-words"
+                >
+                  —
+                </p>
+              </div>
+
+              <div class="dr-history-field">
+                <label class="dr-history-field-label" for="drHistoryDateFrom">From</label>
+                <input
+                  type="date"
+                  class="form-control dr-history-control"
+                  id="drHistoryDateFrom"
+                />
+              </div>
+
+              <div class="dr-history-field">
+                <label class="dr-history-field-label" for="drHistoryDateTo">To</label>
+                <input
+                  type="date"
+                  class="form-control dr-history-control"
+                  id="drHistoryDateTo"
+                />
+              </div>
+
+              <div class="dr-history-filter-actions flex flex-row flex-wrap gap-2">
+              <button
+                type="button"
+                id="drHistorySearch"
+                class="dr-history-search-btn inline-flex items-center justify-center gap-2 text-white"
+              >
+                <svg
+                  class="dr-history-search-icon block shrink-0"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+                Search
+              </button>
+              <button
+                type="button"
+                id="drHistoryReset"
+                class="dr-history-reset-btn"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                  ></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                Reset
+              </button>
+            </div>
+            </div>
+          </div>
+
+          <div class="dr-history-toolbar flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p id="drHistoryCount" class="dr-history-count">
+              0 record(s) found
+            </p>
+            <div class="dr-history-sort">
+              <label class="mb-0" for="drHistorySort">Sort by</label>
+              <select class="form-select dr-history-control" id="drHistorySort">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="drHistoryList" class="dr-history-results"></div>
+        </div>
+      </div>
+    </div>
     <!--#endregion MODAL END-->
 
     <div class="sidebar close fixed-top">
@@ -446,9 +597,37 @@ require_once __DIR__ . '/lib/assets.php';
           <div class="maindiv position-relative px-0 py-2 m-0 row">
             <div class="page-title col-12 px-3 pb-3 m-0">
               <h2 class="title ps-2 m-0">Daily Report</h2>
-              <a class="override-btn" href="../Override/">
-                <span>Override</span>
-              </a>
+              <div class="page-title-actions">
+                <button
+                  type="button"
+                  class="history-btn"
+                  id="btnDailyReportHistory"
+                  aria-label="Open daily report history"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                    ></path>
+                    <path d="M3 3v5h5"></path>
+                    <path d="M12 7v5l4 2"></path>
+                  </svg>
+                  <span>History</span>
+                </button>
+                <a class="override-btn" href="../Override/">
+                  <span>Override</span>
+                </a>
+              </div>
               <!-- <button id="button_closed">
                 <span><i class="bx bxs-user-detail text-light"></i></span>
               </button> -->
@@ -1269,7 +1448,7 @@ require_once __DIR__ . '/lib/assets.php';
         <!-- Copyright -->
         <div class="p-0 p-md-2 footer-text">
           <i class="bx bx-copyright"></i>2023 Copyright:
-          <a class="text-dark text-decoration-none">KDTSys</a>
+          <a class="text-gray-700 text-decoration-none">KDTSys</a>
         </div>
         <!-- Copyright -->
       </footer>

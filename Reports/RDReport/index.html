@@ -11,6 +11,7 @@
     <script src="../js/jquery.js"></script>
     <script src="../MHReport/js/bootstrap.min.js"></script>
     <script src="../MHReport/js/tableToExcel.js"></script>
+    <script src="js/lucide.min.js"></script>
     <script src="js/main.js"></script>
   </head>
 
@@ -61,7 +62,7 @@
             </div>
             <div class="rd-field rd-field-jrd rd-jrd-search-wrap">
               <label class="rd-field-label" for="jrdFocusInput">
-                Focus on R&amp;D Activity (JRD)...
+                R&amp;D Activity (JRD)
               </label>
               <div class="rd-control">
                 <input
@@ -203,7 +204,14 @@
         </div>
 
         <div class="lower">
-          <p id="emptyState" class="rd-empty d-none"></p>
+          <div id="emptyState" class="rd-empty-state d-none">
+            <i data-lucide="file-search"></i>
+            <div class="rd-empty-title">No R&amp;D data found</div>
+            <div class="rd-empty-text">
+              No R&amp;D manhours were recorded for the selected month, groups, or JRD.
+            </div>
+            <div class="rd-empty-hint">Try changing the filters above.</div>
+          </div>
           <div id="reportView"></div>
         </div>
       </div>

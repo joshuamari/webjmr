@@ -7,6 +7,7 @@ let jrdFocus = null;
 let customizeState = defaultCustomize([]);
 let expandedGroups = {};
 let tableTimer = null;
+let tableRequestSeq = 0;
 let suggestIndex = -1;
 
 checkAccess()
@@ -644,14 +645,58 @@ function hoursCell(hours, className, extra) {
   )}>${formatHours(hours)}</td>`;
 }
 
+function currentViewHasRecords(data) {
+  if (!data) {
+    return false;
+  }
+  var stats = focusedViewStats(data);
+  if (!(stats.groups || []).length) {
+    return false;
+  }
+  if (jrdFocus) {
+    return hasHours(stats.totalHours);
+  }
+  return true;
+}
+
+function refreshLucideIcons() {
+  if (
+    window.lucide &&
+    typeof lucide.createIcons === "function" &&
+    document.querySelector("#emptyState i[data-lucide]")
+  ) {
+    lucide.createIcons();
+  }
+}
+
+function hideNoDataState() {
+  $("#emptyState").addClass("d-none");
+}
+
+function showNoDataState() {
+  $("#reportView").empty();
+  $("#emptyState").removeClass("d-none");
+  refreshLucideIcons();
+}
+
+function showReportLoading() {
+  hideNoDataState();
+  $("#reportView").html(
+    '<div class="rd-loading" aria-busy="true" aria-live="polite">' +
+      '<div class="spinner-border" role="status">' +
+      '<span class="visually-hidden">Loading</span>' +
+      "</div></div>"
+  );
+}
+
 function renderEmpty(message) {
   reportData = null;
-  $("#reportView").empty();
+  hideNoDataState();
   $("#summaryCards, #viewToolbar").addClass("d-none");
   if (message) {
-    $("#emptyState").text(message).removeClass("d-none");
+    $("#reportView").html('<p class="rd-empty">' + escapeHtml(message) + "</p>");
   } else {
-    $("#emptyState").text("").addClass("d-none");
+    $("#reportView").empty();
   }
   $("#btnPrint, #btnExport").prop("disabled", true);
 }
@@ -1201,7 +1246,7 @@ function renderByGroup(data) {
   return `
     ${renderGroupSummary(data, viewStats)}
     <h3 class="rd-section-title">GROUP DETAIL TABLES</h3>
-    ${cards || '<p class="rd-empty">No groups contain the selected JRD.</p>'}`;
+    ${cards}`;
 }
 
 function printMetaText(data) {
@@ -1217,19 +1262,26 @@ function printMetaText(data) {
 }
 
 function renderCurrentView() {
-  if (!reportData || !(reportData.groups || []).length) {
+  if (!reportData) {
     return;
   }
   updateViewChrome();
   updateSummaryCards(focusedViewStats(reportData));
   $("#printMeta").text(printMetaText(reportData));
+  $("#viewToolbar").removeClass("d-none");
+  if (!currentViewHasRecords(reportData)) {
+    showNoDataState();
+    $("#btnPrint, #btnExport").prop("disabled", true);
+    return;
+  }
+  hideNoDataState();
+  $("#btnPrint, #btnExport").prop("disabled", false);
   var html =
     viewMode === "bygroup" ? renderByGroup(reportData) : renderPivot(reportData);
   $("#reportView").html(html);
 }
 
 function renderReport(data) {
-  var groups = data.groups || [];
   var previousJrdIds = ((reportData && reportData.jrds) || []).map(function (jrd) {
     return String(jrd.id);
   }).join("|");
@@ -1254,21 +1306,6 @@ function renderReport(data) {
     }
   }
   syncJrdFocusInput();
-  $("#viewToolbar").removeClass("d-none");
-  $("#emptyState").addClass("d-none");
-  if (groups.length === 0) {
-    updateSummaryCards({
-      totalHours: 0,
-      activityCount: 0,
-      contributorCount: 0,
-      groupCount: 0,
-    });
-    $("#reportView").empty();
-    $("#emptyState").text("No R&D hours for this month.").removeClass("d-none");
-    $("#btnPrint, #btnExport").prop("disabled", true);
-    return;
-  }
-  $("#btnPrint, #btnExport").prop("disabled", false);
   renderCurrentView();
 }
 
@@ -1282,6 +1319,7 @@ function getTable() {
     return;
   }
 
+  var requestSeq = ++tableRequestSeq;
   $.ajax({
     type: "POST",
     url: "php/get_rd_hours.php",
@@ -1290,7 +1328,13 @@ function getTable() {
       getYMSel: $("#monthSel").val(),
     },
     dataType: "json",
+    beforeSend: function () {
+      showReportLoading();
+    },
     success: function (response) {
+      if (requestSeq !== tableRequestSeq) {
+        return;
+      }
       if (!response || !response.isSuccess) {
         renderEmpty("");
         alert((response && response.message) || "Could not load R&D hours.");
@@ -1299,6 +1343,9 @@ function getTable() {
       renderReport(response);
     },
     error: function (xhr) {
+      if (requestSeq !== tableRequestSeq) {
+        return;
+      }
       renderEmpty("");
       alert(rdAjaxMessage(xhr, "Could not load R&D hours."));
     },
@@ -1455,7 +1502,7 @@ function buildExportTable() {
 }
 
 $(document).on("click", "#btnPrint", function () {
-  if (!reportData || !(reportData.groups || []).length) {
+  if (!currentViewHasRecords(reportData)) {
     return;
   }
   $("#printMeta").text(printMetaText(reportData));
@@ -1467,7 +1514,7 @@ $(document).on("click", "#btnPrint", function () {
 });
 
 $(document).on("click", "#btnExport", function () {
-  if (!reportData || !(reportData.groups || []).length) {
+  if (!currentViewHasRecords(reportData)) {
     return;
   }
   var exportEl = buildExportTable();
