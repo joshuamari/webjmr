@@ -45,6 +45,9 @@ switch($type){
             }
         }
         $statement=" AND fldGroup='$empGroup' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL)";
+        if($kdtWideItemID && $itemID==$kdtWideItemID){
+            $statement=" AND fldGroup IS NULL AND fldProject='$projID' AND fldItem='$itemID'";
+        }
         break;
 }
 

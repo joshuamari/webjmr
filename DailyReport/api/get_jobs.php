@@ -20,6 +20,7 @@ try {
     $systemIds = getSystemIds($connwebjmr);
     $trainProjID = (int) ($systemIds['trainProjID'] ?? 0);
     $rdItemID = (int) ($systemIds['rdItemID'] ?? 0);
+    $kdtWideItemID = (int) ($systemIds['kdtWideItemID'] ?? 0);
     $empGroupAbbr = $empGroupId > 0 ? getGroupAbbreviation($connnew, $empGroupId) : '';
     $sharedProjectIds = getSharedProjectIds($connwebjmr, $empNum);
 
@@ -36,7 +37,7 @@ try {
         "fldJob LIKE :searchJrd",
     ];
 
-    if ($projID === $trainProjID) {
+    if ($projID === $trainProjID && !($kdtWideItemID > 0 && $itemID === $kdtWideItemID)) {
         $conditions[] = "fldItem IS NULL";
     } else {
         $conditions[] = "fldItem = :itemID";

@@ -87,6 +87,21 @@ function getTrainProjID()
   return $trainProjID;
 }
 
+function getKdtWideItemID()
+{
+  global $connwebjmr;
+  $kdtWideQ = "SELECT i.fldID
+    FROM itemofworkstable AS i
+    JOIN projectstable AS p ON p.fldID = i.fldProject
+    WHERE p.fldProject = 'Training'
+      AND i.fldItem = 'KDT Wide Training'
+      AND i.fldDelete = '0'
+    LIMIT 1";
+  $kdtWideStmt = $connwebjmr->prepare($kdtWideQ);
+  $kdtWideStmt->execute([]);
+  return $kdtWideStmt->fetchColumn();
+}
+
 function getLeaveID()
 {
   global $connwebjmr;

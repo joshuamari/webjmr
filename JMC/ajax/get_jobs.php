@@ -18,6 +18,8 @@ if(isset($_REQUEST['selItem'])){
 $statement=" AND fldItem IS NULL";
 if($selProj!=$trainProjID){
     $statement=" AND fldItem='$selItem' AND fldGroup='$empGroup'";
+} elseif ($kdtWideItemID && $selItem == $kdtWideItemID) {
+    $statement=" AND fldItem='$selItem'";
 }
 $jobsArray=array();
 #endregion

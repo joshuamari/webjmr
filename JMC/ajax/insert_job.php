@@ -9,17 +9,22 @@ if(!empty($_REQUEST['projID'])){
 }
 $itemID=NULL;
 $grp=NULL;
+$requestedItemID='';
+if(!empty($_REQUEST['itemID'])){
+    $requestedItemID=$_REQUEST['itemID'];
+}
+$isKdtWideTraining = ($projID==$trainProjID && $kdtWideItemID && $requestedItemID==$kdtWideItemID);
 // if($projID!=2){
 //     if(!empty($_REQUEST['itemID'])){
 //         $itemID=$_REQUEST['itemID'];
 //     }
 // }
-if($projID!=$leaveID && $projID!=$trainProjID){
-    if(!empty($_REQUEST['grp'])){
+if($projID!=$leaveID && ($projID!=$trainProjID || $isKdtWideTraining)){
+    if(!$isKdtWideTraining && !empty($_REQUEST['grp'])){
         $grp=$_REQUEST['grp'];
     }
-    if(!empty($_REQUEST['itemID'])){
-        $itemID=$_REQUEST['itemID'];
+    if($requestedItemID!==''){
+        $itemID=$requestedItemID;
     }
 }
 $jobName='';
@@ -62,11 +67,16 @@ $jobPrep=NULL;
 if(!empty($_REQUEST['jobPrep'])){
     $jobPrep=$_REQUEST['jobPrep'];
 }
-$prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL)";
+if($isKdtWideTraining){
+    $prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup IS NULL AND fldProject='$projID' AND fldItem='$itemID'";
+    $dupq="SELECT COUNT(*) FROM drawingreference WHERE fldDelete='0' AND fldGroup IS NULL AND fldProject='$projID' AND fldItem='$itemID' AND fldJob='$jobName'";
+} else {
+    $prioq="SELECT MAX(fldPriority) FROM drawingreference WHERE fldActive='1' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL)";
+    $dupq="SELECT COUNT(*) FROM drawingreference WHERE fldDelete='0' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL) AND fldJob='$jobName'";
+}
 $priostmt=$connwebjmr->query($prioq);
 $maxPrio=$priostmt->fetchColumn();
 $maxPrio++;
-$dupq="SELECT COUNT(*) FROM drawingreference WHERE fldDelete='0' AND fldGroup='$grp' AND fldProject='$projID' AND (fldItem='$itemID' OR fldItem IS NULL) AND fldJob='$jobName'";
 $dupstmt=$connwebjmr->query($dupq);
 $dup=$dupstmt->fetchColumn();
 #endregion

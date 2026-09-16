@@ -47,9 +47,11 @@ if ($count > 0) {
 $itemID = $input['itemID'];
 $grpAbrrev = getGroup($input['grpNum']);
 $trainProjID = getTrainProjID();
+$kdtWideItemID = getKdtWideItemID();
 $projID = $input['projID'];
 $sharedProjects = getSharedProjects($input['empNum']);
-$statement = ($projID == $trainProjID) ? " AND fldItem IS NULL" : " AND fldItem = $itemID";
+$useSharedTrainingJrds = ($projID == $trainProjID && $itemID != $kdtWideItemID);
+$statement = $useSharedTrainingJrds ? " AND fldItem IS NULL" : " AND fldItem = $itemID";
 #endregion
 
 

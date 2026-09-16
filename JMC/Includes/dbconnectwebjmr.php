@@ -42,6 +42,15 @@ try {
     LIMIT 1";
   $rdItemStmt = $connwebjmr->query($rdItemQ);
   $rdItemID = $rdItemStmt->fetchColumn();
+  $kdtWideQ = "SELECT i.fldID
+    FROM itemofworkstable AS i
+    JOIN projectstable AS p ON p.fldID = i.fldProject
+    WHERE p.fldProject = 'Training'
+      AND i.fldItem = 'KDT Wide Training'
+      AND i.fldDelete = '0'
+    LIMIT 1";
+  $kdtWideStmt = $connwebjmr->query($kdtWideQ);
+  $kdtWideItemID = $kdtWideStmt->fetchColumn();
   $noMoreInputItemOfWorks = ['6', '10', '15', '17', '19', '21'];
   $KDTWAccess = ['SYS', 'ANA', 'IT'];
   $managementPositions = ['KDTP', 'SM', 'DM', 'AM', 'SSS', 'SSV', 'CTE', 'GM'];

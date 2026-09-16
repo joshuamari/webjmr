@@ -69,6 +69,20 @@ function getRdItemId(PDO $conn): int
     );
 }
 
+function getKdtWideItemId(PDO $conn): int
+{
+    return fetchSingleId(
+        $conn,
+        "SELECT i.fldID
+         FROM itemofworkstable AS i
+         JOIN projectstable AS p ON p.fldID = i.fldProject
+         WHERE p.fldProject = 'Training'
+           AND i.fldItem = 'KDT Wide Training'
+           AND i.fldDelete = '0'
+         LIMIT 1"
+    );
+}
+
 function getSystemIds(PDO $conn): array
 {
     static $cache = null;
@@ -85,6 +99,7 @@ function getSystemIds(PDO $conn): array
         'trainProjID' => getProjectIdByName($conn, 'Training'),
         'oneBUTrainerID' => getOneBuTrainerId($conn),
         'rdItemID' => getRdItemId($conn),
+        'kdtWideItemID' => getKdtWideItemId($conn),
         'defaults' => fetchIntList(
             $conn,
             "SELECT fldID FROM projectstable WHERE fldDirect = 0 AND fldDelete = 0"

@@ -39,6 +39,7 @@ function mhKdtShareByItemName(): array
         'Trainer for Multiple BU Participants- [50% KDT]' => 100,
         'Trainer for One BU Participants' => 100,
         'Trainer for One BU Participants- [100% KHI]' => 100,
+        'KDT Wide Training' => 100,
         'Business Trip, Seminar (Requested by KDT)' => 100,
         'Medical' => 100,
         'Calamity' => 100,
