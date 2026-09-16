@@ -1,0 +1,85 @@
+{
+  "releases": [
+    {
+      "version": "1.1.0",
+      "date": "2026-09-10",
+      "latest": true,
+      "summary": "Review Daily Report changes more easily, and view R&D manhours in a dedicated report.",
+      "added": [
+        {
+          "title": "Daily Report History",
+          "description": "Users can now review the history of changes made to Daily Report entries, including what was changed, the previous and new values, who performed the change, when the change was made, and the affected report date."
+        },
+        {
+          "title": "Research & Development Manhour Report",
+          "description": "A new Research & Development report is now available for reviewing manhours recorded under R&D activities. Reported hours are organized using the R&D activity entries maintained in Job Manhour Category."
+        },
+        {
+          "title": "Research & Development Activities in JMC",
+          "description": "Research & Development is now available under KDT Internal Activities in Job Manhour Category, allowing groups to maintain their own R&D activity entries for Daily Report and reporting use."
+        }
+      ],
+      "changed": [
+        {
+          "title": "Supervisor Override Tracking",
+          "description": "Daily Report changes made through supervisor override are now clearly identified in the history, including the supervisor who performed the override, the reason, and the fields that were changed."
+        }
+      ],
+      "modified": [
+        {
+          "title": "Clearer Change Details",
+          "description": "Daily Report updates now show changed values in a clearer before-and-after format, making corrections easier to review."
+        },
+        {
+          "title": "Improved History Experience",
+          "description": "The Daily Report history interface has been improved for easier scanning and better usability across laptop, tablet, and smaller screens."
+        }
+      ]
+    },
+    {
+      "version": "1.0.0",
+      "date": "2024-04-29",
+      "latest": false,
+      "summary": "Various improvements to reporting and user experience.",
+      "added": [
+        {
+          "title": "Daily Report locking for previous months"
+        },
+        {
+          "title": "Temporary Daily Report access requests"
+        },
+        {
+          "title": "Daily Report Approvals workflow"
+        }
+      ],
+      "changed": [
+        {
+          "title": "Restricted Daily Report editing outside the editable month"
+        }
+      ],
+      "modified": []
+    },
+    {
+      "version": "0.9.0",
+      "date": "2024-01-15",
+      "latest": false,
+      "summary": "Initial release with core reporting features.",
+      "added": [
+        {
+          "title": "Daily Report"
+        },
+        {
+          "title": "Planning"
+        },
+        {
+          "title": "Job Manhour Category"
+        },
+        {
+          "title": "Core WEB JMR reports"
+        }
+      ],
+      "changed": [],
+      "modified": []
+    }
+  ]
+}

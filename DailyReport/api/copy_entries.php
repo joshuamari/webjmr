@@ -7,6 +7,11 @@ $targetDate = trim((string) requireRequestValue('getDate', 'Target date is requi
 $sourceDate = trim((string) requireRequestValue('copyDate', 'Source date is required.'));
 
 $changeLog = date('YmdHis') . '_' . $empNum;
+$actorNum = getCurrentEmployeeId();
+$overrideReason = trim((string) requestValue('overrideReason', ''));
+
+ensureDailyReportHistoryTable();
+assertDailyReportDateEditable($actorNum, $targetDate);
 
 try {
     $connwebjmr->beginTransaction();
@@ -95,6 +100,13 @@ try {
             ':changeLog' => $changeLog,
             ':trainingGroupId' => $row['fldTrGroup'],
         ]);
+
+        $entryId = (int) $connwebjmr->lastInsertId();
+        $newRow = $row;
+        $newRow['fldDate'] = $targetDate;
+        $newRow['fldEmployeeNum'] = $empNum;
+
+        recordDailyReportCreatedHistory($entryId, $newRow, $actorNum, $overrideReason);
 
         $copiedCount++;
     }

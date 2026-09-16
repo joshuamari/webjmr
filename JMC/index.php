@@ -23,6 +23,9 @@ require_once __DIR__ . '/lib/assets.php';
     <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
     <script src="<?= asset_url('js/newmain.js') ?>"></script>
     <script src="<?= asset_url('jquery-ui-1.13.2/jquery-ui.min.js') ?>"></script>
+    <link rel="stylesheet" href="../css/whats-new.css" />
+    <script src="../js/release-history.js"></script>
+    <script src="../js/whats-new.js"></script>
   </head>
   <body>
     <!--#region MODAL START-->
@@ -1185,7 +1188,7 @@ require_once __DIR__ . '/lib/assets.php';
           <!-- Copyright -->
           <div class="p-0 p-md-2 footer-text">
             <i class="bx bx-copyright"></i>2023 Copyright:
-            <a class="text-dark text-decoration-none">KDTSys</a>
+            <a class="text-gray-700 text-decoration-none">KDTSys</a>
           </div>
           <!-- Copyright -->
         </footer>

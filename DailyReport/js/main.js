@@ -5,5 +5,6 @@ function bindPageEvents() {
   bindSearchEvents();
   bindPlanningEvents();
   bindUtilityEvents();
+  bindHistoryEvents();
 }
 
