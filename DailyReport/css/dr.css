@@ -1691,17 +1691,6 @@ footer {
   line-height: 1.2;
 }
 
-.dr-history-filter-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1 1 100%;
-  min-width: 0;
-  width: auto;
-}
-
-.dr-history-search-btn,
-.dr-history-reset-btn,
 .dr-history-retry-btn {
   display: inline-flex;
   align-items: center;
@@ -1711,57 +1700,11 @@ footer {
   width: auto;
   min-width: 88px;
   padding: 0 12px;
+  border: 0;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-}
-
-.dr-history-search-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 0;
-  background: #2563eb;
-  color: #fff;
-  line-height: 1;
-}
-
-.dr-history-search-btn .dr-history-search-icon,
-.dr-history-search-btn svg {
-  display: block;
-  flex-shrink: 0;
-  width: 16px;
-  height: 16px;
-  color: #fff;
-  stroke: currentColor;
-}
-
-.dr-history-search-btn svg *,
-.dr-history-search-icon * {
-  color: inherit;
-  stroke: currentColor;
-  fill: none;
-}
-
-.dr-history-search-btn:hover {
-  background: #1d4ed8;
-}
-
-.dr-history-reset-btn {
-  border: 1px solid #cbd5e1;
-  background: #fff;
-  color: #334155;
-}
-
-.dr-history-reset-btn:hover {
-  background: #f8fafc;
-}
-
-.dr-history-retry-btn {
-  width: auto;
-  border: 0;
   background: #2563eb;
   color: #fff;
 }
@@ -2037,8 +1980,7 @@ footer {
   display: block;
 }
 
-.dr-history-section + .dr-history-section,
-.dr-history-reason + .dr-history-section {
+.dr-history-section + .dr-history-section {
   margin-top: 12px;
 }
 
@@ -2049,32 +1991,6 @@ footer {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #64748b;
-}
-
-.dr-history-reason {
-  margin: 0 0 12px;
-  padding: 10px 12px;
-  border: 1px solid #ffedd5;
-  border-radius: 8px;
-  background: #fff7ed;
-  overflow-wrap: break-word;
-  word-break: break-word;
-}
-
-.dr-history-reason-label {
-  margin: 0 0 4px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #c2410c;
-}
-
-.dr-history-reason p:last-child {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 400;
-  color: #9a3412;
 }
 
 .dr-history-table-wrap {
@@ -2131,10 +2047,6 @@ footer {
     flex: 0 1 10.5rem;
   }
 
-  .dr-history-modal .dr-history-filter-actions {
-    flex: 0 0 auto;
-  }
-
   .dr-history-header {
     padding: 14px 20px 12px;
   }
@@ -2160,10 +2072,6 @@ footer {
 
   .dr-history-modal .dr-history-field {
     flex: 0 0 10.75rem;
-  }
-
-  .dr-history-modal .dr-history-filter-actions {
-    flex: 0 0 auto;
   }
 
   .dr-history-modal .dr-history-employee-name {

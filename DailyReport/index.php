@@ -344,56 +344,6 @@ require_once __DIR__ . '/lib/assets.php';
                   id="drHistoryDateTo"
                 />
               </div>
-
-              <div class="dr-history-filter-actions flex flex-row flex-wrap gap-2">
-              <button
-                type="button"
-                id="drHistorySearch"
-                class="dr-history-search-btn inline-flex items-center justify-center gap-2 text-white"
-              >
-                <svg
-                  class="dr-history-search-icon block shrink-0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="m21 21-4.3-4.3"></path>
-                </svg>
-                Search
-              </button>
-              <button
-                type="button"
-                id="drHistoryReset"
-                class="dr-history-reset-btn"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
-                  ></path>
-                  <path d="M3 3v5h5"></path>
-                </svg>
-                Reset
-              </button>
-            </div>
             </div>
           </div>
 

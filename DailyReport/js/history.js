@@ -16,8 +16,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 05, 2026",
     reportDateRaw: "2026-09-05",
     isOverride: true,
-    overrideReason:
-      "Employee is currently on leave. Supervisor corrected the previously entered hours and manhour type.",
     changes: [
       { field: "No. of Hours", previousValue: "08:00", newValue: "04:00" },
       { field: "Manhour Type", previousValue: "Regular", newValue: "Leave" },
@@ -40,7 +38,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 09, 2026",
     reportDateRaw: "2026-09-09",
     isOverride: false,
-    overrideReason: "",
     changes: [
       { field: "No. of Hours", previousValue: "07:30", newValue: "08:00" },
       {
@@ -62,7 +59,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 09, 2026",
     reportDateRaw: "2026-09-09",
     isOverride: false,
-    overrideReason: "",
     initialValues: [
       { field: "Project", value: "Project Alpha" },
       { field: "Item of Works", value: "Design Review" },
@@ -84,8 +80,6 @@ const mockDailyReportHistory = [
     reportDate: "Aug 28, 2026",
     reportDateRaw: "2026-08-28",
     isOverride: true,
-    overrideReason:
-      "Previous month is locked. Supervisor corrected the employee's advanced Daily Report entry.",
     changes: [
       { field: "Project", previousValue: "Project Alpha", newValue: "Project Beta" },
       { field: "No. of Hours", previousValue: "08:00", newValue: "06:00" },
@@ -108,7 +102,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 05, 2026",
     reportDateRaw: "2026-09-05",
     isOverride: false,
-    overrideReason: "",
     changes: [
       {
         field: "Remarks",
@@ -130,7 +123,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 05, 2026",
     reportDateRaw: "2026-09-05",
     isOverride: false,
-    overrideReason: "",
     initialValues: [
       { field: "Project", value: "Project Alpha" },
       { field: "Item of Works", value: "Coordination" },
@@ -151,7 +143,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 02, 2026",
     reportDateRaw: "2026-09-02",
     isOverride: false,
-    overrideReason: "",
     changes: [
       {
         field: "Job Request Description",
@@ -173,7 +164,6 @@ const mockDailyReportHistory = [
     reportDate: "Sep 01, 2026",
     reportDateRaw: "2026-09-01",
     isOverride: false,
-    overrideReason: "",
     initialValues: [
       { field: "Project", value: "Project Alpha" },
       { field: "Item of Works", value: "Site Inspection" },
@@ -184,6 +174,10 @@ const mockDailyReportHistory = [
     ],
   },
 ];
+
+let lastLoadedHistoryQuery = "";
+let inFlightHistoryQuery = "";
+let historyLoadToken = 0;
 
 function bindHistoryEvents() {
   $(document).off(".drhistory");
@@ -208,14 +202,13 @@ function bindHistoryEvents() {
     }
   });
 
-  $(document).on("click.drhistory", "#drHistorySearch", function () {
-    loadDailyReportHistory();
-  });
-
-  $(document).on("click.drhistory", "#drHistoryReset", function () {
-    resetDailyReportHistoryFilters();
-    loadDailyReportHistory();
-  });
+  $(document).on(
+    "change.drhistory",
+    "#drHistoryDateFrom, #drHistoryDateTo",
+    function () {
+      applyHistoryDateFilters();
+    },
+  );
 
   $(document).on("change.drhistory", "#drHistorySort", function () {
     loadDailyReportHistory();
@@ -281,6 +274,29 @@ function resetDailyReportHistoryFilters() {
   $("#drHistoryDateFrom").val(defaults.dateFrom);
   $("#drHistoryDateTo").val(defaults.dateTo);
   $("#drHistorySort").val(defaults.sort);
+  $("#drHistoryDateFrom, #drHistoryDateTo").removeClass("is-invalid");
+}
+
+function getHistoryDateRangeState() {
+  const dateFrom = $("#drHistoryDateFrom").val() || "";
+  const dateTo = $("#drHistoryDateTo").val() || "";
+  const complete = Boolean(dateFrom && dateTo);
+  const valid = complete && dateFrom <= dateTo;
+
+  $("#drHistoryDateFrom, #drHistoryDateTo").toggleClass(
+    "is-invalid",
+    complete && !valid,
+  );
+
+  return { dateFrom, dateTo, valid };
+}
+
+function applyHistoryDateFilters() {
+  if (!getHistoryDateRangeState().valid) {
+    return;
+  }
+
+  loadDailyReportHistory();
 }
 
 function areHistoryFiltersActive() {
@@ -297,6 +313,9 @@ function openDailyReportHistory() {
 
   $("#drHistoryEmployeeName").text(employee.name);
   resetDailyReportHistoryFilters();
+  lastLoadedHistoryQuery = "";
+  inFlightHistoryQuery = "";
+  historyLoadToken += 1;
   $("#drHistoryModal").addClass("is-open").attr("aria-hidden", "false");
   loadDailyReportHistory();
 }
@@ -415,19 +434,6 @@ function formatHistoryEventTime(timestamp) {
     .replace(/,\s*(\d{1,2}:\d{2}\s*[AP]M)$/i, " · $1");
 }
 
-function renderHistoryReason(record) {
-  if (!record.isOverride || !record.overrideReason) {
-    return "";
-  }
-
-  return `
-      <div class="dr-history-reason">
-        <p class="dr-history-reason-label">Reason for override</p>
-        <p>${escapeHtml(record.overrideReason)}</p>
-      </div>
-    `;
-}
-
 function renderHistoryTable(headers, rowsHtml) {
   if (!rowsHtml) {
     return `<p class="dr-history-no-changes">No field-level changes were recorded for this event.</p>`;
@@ -459,8 +465,6 @@ function renderHistorySection(title, content) {
 }
 
 function renderHistoryChanges(record) {
-  const reason = renderHistoryReason(record);
-
   if (record.action === "created") {
     const initialValues =
       record.initialValues && record.initialValues.length
@@ -480,10 +484,10 @@ function renderHistoryChanges(record) {
       )
       .join("");
 
-    return `${reason}${renderHistorySection(
+    return renderHistorySection(
       "Initial entry",
       renderHistoryTable(["Field", "Value"], rows),
-    )}`;
+    );
   }
 
   const changes = record.changes || [];
@@ -499,10 +503,10 @@ function renderHistoryChanges(record) {
     )
     .join("");
 
-  return `${reason}${renderHistorySection(
+  return renderHistorySection(
     "Changes",
     renderHistoryTable(["Field", "Previous Value", "New Value"], rows),
-  )}`;
+  );
 }
 
 function renderHistoryItem(record, index) {
@@ -604,7 +608,20 @@ function getFilteredMockDailyReportHistory() {
   };
 }
 
+function getHistoryQueryKey(employeeNum) {
+  return [
+    employeeNum || "",
+    $("#drHistoryDateFrom").val() || "",
+    $("#drHistoryDateTo").val() || "",
+    $("#drHistorySort").val() || "newest",
+  ].join("|");
+}
+
 function loadDailyReportHistory() {
+  if (!getHistoryDateRangeState().valid) {
+    return;
+  }
+
   const employee = getHistoryEmployee();
 
   if (!employee.empNum) {
@@ -614,10 +631,20 @@ function loadDailyReportHistory() {
 
   $("#drHistoryEmployeeName").text(employee.name);
 
+  const queryKey = getHistoryQueryKey(employee.empNum);
+
+  if (queryKey === lastLoadedHistoryQuery || queryKey === inFlightHistoryQuery) {
+    return;
+  }
+
   if (USE_MOCK_DAILY_REPORT_HISTORY) {
+    lastLoadedHistoryQuery = queryKey;
     renderHistoryList(getFilteredMockDailyReportHistory());
     return;
   }
+
+  const requestToken = (historyLoadToken += 1);
+  inFlightHistoryQuery = queryKey;
 
   renderHistoryLoading();
 
@@ -632,10 +659,21 @@ function loadDailyReportHistory() {
     "Failed to load daily report history.",
   )
     .then((response) => {
-      const data = response.data || {};
-      renderHistoryList(data);
+      if (requestToken !== historyLoadToken) {
+        return;
+      }
+
+      inFlightHistoryQuery = "";
+      lastLoadedHistoryQuery = queryKey;
+      renderHistoryList(response.data || {});
     })
     .catch((error) => {
+      if (requestToken !== historyLoadToken) {
+        return;
+      }
+
+      inFlightHistoryQuery = "";
+      lastLoadedHistoryQuery = "";
       console.error(error);
       renderHistoryError(error);
     });
