@@ -10,7 +10,7 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
-## [1.3.0] - 2026-09-17
+## [1.3.0] - 2026-09-18
 
 Daily Report history, R&D Manhour Report, MH Report billing shares, and KDT Wide Training Report.
 

@@ -2,7 +2,7 @@
   "releases": [
     {
       "version": "1.3.0",
-      "date": "2026-09-17",
+      "date": "2026-09-18",
       "latest": true,
       "summary": "Daily Report history, R&D and KDT Wide Training reports, and Man-Hour Report billing updates.",
       "added": [

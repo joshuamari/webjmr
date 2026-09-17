@@ -317,7 +317,6 @@ function defaultCustomize(jrds) {
     showTotalRow: true,
     showGroupSubtotal: true,
     compactRows: false,
-    wrapJrdTitles: true,
   };
 }
 
@@ -865,9 +864,6 @@ function tableClassNames(extra, useCustomize) {
   if (useCustomize && customizeState.compactRows) {
     cls += " rd-compact";
   }
-  if (useCustomize && !customizeState.wrapJrdTitles) {
-    cls += " rd-nowrap-titles";
-  }
   return cls.trim();
 }
 
@@ -979,7 +975,7 @@ function renderPivot(data) {
   var jrdHeaders = jrds
     .map(function (jrd) {
       return `<th class="rd-jrd" ${cellAttrs(
-        'data-a-h="center" data-a-wrap="true" data-fill-color="E8F1FB" data-f-bold="true"'
+        'data-a-h="center" data-a-wrap="false" data-fill-color="E8F1FB" data-f-bold="true"'
       )}>${escapeHtml(jrdHeaderLabel(jrd, data.jrds || []))}</th>`;
     })
     .join("");
@@ -1190,7 +1186,7 @@ function renderGroupDetailTable(group, jrds, tableId) {
   var jrdHeaders = jrds
     .map(function (jrd) {
       return `<th class="rd-jrd" ${cellAttrs(
-        'data-a-h="center" data-a-wrap="true" data-fill-color="E8F1FB" data-f-bold="true"'
+        'data-a-h="center" data-a-wrap="false" data-fill-color="E8F1FB" data-f-bold="true"'
       )}>${escapeHtml(jrd.description || "")}</th>`;
     })
     .join("");
@@ -1423,7 +1419,6 @@ function openCustomize() {
   $("#optShowTotalRow").prop("checked", customizeState.showTotalRow);
   $("#optShowGroupSubtotal").prop("checked", customizeState.showGroupSubtotal);
   $("#optCompactRows").prop("checked", customizeState.compactRows);
-  $("#optWrapJrdTitles").prop("checked", customizeState.wrapJrdTitles);
   $("#customizeSearch").val("");
   filterCustomizeList("");
   $("#customizeOverlay").removeClass("d-none");
@@ -1509,7 +1504,6 @@ function applyCustomize() {
     showTotalRow: $("#optShowTotalRow").prop("checked"),
     showGroupSubtotal: $("#optShowGroupSubtotal").prop("checked"),
     compactRows: $("#optCompactRows").prop("checked"),
-    wrapJrdTitles: $("#optWrapJrdTitles").prop("checked"),
   };
   closeCustomize();
   renderCurrentView();
