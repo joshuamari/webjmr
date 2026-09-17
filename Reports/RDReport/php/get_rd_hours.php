@@ -11,7 +11,8 @@ try {
         ]);
     }
 
-    if (!rdHasAccess($login['data']['id'])) {
+    $reportType = rdRequestedType();
+    if (!rdHasAccess($login['data']['id'], $reportType)) {
         rdJsonOk([
             'isSuccess' => false,
             'message' => 'No access',
@@ -46,7 +47,7 @@ try {
     }
     $requestedGroups = array_values(array_unique($requestedGroups));
 
-    $allowedGroups = getGroups($login['data']['id'], RD_ALL_GROUP_ACCESS);
+    $allowedGroups = getGroups($login['data']['id'], rdAllGroupAccessPermissionId($reportType));
     $allowedByAbbrev = [];
     foreach ($allowedGroups as $grp) {
         $abbrev = trim((string) ($grp['abbreviation'] ?? ''));
@@ -71,8 +72,12 @@ try {
         }
     }
 
+    $sharedJrds = $reportType === RD_REPORT_TYPE_KDTWIDE;
+
     $emptyPayload = [
         'isSuccess' => true,
+        'reportType' => $reportType,
+        'jrdScope' => $sharedJrds ? 'shared' : 'group',
         'month' => $ymSel,
         'groupFilter' => $requestedGroups,
         'showGrandTotal' => false,
@@ -93,11 +98,11 @@ try {
         rdJsonOk($emptyPayload);
     }
 
-    $rdItemId = rdItemId($connwebjmr);
+    $rdItemId = rdItemIdForType($connwebjmr, $reportType);
     if ($rdItemId < 1) {
         rdJsonOk([
             'isSuccess' => false,
-            'message' => 'Research & Development item was not found.',
+            'message' => rdItemMissingMessage($reportType),
         ]);
     }
 
@@ -148,18 +153,22 @@ try {
 
         $rawJrdId = trim((string) ($row['jrdId'] ?? ''));
         $jrdGroup = trim((string) ($row['jrdGroup'] ?? ''));
+        $jrdScope = 'group';
         if ($rawJrdId === '' || $rawJrdId === '0') {
             $jrdId = '__none__:' . $abbrev;
             $jrdGroup = $abbrev;
             $jrdDescription = 'Unspecified';
         } else {
             $jrdId = $rawJrdId;
-            if ($jrdGroup === '' || !isset($allowedByAbbrev[$jrdGroup])) {
-                $jrdGroup = $abbrev;
-            }
             $jrdDescription = trim((string) ($row['jrdDescription'] ?? ''));
             if ($jrdDescription === '') {
                 $jrdDescription = 'JRD #' . $jrdId;
+            }
+            if ($sharedJrds) {
+                $jrdGroup = '';
+                $jrdScope = 'shared';
+            } elseif ($jrdGroup === '' || !isset($allowedByAbbrev[$jrdGroup])) {
+                $jrdGroup = $abbrev;
             }
         }
 
@@ -182,8 +191,11 @@ try {
                 'id' => $jrdId,
                 'description' => $jrdDescription,
                 'group' => $jrdGroup,
-                'groupName' => $allowedByAbbrev[$jrdGroup]['name'] ?? $jrdGroup,
+                'groupName' => $jrdScope === 'shared'
+                    ? ''
+                    : ($allowedByAbbrev[$jrdGroup]['name'] ?? $jrdGroup),
                 'priority' => (int) ($row['jrdPriority'] ?? 0),
+                'scope' => $jrdScope,
             ];
         }
     }
@@ -206,10 +218,17 @@ try {
 
     $groupOrder = array_flip($targetAbbrevs);
     uasort($jrdMeta, function ($a, $b) use ($groupOrder) {
-        $aPos = $groupOrder[$a['group']] ?? 9999;
-        $bPos = $groupOrder[$b['group']] ?? 9999;
-        if ($aPos !== $bPos) {
-            return $aPos <=> $bPos;
+        $aShared = ($a['scope'] ?? '') === 'shared';
+        $bShared = ($b['scope'] ?? '') === 'shared';
+        if ($aShared !== $bShared) {
+            return $aShared ? -1 : 1;
+        }
+        if (!$aShared) {
+            $aPos = $groupOrder[$a['group']] ?? 9999;
+            $bPos = $groupOrder[$b['group']] ?? 9999;
+            if ($aPos !== $bPos) {
+                return $aPos <=> $bPos;
+            }
         }
         if ($a['priority'] !== $b['priority']) {
             return $a['priority'] <=> $b['priority'];
@@ -253,8 +272,11 @@ try {
                 $hoursByJrd[$jrdId] = $jrdHours;
                 $groupMinutesByJrd[$jrdId] = ($groupMinutesByJrd[$jrdId] ?? 0.0) + (float) $jrdMinutes;
                 $grandMinutesByJrd[$jrdId] = ($grandMinutesByJrd[$jrdId] ?? 0.0) + (float) $jrdMinutes;
-                if (isset($jrdMeta[$jrdId]) && ($jrdMeta[$jrdId]['group'] ?? '') === $abbrev) {
-                    $groupJrdIds[$jrdId] = true;
+                if (isset($jrdMeta[$jrdId])) {
+                    $jrdScope = $jrdMeta[$jrdId]['scope'] ?? 'group';
+                    if ($jrdScope === 'shared' || ($jrdMeta[$jrdId]['group'] ?? '') === $abbrev) {
+                        $groupJrdIds[$jrdId] = true;
+                    }
                 }
             }
 
@@ -319,6 +341,8 @@ try {
 
     rdJsonOk([
         'isSuccess' => true,
+        'reportType' => $reportType,
+        'jrdScope' => $sharedJrds ? 'shared' : 'group',
         'month' => $ymSel,
         'groupFilter' => $targetAbbrevs,
         'showGrandTotal' => $showGrandTotal,

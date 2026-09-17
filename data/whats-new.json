@@ -1,40 +1,72 @@
 {
   "releases": [
     {
-      "version": "1.1.0",
-      "date": "2026-09-10",
+      "version": "1.3.0",
+      "date": "2026-09-17",
       "latest": true,
-      "summary": "Review Daily Report changes more easily, and view R&D manhours in a dedicated report.",
+      "summary": "Daily Report history, R&D and KDT Wide Training reports, and Man-Hour Report billing updates.",
       "added": [
         {
           "title": "Daily Report History",
-          "description": "Users can now review the history of changes made to Daily Report entries, including what was changed, the previous and new values, who performed the change, when the change was made, and the affected report date."
+          "description": "Users can review the history of changes to Daily Report entries, including what changed, previous and new values, who made the change, when it happened, and the affected report date."
         },
         {
           "title": "Research & Development Manhour Report",
-          "description": "A new Research & Development report is now available for reviewing manhours recorded under R&D activities. Reported hours are organized using the R&D activity entries maintained in Job Manhour Category."
+          "description": "A new R&D report is available for reviewing manhours recorded under R&D activities. Hours are organized by group and by the R&D activity entries maintained in Job Manhour Category."
         },
         {
-          "title": "Research & Development Activities in JMC",
-          "description": "Research & Development is now available under KDT Internal Activities in Job Manhour Category, allowing groups to maintain their own R&D activity entries for Daily Report and reporting use."
+          "title": "KDT Wide Training Report",
+          "description": "A new report in the same format as the R&D Manhour Report shows KDT Wide Training hours by group, employee, and activity."
         }
       ],
       "changed": [
         {
+          "title": "Man-Hour Report Billing",
+          "description": "KDT vs BU billing shares are no longer taken from percent labels in item names. Training items that used to split 50/50, plus Research & Development and KDT Wide Training, now bill 100% to KDT. Trainer for KHI Engineer remains billed to the BU."
+        },
+        {
           "title": "Supervisor Override Tracking",
-          "description": "Daily Report changes made through supervisor override are now clearly identified in the history, including the supervisor who performed the override, the reason, and the fields that were changed."
+          "description": "Daily Report changes made through supervisor override are marked in history, including the supervisor who made the change and the fields that were changed."
         }
       ],
       "modified": [
         {
           "title": "Clearer Change Details",
-          "description": "Daily Report updates now show changed values in a clearer before-and-after format, making corrections easier to review."
+          "description": "Daily Report updates show changed values in a clearer before-and-after format, making corrections easier to review."
         },
         {
           "title": "Improved History Experience",
-          "description": "The Daily Report history interface has been improved for easier scanning and better usability across laptop, tablet, and smaller screens."
+          "description": "The Daily Report history interface is easier to scan on laptop, tablet, and smaller screens."
         }
       ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-09-16",
+      "latest": false,
+      "summary": "Log KDT Wide Training hours in Daily Report.",
+      "added": [
+        {
+          "title": "KDT Wide Training Hours",
+          "description": "Employees can now log KDT Wide Training hours in Daily Report under Training. Shared activities are People management training program and Work Evolution Guidance, maintained in Job Manhour Category."
+        }
+      ],
+      "changed": [],
+      "modified": []
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-09-10",
+      "latest": false,
+      "summary": "Log Research & Development hours in Daily Report.",
+      "added": [
+        {
+          "title": "Research & Development Hours",
+          "description": "Employees can now log Research & Development hours in Daily Report under KDT Internal Activities. Each group maintains its own R&D activity entries in Job Manhour Category."
+        }
+      ],
+      "changed": [],
+      "modified": []
     },
     {
       "version": "1.0.0",

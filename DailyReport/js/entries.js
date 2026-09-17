@@ -323,6 +323,13 @@ function copyEntries() {
 
   const getDate = $("#idDRDate").val();
   const copyDate = $("#idCopyDate").val();
+  const isTesting =
+    AppState.empDetails.empGroup === "SYS" ||
+    AppState.empDetails.empGroup === "MNG" ||
+    AppState.empDetails.empGroup === "PIP" ||
+    AppState.empDetails.empGroup === "IT"
+      ? true
+      : false;
 
   postJson(
     "api/copy_entries.php",
@@ -330,6 +337,7 @@ function copyEntries() {
       empNum: AppState.empDetails.empNum,
       getDate: getDate,
       copyDate: copyDate,
+      isTesting: isTesting,
     },
     "Failed to copy entries.",
   )

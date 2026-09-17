@@ -2,6 +2,7 @@
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
 require_once "./global_functions.php";
+require_once "./dr_history.php";
 #endregion
 
 #region set timezone
@@ -94,6 +95,11 @@ try {
     ":logs" => $logs
   ]);
   if($insertDRStmt->rowCount() > 0) {
+    $entryId = (int) $connwebjmr->lastInsertId();
+    overrideRecordCreatedHistory(
+      $entryId,
+      overrideHistoryActorNum($input)
+    );
     $result['isSuccess'] = TRUE;
     $result['message'] = "Entries Added Successfully";
   }

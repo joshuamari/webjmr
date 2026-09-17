@@ -1,7 +1,7 @@
 // TEMPORARY MOCK DATA FOR DAILY REPORT HISTORY UI TESTING
 // Set USE_MOCK_DAILY_REPORT_HISTORY to false (or delete this mock block)
 // to restore live API history from get_history.php.
-const USE_MOCK_DAILY_REPORT_HISTORY = true;
+const USE_MOCK_DAILY_REPORT_HISTORY = false;
 
 const mockDailyReportHistory = [
   {

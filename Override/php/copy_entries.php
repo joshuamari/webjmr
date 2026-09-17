@@ -1,6 +1,7 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
+require_once "./dr_history.php";
 #endregion
 
 #region set timezone
@@ -122,6 +123,10 @@ try{
           ":trGrp" => $res['fldTrGroup'],
           ":logs" => $logs,
         ]);
+        overrideRecordCreatedHistory(
+          (int) $connwebjmr->lastInsertId(),
+          overrideHistoryActorNum($input)
+        );
       }
     }
     $result['isSuccess'] = TRUE;

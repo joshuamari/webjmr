@@ -520,7 +520,7 @@ function deleteEntry(trID) {
     $.ajax({
       type: "POST",
       url: "php/delete_entry.php",
-      data: { drID: trID },
+      data: { drID: trID, overrideEmpNum: empDetails["empID"] },
       dataType: "json",
       success: function (response) {
         getEntries(emp).then(fillEntries);

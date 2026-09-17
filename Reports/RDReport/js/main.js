@@ -1,4 +1,18 @@
 const rootFolder = `//${document.location.hostname}`;
+const reportConfig = Object.assign(
+  {
+    type: "rd",
+    phpBase: "php/",
+    title: "R&D Manhour Report",
+    loadError: "Could not load R&D Manhour Report data.",
+    hoursError: "Could not load R&D hours.",
+    byGroupHint: "Each group displays only its own R&D Job Request Descriptions.",
+    exportTitle: "R&D Manhour Report",
+    exportFileLabel: "R&D Manhour Report",
+    sheetPrefix: "RD",
+  },
+  window.RD_REPORT_CONFIG || {}
+);
 let empDetails = [];
 let allowedGroups = [];
 let reportData = null;
@@ -143,6 +157,7 @@ $(document).on("click", ".rd-jrd-suggest-item", function () {
     description: $(this).attr("data-jrd-desc") || "",
     group: $(this).attr("data-jrd-group") || "",
     groupName: $(this).attr("data-jrd-group-name") || "",
+    scope: $(this).attr("data-jrd-scope") || "",
   });
 });
 
@@ -217,14 +232,32 @@ $(document).on("dragover", ".rd-jrd-col-item", function (e) {
   }
 });
 
+function reportPhpUrl(file) {
+  var base = String(reportConfig.phpBase || "php/");
+  if (base.charAt(base.length - 1) !== "/") {
+    base += "/";
+  }
+  return base + file;
+}
+
+function isSharedJrd(jrd) {
+  if (!jrd) {
+    return false;
+  }
+  if (jrd.scope === "shared") {
+    return true;
+  }
+  return reportConfig.type === "kdtwide" && !jrd.group;
+}
+
 function rdAlertText(error) {
   if (!error) {
-    return "Could not load R&D Manhour Report data.";
+    return reportConfig.loadError;
   }
   if (typeof error === "string") {
     return error;
   }
-  return error.message || "Could not load R&D Manhour Report data.";
+  return error.message || reportConfig.loadError;
 }
 
 function rdAjaxMessage(xhr, fallback) {
@@ -390,8 +423,11 @@ function duplicateJrdNames(jrds) {
 }
 
 function jrdHeaderLabel(jrd, jrds) {
-  var counts = duplicateJrdNames(jrds);
   var name = jrd.description || "";
+  if (isSharedJrd(jrd)) {
+    return name;
+  }
+  var counts = duplicateJrdNames(jrds);
   if ((counts[String(name).toLowerCase()] || 0) > 1) {
     return name + " (" + (jrd.groupName || jrd.group || "") + ")";
   }
@@ -402,7 +438,11 @@ function jrdFocusLabel(focus) {
   if (!focus) {
     return "";
   }
-  return (focus.description || "") + " — " + (focus.groupName || focus.group || "");
+  var desc = focus.description || "";
+  if (isSharedJrd(focus) || !String(focus.group || "").trim()) {
+    return desc;
+  }
+  return desc + " — " + (focus.groupName || focus.group || "");
 }
 
 function focusedJrdRecord() {
@@ -418,7 +458,7 @@ function groupContainsFocusedJrd(group) {
     return false;
   }
   var jrdId = String(jrd.id);
-  if (String(jrd.group || "") !== String(group.abbreviation || "")) {
+  if (!isSharedJrd(jrd) && String(jrd.group || "") !== String(group.abbreviation || "")) {
     return false;
   }
   if (
@@ -560,7 +600,8 @@ function checkAccess() {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
-      url: "php/get_access.php",
+      url: reportPhpUrl("get_access.php"),
+      data: { reportType: reportConfig.type },
       dataType: "json",
       success: function (response) {
         resolve(response);
@@ -594,7 +635,8 @@ function getGroups() {
   return new Promise((resolve, reject) => {
     $.ajax({
       type: "GET",
-      url: "php/get_user_groups.php",
+      url: reportPhpUrl("get_user_groups.php"),
+      data: { reportType: reportConfig.type },
       dataType: "json",
       success: function (response) {
         resolve(response);
@@ -718,7 +760,7 @@ function updateViewChrome() {
   $("#viewHintText").text(
     isPivot
       ? "Group, Employee No. and Employee stay fixed while JRD columns scroll."
-      : "Each group displays only its own R&D Job Request Descriptions."
+      : reportConfig.byGroupHint
   );
 }
 
@@ -750,8 +792,20 @@ function matchingJrds(query) {
     needle = "";
   }
   return jrds.filter(function (jrd) {
-    if (restrictGroups && checked.indexOf(String(jrd.group)) === -1) {
-      return false;
+    if (restrictGroups) {
+      if (isSharedJrd(jrd)) {
+        var usedInChecked = ((reportData && reportData.groups) || []).some(function (group) {
+          return (
+            checked.indexOf(String(group.abbreviation)) !== -1 &&
+            hasHours(hoursLookup(group.hoursByJrd, jrd.id))
+          );
+        });
+        if (!usedInChecked) {
+          return false;
+        }
+      } else if (checked.indexOf(String(jrd.group)) === -1) {
+        return false;
+      }
     }
     if (!needle) {
       return true;
@@ -782,12 +836,17 @@ function renderJrdSuggestions(query) {
   }
   var html = matches
     .map(function (jrd) {
-      var label = escapeHtml(jrd.description || "") + " — " + escapeHtml(jrd.groupName || jrd.group || "");
+      var label = escapeHtml(jrd.description || "");
+      if (!isSharedJrd(jrd) && (jrd.groupName || jrd.group)) {
+        label += " — " + escapeHtml(jrd.groupName || jrd.group || "");
+      }
       return `<button type="button" class="rd-jrd-suggest-item" data-jrd-id="${escapeHtml(
         jrd.id
       )}" data-jrd-desc="${escapeHtml(jrd.description || "")}" data-jrd-group="${escapeHtml(
         jrd.group || ""
-      )}" data-jrd-group-name="${escapeHtml(jrd.groupName || "")}">${label}</button>`;
+      )}" data-jrd-group-name="${escapeHtml(jrd.groupName || "")}" data-jrd-scope="${escapeHtml(
+        jrd.scope || ""
+      )}">${label}</button>`;
     })
     .join("");
   $("#jrdFocusMenu").html(html).removeClass("d-none");
@@ -1299,8 +1358,11 @@ function renderReport(data) {
     });
     var checked = checkedGroupAbbrevs();
     var restrictGroups = checked.length > 0 && checked.length < allowedGroups.length;
+    var focused = focusedJrdRecord() || jrdFocus;
     var groupOk =
-      !restrictGroups || checked.indexOf(String(jrdFocus.group)) !== -1;
+      !restrictGroups ||
+      isSharedJrd(focused) ||
+      checked.indexOf(String(jrdFocus.group)) !== -1;
     if (!stillThere || !groupOk) {
       jrdFocus = null;
     }
@@ -1322,10 +1384,11 @@ function getTable() {
   var requestSeq = ++tableRequestSeq;
   $.ajax({
     type: "POST",
-    url: "php/get_rd_hours.php",
+    url: reportPhpUrl("get_rd_hours.php"),
     data: {
       getGroups: groups,
       getYMSel: $("#monthSel").val(),
+      reportType: reportConfig.type,
     },
     dataType: "json",
     beforeSend: function () {
@@ -1337,7 +1400,7 @@ function getTable() {
       }
       if (!response || !response.isSuccess) {
         renderEmpty("");
-        alert((response && response.message) || "Could not load R&D hours.");
+        alert((response && response.message) || reportConfig.hoursError);
         return;
       }
       renderReport(response);
@@ -1347,7 +1410,7 @@ function getTable() {
         return;
       }
       renderEmpty("");
-      alert(rdAjaxMessage(xhr, "Could not load R&D hours."));
+      alert(rdAjaxMessage(xhr, reportConfig.hoursError));
     },
   });
 }
@@ -1408,7 +1471,11 @@ function renderCustomizeList() {
         />
         <label class="rd-jrd-option-label" for="${escapeHtml(inputId)}">
           <span class="rd-jrd-col-title">${escapeHtml(jrd.description || "")}</span>
-          <span class="rd-jrd-col-group">${escapeHtml(jrd.groupName || jrd.group || "")}</span>
+          ${
+            isSharedJrd(jrd) || !(jrd.groupName || jrd.group)
+              ? ""
+              : `<span class="rd-jrd-col-group">${escapeHtml(jrd.groupName || jrd.group || "")}</span>`
+          }
         </label>
       </div>`;
   });
@@ -1479,7 +1546,7 @@ function buildExportTable() {
   }
   holder.innerHTML = "";
   var tbody = document.createElement("tbody");
-  appendTitleRow(tbody, "R&D Manhour Report");
+  appendTitleRow(tbody, reportConfig.exportTitle);
   appendTitleRow(tbody, printMetaText(reportData));
   tbody.appendChild(document.createElement("tr"));
 
@@ -1523,11 +1590,11 @@ $(document).on("click", "#btnExport", function () {
   }
   var groupLabel = selectedGroupLabel().replace(/\s+/g, "");
   var viewLabel = viewMode === "pivot" ? "Pivot" : "ByGroup";
-  var xlsName = `${$("#monthSel").val()}_${groupLabel} ${viewLabel} R&D Manhour Report.xlsx`;
+  var xlsName = `${$("#monthSel").val()}_${groupLabel} ${viewLabel} ${reportConfig.exportFileLabel}.xlsx`;
   TableToExcel.convert(exportEl, {
     name: xlsName,
     sheet: {
-      name: (viewLabel + " " + (groupLabel || "RD")).substring(0, 31),
+      name: (viewLabel + " " + (groupLabel || reportConfig.sheetPrefix)).substring(0, 31),
     },
   });
 });

@@ -1,6 +1,7 @@
 <?php
 #region DB Connect
 require_once "../../dbconn/dbconnectwebjmr.php";
+require_once "./dr_history.php";
 #endregion
 
 #region Initialize Variable
@@ -62,6 +63,10 @@ $logs = date("YmdHis") . "_" . $input['overrideEmpNum'];
 
 #region Main Query
 try{
+  $entryId = (int) $input['drID'];
+  overrideLoadDailyReportHistory();
+  $oldRow = fetchDailyReportRowById($entryId) ?: [];
+
   $updateEntryQ = "UPDATE `dailyreport` 
                    SET `fldLocation` = :locID, 
                        `fldProject` = :projID, 
@@ -95,6 +100,11 @@ try{
     ":drID" => $input['drID'],
   ]);
   if($updateEntryStmt->rowCount() > 0) {
+    overrideRecordUpdatedHistory(
+      $oldRow,
+      $entryId,
+      overrideHistoryActorNum($input)
+    );
     $result['isSuccess'] = TRUE;
     $result['message'] = "Edit Entry Successfully";
   }

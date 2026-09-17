@@ -14,9 +14,13 @@ try {
         rdJsonOk($result);
     }
 
-    $ac = rdHasAccess($login['data']['id']);
+    $reportType = rdRequestedType();
+    $ac = rdHasAccess($login['data']['id'], $reportType);
     if ($ac) {
-        $result['data'] = getGroups($login['data']['id'], RD_ALL_GROUP_ACCESS);
+        $result['data'] = getGroups(
+            $login['data']['id'],
+            rdAllGroupAccessPermissionId($reportType)
+        );
         $result['isSuccess'] = true;
         $result['message'] = 'Groups fetched';
     }

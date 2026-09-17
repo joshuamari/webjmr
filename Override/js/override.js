@@ -2160,6 +2160,7 @@ function deleteEntry(trID) {
       url: "php/delete_entry.php",
       data: {
         drID: trID,
+        overrideEmpNum: empDetails["empID"],
       },
       dataType: "json",
       success: function (response) {

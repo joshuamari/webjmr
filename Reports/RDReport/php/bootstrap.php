@@ -9,10 +9,30 @@ date_default_timezone_set('Asia/Manila');
 const RD_ALL_GROUPS = '__all__';
 const RD_ACCESS_PERMISSION = 54;
 const RD_ALL_GROUP_ACCESS = 55;
+const KDTWIDE_ACCESS_PERMISSION = 56;
+const KDTWIDE_ALL_GROUP_ACCESS = 57;
+const RD_REPORT_TYPE_RD = 'rd';
+const RD_REPORT_TYPE_KDTWIDE = 'kdtwide';
 
-function rdHasAccess($employeeId): bool
+function rdAccessPermissionId(string $type): int
 {
-    return checkAccess(RD_ACCESS_PERMISSION, $employeeId);
+    return $type === RD_REPORT_TYPE_KDTWIDE
+        ? KDTWIDE_ACCESS_PERMISSION
+        : RD_ACCESS_PERMISSION;
+}
+
+function rdAllGroupAccessPermissionId(string $type): int
+{
+    return $type === RD_REPORT_TYPE_KDTWIDE
+        ? KDTWIDE_ALL_GROUP_ACCESS
+        : RD_ALL_GROUP_ACCESS;
+}
+
+function rdHasAccess($employeeId, ?string $type = null): bool
+{
+    $type = $type ?? rdRequestedType();
+
+    return checkAccess(rdAccessPermissionId($type), $employeeId);
 }
 
 function rdPublicErrorMessage(Throwable $e): string
@@ -85,21 +105,68 @@ function rdRequireConnections(): void
     $connwebjmr->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 
-function rdItemId(PDO $conn): int
+function rdRequestedType(): string
+{
+    $raw = '';
+    if (isset($_POST['reportType'])) {
+        $raw = trim((string) $_POST['reportType']);
+    } elseif (isset($_GET['reportType'])) {
+        $raw = trim((string) $_GET['reportType']);
+    }
+
+    if ($raw === RD_REPORT_TYPE_KDTWIDE) {
+        return RD_REPORT_TYPE_KDTWIDE;
+    }
+
+    return RD_REPORT_TYPE_RD;
+}
+
+function rdLookupItemId(PDO $conn, string $projectName, string $itemName): int
 {
     $stmt = $conn->prepare(
         "SELECT i.fldID
          FROM itemofworkstable AS i
          JOIN projectstable AS p ON p.fldID = i.fldProject
-         WHERE p.fldProject = 'KDT Internal Activities'
-           AND i.fldItem = 'Research & Development'
+         WHERE p.fldProject = :projectName
+           AND i.fldItem = :itemName
            AND i.fldDelete = '0'
          LIMIT 1"
     );
-    $stmt->execute();
+    $stmt->execute([
+        ':projectName' => $projectName,
+        ':itemName' => $itemName,
+    ]);
     $value = $stmt->fetchColumn();
 
     return $value !== false ? (int) $value : 0;
+}
+
+function rdItemId(PDO $conn): int
+{
+    return rdLookupItemId($conn, 'KDT Internal Activities', 'Research & Development');
+}
+
+function rdKdtWideItemId(PDO $conn): int
+{
+    return rdLookupItemId($conn, 'Training', 'KDT Wide Training');
+}
+
+function rdItemIdForType(PDO $conn, string $type): int
+{
+    if ($type === RD_REPORT_TYPE_KDTWIDE) {
+        return rdKdtWideItemId($conn);
+    }
+
+    return rdItemId($conn);
+}
+
+function rdItemMissingMessage(string $type): string
+{
+    if ($type === RD_REPORT_TYPE_KDTWIDE) {
+        return 'KDT Wide Training item was not found.';
+    }
+
+    return 'Research & Development item was not found.';
 }
 
 function rdMinutesToHours(float $minutes): float

@@ -8,28 +8,69 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ## [Unreleased]
 
-R&D hours input, R&D Manhour Report, and MH Report billing shares. No release date yet.
+---
+
+## [1.3.0] - 2026-09-17
+
+Daily Report history, R&D Manhour Report, MH Report billing shares, and KDT Wide Training Report.
 
 ### Added
 
-- Daily Report: employees can log **Research & Development** hours under KDT Internal Activities. Unlike other KIA items, the JRD is not auto-selected; only the selected group's JRDs are listed (groups manage those JRDs in JMC)
-- **R&D Manhour Report** (`Reports/RDReport/`): monthly R&D hours by employee, grouped by BU, with print and Excel export. Groups are multi-select; users with all-group access can include several BUs
+- Daily Report **History**: Created / Updated / Deleted log with before-and-after values, actor, timestamp, report date, and an Override badge when a supervisor made the change (including Override-module edits). Copy From is not a separate action; copied rows are logged as Created
+- **R&D Manhour Report** (`Reports/RDReport/`): monthly R&D hours by employee, grouped by BU, with pivot / by-group views, print, and Excel export. Groups are multi-select; users with all-group access can include several BUs
 - Reports hub card for R&D Manhour Report
 - Report permissions: R&D Report Access (54) and R&D Report All Group Access (55). Idempotent migration copies current Man-Hour Report grants
+- **KDT Wide Training Report** (`Reports/KDTWideReport/`): same layout as the R&D report, with shared JRD columns. Access (56) and All Group Access (57)
+- Reports hub card for KDT Wide Training Report
+- Report permissions: KDT Wide Training Report Access (56) and All Group Access (57). Idempotent migrations create the module and copy current Man-Hour Report grants
 
 ### Changed
 
 - **Man-Hour Report billing:** KDT vs BU split is no longer read from item-name suffixes (`[50% KDT]`, `[100% KHI]`). Shares live in `Reports/MHReport/php/mh_billing.php` (0–100 = KDT share; BU gets the remainder)
-- Training / KIA items that used to split 50/50 now bill **100% KDT** (K1/K2), including Training for New Employee, Trainer for Multiple BU, Trainer for One BU, and Research & Development. **Trainer for KHI Engineer** stays 100% BU
+- Training / KIA items that used to split 50/50 now bill **100% KDT** (K1/K2), including Training for New Employee, Trainer for Multiple BU, Trainer for One BU, Research & Development, and **KDT Wide Training**. **Trainer for KHI Engineer** stays 100% BU
 - Training item labels dropped the percent suffix (name only). Daily Report rows are unchanged (`fldID` stays the same)
 - Groups with no KHI counterpart: any remaining partial share still goes 100% to KDT (same rule as before)
 
 ### Notes
 
-- Depends on the shared R&D item of work (see 2026-08-27)
+- Depends on R&D hour input (1.1.0) and KDT Wide Training input (1.2.0)
 - To change a split later, edit `mhKdtShareByItemName()` — do not put `%` back in the item name
 - Run: `php SQL/migrations/20260901_copy_mh_report_permissions_to_rd_report.php`
 - Run: `php SQL/migrations/20260901_rename_trainer_for_one_bu.php`
+- Run: `SQL/migrations/20260909_dailyreport_history.sql` (PHP also creates `dailyreport_history` if missing)
+- Run: `php SQL/migrations/20260916_add_kdt_wide_report_permissions.php`
+- Run: `php SQL/migrations/20260916_copy_mh_report_permissions_to_kdt_wide_report.php`
+
+---
+
+## [1.2.0] - 2026-09-16
+
+KDT Wide Training hours can be logged in Daily Report.
+
+### Added
+
+- **KDT Wide Training** item under Training, with two company-wide JRDs (People management training program, Work Evolution Guidance). JRDs are item-scoped (`fldGroup` NULL), not the shared Training pool. Daily Report, JMC, and Override list those JRDs for every group
+
+### Notes
+
+- Run: `php SQL/migrations/20260916_add_kdt_wide_training.php`
+- Man-Hour Report bills this item at 100% KDT via `mh_billing.php`
+- The KDT Wide Training Report is in 1.3.0, not this release
+
+---
+
+## [1.1.0] - 2026-09-10
+
+Research & Development hours can be logged in Daily Report.
+
+### Added
+
+- Daily Report: employees can log **Research & Development** hours under KDT Internal Activities. Unlike other KIA items, the JRD is not auto-selected; only the selected group's JRDs are listed (groups manage those JRDs in JMC)
+
+### Notes
+
+- Depends on the shared R&D item of work (see 2026-08-27)
+- The R&D Manhour Report is in 1.3.0, not this release
 
 ---
 

@@ -39,4 +39,14 @@ function applySidebarPermissions() {
   const hasUnlock = overrideAccessState?.hasUnlock === true;
   $("#planningLink").toggle(hasPlanning);
   $("#drapprovals").toggle(hasUnlock);
+  $("#overtimeLink").toggle(canSeeOvertimeLink());
+}
+
+function canSeeOvertimeLink() {
+  const groups = String(empDetails?.empGroup || "")
+    .split(",")
+    .map((group) => group.trim().toUpperCase())
+    .filter(Boolean);
+
+  return groups.includes("SYS") || groups.includes("MNG");
 }
