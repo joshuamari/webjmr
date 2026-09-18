@@ -6,6 +6,6 @@ function hideOvertimeButton() {
     AppState.empDetails.empGroup === "IT"
   ) {
     $("#overtimeLink").show();
-    $('#idMH option[mhid="1"]').remove();
+    $('#idMH option[mhid="1"]').prop("disabled", true);
   }
 }
