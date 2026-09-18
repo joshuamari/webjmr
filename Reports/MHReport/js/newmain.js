@@ -399,10 +399,10 @@ function afterSub(kdtGroup) {
     pHead([
       `Management||${codeArr[kdtGroup]}||100%||P||M1`,
       `Management||${codeArr[kdtGroup]}||100%||J||M2`,
-      `${kdtGroup}||${codeArr[kdtGroup]}||50%||P||B1`,
-      `${kdtGroup}||${codeArr[kdtGroup]}||50%||J||B2`,
-      `KDT||${codeArr["KDT"]}||50%||P||K1`,
-      `KDT||${codeArr["KDT"]}||50%||J||K2`,
+      `${kdtGroup}||${codeArr[kdtGroup]}||100%||P||B1`,
+      `${kdtGroup}||${codeArr[kdtGroup]}||100%||J||B2`,
+      `KDT||${codeArr["KDT"]}||100%||P||K1`,
+      `KDT||${codeArr["KDT"]}||100%||J||K2`,
     ]);
   } else {
     pHead([`KDT||61W2102-8900||100%||P||K1`, `KDT||61W2102-8900||100%||J||K2`]);
