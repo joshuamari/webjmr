@@ -107,11 +107,39 @@
 
   function noteItemText(item) {
     if (isNoteObject(item)) {
-      return item.description
-        ? item.title + " — " + item.description
-        : item.title;
+      return item.title;
     }
     return String(item == null ? "" : item);
+  }
+
+  function popupItemMarkup(item) {
+    if (!isNoteObject(item)) {
+      return "<li>" + escapeHtml(noteItemText(item)) + "</li>";
+    }
+
+    var title =
+      '<span class="whats-new-popup-title">' +
+      escapeHtml(item.title) +
+      "</span>";
+    var bullets = Array.isArray(item.bullets)
+      ? item.bullets.filter(Boolean)
+      : [];
+
+    if (!bullets.length) {
+      return "<li>" + title + "</li>";
+    }
+
+    return (
+      "<li>" +
+      title +
+      "<ul>" +
+      bullets
+        .map(function (line) {
+          return "<li>" + escapeHtml(String(line)) + "</li>";
+        })
+        .join("") +
+      "</ul></li>"
+    );
   }
 
   function getPageNoteItems(items) {
@@ -137,11 +165,7 @@
         '<p class="whats-new-notes-label">' +
         escapeHtml(section.label) +
         "</p><ul>" +
-        items
-          .map(function (item) {
-            return "<li>" + escapeHtml(noteItemText(item)) + "</li>";
-          })
-          .join("") +
+        items.map(popupItemMarkup).join("") +
         "</ul></div>"
       );
     }).join("");

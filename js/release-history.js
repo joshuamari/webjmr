@@ -29,6 +29,13 @@
           if (item.description) {
             note.description = String(item.description);
           }
+          if (Array.isArray(item.bullets) && item.bullets.length) {
+            note.bullets = item.bullets
+              .map(function (line) {
+                return line ? String(line) : "";
+              })
+              .filter(Boolean);
+          }
           return note;
         }
         if (typeof item === "string" && item) {

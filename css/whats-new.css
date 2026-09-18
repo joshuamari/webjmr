@@ -283,14 +283,42 @@ button.version-history-trigger:focus-visible {
 
 .whats-new-notes-group ul {
   margin: 0;
-  padding-left: 18px;
+  padding: 0 0 0 1.15rem;
+  list-style: disc;
 }
 
 .whats-new-notes-group li {
-  margin: 0 0 4px;
+  margin: 0 0 8px;
   font-size: 13px;
   color: #4b5563;
-  line-height: 1.45;
+  line-height: 1.4;
+}
+
+.whats-new-notes-group > ul > li:last-child {
+  margin-bottom: 0;
+}
+
+.whats-new-notes-group li::marker {
+  color: #94a3b8;
+}
+
+.whats-new-popup-title {
+  font-weight: 600;
+  color: #16334f;
+}
+
+.whats-new-notes-group li ul {
+  margin: 4px 0 0;
+}
+
+.whats-new-notes-group li ul li {
+  margin: 0 0 3px;
+  font-weight: 400;
+  color: #4b5563;
+}
+
+.whats-new-notes-group li ul li:last-child {
+  margin-bottom: 0;
 }
 
 .whats-new-page .home-section {
