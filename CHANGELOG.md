@@ -10,6 +10,23 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.3.1] - 2026-09-21
+
+WFH hours in Daily Report and Override follow the same rules as other locations.
+
+### Changed
+
+- **Daily Report:** selecting WFH no longer forces man-hour type to Regular or locks the dropdown. On workdays, Regular and Overtime are both available, same as KDT/HWFH. Weekends and holidays still lock to Overtime
+- **Daily Report time cards:** WFH uses the same 8-hour checks as other locations (Regular over/under 8, OT/leave highlighting)
+- **Override:** same WFH input and time-card behavior on add and edit
+
+### Notes
+
+- Input only. Accounting, Individual, and Monthly Standard reports still use the old WFH 7.5-hour rules until the output pass
+- SYS / MNG / PIP / IT still cannot pick Overtime in Daily Report via `overtimeTest.js` (Web Overtime link); that is unchanged and is not WFH-specific
+
+---
+
 ## [1.3.0] - 2026-09-18
 
 Daily Report history, R&D Manhour Report, MH Report billing shares, and KDT Wide Training Report.

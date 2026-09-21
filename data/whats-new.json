@@ -1,9 +1,28 @@
 {
   "releases": [
     {
+      "version": "1.3.1",
+      "date": "2026-09-21",
+      "latest": true,
+      "summary": "Work from home hours now follow the same Daily Report rules as other locations.",
+      "added": [],
+      "changed": [
+        {
+          "title": "Work From Home Hours",
+          "description": "WFH is now treated like other locations in Daily Report and Override. On regular workdays you can choose Regular or Overtime. Time cards use the same 8-hour checks as office locations.",
+          "bullets": [
+            "WFH no longer locks man-hour type to Regular",
+            "On workdays, Regular and Overtime are both available",
+            "Time cards use the same 8-hour checks as other locations"
+          ]
+        }
+      ],
+      "modified": []
+    },
+    {
       "version": "1.3.0",
       "date": "2026-09-18",
-      "latest": true,
+      "latest": false,
       "summary": "Daily Report history, R&D and KDT Wide Training reports, and Man-Hour Report billing updates.",
       "added": [
         {
