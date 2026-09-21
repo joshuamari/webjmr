@@ -124,18 +124,6 @@ async function getMHCount() {
   $("#cardOt").removeClass("new");
   $("#cardLv").removeClass("new");
 
-  if (loc == "WFH") {
-    if (ot > 0) {
-      $("#cardOt").addClass("new");
-    }
-
-    if (lv > 0) {
-      $("#cardLv").addClass("new");
-    }
-
-    return;
-  }
-
   try {
     const workDay = await isWorkDay(loc);
 

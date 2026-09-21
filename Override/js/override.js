@@ -866,10 +866,6 @@ function MHValidation(type) {
         $("#idMH").val("Overtime");
         $("#idMH").prop("disabled", true);
       }
-      if (selLoc == "WFH") {
-        $("#idMH").val("Regular");
-        $("#idMH").prop("disabled", true);
-      }
     } else {
       $("#idMH").prop("disabled", true);
       $("#idMH").val(0);
@@ -890,10 +886,6 @@ function MHValidation(type) {
       $("#edit-selMHType").prop("disabled", false);
       if (!isWorkDay(selLoc)) {
         $("#edit-selMHType").val("Overtime");
-        $("#edit-selMHType").prop("disabled", true);
-      }
-      if (selLoc == "WFH") {
-        $("#edit-selMHType").val("Regular");
         $("#edit-selMHType").prop("disabled", true);
       }
     } else {
@@ -1491,33 +1483,24 @@ function getMHCount() {
   $("#cardReg").removeClass("new");
   $("#cardOt").removeClass("new");
   $("#cardLv").removeClass("new");
-  if (loc == "WFH") {
+  if (isWorkDay(loc)) {
     if (ot > 0) {
-      $("#cardOt").addClass("new");
+      if (reg < 8 || lv > 0) {
+        $("#cardOt").addClass("new");
+      }
+    }
+    if (lv == 4 && reg < 4) {
+      $("#cardLv").addClass("new");
+    }
+    if (reg > 8 || (reg > 0 && reg + lv < 8)) {
+      $("#cardReg").addClass("new");
+    }
+  } else {
+    if (reg > 0) {
+      $("#cardReg").addClass("new");
     }
     if (lv > 0) {
       $("#cardLv").addClass("new");
-    }
-  } else {
-    if (isWorkDay(loc)) {
-      if (ot > 0) {
-        if (reg < 8 || lv > 0) {
-          $("#cardOt").addClass("new");
-        }
-      }
-      if (lv == 4 && reg < 4) {
-        $("#cardLv").addClass("new");
-      }
-      if (reg > 8 || (reg > 0 && reg + lv < 8)) {
-        $("#cardReg").addClass("new");
-      }
-    } else {
-      if (reg > 0) {
-        $("#cardReg").addClass("new");
-      }
-      if (lv > 0) {
-        $("#cardLv").addClass("new");
-      }
     }
   }
 }

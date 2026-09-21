@@ -114,12 +114,6 @@ function MHValidation() {
         return;
       }
 
-      if (selLoc == "WFH") {
-        $("#idMH").val("Regular");
-        $("#idMH").prop("disabled", true);
-        return;
-      }
-
       $("#idMH").prop("disabled", false);
     });
   }
