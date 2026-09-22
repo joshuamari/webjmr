@@ -10,15 +10,19 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
-## [1.3.1] - 2026-09-21
+## [1.3.1] - 2026-09-22
 
-WFH hours in Daily Report and Override follow the same rules as other locations.
+WFH hours in Daily Report and Override follow the same rules as other locations. A Drawing Monitoring Report bug that left placeholder text in Total Manhour is fixed.
 
 ### Changed
 
 - **Daily Report:** selecting WFH no longer forces man-hour type to Regular or locks the dropdown. On workdays, Regular and Overtime are both available, same as KDT/HWFH. Weekends and holidays still lock to Overtime
 - **Daily Report time cards:** WFH uses the same 8-hour checks as other locations (Regular over/under 8, OT/leave highlighting)
 - **Override:** same WFH input and time-card behavior on add and edit
+
+### Fixed
+
+- **Drawing Monitoring Report bug:** some Total Manhour cells stayed as the placeholder text `totPlan` / `totActual` instead of hours. Every row now shows the summed planned and actual hours for the selected month, or `0` when there are none
 
 ### Notes
 

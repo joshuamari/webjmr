@@ -4,7 +4,7 @@
  * all read from that file after it loads.
  */
 (function (global) {
-  var NOTE_KEYS = ["added", "changed", "modified"];
+  var NOTE_KEYS = ["added", "changed", "fixed", "modified"];
 
   function getWhatsNewDataUrl() {
     var scripts = document.getElementsByTagName("script");

@@ -2,9 +2,9 @@
   "releases": [
     {
       "version": "1.3.1",
-      "date": "2026-09-21",
+      "date": "2026-09-22",
       "latest": true,
-      "summary": "Work from home hours now follow the same Daily Report rules as other locations.",
+      "summary": "Work from home hours follow the same Daily Report rules as other locations. A Drawing Monitoring Report bug that showed placeholder text instead of hours is fixed.",
       "added": [],
       "changed": [
         {
@@ -14,6 +14,16 @@
             "WFH no longer locks man-hour type to Regular",
             "On workdays, Regular and Overtime are both available",
             "Time cards use the same 8-hour checks as other locations"
+          ]
+        }
+      ],
+      "fixed": [
+        {
+          "title": "Drawing Monitoring Report Totals",
+          "description": "Fixed a bug where Total Manhour showed the placeholder text totPlan and totActual instead of hours. Every row now shows the planned and actual totals for the selected month, or 0 when there are none.",
+          "bullets": [
+            "Bug: some rows kept the text totPlan and totActual",
+            "Those cells now show the real planned and actual hours, or 0"
           ]
         }
       ],

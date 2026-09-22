@@ -9,6 +9,7 @@
   var PAGE_NOTE_SECTIONS = [
     { key: "added", label: "ADDED" },
     { key: "changed", label: "CHANGED" },
+    { key: "fixed", label: "FIXED" },
     { key: "modified", label: "MODIFIED" },
   ];
 
