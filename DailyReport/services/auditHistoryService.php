@@ -143,23 +143,21 @@ function drHistoryEmployeeDisplayName(string $employeeId): string
 
 function drHistoryEmployeeRole(string $employeeId): string
 {
-    global $connkdt;
+    global $connnew;
 
-    $profile = getEmployeeProfile($employeeId);
-    $desig = trim((string) ($profile['fldDesig'] ?? ''));
-
-    if ($desig === '') {
+    if ($employeeId === '') {
         return '';
     }
 
-    $full = drHistoryLookupName(
-        $connkdt,
-        "SELECT fldFull FROM kdtpositions WHERE fldAcro = :acro LIMIT 1",
-        [':acro' => $desig],
-        $desig
+    return drHistoryLookupName(
+        $connnew,
+        "SELECT `dl`.`name`
+         FROM `employee_list` AS `el`
+         INNER JOIN `designation_list` AS `dl` ON `dl`.`id` = `el`.`designation`
+         WHERE `el`.`id` = :empID
+         LIMIT 1",
+        [':empID' => $employeeId]
     );
-
-    return $full;
 }
 
 function drHistoryEmployeeInitials(string $name): string
