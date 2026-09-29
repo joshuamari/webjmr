@@ -104,6 +104,12 @@ function MHValidation() {
   const projID = $("#idProject option:selected").attr("proj-id");
   const selLoc = $("#idLocation").val() || "KDT";
 
+  if (selLoc === "KDT" || selLoc === "WFH" || selLoc === "HWFH") {
+    $('#idMH option[mhid="1"]').prop("disabled", true);
+  } else {
+    $('#idMH option[mhid="1"]').prop("disabled", false);
+  }
+
   if (projID != AppState.leaveID) {
     $("#idMH").prop("disabled", false);
 
