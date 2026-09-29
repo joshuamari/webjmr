@@ -1,20 +1,23 @@
+<?php
+require_once __DIR__ . '/lib/assets.php';
+?>
 <!doctype html>
 <html lang="en">
   <head>
     <title>What's New</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
-    <link rel="stylesheet" href="../css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css" />
-    <link rel="stylesheet" href="../Reports/css/reports.css" />
-    <link rel="stylesheet" href="../css/boxicons.css" />
-    <link rel="stylesheet" href="../tailwindcss/output.css" />
-    <link rel="stylesheet" href="../css/whats-new.css" />
-    <script src="../js/jquery.js"></script>
-    <script src="../js/jquery.inview.min.js"></script>
-    <script src="../js/release-history.js"></script>
-    <script src="../js/whats-new.js"></script>
-    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="<?= asset_url('../css/bootstrap.min.css') ?>" />
+    <link rel="stylesheet" type="text/css" href="<?= asset_url('../css/font-awesome.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../Reports/css/reports.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../css/boxicons.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../tailwindcss/output.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../css/whats-new.css') ?>" />
+    <script src="<?= asset_url('../js/jquery.js') ?>"></script>
+    <script src="<?= asset_url('../js/jquery.inview.min.js') ?>"></script>
+    <script src="<?= asset_url('../js/release-history.js') ?>" data-notes="<?= asset_url('../data/whats-new.json') ?>"></script>
+    <script src="<?= asset_url('../js/whats-new.js') ?>"></script>
+    <script src="<?= asset_url('js/main.js') ?>"></script>
   </head>
   <body class="whats-new-page">
     <div class="sidebar close fixed-top">

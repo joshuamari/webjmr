@@ -516,6 +516,15 @@ button.version-history-trigger:focus-visible {
   color: #64748b;
 }
 
+.whats-new-group li ul.whats-new-note-points {
+  margin: 4px 0 0;
+  padding: 0 0 0 1.1rem;
+}
+
+.whats-new-group li ul.whats-new-note-points li {
+  color: #64748b;
+}
+
 .whats-new-prev-heading {
   margin: 28px 0 10px;
   font-size: 16px;

@@ -184,17 +184,31 @@
         escapeHtml(section.label) +
         "</h3>" +
         "<ul>" +
-        items
+          items
           .map(function (item) {
             if (isNoteObject(item)) {
+              var bullets = Array.isArray(item.bullets)
+                ? item.bullets.filter(Boolean)
+                : [];
+              var detail = item.description
+                ? "<p>" + escapeHtml(item.description) + "</p>"
+                : "";
+              if (!item.description && bullets.length) {
+                detail =
+                  '<ul class="whats-new-note-points">' +
+                  bullets
+                    .map(function (line) {
+                      return "<li>" + escapeHtml(String(line)) + "</li>";
+                    })
+                    .join("") +
+                  "</ul>";
+              }
               return (
                 "<li>" +
                 '<span class="whats-new-note-title">' +
                 escapeHtml(item.title) +
                 "</span>" +
-                (item.description
-                  ? "<p>" + escapeHtml(item.description) + "</p>"
-                  : "") +
+                detail +
                 "</li>"
               );
             }

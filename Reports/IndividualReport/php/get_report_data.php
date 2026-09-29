@@ -78,11 +78,8 @@ if (isset($_POST['core'])) {
 }
 $amT = getHDTow('Leave AM');
 $pmT = getHDTow('Leave PM');
-$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, dr.`fldLocation`, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect AND (pt.fldGroup = :groupSel OR (pt.fldGroup IS NULL AND dr.fldGroup = :groupSel)) $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect AND (pt.fldGroup = :groupSel OR (pt.fldGroup IS NULL AND dr.fldGroup = :groupSel)) $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
 $reportStmt = $connwebjmr->prepare($reportQ);
-
-$workDayCount=0;
-$workDates=[];
 #endregion
 
 #region main
@@ -97,12 +94,6 @@ if ($reportStmt->rowCount() > 0) {
         $orderNum = $rep['fldOrder'];
         $khic = $rep['fldKHIC'];
         $isHalf = $rep['isHalfDay'];
-        $isWFH = $rep['fldLocation'] == 2 ? true : false;
-        $exactDay = $rep['fldDate'];
-        if($locSelect==2 && isWorkDay($exactDay,$locSelect)){
-            $workDayCount++;
-            array_push($workDates,$exactDay);
-        }
         #region description
         $dsc = '';
         foreach ($selectedColumns as $col) {
@@ -174,15 +165,8 @@ if ($reportStmt->rowCount() > 0) {
             }
         }
         #endregion
-        #region isWFH
-        if(!isset($reportData['data'][$repDate]['isWFH'])){
-            $reportData['data'][$repDate]['isWFH'] = (bool)$isWFH;
-        }
-        #endregion
     }
 }
-$reportData['workday']=$workDayCount;
-$reportData['workdates']=$workDates;
 #endregion
 
 #region function
@@ -288,39 +272,6 @@ function getHDTow($towValue)
     }
 
     return $hdTow;
-}
-function isWorkDay(string $day, int $loc): bool
-{
-    global $connkdt;
-
-    // Normalize location mapping
-    if ($loc === 2) {
-        $loc = 1;
-    }
-    // Validate/normalize date
-    $ts = strtotime($day);
-    if ($ts === false) {
-        // Decide your policy: throw, return false, etc.
-        throw new InvalidArgumentException("Invalid date format: {$day}");
-    }
-    $normDate = date('Y-m-d', $ts);
-
-    // Check holiday/workday override first
-    $sql = "SELECT fldHolidayType
-            FROM kdtholiday
-            WHERE fldDate = :selDate AND fldLocID = :selLoc
-            LIMIT 1";
-    $stmt = $connkdt->prepare($sql);
-    $stmt->execute([':selDate' => $normDate, ':selLoc' => $loc]);
-    $workDayType = $stmt->fetchColumn(); // false if no row
-
-    if ($workDayType !== false) {
-        // In your schema: '2' means *workday*; anything else = not a workday
-        return (string)$workDayType == '2';
-    }
-
-    // No override in DB → Mon–Fri are workdays
-    return (int)date('N', $ts) < 6; // 1..5 = Mon..Fri
 }
 
 #endregion

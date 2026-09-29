@@ -76,13 +76,6 @@ $(document).on("change", "#selLoc", function () {
     $("table").addClass("d-none");
     $(".mainTable table[table-id='5']").removeClass("d-none");
   }
-  getReportData()
-    .then((repd) => {
-      createTable(repd, locations);
-    })
-    .catch((error) => {
-      alert(`${error}`);
-    });
 });
 $(document).on("change", "#co", function () {
   getReportData()
@@ -680,6 +673,7 @@ function createTable(data, locs) {
     var table = $(`.mainTable table[table-id='${locid}'] tbody`);
     if (data.hasOwnProperty(locid)) {
       var locData = data[locid];
+      var rowHtml = "";
       Object.keys(locData).forEach((employeeKey) => {
         const mhObject = locData[employeeKey]["mh"];
         const employeeName = locData[employeeKey]["name"];
@@ -966,8 +960,11 @@ function createTable(data, locs) {
         }
 
         str += `</tr>`;
-        table.append(str);
+        rowHtml += str;
       });
+      if (rowHtml) {
+        table.append(rowHtml);
+      }
     } else {
       if (locid == 1) {
         table.append(`<tr class="noData"><td colspan='20' 

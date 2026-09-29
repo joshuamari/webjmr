@@ -36,7 +36,9 @@ switch ($cutOff) {
         $dateCompare = " AND `fldDate` >= '" . $dateRanges['secondHalf']['start'] . "' AND `fldDate`<='" . $dateRanges['secondHalf']['end'] . "'";
         break;
     default:
-        $dateCompare = " AND `fldDate` LIKE '$yearMonth-%'";
+        $monthStart = date('Y-m-01', strtotime($yearMonth . '-01'));
+        $monthEnd = date('Y-m-t', strtotime($monthStart));
+        $dateCompare = " AND `fldDate` >= '" . $monthStart . "' AND `fldDate` <= '" . $monthEnd . "'";
 }
 $entriesArray = array();
 $maypasok = getMayPasok($yearMonth, $loc);
@@ -83,7 +85,6 @@ $regOTStmt = '';
 if (!empty($nonWorkingDays)) {
     $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` ELSE 0 END) AS reg_ot";
 }
-$totalWorkingDays = getDaysInMonths($yearMonth) - count($nonWorkingDays);
 
 $report_data = array();
 //employee query here
@@ -144,9 +145,11 @@ $entriesStmt = $connwebjmr->prepare($entriesQuery);
 $entriesStmt->execute([":leaveID" => $leaveID, ":vlID" => $vlID, ":slID" => $slID]);
 if ($entriesStmt->rowCount() > 0) {
     $entriesArr = $entriesStmt->fetchAll();
+    $names = getNames(array_column($entriesArr, 'fldEmployeeNum'));
     foreach ($entriesArr as $ent) {
         $empid = $ent['fldEmployeeNum'];
-        $ename = getName($empid);
+        $empKey = (string)$empid;
+        $ename = array_key_exists($empKey, $names) ? $names[$empKey] : false;
         $location = (int)$ent['fldLocation'];
         $totalReg = $ent['totalreg'];
         $totalOT = $ent['totalot'];
@@ -156,7 +159,6 @@ if ($entriesStmt->rowCount() > 0) {
         $totalLeave = $ent['totallv'];
         $totalMH = $ent['totalmh'];
 
-        $totalMH_WFH = 450 * ($totalWorkingDays - getPinasokSaKDT($yearMonth, $empid));
         if (array_key_exists('reg_ot', $ent)) {
             $regularOT = $ent['reg_ot'];
             if ($regularOT) {
@@ -227,48 +229,24 @@ if ($entriesStmt->rowCount() > 0) {
 
 
         if ($totalReg) {
-            if ($location == 2 && $totalReg > $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalReg'] = $totalMH_WFH / 60;
-            } else {
-                $report_data[$location][$empid]['mh']['totalReg'] = $totalReg / 60;
-            }
+            $report_data[$location][$empid]['mh']['totalReg'] = $totalReg / 60;
         }
 
         if ($totalOT) {
             $report_data[$location][$empid]['mh']['totalOT'] = $totalOT / 60;
-        } else {
-            if ($location == 2 && $cutOff == 0  && $totalReg > $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalOT'] = ($totalReg - $totalMH_WFH) / 60;
-            }
         }
 
         if ($totalLeave) {
             $report_data[$location][$empid]['mh']['totalLeave'] = $totalLeave / 60;
-        } else {
-            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalLeave'] = ($totalMH_WFH - $totalReg) / 60;
-            }
         }
         if ($totalVL) {
             $report_data[$location][$empid]['mh']['totalvl'] = $totalVL / 60;
-        } else {
-            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalvl'] = ($totalMH_WFH - $totalReg) / 60;
-            }
         }
         if ($totalSL) {
             $report_data[$location][$empid]['mh']['totalsl'] = $totalSL / 60;
-        } else {
-            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalsl'] = 0;
-            }
         }
         if ($totalEL) {
             $report_data[$location][$empid]['mh']['totalel'] = $totalEL / 60;
-        } else {
-            if ($location == 2 && $cutOff == 0 && $totalReg < $totalMH_WFH) {
-                $report_data[$location][$empid]['mh']['totalel'] = 0;
-            }
         }
         if ($totalMH) {
             $report_data[$location][$empid]['mh']['totalMH'] = $totalMH / 60;
@@ -284,15 +262,29 @@ if ($entriesStmt->rowCount() > 0) {
 // ksort($report_data);
 echo json_encode($report_data);
 #region function
-function getName($empNum)
+function getNames($empNums)
 {
     global $connkdt;
-    $eName = '';
-    $nameQ = "SELECT CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum = :empNum";
+    $names = array();
+    $ids = array();
+    foreach ($empNums as $empNum) {
+        if ($empNum === null || $empNum === '') {
+            continue;
+        }
+        $ids[(string)$empNum] = (string)$empNum;
+    }
+    if (!$ids) {
+        return $names;
+    }
+    $idList = array_values($ids);
+    $placeholders = implode(',', array_fill(0, count($idList), '?'));
+    $nameQ = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum IN ($placeholders)";
     $nameStmt = $connkdt->prepare($nameQ);
-    $nameStmt->execute([":empNum" => $empNum]);
-    $eName = $nameStmt->fetchColumn();
-    return $eName;
+    $nameStmt->execute($idList);
+    foreach ($nameStmt->fetchAll() as $row) {
+        $names[(string)$row['fldEmployeeNum']] = $row['ename'];
+    }
+    return $names;
 }
 function getMayPasok($yearMonth, $loc)
 {
@@ -379,22 +371,5 @@ function getRanges($yearmonth)
         'firstHalf' => ['start' => $firstHalfStartDate, 'end' => $firstHalfEndDate],
         'secondHalf' => ['start' => $secondHalfStartDate, 'end' => $secondHalfEndDate],
     ];
-}
-function getDaysInMonths($yearmonth)
-{
-    $numberOfDays = 0;
-    list($year, $month) = explode("-", $yearmonth);
-    $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-    return $numberOfDays;
-}
-function getPinasokSaKDT($yearmonth, $empid)
-{
-    global $connwebjmr;
-    $count = 0;
-    $countQ = "SELECT COUNT(DISTINCT(fldDate)) FROM dailyreport WHERE fldDate LIKE :yearmonth AND fldEmployeeNum = :empid AND fldLocation = 1";
-    $countStmt = $connwebjmr->prepare($countQ);
-    $countStmt->execute([":yearmonth" => "$yearmonth%", ":empid" => $empid]);
-    $count = $countStmt->fetchColumn();
-    return $count;
 }
 #endregion

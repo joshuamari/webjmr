@@ -1,9 +1,34 @@
 {
   "releases": [
     {
+      "version": "1.3.2",
+      "date": "2026-09-29",
+      "latest": true,
+      "summary": "Work from home hours in Accounting and Individual reports now follow the hours that were logged, the same as other locations. Report loading is optimized.",
+      "added": [],
+      "changed": [
+        {
+          "title": "Accounting Report",
+          "bullets": [
+            "Regular, overtime, and leave for WFH are no longer based on the expected total work hours. They follow the hours that were logged, the same as KDT and other locations.",
+            "Optimized report loading"
+          ]
+        },
+        {
+          "title": "Individual Report",
+          "bullets": [
+            "Overtime for WFH is no longer based on the expected total work hours. It follows the overtime that was logged, the same as other locations.",
+            "Optimized report loading"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.3.1",
       "date": "2026-09-22",
-      "latest": true,
+      "latest": false,
       "summary": "Work from home hours follow the same Daily Report rules as other locations. A Drawing Monitoring Report bug that showed placeholder text instead of hours is fixed.",
       "added": [],
       "changed": [

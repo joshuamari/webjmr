@@ -9,8 +9,13 @@
   function getWhatsNewDataUrl() {
     var scripts = document.getElementsByTagName("script");
     for (var i = scripts.length - 1; i >= 0; i -= 1) {
-      var src = scripts[i].getAttribute("src") || "";
+      var script = scripts[i];
+      var src = script.getAttribute("src") || "";
       if (/release-history\.js(\?|$)/.test(src)) {
+        var notes = script.getAttribute("data-notes");
+        if (notes) {
+          return notes;
+        }
         return src.replace(/js\/release-history\.js(\?.*)?$/, "data/whats-new.json");
       }
     }

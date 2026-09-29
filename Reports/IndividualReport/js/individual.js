@@ -21,7 +21,6 @@ const monthNames = [
   "November",
   "December",
 ];
-let workdays = 0;
 //#endregion
 checkLogin()
   .then((emp_deets) => {
@@ -543,7 +542,6 @@ function toggleCheckbox(checkbox) {
 function calculateTotalHours() {
   var totalManHour = 0;
   var totalOverTime = 0;
-  const locSelect = parseInt($("#idLoc").find(":selected").attr("loc-id"));
   $("#appendHere tr:not(#appendBefore)").each(function () {
     var manHour = parseFloat($(this).find("td:nth-child(4)").text());
     var overTime = parseFloat($(this).find("td:nth-child(5)").text());
@@ -555,9 +553,6 @@ function calculateTotalHours() {
       totalOverTime += overTime;
     }
   });
-  if(locSelect==2){
-    totalOverTime = totalManHour-(workdays * 7.5);
-  }
   $("#totalMH").text(totalManHour);
   $("#totalOT").text(totalOverTime);
 }
@@ -1010,7 +1005,6 @@ function getReportData() {
       },
       dataType: "json",
       success: function (data) {
-        workdays = data.workday;
         const repdata = data.data;
         resolve(repdata);
       },

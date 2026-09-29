@@ -10,6 +10,26 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.3.2] - 2026-09-25
+
+WFH hours in Accounting Report and Individual Report follow the hours that were logged, the same as KDT and other locations.
+
+### Changed
+
+- **Accounting Report**
+  - Regular, overtime, and leave for WFH are no longer based on the expected total work hours. They follow the hours that were logged, the same as KDT and other locations
+  - Optimized report loading
+- **Individual Report**
+  - Overtime for WFH is no longer based on the expected total work hours. It follows the overtime that was logged, the same as other locations
+  - Optimized report loading
+
+### Notes
+
+- This is the output pass called out in 1.3.1. Daily Report and Override already used logged WFH hours
+- Monthly Standard was not part of this change
+
+---
+
 ## [1.3.1] - 2026-09-22
 
 WFH hours in Daily Report and Override follow the same rules as other locations. A Drawing Monitoring Report bug that left placeholder text in Total Manhour is fixed.
