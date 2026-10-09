@@ -3,11 +3,12 @@ const rootFolder = `//${document.location.hostname}`;
 
 // const Leaves = ["25", "26", "27", "28", "29", "30", "31"];
 const Leaves = ["6"];
-const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
-const today = new Date();
-$("#monthSel").val(
-  `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
-);
+const vacationLeaveItemId = 25;
+const sickLeaveItemId = 26;
+
+function isLeaveProject(projectId) {
+  return Leaves.indexOf(String(projectId)) !== -1;
+}
 
 //pang distinct. di ko alam kung may function ba na distinct hehe
 const onlyUnique = (value, index, self) => {
@@ -34,6 +35,10 @@ var _saturdays = [];
 checkLogin();
 //#region BINDS
 $(document).ready(function () {
+  const today = new Date();
+  $("#monthSel").val(
+    `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
+  );
   $.ajaxSetup({ async: false });
   getGroupList();
   getEmployeeList();
@@ -290,7 +295,7 @@ function adjustWidth() {
 }
 
 function extractData(entry) {
-  if (!Leaves.includes(entry["pIndex"])) {
+  if (!isLeaveProject(entry["pIndex"])) {
     if (entry["OT"]) {
       _grpOT.push({
         pIndex: entry["pIndex"],
@@ -365,7 +370,7 @@ function pGet(empNum, ifOT) {
   if (ifOT) {
     //is OT
     _unifiedQ.forEach((element) => {
-      if (element["empNum"] == empNum && !Leaves.includes(element["pIndex"])) {
+      if (element["empNum"] == empNum && !isLeaveProject(element["pIndex"])) {
         if (element["OT"]) {
           returnObject.push(element);
         }
@@ -374,7 +379,7 @@ function pGet(empNum, ifOT) {
   } else {
     //regular hours
     _unifiedQ.forEach((element) => {
-      if (element["empNum"] == empNum && !Leaves.includes(element["pIndex"])) {
+      if (element["empNum"] == empNum && !isLeaveProject(element["pIndex"])) {
         // if (!element["OT"]) {
         returnObject.push(element);
         // }
@@ -439,7 +444,7 @@ function addCells() {
 function fillTable(entry) {
   //ETOBAGUHIN MO NEXT WEEK
   var currentHours = 0;
-  if (!Leaves.includes(entry["pIndex"])) {
+  if (!isLeaveProject(entry["pIndex"])) {
     currentHours =
       parseFloat(
         $(
@@ -462,7 +467,8 @@ function fillTable(entry) {
       ).text(entry["hours"]);
     }
   } else {
-    if (oLeaves.hasOwnProperty(entry["iIndex"])) {
+    const itemId = Number(entry["iIndex"]);
+    if (itemId !== vacationLeaveItemId && itemId !== sickLeaveItemId) {
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`

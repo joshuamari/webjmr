@@ -10,6 +10,37 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.4.1] - 2026-10-09
+
+Special Leave hours in Monthly Standard appear under EL, PL, ML, Others.
+
+### Changed
+
+- **Monthly Standard** (`Reports/MonthlyStandard/` and `Reports/MonthlyStandard_new/`): leave other than Vacation Leave and Sick Leave, including Special Leave, is written to the EL, PL, ML, Others row. Previously only a fixed list of item IDs (EL, ML, PL, TbL, LL) was included, so a new leave type was left out
+
+### Notes
+
+- Depends on the Special Leave item added in 1.4.0
+- Vacation Leave and Sick Leave stay on their own rows
+
+---
+
+## [1.4.0] - 2026-10-08
+
+Special Leave hours can be logged in Daily Report.
+
+### Added
+
+- **Special Leave** item under Leave. It is visible to every group (`fldGroup` NULL). Leave entries do not require a job request, so no JRD is seeded
+
+### Notes
+
+- Run: `php SQL/migrations/20261008_add_special_leave.php`
+- Safe to run more than once. Leave is looked up by project name, so the project ID can differ per environment
+- Monthly Standard output for these hours is in 1.4.1, not this release
+
+---
+
 ## [1.3.2] - 2026-09-25
 
 WFH hours in Accounting Report and Individual Report follow the hours that were logged, the same as KDT and other locations.

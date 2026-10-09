@@ -4,12 +4,9 @@ const rootFolder = `//${document.location.hostname}`;
 var allEmployees = {};
 
 const Leaves = ["6"];
-const oLeaves = { 27: "EL", 28: "ML", 29: "PL", 30: "TbL", 31: "LL" };
+const vacationLeaveItemId = 25;
+const sickLeaveItemId = 26;
 let global_holidays = [];
-const today = new Date();
-$("#monthSel").val(
-  `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
-);
 
 //pang distinct. di ko alam kung may function ba na distinct hehe
 const onlyUnique = (value, index, self) => {
@@ -36,6 +33,10 @@ checkLogin()
       _empDetails = emp;
       msAccess();
       $(document).ready(function () {
+        const today = new Date();
+        $("#monthSel").val(
+          `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, "0")}`
+        );
         Promise.all([getGroupList(), getLocations(), fetchHolidays()]).then(
           ([grps, locs, hols]) => {
             fillGroups(grps);
@@ -1368,13 +1369,13 @@ function fillTable(entry) {
       ).text(entry["hours"]);
     }
   } else {
-    if (oLeaves.hasOwnProperty(entry["iIndex"])) {
-      //EL PL
+    const itemId = Number(entry["iIndex"]);
+    if (itemId !== vacationLeaveItemId && itemId !== sickLeaveItemId) {
       $(
         $(
           `.lRow[p-index="others"][employee-number="${entry["empNum"]}"]`
         ).children()[entry["entryDate"] + 1]
-      ).text(1233);
+      ).text(entry["hours"]);
     }
     // iIndex === 25 = VL
     // iIndex === 26 = SL

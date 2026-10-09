@@ -1,9 +1,45 @@
 {
   "releases": [
     {
+      "version": "1.4.1",
+      "date": "2026-10-09",
+      "latest": true,
+      "summary": "Special Leave hours in Monthly Standard now appear with EL, PL, ML, and other leave.",
+      "added": [],
+      "changed": [
+        {
+          "title": "Monthly Standard",
+          "description": "Special Leave hours are included on the EL, PL, ML, Others row. Vacation Leave and Sick Leave stay on their own rows.",
+          "bullets": [
+            "Special Leave hours show under EL, PL, ML, Others"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-10-08",
+      "latest": false,
+      "summary": "Employees can log Special Leave hours in Daily Report.",
+      "added": [
+        {
+          "title": "Special Leave",
+          "description": "Special Leave is available under Leave in Daily Report for every group. No job request is required.",
+          "bullets": [
+            "Log Special Leave hours in Daily Report under Leave"
+          ]
+        }
+      ],
+      "changed": [],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.3.2",
       "date": "2026-09-29",
-      "latest": true,
+      "latest": false,
       "summary": "Work from home hours in Accounting and Individual reports now follow the hours that were logged, the same as other locations. Report loading is optimized.",
       "added": [],
       "changed": [
