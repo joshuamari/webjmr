@@ -10,6 +10,23 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.0] - 2026-10-16
+
+KHI Group Code of Conduct can be logged under KDT Wide Training.
+
+### Added
+
+- **KHI Group Code of Conduct** JRD under KDT Wide Training. It is company-wide (`fldGroup` NULL), same as the other KDT Wide activities. Daily Report, JMC, Override, and the KDT Wide Training Report list it with those activities
+
+### Notes
+
+- Run: `php SQL/migrations/20261016_add_khi_group_code_of_conduct.php`
+- Safe to run more than once. Training and KDT Wide Training are looked up by name
+- Hours still bill 100% KDT with the rest of KDT Wide Training via `mh_billing.php`
+- Depends on KDT Wide Training input (1.2.0)
+
+---
+
 ## [1.4.1] - 2026-10-09
 
 Special Leave hours in Monthly Standard appear under EL, PL, ML, Others.

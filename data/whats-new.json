@@ -1,9 +1,27 @@
 {
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-10-16",
+      "latest": true,
+      "summary": "KHI Group Code of Conduct is available under KDT Wide Training.",
+      "added": [
+        {
+          "title": "KHI Group Code of Conduct",
+          "description": "Employees can log hours for KHI Group Code of Conduct in Daily Report under Training, KDT Wide Training. It appears for every group, with the other KDT Wide activities.",
+          "bullets": [
+            "Log KHI Group Code of Conduct hours under KDT Wide Training"
+          ]
+        }
+      ],
+      "changed": [],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.4.1",
       "date": "2026-10-09",
-      "latest": true,
+      "latest": false,
       "summary": "Special Leave hours in Monthly Standard now appear with EL, PL, ML, and other leave.",
       "added": [],
       "changed": [
