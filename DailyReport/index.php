@@ -36,7 +36,6 @@ require_once __DIR__ . '/lib/assets.php';
     <script src="<?= asset_url('js/events.search.js') ?>"></script>
     <script src="<?= asset_url('js/events.utility.js') ?>"></script>
     <script src="<?= asset_url('js/history.js') ?>"></script>
-    <script src="<?= asset_url('js/overtimeTest.js') ?>"></script>
     <script src="<?= asset_url('js/main.js') ?>"></script>
     <script src="<?= asset_url('js/app.js') ?>"></script>
     <link rel="stylesheet" href="../css/whats-new.css" />

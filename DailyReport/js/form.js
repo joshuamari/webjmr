@@ -34,6 +34,7 @@ function setAddMode() {
 function setEditMode() {
   $("#idAdd").text("Save Changes");
   $("#idReset").text("Cancel");
+  $();
 }
 
 function disableTimeInput(projID) {
@@ -106,6 +107,7 @@ function MHValidation() {
 
   if (selLoc === "KDT" || selLoc === "WFH" || selLoc === "HWFH") {
     $('#idMH option[mhid="1"]').prop("disabled", true);
+    $('#idMH option[mhid="0"]').prop("selected", true);
   } else {
     $('#idMH option[mhid="1"]').prop("disabled", false);
   }
