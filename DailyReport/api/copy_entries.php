@@ -8,8 +8,9 @@ $sourceDate = trim((string) requireRequestValue('copyDate', 'Source date is requ
 
 $changeLog = date('YmdHis') . '_' . $empNum;
 $actorNum = getCurrentEmployeeId();
+$userDeets = getEmployeeProfile($actorNum);
+$userGroup = $userDeets['fldGroup'] ?? '';
 $overrideReason = trim((string) requestValue('overrideReason', ''));
-$isTesting = $_POST['isTesting'] ?? 'false';
 
 ensureDailyReportHistoryTable();
 assertDailyReportDateEditable($actorNum, $targetDate);
@@ -17,7 +18,7 @@ assertDailyReportDateEditable($actorNum, $targetDate);
 try {
     $connwebjmr->beginTransaction();
 
-    $forTesting = $isTesting == 'true' ? ' AND dr.fldMHType != 1' : '';
+    $canCopy = $userGroup != 'MNG' ? ' AND dr.fldMHType != 1' : '';
 
     $selectStmt = $connwebjmr->prepare("
         SELECT
@@ -28,6 +29,7 @@ try {
             ON dr.fldProject = pt.fldID
         WHERE dr.fldEmployeeNum = :empNum
           AND dr.fldDate = :sourceDate
+        $canCopy
     ");
 
     $selectStmt->execute([

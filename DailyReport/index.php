@@ -490,7 +490,7 @@ require_once __DIR__ . '/lib/assets.php';
             <li><a class="link_name" href="../Reports/">Reports</a></li>
           </ul>
         </li>
-        <li id="overtimeLink" style="display: none">
+        <li id="overtimeLink">
           <div class="iocn-link">
             <a class="row-cols-12" href="/../overtime/">
               <i class="bx bx-time-five"></i>
