@@ -29,12 +29,17 @@ function resetOnGrpChange() {
 function setAddMode() {
   $("#idAdd").text("Add");
   $("#idReset").text("Clear");
+
+  $("#idMH").prop("disabled", false);
 }
 
 function setEditMode() {
   $("#idAdd").text("Save Changes");
   $("#idReset").text("Cancel");
-  $();
+  let mhtype = $("#idMH option:selected").attr("mhid");
+  if (mhtype == 1) {
+    $("#idMH").prop("disabled", true);
+  }
 }
 
 function disableTimeInput(projID) {
@@ -125,9 +130,6 @@ function MHValidation() {
       $("#idMH").prop("disabled", false);
     });
   }
-
-  $("#idMH").prop("disabled", true);
-  $("#idMH").val("");
 
   return isWorkDay(selLoc).then((workDay) => {
     if (!workDay) {

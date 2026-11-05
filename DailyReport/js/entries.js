@@ -270,7 +270,6 @@ function editEntry(currentObject) {
     return;
   }
 
-  setEditMode();
   $("#idLocation").val("");
   $(".trgrp").remove();
 
@@ -278,6 +277,9 @@ function editEntry(currentObject) {
 
   fetchEntryDetails(AppState.editID)
     .then(loadEntryToForm)
+    .then(() => {
+      setEditMode();
+    })
     .catch((error) => {
       console.error("Failed to load entry for edit:", error);
       alert("Failed to load entry.");
