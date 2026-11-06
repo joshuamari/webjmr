@@ -10,6 +10,56 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.3] - 2026-11-05
+
+Overtime cannot be selected for KDT, WFH, or HWFH. Editing an overtime entry locks Manhour Type.
+
+### Changed
+
+- **Daily Report** (`DailyReport/js/form.js`): Overtime is disabled in Manhour Type when the location is KDT, WFH, or HWFH, and Regular is selected instead. A dispatch location still allows Overtime
+- **Daily Report** (`DailyReport/js/form.js`, `DailyReport/js/entries.js`): editing an existing Overtime entry disables Manhour Type so it cannot be changed. Add mode leaves the dropdown enabled
+
+### Notes
+
+- Weekends and holidays still lock the entry to Overtime
+- No migration
+
+---
+
+## [1.5.2] - 2026-11-04
+
+KDT Internal Activities logged under a subgroup now appear on that group's Man-Hour Report.
+
+### Fixed
+
+- **Man-Hour Report** (`Reports/MHReport/php/get_emplist.php`): an employee was left off a group's report when their main group was different and the hours were on a shared internal project (KDT Internal Activities, Training, or Business Trip & Other). The report already added those people for Management and Development, Analysis & IT. They are now added for the other internal projects too, so the hours show in that group's KDT columns. Hours stay with the group selected on the Daily Report entry and still do not appear on the main-group report
+
+### Notes
+
+- Leave is still excluded
+- No migration
+
+---
+
+## [1.5.1] - 2026-11-03
+
+Web Overtime is in the Daily Report menu, and copying a day leaves out overtime manhours.
+
+### Added
+
+- **Daily Report:** Web Overtime in the sidebar, for every user
+
+### Changed
+
+- **Daily Report** (`DailyReport/api/copy_entries.php`): copying entries skips overtime manhours
+
+### Notes
+
+- Managers (MNG) can still copy overtime manhours
+- No migration
+
+---
+
 ## [1.5.0] - 2026-10-16
 
 KHI Group Code of Conduct can be logged under KDT Wide Training.

@@ -23,8 +23,8 @@ $dateCompare = " AND fldDate >= '$firstDay' AND fldDate<'$lastDay'";
 $selYearMonth = date("Y-m-01", strtotime($ymSel));
 $eList = array();
 $billing = mhBillingContext($connwebjmr, $connkdt);
-$mngProjID = $billing['mngProjID'];
-$solProjID = $billing['solProjID'];
+$internalProjectIds = array_map('intval', $billing['defaultProjectIds']);
+$internalProjectIn = $internalProjectIds === [] ? '0' : implode("','", $internalProjectIds);
 #endregion
 
 #region main
@@ -45,7 +45,7 @@ if ($empNgBUStmt->rowCount() > 0) {
     $mgaEmpNgBU = "('" . $implodeString . "')";
     $mgaEmpStmt = "AND fldEmployeeNum NOT IN";
 }
-$empsQ = "SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$group') OR fldTrGroup='$group'  OR (fldProject IN ('$mngProjID','$solProjID') AND fldGroup='$group')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
+$empsQ = "SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup='$group') OR fldTrGroup='$group' OR (fldProject IN ('$internalProjectIn') AND fldGroup='$group')) $mgaEmpStmt $mgaEmpNgBU $dateCompare";
 $empsStmt = $connwebjmr->prepare($empsQ);
 $empsStmt->execute();
 if ($empsStmt->rowCount() > 0) {

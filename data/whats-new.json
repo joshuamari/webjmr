@@ -1,9 +1,75 @@
 {
   "releases": [
     {
+      "version": "1.5.3",
+      "date": "2026-11-05",
+      "latest": true,
+      "summary": "Overtime cannot be selected for KDT, WFH, or HWFH. Editing an overtime entry locks Manhour Type.",
+      "added": [],
+      "changed": [
+        {
+          "title": "Manhour Type",
+          "description": "Overtime is not available when the location is KDT, WFH, or HWFH. A dispatch location still allows Overtime. Editing an overtime entry locks Manhour Type.",
+          "bullets": [
+            "Overtime is disabled for KDT, WFH, and HWFH",
+            "A dispatch location still allows Overtime",
+            "Editing an overtime entry locks Manhour Type"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
+      "version": "1.5.2",
+      "date": "2026-11-04",
+      "latest": false,
+      "summary": "KDT Internal Activities logged under another group now show on that group's Man-Hour Report.",
+      "added": [],
+      "changed": [],
+      "fixed": [
+        {
+          "title": "Man-Hour Report",
+          "description": "Hours logged under KDT Internal Activities for a group other than your main group now appear on that group's Man-Hour Report. They stay off your main group's report.",
+          "bullets": [
+            "Internal hours logged under a subgroup show on that group's report",
+            "The same applies to Training and Business Trip & Other"
+          ]
+        }
+      ],
+      "modified": []
+    },
+    {
+      "version": "1.5.1",
+      "date": "2026-11-03",
+      "latest": false,
+      "summary": "Web Overtime is in the Daily Report menu. Copying a day leaves out overtime manhours.",
+      "added": [
+        {
+          "title": "Web Overtime",
+          "description": "Web Overtime is available from the Daily Report menu.",
+          "bullets": [
+            "Open Web Overtime from the Daily Report sidebar"
+          ]
+        }
+      ],
+      "changed": [
+        {
+          "title": "Copy Entries",
+          "description": "Copying a day's entries skips overtime manhours. Managers can still copy them.",
+          "bullets": [
+            "Overtime manhours are not copied with the rest of the day",
+            "Managers can still copy overtime manhours"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.5.0",
       "date": "2026-10-16",
-      "latest": true,
+      "latest": false,
       "summary": "KHI Group Code of Conduct is available under KDT Wide Training.",
       "added": [
         {
