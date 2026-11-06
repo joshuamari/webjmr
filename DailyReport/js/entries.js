@@ -1,11 +1,5 @@
-function formatEntryCode(entryId) {
-  const id = Number(entryId || 0);
-  return id > 0 ? `DR-${id}` : "";
-}
-
 function addRow(entry) {
   const pId = entry.entryId;
-  const entryCode = formatEntryCode(pId);
   const loc = entry.locationName || "";
   const group = entry.groupName || "";
   const project = entry.projectName || "";
@@ -37,7 +31,6 @@ function addRow(entry) {
 
   const rowHtml = `
     <tr data-entry-id="${pId}" data-mh="${mht}" title="${rmrks}">
-      <td>${entryCode ? `<span class="dr-entry-code">${entryCode}</span>` : ""}</td>
       <td data-field="location">${loc}</td>
       <td>${group}</td>
       <td>${deletedLabel}${project}</td>
@@ -86,7 +79,7 @@ function getEntries() {
       } else {
         $("#drEntries").append(`
           <tr>
-            <td colspan="10" class="text-center py-5">
+            <td colspan="9" class="text-center py-5">
               <h3>No Entries Found</h3>
             </td>
           </tr>
@@ -99,7 +92,7 @@ function getEntries() {
       console.error(error);
       $("#drEntries").append(`
         <tr>
-          <td colspan="10" class="text-center py-5">
+          <td colspan="9" class="text-center py-5">
             <h3>Failed to load entries</h3>
           </td>
         </tr>

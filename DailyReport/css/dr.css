@@ -1936,8 +1936,7 @@ footer {
   line-height: 1.4;
 }
 
-.dr-history-entry-code,
-.dr-entry-code {
+.dr-history-entry-code {
   display: inline-flex;
   align-items: center;
   padding: 1px 7px;
