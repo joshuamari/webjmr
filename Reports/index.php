@@ -143,6 +143,19 @@ require_once __DIR__ . '/lib/assets.php';
             <li><a class="link_name">Reports</a></li>
           </ul>
         </li>
+        <li id="overtimeLink">
+          <div class="iocn-link">
+            <a class="row-cols-12" href="/../overtime/">
+              <i class="bx bx-time-five"></i>
+              <span class="link_name col-9">Web Overtime</span>
+            </a>
+          </div>
+          <ul class="sub-menu">
+            <li>
+              <a class="link_name" href="../../overtime/request">Web Overtime</a>
+            </li>
+          </ul>
+        </li>
         <!-- <li class="mt-auto">
               <div class="iocn-link">
                   <a class="row-cols-12 ey">

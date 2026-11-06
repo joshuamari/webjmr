@@ -1,9 +1,27 @@
 {
   "releases": [
     {
+      "version": "1.5.4",
+      "date": "2026-11-06",
+      "latest": true,
+      "summary": "Web Overtime is in the sidebar on JMC, Reports, DR Access Request, and DR Approvals.",
+      "added": [
+        {
+          "title": "Web Overtime",
+          "description": "Web Overtime is available from the sidebar on JMC, Reports, DR Access Request, and DR Approvals, the same as Daily Report.",
+          "bullets": [
+            "Open Web Overtime from JMC, Reports, DR Access Request, and DR Approvals"
+          ]
+        }
+      ],
+      "changed": [],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.5.3",
       "date": "2026-11-05",
-      "latest": true,
+      "latest": false,
       "summary": "Overtime cannot be selected for KDT, WFH, or HWFH. Editing an overtime entry locks Manhour Type.",
       "added": [],
       "changed": [

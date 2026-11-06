@@ -10,6 +10,21 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.4] - 2026-11-06
+
+Web Overtime is in the sidebar on JMC, Reports, DR Access Request, and DR Approvals.
+
+### Added
+
+- **JMC, Reports, DR Access Request, and DR Approvals:** Web Overtime in the sidebar, same as Daily Report. It is visible to every user on those pages
+
+### Notes
+
+- Override still shows Web Overtime only for SYS and MNG
+- No migration
+
+---
+
 ## [1.5.3] - 2026-11-05
 
 Overtime cannot be selected for KDT, WFH, or HWFH. Editing an overtime entry locks Manhour Type.
