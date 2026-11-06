@@ -8,6 +8,17 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ## [Unreleased]
 
+Planning uses the same page shell as Daily Report. Entry forms and save behavior are unchanged.
+
+### Changed
+
+- **Planning** (`Planning/index.php`, `Planning/lib/assets.php`): the page is served from `index.php`. Styles and scripts use a file-modified timestamp so browsers pick up new files. `index.html` redirects to that page
+- **Planning:** the sidebar matches the other pages: Daily Report, Planning, DR Access Request, DR Approvals, JMC, Reports, and Web Overtime. Planning is the current tab. DR Approvals still appears only for users who have that access
+
+### Notes
+
+- No migration
+
 ---
 
 ## [1.5.4] - 2026-11-06
