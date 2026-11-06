@@ -1111,6 +1111,7 @@ require_once __DIR__ . '/lib/assets.php';
                     <table class="table table-hover overflow-auto">
                       <thead class="col-header sticky-top bg-body">
                         <tr>
+                          <th>Code</th>
                           <th>Location</th>
                           <th>Group</th>
                           <th>Project</th>

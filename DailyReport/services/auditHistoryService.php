@@ -550,6 +550,15 @@ function formatHistoryReportDate(string $date): string
     }
 }
 
+function formatDailyReportEntryCode(int $dailyReportId): string
+{
+    if ($dailyReportId <= 0) {
+        return '';
+    }
+
+    return 'DR-' . $dailyReportId;
+}
+
 function buildHistoryChangesList(array $previousValues, array $newValues, array $changedFields): array
 {
     $changes = [];
@@ -659,6 +668,7 @@ function getDailyReportHistory(array $filters): array
         $records[] = [
             'id' => (int) $row['id'],
             'dailyReportId' => (int) $row['daily_report_id'],
+            'entryCode' => formatDailyReportEntryCode((int) $row['daily_report_id']),
             'timestamp' => formatHistoryTimestamp((string) $row['created_at']),
             'actorName' => $actorName,
             'actorRole' => (string) ($row['actor_role'] ?? ''),

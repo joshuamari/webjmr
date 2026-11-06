@@ -10,6 +10,12 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 Planning uses the same page shell as Daily Report. Entry forms and save behavior are unchanged.
 
+Daily Report history shows which entry was created, updated, or deleted.
+
+### Added
+
+- **Daily Report** (`DailyReport/services/auditHistoryService.php`, `DailyReport/js/history.js`, `DailyReport/js/entries.js`, `DailyReport/index.php`): each history event shows an entry code, `DR-` plus the row id (for example `DR-67`). The same code appears in a Code column on that day's entries, so a log line can be matched to a row. Older history uses the id already stored on the log
+
 ### Changed
 
 - **Planning** (`Planning/index.php`, `Planning/lib/assets.php`): the page is served from `index.php`. Styles and scripts use a file-modified timestamp so browsers pick up new files. `index.html` redirects to that page

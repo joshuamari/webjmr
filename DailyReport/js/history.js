@@ -407,6 +407,16 @@ function renderHistoryEmpty() {
   `);
 }
 
+function formatDailyReportEntryCode(record) {
+  const code = String(record.entryCode || "").trim();
+  if (code) {
+    return code;
+  }
+
+  const id = Number(record.dailyReportId || 0);
+  return id > 0 ? `DR-${id}` : "";
+}
+
 function formatHistoryActionTitle(record) {
   const action = String(record.action || "").toLowerCase();
 
@@ -511,6 +521,10 @@ function renderHistoryChanges(record) {
 
 function renderHistoryItem(record, index) {
   const expanded = index === 0;
+  const entryCode = formatDailyReportEntryCode(record);
+  const entryCodeBadge = entryCode
+    ? `<span class="dr-history-entry-code" title="Daily report entry">${escapeHtml(entryCode)}</span>`
+    : "";
   const badge = record.isOverride
     ? `<span class="dr-history-badge">Override</span>`
     : "";
@@ -536,6 +550,7 @@ function renderHistoryItem(record, index) {
             <span class="dr-history-item-top">
               <span class="dr-history-action-row">
                 <span class="dr-history-action">${escapeHtml(formatHistoryActionTitle(record))}</span>
+                ${entryCodeBadge}
                 ${badge}
               </span>
               <span class="dr-history-event-time">${escapeHtml(formatHistoryEventTime(record.timestamp))}</span>

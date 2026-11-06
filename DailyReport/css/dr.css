@@ -1936,6 +1936,22 @@ footer {
   line-height: 1.4;
 }
 
+.dr-history-entry-code,
+.dr-entry-code {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .dr-history-event-time {
   font-size: 12px;
   font-weight: 500;
