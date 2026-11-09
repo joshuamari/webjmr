@@ -14,5 +14,6 @@ try {
 
     jsonSuccess($startupConfig);
 } catch (Throwable $e) {
-    jsonError('Failed to load startup config.', 500);
+    // jsonError('Failed to load startup config.', 500);
+    jsonError($e->getMessage(), 500);
 }

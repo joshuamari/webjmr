@@ -79,13 +79,15 @@ body {
   --lightblue-color: #476f95;
   --green-color: #7bae37;
 }
-#toPrint {
+#toPrint,
+.extra-page {
   color: #000 !important;
   font-size: 13px;
   font-family: "Arial", sans-serif;
   scale: 0.9;
 }
 #toPrint table td,
+.extra-page table td,
 th {
   color: #000;
 }
@@ -155,6 +157,24 @@ th {
 }
 .signature {
   margin-top: 35px;
+}
+.sheet-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+.sheet-pager button {
+  width: 110px;
+}
+#sheetPageLabel {
+  min-width: 64px;
+  text-align: center;
+  font-weight: 600;
+}
+.viewer.is-hidden {
+  display: none !important;
 }
 table-cont {
   height: 615px;
@@ -292,6 +312,7 @@ table tbody td.des {
   width: 330px;
   max-width: 330px;
   overflow: hidden;
+  padding-left: 5px;
 }
 
 table .invop {
@@ -311,7 +332,7 @@ table tbody tr {
 tbody td.nan {
   border: 0 !important;
 }
-tbody tr:not(:last-of-type) {
+tbody tr:not(#appendBefore) {
   border-left: 0.25px solid #000;
   border-right: 0.25px solid #000;
 }
@@ -366,10 +387,12 @@ table tbody td {
   .table td {
     font-size: 12px !important;
   }
-  #toPrint {
+  #toPrint,
+  .extra-page {
     padding: 8mm 9mm 8mm 18mm;
   }
-  #toPrint table {
+  #toPrint table,
+  .extra-page table {
     border: 0.5px solid #000;
   }
 

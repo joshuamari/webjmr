@@ -359,7 +359,31 @@
               style="border: 1.5px solid #a8a8a8"
             >
               <div>
-                <div class="mb-3 d-flex align-items-center gap-2">
+                <div class="d-flex flex-row gap-5">
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <input
+                      class="checkbox"
+                      type="checkbox"
+                      value=""
+                      id="excludeKDT"
+                    />
+                    <label class="form-check-label" for="excludeKDT">
+                      Exclude KDT Indirect
+                    </label>
+                  </div>
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <input
+                      class="checkbox"
+                      type="checkbox"
+                      value=""
+                      id="includeOGP"
+                    />
+                    <label class="form-check-label" for="includeOGP">
+                      Include OGP (Other Group Projects)
+                    </label>
+                  </div>
+                </div>
+                <!-- <div class="mb-3 d-flex align-items-center gap-2">
                   <input
                     class="checkbox"
                     type="checkbox"
@@ -367,9 +391,9 @@
                     id="excludeKDT"
                   />
                   <label class="form-check-label" for="excludeKDT">
-                    Exclude KDT Hours
+                    Exclude KDT Indirect
                   </label>
-                </div>
+                </div> -->
                 <div class="d-flex align-items-center gap-2">
                   <input
                     class="checkbox"
@@ -483,6 +507,17 @@
                   </div>
                 </div>
               </div>
+              <!-- <div class="mb-3 d-flex align-items-center gap-2">
+                <input
+                  class="checkbox"
+                  type="checkbox"
+                  value=""
+                  id="includeOGP"
+                />
+                <label class="form-check-label" for="includOGP">
+                  Include OGP (Other Group Projects)
+                </label>
+              </div> -->
               <span class="header">Optional</span>
             </div>
 
@@ -551,128 +586,134 @@
         </div>
       </div>
       <div
-        class="d-flex justify-content-center bg-body-secondary position-relative"
+        id="sheetFrame"
+        class="d-flex flex-column align-items-center bg-body-secondary position-relative"
         style="width: 100%; min-width: 210mm"
       >
         <div
           id="toPrint"
-          class="bg-body viewer overflow-hidden"
+          class="bg-body viewer"
           style="width: 210mm; height: 297mm; padding: 10mm 10mm 10mm 20mm"
         >
-          <div
-            class="logos d-flex justify-content-between"
-            style="margin-bottom: 40px"
-          >
+          <div class="sheet-head">
             <div
-              style="
-                background-image: url(&quot;./images/kdt\ logo.png&quot;);
-                height: 38px;
-                width: 75px;
-                background-size: cover;
-                background-position: center;
-              "
-            ></div>
-            <div
-              style="
-                background-image: url(&quot;./images/Kawasaki.png&quot;);
-                height: 38px;
-                width: 160px;
-                background-size: cover;
-                background-position: center;
-              "
-            ></div>
-          </div>
-          <div
-            class="d-flex justify-content-center align-items-center"
-            style="margin-bottom: 23px"
-          >
-            <h5 class="text-uppercase fw-semibold m-0" style="font-size: 24px">
-              KDT Monthly Working Record
-            </h5>
-          </div>
-          <div
-            class="inputs d-flex justify-content-between"
-            style="margin-bottom: 18px"
-          >
-            <div
-              class="d-flex flex-column"
-              style="width: 320px; overflow: hidden"
+              class="logos d-flex justify-content-between"
+              style="margin-bottom: 40px"
             >
-              <div class="row">
-                <div
-                  class="d-flex justify-content-between"
-                  style="width: 110px"
-                >
-                  <span class="">Name</span>
-                  <span class="">:</span>
-                </div>
-                <div
-                  class=""
-                  style="
-                    border-bottom: 1px solid #000;
-                    width: calc(100% - 110px);
-                  "
-                >
-                  <span class="fw-semibold" id="viewName"></span>
-                </div>
-              </div>
-              <div class="row">
-                <div
-                  class="d-flex justify-content-between"
-                  style="width: 110px"
-                >
-                  <span class="">KDT Group</span>
-                  <span class="">:</span>
-                </div>
-                <div
-                  class=""
-                  style="
-                    border-bottom: 1px solid #000;
-                    width: calc(100% - 110px);
-                  "
-                >
-                  <span class="fw-semibold" id="viewGroup"></span>
-                </div>
-              </div>
+              <div
+                style="
+                  background-image: url(&quot;./images/kdt\ logo.png&quot;);
+                  height: 38px;
+                  width: 75px;
+                  background-size: cover;
+                  background-position: center;
+                "
+              ></div>
+              <div
+                style="
+                  background-image: url(&quot;./images/Kawasaki.png&quot;);
+                  height: 38px;
+                  width: 160px;
+                  background-size: cover;
+                  background-position: center;
+                "
+              ></div>
             </div>
             <div
-              class="d-flex flex-column"
-              style="width: 320px; overflow: hidden"
+              class="d-flex justify-content-center align-items-center"
+              style="margin-bottom: 23px"
             >
-              <div class="row">
-                <div
-                  class="d-flex justify-content-between"
-                  style="width: 110px"
-                >
-                  <span class="">Month, Year</span>
-                  <span class="">:</span>
+              <h5
+                class="text-uppercase fw-semibold m-0"
+                style="font-size: 24px"
+              >
+                KDT Monthly Working Record
+              </h5>
+            </div>
+            <div
+              class="inputs d-flex justify-content-between"
+              style="margin-bottom: 18px"
+            >
+              <div
+                class="d-flex flex-column"
+                style="width: 320px; overflow: hidden"
+              >
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Name</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewName"></span>
+                  </div>
                 </div>
-                <div
-                  class=""
-                  style="
-                    border-bottom: 1px solid #000;
-                    width: calc(100% - 110px);
-                  "
-                >
-                  <span class="fw-semibold" id="viewDate"></span>
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">KDT Group</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewGroup"></span>
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <div
-                  class="d-flex justify-content-between"
-                  style="width: 110px"
-                >
-                  <span class="">Location</span>
-                  <span class="">:</span>
+              <div
+                class="d-flex flex-column"
+                style="width: 320px; overflow: hidden"
+              >
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Month, Year</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewDate"></span>
+                  </div>
                 </div>
-                <div
-                  class=""
-                  style="
-                    border-bottom: 1px solid #000;
-                    width: calc(100% - 110px);
-                  "
-                >
-                  <span class="fw-semibold" id="viewLoc"></span>
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Location</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewLoc"></span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -816,18 +857,22 @@
             </div>
           </div>
           <div
-            class="d-flex justify-content-center align-items-center"
-            style="
-              position: absolute;
-              bottom: 90px;
-              left: 50%;
-              transform: translate(-50%);
-            "
+            class="d-flex justify-content-center align-items-center sheet-footer"
+            style="margin-top: 24px"
           >
             <h5 class="fw-semibold m-0" style="font-size: 16px">
               KHI Design & Technical Service, Inc.
             </h5>
           </div>
+        </div>
+        <div id="sheetPager" class="sheet-pager d-none">
+          <button type="button" id="sheetPrev" class="btn btn-secondary">
+            Previous
+          </button>
+          <span id="sheetPageLabel">1 / 1</span>
+          <button type="button" id="sheetNext" class="btn btn-secondary">
+            Next
+          </button>
         </div>
       </div>
 

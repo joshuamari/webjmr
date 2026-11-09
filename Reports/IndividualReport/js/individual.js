@@ -49,7 +49,7 @@ checkLogin()
 
             $("#idEmp option[emp-id='" + empDetails["empNum"] + "']").prop(
               "selected",
-              true
+              true,
             );
             createCheckers(chkrs);
             setViewer();
@@ -121,6 +121,12 @@ $(document).on("click", ".remind", function () {
     console.log("Modal is not shown for the remainder of the day");
     $("#save").click();
   }
+});
+$(document).on("click", "#sheetPrev", function () {
+  showSheet(currentSheetIndex() - 1);
+});
+$(document).on("click", "#sheetNext", function () {
+  showSheet(currentSheetIndex() + 1);
 });
 $(document).on("click", "#btnPrint", function () {
   // html2canvas($("#toPrint")[0], { scale: 1.2 }).then((canvas) => {
@@ -281,7 +287,7 @@ $(document).on("click", "#totOnly", function () {
     });
   $(".btn-close").click();
 });
-$(document).on("change", "#excludeKDT", function () {
+$(document).on("change", "#excludeKDT, #includeOGP", function () {
   getReportData()
     .then((repdata) => {
       createTable(repdata);
@@ -354,6 +360,12 @@ function countToken() {
   totalCost();
 }
 function createTable(repdata) {
+  $("#toPrint").removeClass("is-hidden");
+  $("#sheetPager").addClass("d-none");
+  $("#appendHere").append($("#appendBefore"));
+  $("#toPrint").append($(".tokenTable, .signature, .sheet-footer"));
+  $(".extra-page").remove();
+
   var mo = $("#idMonth").val();
   var yr = parseInt(mo.split("-")[0]);
   var moIndex = parseInt(mo.split("-")[1]) - 1;
@@ -462,36 +474,76 @@ function createTable(repdata) {
     const invop = `<svg class="custom-checkbox toke" viewBox="0 0 24 24" onclick="toggleCheckbox(this)"><circle class="circle" cx="12" cy="12" r="11" stroke="#333" fill="none"/></svg>`;
     var jobMPM = "";
     var invopMPM = "";
-    if (repdata) {
-      if (repdata.hasOwnProperty(key)) {
-        timeIn = repdata[key].start !== undefined ? repdata[key].start : "";
-        timeOut = repdata[key].end !== undefined ? repdata[key].end : "";
-        description = repdata[key].desc !== undefined ? repdata[key].desc : "";
-        overtime = repdata[key].ot !== undefined ? repdata[key].ot : "";
-        manHour = repdata[key].hours !== undefined ? repdata[key].hours : "";
-        pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
-        jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
-        jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
-      }
-      var jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
-      var invopMPM =
-        tokenChecked === true
-          ? `<td class="invop">${manHour ? invop : ""}</td>`
+    // if (repdata) {
+    //   console.log("DATA?: ", repdata);
+    //   if (repdata.hasOwnProperty(key)) {
+    //     timeIn = repdata[key].start !== undefined ? repdata[key].start : "";
+    //     timeOut = repdata[key].end !== undefined ? repdata[key].end : "";
+    //     description = repdata[key].desc !== undefined ? repdata[key].desc : "";
+    //     overtime = repdata[key].ot !== undefined ? repdata[key].ot : "";
+    //     manHour = repdata[key].hours !== undefined ? repdata[key].hours : "";
+    //     pic = repdata[key].khic !== undefined ? repdata[key].khic : "";
+    //     jobNum = repdata[key].order !== undefined ? repdata[key].order : "";
+    //     jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
+    //   }
+    //   var jobMPM = tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
+    //   var invopMPM =
+    //     tokenChecked === true
+    //       ? `<td class="invop">${manHour ? invop : ""}</td>`
+    //       : "";
+    // }
+
+    // dayTr += `<tr class='${isHoliday}'>
+    // <td>${(x < 10 ? "0" : "") + (x <= daysInMonth ? x : "")}</td>
+    // <td>${timeIn}</td>
+    // <td>${timeOut}</td>
+    // <td>${manHour}</td>
+    // <td>${overtime}</td>
+    // ${jobMPM}
+    // <td class="des text-start">${description}</td>
+    // ${invopMPM}
+    // <td class="pic">${pic}</td>
+    // </tr>`;
+
+    const entries =
+      repdata && repdata[key] && repdata[key].length ? repdata[key] : [null];
+    const span = entries.length;
+
+    entries.forEach((entry, index) => {
+      const cellText = (value) => (value == null || value === "" ? " " : value);
+      const manHour = cellText(entry && entry.hours);
+      const overtime = cellText(entry && entry.ot);
+      const description = entry && entry.desc ? entry.desc : "";
+      const pic = entry && entry.khic ? entry.khic : "";
+      const jobNum = entry && entry.order ? entry.order : "";
+      const dateLabel = (x < 10 ? "0" : "") + (x <= daysInMonth ? x : "");
+      const dateCell =
+        index === 0
+          ? `<td rowspan="${span}" style="vertical-align:middle">${dateLabel}</td>`
           : "";
-    }
+      const timeCells =
+        index === 0
+          ? `<td rowspan="${span}" style="vertical-align:middle">${cellText(entry && entry.start)}</td>
+            <td rowspan="${span}" style="vertical-align:middle">${cellText(entry && entry.end)}</td>`
+          : "";
+      const jobMPM =
+        tokenChecked === true ? `<td class="jn">${jobNum}</td>` : "";
+      const invopMPM =
+        tokenChecked === true
+          ? `<td class="invop">${String(manHour).trim() ? invop : ""}</td>`
+          : "";
 
-    dayTr += `<tr class='${isHoliday}'>
-    <td>${(x < 10 ? "0" : "") + (x <= daysInMonth ? x : "")}</td>
-    <td>${timeIn}</td>
-    <td>${timeOut}</td>
-    <td>${manHour}</td>
-    <td>${overtime}</td>
-    ${jobMPM}
-    <td class="des text-start">${description}</td>
-    ${invopMPM}
-    <td class="pic">${pic}</td>
-    </tr>`;
-
+      dayTr += `<tr class="${isHoliday}">
+        ${dateCell}
+        ${timeCells}
+        <td class="mh">${manHour}</td>
+        <td class="ot">${overtime}</td>
+        ${jobMPM}
+        <td class="des text-start">${description}</td>
+        ${invopMPM}
+        <td class="pic">${pic}</td>
+      </tr>`;
+    });
     $(".table-cont table tbody tr:not(#appendBefore)").remove();
     $("#appendBefore").before(dayTr);
 
@@ -502,7 +554,7 @@ function createTable(repdata) {
       $(".tokenTable").removeClass("d-none");
       $(".signature").css("margin-top", "18px");
       $("td,th, table tbody tr, table thead tr").css("height", "17px ");
-      $(".table-cont").css("height", "581px ");
+      // $(".table-cont").css("height", "581px ");
       $("th.des, td.des").css({
         width: "147px",
         "max-width": "147px",
@@ -523,7 +575,7 @@ function createTable(repdata) {
       $(".tokenTable").addClass("d-none");
       $(".signature").css("margin-top", "35px");
       $("td,th, table tbody tr, table thead tr").css("height", "18px ");
-      $(".table-cont").css("height", "615px ");
+      // $(".table-cont").css("height", "615px ");
       $("th.des, td.des").css("width", "330px");
       $("th.pic, td.pic").css({
         width: "135px",
@@ -534,6 +586,7 @@ function createTable(repdata) {
   }
   //#endregion
   calculateTotalHours();
+  paginateSheets();
 }
 function toggleCheckbox(checkbox) {
   checkbox.classList.toggle("checked");
@@ -543,8 +596,8 @@ function calculateTotalHours() {
   var totalManHour = 0;
   var totalOverTime = 0;
   $("#appendHere tr:not(#appendBefore)").each(function () {
-    var manHour = parseFloat($(this).find("td:nth-child(4)").text());
-    var overTime = parseFloat($(this).find("td:nth-child(5)").text());
+    var manHour = parseFloat($(this).find("td.mh").text());
+    var overTime = parseFloat($(this).find("td.ot").text());
 
     if (!isNaN(manHour)) {
       totalManHour += manHour;
@@ -556,6 +609,101 @@ function calculateTotalHours() {
   $("#totalMH").text(totalManHour);
   $("#totalOT").text(totalOverTime);
 }
+
+function paginateSheets() {
+  $(".extra-page").remove();
+
+  const first = $("#toPrint");
+  first.css({ height: "297mm", overflow: "hidden", position: "relative" });
+
+  const blocks = [];
+  $("#appendHere tr")
+    .not("#appendBefore")
+    .each(function () {
+      if (this.querySelector("td[rowspan]")) blocks.push([this]);
+      else if (blocks.length) blocks[blocks.length - 1].push(this);
+    });
+
+  const totalRow = $("#appendBefore").detach();
+  const footer = first
+    .children(".tokenTable, .signature, .sheet-footer")
+    .detach();
+  blocks.forEach((block) => block.forEach((tr) => $(tr).detach()));
+  let page = first;
+  let tbody = $("#appendHere");
+
+  const overflows = (sheet) =>
+    sheet[0].scrollHeight > sheet[0].clientHeight + 1;
+
+  const addPage = (after) => {
+    const header = first.children(".sheet-head").clone();
+    header.find("[id]").removeAttr("id");
+    const next = $(`
+      <div class="extra-page bg-body viewer" style="width:210mm;height:297mm;overflow:hidden;position:relative;padding:10mm 10mm 10mm 20mm;">
+        <div class="table-cont" style="width:100%">
+          <table class="w-100">
+            <thead style="border:1px solid #000">${first.find("thead").html()}</thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>`);
+    next.prepend(header);
+    after.after(next);
+    return next;
+  };
+
+  blocks.forEach((block) => {
+    block.forEach((tr) => tbody.append(tr));
+    if (!overflows(page)) return;
+    block.forEach((tr) => $(tr).detach());
+    page = addPage(page);
+    tbody = page.find("tbody");
+    block.forEach((tr) => tbody.append(tr));
+  });
+
+  tbody.append(totalRow);
+  page.append(footer);
+
+  while (overflows(page)) {
+    const rows = tbody.children("tr").not(totalRow).toArray();
+    if (!rows.length) break;
+
+    const block = [];
+    for (let i = rows.length - 1; i >= 0; i--) {
+      block.unshift(rows[i]);
+      if (rows[i].querySelector("td[rowspan]")) break;
+    }
+    if (block.length === rows.length) break;
+
+    block.forEach((tr) => $(tr).detach());
+    page = addPage(page);
+    tbody = page.find("tbody");
+    block.forEach((tr) => tbody.append(tr));
+    tbody.append(totalRow);
+    page.append(footer);
+  }
+  showSheet(0);
+}
+
+function currentSheetIndex() {
+  const sheets = $("#toPrint, .extra-page");
+  const index = sheets.index(sheets.filter(":not(.is-hidden)").first());
+  return index < 0 ? 0 : index;
+}
+
+function showSheet(index) {
+  const sheets = $("#toPrint, .extra-page");
+  const count = sheets.length;
+  const page = Math.max(0, Math.min(index, count - 1));
+  sheets.each(function (i) {
+    $(this).toggleClass("is-hidden", i !== page);
+  });
+  $("#sheetPageLabel").text(page + 1 + " / " + count);
+  $("#sheetPrev").prop("disabled", page === 0);
+  $("#sheetNext").prop("disabled", page === count - 1);
+  $("#sheetPager").toggleClass("d-none", count < 2);
+}
+
 function setCurrentMonth() {
   var currentDate = new Date();
   var year = currentDate.getFullYear();
@@ -644,7 +792,7 @@ function setApprovedBy() {
 
 function clearViewer() {
   $(
-    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #invDays"
+    "#viewName, #preparedBy, #viewPrepPos, #checkedBy, #viewCheckPos, #approvedBy, #viewAppPos, #invDays",
   ).text("");
 }
 
@@ -669,23 +817,82 @@ function countCheck() {
     btnText.text("Select Description");
   }
 }
+function keepMergedCells(root) {
+  const cells = [...root.querySelectorAll("tbody td[rowspan]")];
+  cells.forEach((cell) => {
+    const span = parseInt(cell.getAttribute("rowspan"), 10);
+    if (!span || span < 2) return;
+    const text = cell.textContent;
+    const tr = cell.parentElement;
+    const index = [...tr.children].indexOf(cell);
+    const rows = [tr];
+    let row = tr;
+    for (let i = 1; i < span; i++) {
+      row = row.nextElementSibling;
+      if (!row || row.tagName !== "TR") break;
+      rows.push(row);
+    }
+    rows.forEach((current, i) => {
+      let target = cell;
+      if (i > 0) {
+        target = cell.cloneNode(false);
+        target.removeAttribute("rowspan");
+        current.insertBefore(target, current.children[index] || null);
+      } else {
+        cell.removeAttribute("rowspan");
+      }
+      target.textContent = i === 0 ? text : "\u00a0";
+      target.style.setProperty("vertical-align", "middle", "important");
+      target.style.setProperty(
+        "border-bottom",
+        i < rows.length - 1 ? "none" : "0.25px solid #000",
+        "important",
+      );
+    });
+  });
+}
 function saveToPDF() {
   $(".custom-checkbox:not(.checked)").addClass("d-none");
-  $("#toPrint").css("scale", "1");
-  html2canvas($("#toPrint")[0], { scale: 2 }).then((canvas) => {
-    var imgData = canvas.toDataURL("image/jpeg", 1.25);
-    var doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-      displayMode: "fullwidth",
-      userUnit: 1,
-    });
-    doc.addImage(imgData, "JPEG", 0, 0, 210, 297);
-    doc.save("Monthly_Individual_Report.pdf");
+  const sheets = $("#toPrint, .extra-page").toArray();
+  const current = currentSheetIndex();
+  const doc = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4",
+    displayMode: "fullwidth",
+    userUnit: 1,
   });
-  $("#toPrint").css("scale", "0.9");
-  $(".custom-checkbox:not(.checked)").removeClass("d-none");
+
+  const capture = (index) => {
+    if (index >= sheets.length) {
+      doc.save("Monthly_Individual_Report.pdf");
+      $(".custom-checkbox:not(.checked)").removeClass("d-none");
+      showSheet(current);
+      return;
+    }
+    showSheet(index);
+    $(sheets[index]).css("scale", "1");
+    html2canvas(sheets[index], {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      onclone(doc) {
+        keepMergedCells(doc);
+      },
+    }).then((canvas) => {
+      if (index > 0) doc.addPage();
+      doc.addImage(
+        canvas.toDataURL("image/jpeg", 0.95),
+        "JPEG",
+        0,
+        0,
+        210,
+        297,
+      );
+      $(sheets[index]).css("scale", "");
+      capture(index + 1);
+    });
+  };
+  capture(0);
 }
 function checkLogin() {
   return new Promise((resolve, reject) => {
@@ -987,6 +1194,7 @@ function getReportData() {
   const hrsChk = $("#hrschk").hasClass("checked");
   const ymSel = $("#idMonth").val();
   const exclude = $("#excludeKDT").is(":checked");
+  const ogp = $("#includeOGP").is(":checked");
   const core = crtime;
   const locSelect = parseInt($("#idLoc").find(":selected").attr("loc-id"));
   return new Promise((resolve, reject) => {
@@ -1000,6 +1208,7 @@ function getReportData() {
         locSelect: locSelect,
         selColumns: JSON.stringify(selColumns),
         exclude: JSON.stringify(exclude),
+        ogp: JSON.stringify(ogp),
         hrsChk: JSON.stringify(hrsChk),
         core: JSON.stringify(core),
       },
