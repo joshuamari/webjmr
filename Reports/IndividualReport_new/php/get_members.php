@@ -1,0 +1,104 @@
+<?php
+#region DB Connect
+require_once '../dbconn/dbconnectkdtph.php';
+require_once '../dbconn/dbconnectwebjmr.php';
+#endregion
+
+#region set timezone
+date_default_timezone_set('Asia/Manila');
+#endregion
+
+#region Initialize Variable
+$empNum = NULL;
+if (!empty($_POST['empnum'])) {
+    $empNum = $_POST['empnum'];
+}
+$empGroup = NULL;
+if (!empty($_POST['empGroup'])) {
+    $empGroup = $_POST['empGroup'];
+}
+$ymSelect = date("Y-m");
+if (!empty($_POST['ymSelect'])) {
+    $ymSelect = $_POST['ymSelect'];
+}
+$members = array();
+$sharedEmp = "";
+$canSeeOthers = seeOtherMembers($empNum);
+if ($canSeeOthers) {
+    $mainMemStmt = "";
+    $sharedArr = array();
+    $monthStart = date('Y-m-01', strtotime($ymSelect . '-01'));
+    $monthEnd = date('Y-m-t', strtotime($monthStart));
+    $mainQ = "SELECT DISTINCT(fldEmployeeNum) FROM emp_prof WHERE fldGroup = :empGroup AND (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) AND fldNick<>''";
+    $mainStmt = $connkdt->prepare($mainQ);
+    $mainStmt->execute([":empGroup" => $empGroup, ":ymSel" => "$ymSelect%"]);
+    if ($mainStmt->rowCount() > 0) {
+        $mainArr = $mainStmt->fetchAll();
+        foreach ($mainArr as $main) {
+            array_push($sharedArr, $main['fldEmployeeNum']);
+        }
+        $mainMemStmt = " AND fldEmployeeNum NOT IN (" . implode(",", $sharedArr) . ")";
+    }
+    $hiramQ = "SELECT DISTINCT(fldEmployeeNum) FROM dailyreport WHERE (fldProject IN (SELECT fldID FROM projectstable WHERE fldGroup=:empGroup) OR fldTrGroup=:empGroup  OR (fldProject IN (:mngProjID,:solProjID,:leaveID) AND fldGroup=:empGroup)) $mainMemStmt AND fldDate >= :monthStart AND fldDate <= :monthEnd";
+    $hiramStmt = $connwebjmr->prepare($hiramQ);
+    $hiramStmt->execute([":empGroup" => $empGroup, ":monthStart" => $monthStart, ":monthEnd" => $monthEnd, ":mngProjID" => $mngProjID, ":solProjID" => $solProjID, ":leaveID" => $leaveID]);
+    if ($hiramStmt->rowCount() > 0) {
+        $hiramArr = $hiramStmt->fetchAll();
+        foreach ($hiramArr as $hEmp) {
+            array_push($sharedArr, $hEmp['fldEmployeeNum']);
+        }
+    }
+    $sharedEmp = "AND fldEmployeeNum IN (" . implode(",", $sharedArr) . ")";
+}
+#endregion
+
+#region main query
+try {
+    if ($canSeeOthers) {
+        // $memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig,fldGroup FROM emp_prof WHERE (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) $sharedEmp ORDER BY CASE WHEN fldGroup=:empGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
+        $memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig,fldGroup FROM emp_prof WHERE (DATE_FORMAT(fldDateHired, '%Y-%m') <= :ymSel AND (DATE_FORMAT(fldResignDate, '%Y-%m') >= :ymSel OR fldResignDate IS NULL)) $sharedEmp ORDER BY CASE WHEN fldGroup=:empGroup THEN 1 ELSE fldGroup END, fldEmployeeNum";
+        $memStmt = $connkdt->prepare($memberQ);
+        $memStmt->execute([":empGroup" => $empGroup, ":ymSel" => $ymSelect]);
+    } else {
+        $memberQ = "SELECT fldEmployeeNum,fldFirstname,fldSurname,fldDesig FROM emp_prof WHERE fldEmployeeNum=:empNum";
+        $memStmt = $connkdt->prepare($memberQ);
+        $memStmt->execute([":empNum" => $empNum]);
+    }
+
+
+    if ($memStmt->rowCount() > 0) {
+        $memarr = $memStmt->fetchAll();
+        foreach ($memarr as $mem) {
+            $output = array();
+            $fname = $mem['fldFirstname'];
+            $sname = $mem['fldSurname'];
+            $id = (int)$mem['fldEmployeeNum'];
+            $desig = $mem['fldDesig'];
+            $output += ["fname" => $fname];
+            $output += ["sname" => $sname];
+            $output += ["id" => $id];
+            $output += ["desig" => $desig];
+            array_push($members, $output);
+        }
+    }
+} catch (Exception $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+
+#endregion
+#region FUNCTIONS
+function seeOtherMembers($empNum)
+{
+    global $connkdt;
+    $pID = 34; //Individual see other members MODULE PERMISSION ID kdtphdb>>>>p_permissions
+    $accessQ = "SELECT COUNT(*) FROM `user_permissions` WHERE `fldEmployeeNum` = :empNum AND `permission_id` =:pID;";
+    $accessStmt = $connkdt->prepare($accessQ);
+    $accessStmt->execute([":empNum" => $empNum, ":pID" => $pID]);
+    $ac = $accessStmt->fetchColumn();
+    if ($ac) {
+        return TRUE;
+    }
+    return FALSE;
+}
+#endregion
+echo json_encode($members);

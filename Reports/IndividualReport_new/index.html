@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Monthly Individual Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <link
+      rel="stylesheet"
+      href="css/bootstrap.min.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
+    <link rel="stylesheet" href="css/individual.css" />
+    <link rel="stylesheet" href="css/boxicons.css" />
+    <link rel="stylesheet" href="../../tailwindcss/output.css" />
+    <script src="js/html2canvas.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.inview.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/individual.js"></script>
+    <!-- <script src="js/jquery.table2excel.js"></script> -->
+    <script>
+      var busterCall = [
+        "js/individual.js",
+        "css/individual.css",
+        "css/bootstrap.min.css",
+      ];
+      $.post(
+        "php/get_version.php",
+        {
+          busterCall: busterCall,
+          titleName: "Monthly Individual Report",
+        },
+        function (data) {
+          $("head").html(data);
+        },
+      );
+    </script>
+  </head>
+
+  <!-- #region modal -->
+  <div
+    class="modal fade"
+    id="changeCoreTime"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">
+            Change Core Time
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mx-2 p-2">
+            <label class="form-label">AM Shift</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sTime" class="form-label">Start</label>
+                <input type="time" class="form-control cts" id="sTime" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eTime" class="form-label">End</label>
+                <input type="time" class="form-control cte" id="eTime" />
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="mx-2 p-2">
+            <label class="form-label">Halfday</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sHDay" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sHDay" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eHDay" class="form-label">End</label>
+                <input type="time" class="form-control" id="eHDay" />
+              </div>
+            </div>
+          </div> -->
+          <div class="mx-2 p-2">
+            <label class="form-label">Lunch Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sLunch" class="form-label">Start</label>
+                <input type="time" class="form-control cts" id="sLunch" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eLunch" class="form-label">End</label>
+                <input type="time" class="form-control cte" id="eLunch" />
+              </div>
+            </div>
+          </div>
+          <!-- <div class="mx-2 p-2">
+            <label class="form-label">PM Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sPmBreak" class="form-label">Start</label>
+                <input type="time" class="form-control" id="sPmBreak" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="ePmBreak" class="form-label">End</label>
+                <input type="time" class="form-control" id="ePmBreak" />
+              </div>
+            </div>
+          </div> -->
+
+          <div class="mx-2 p-2">
+            <label class="form-label">Dinner Break</label>
+            <div class="row p-2 rounded-3" style="background-color: #e7eaf0">
+              <div class="mb-3 col-6">
+                <label for="sDinner" class="form-label">Start</label>
+                <input type="time" class="form-control cts" id="sDinner" />
+              </div>
+              <div class="mb-3 col-6">
+                <label for="eDinner" class="form-label">End</label>
+                <input type="time" class="form-control cte" id="eDinner" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-O" id="totOnly">Change</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="reminderModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="staticBackdropLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body d-flex flex-column">
+          <div
+            class="w-100 rounded-2 p-3"
+            style="background-color: rgba(254, 201, 88, 0.25)"
+          >
+            <div
+              class="d-flex align-items-center gap-1 fw-semibold"
+              style="color: #222"
+            >
+              <i class="bx bx-error-circle" style="color: #222"></i
+              ><span>Reminder: Formatting before printing.</span>
+            </div>
+            <div class="">
+              <p style="font-size: 14px" class="m-0">
+                Please make sure to set your printer settings
+                <span class="fw-semibold">Scale(%) to Actual size</span> and
+                your <span class="fw-semibold">Margins to None</span>.
+              </p>
+              <!-- <video
+                autoplay
+                class="mt-2 rounded-1"
+                src="./images/scale.mp4"
+                style="width: 290px"
+                alt="scale"
+              /> -->
+              <video
+                class="mt-2 rounded-1"
+                style="width: 290px"
+                autoplay
+                loop
+                muted
+              >
+                <source src="./images/scale.mp4" type="video/mp4" />
+              </video>
+              <video
+                class="mt-2 rounded-1"
+                style="width: 290px"
+                autoplay
+                loop
+                muted
+              >
+                <source src="./images/margin.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+
+          <div class="form-check mt-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              value=""
+              id="doNotShowAgain"
+            />
+            <label
+              class="form-check-label"
+              style="font-size: 14px"
+              for="doNotShowAgain"
+            >
+              Don't show this again
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            class="btn close btn-secondary"
+            type="button"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            Cancel
+          </button>
+          <button type="button" class="btn btn-O" id="save">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- #endregion modal-->
+
+  <body>
+    <div class="home-content position-relative d-flex">
+      <div class="shadow-sm" style="z-index: 3; width: 100%; min-width: 480px">
+        <div class="title xPrint">
+          <h1>Monthly Individual Report</h1>
+
+          <div class="d-flex justify-content-between align-items-center px-2">
+            <a href="../" class="backbtn">
+              <i class="bx bx-left-arrow-alt fs-5"></i>
+              <h5 style="font-weight: 400; font-size: 17px">Back to Reports</h5>
+            </a>
+            <div class="d-flex gap-2">
+              <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#changeCoreTime"
+              >
+                Core Time
+              </button>
+              <button class="remind btn btn-success px-4">SAVE</button>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 selections" style="height: calc(100% - 120px)">
+          <div class="row">
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div class="row">
+                <div class="mb-3 col-6">
+                  <label for="idGroup" class="form-label">Group</label>
+                  <select id="idGroup" class="form-select" aria-label="Group">
+                    <!-- <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option> -->
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label for="idMonth" class="form-label">Month</label>
+                  <input
+                    type="month"
+                    class="form-control"
+                    id="idMonth"
+                    placeholder="Month/Year"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="idLoc" class="form-label">Location</label>
+                  <select
+                    id="idLoc"
+                    class="form-select"
+                    aria-label="Location"
+                  ></select>
+                </div>
+                <div class="mb-3">
+                  <label for="idEmp" class="form-label">Employee Name</label>
+                  <select
+                    id="idEmp"
+                    class="form-select text-uppercase"
+                    aria-label="Name"
+                  ></select>
+                </div>
+                <div class="position-relative">
+                  <label for="descriptionList" class="form-label"
+                    >Description</label
+                  >
+                  <div
+                    class="d-flex align-items-center justify-content-between rounded-2"
+                    id="descriptionList"
+                    role="button"
+                  >
+                    <span class="text-btn">Select Description</span>
+                    <span
+                      class="arrow-down d-flex justify-content-center align-items-center"
+                    >
+                      <i class="bx bx-chevron-down fs-4"></i>
+                    </span>
+                  </div>
+                  <ul
+                    id="selCol"
+                    class="list-items list-unstyled mt-2 mb-0 rounded-2 p-2"
+                  >
+                    <li class="item rounded-1 gap-2 checked" id="proj">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Project</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="item">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Item</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="job">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Description</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="tow">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Type of Works</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="rem">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Remarks</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" id="hrschk">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">Hours</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <span class="header">Employee details</span>
+            </div>
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div>
+                <div class="d-flex flex-row gap-5">
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <input
+                      class="checkbox"
+                      type="checkbox"
+                      value=""
+                      id="excludeKDT"
+                    />
+                    <label class="form-check-label" for="excludeKDT">
+                      Exclude KDT Indirect
+                    </label>
+                  </div>
+                  <div class="mb-3 d-flex align-items-center gap-2">
+                    <input
+                      class="checkbox"
+                      type="checkbox"
+                      value=""
+                      id="includeOGP"
+                    />
+                    <label class="form-check-label" for="includeOGP">
+                      Include OGP (Other Group Projects)
+                    </label>
+                  </div>
+                </div>
+                <!-- <div class="mb-3 d-flex align-items-center gap-2">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    value=""
+                    id="excludeKDT"
+                  />
+                  <label class="form-check-label" for="excludeKDT">
+                    Exclude KDT Indirect
+                  </label>
+                </div> -->
+                <div class="d-flex align-items-center gap-2">
+                  <input
+                    class="checkbox"
+                    type="checkbox"
+                    value=""
+                    id="withTokens"
+                  />
+                  <label class="form-check-label" for="withTokens">
+                    With Token Option
+                  </label>
+                </div>
+                <div class="token mt-3">
+                  <div
+                    class="rounded-2 p-3"
+                    style="border: 1px solid #dee2e6; background-color: #e9ecf0"
+                  >
+                    <div class="mb-3 token position-relative">
+                      <div style="width: max-content" class="position-relative">
+                        <div
+                          class="d-flex gap-1 align-items-center position-relative"
+                          id="howttoToken"
+                          style="
+                            color: var(--main-blue);
+                            font-size: 14px;
+                            width: max-content;
+                          "
+                        >
+                          <i
+                            class="bx bx-help-circle fs-5"
+                            style="color: var(--main-blue)"
+                            role="button"
+                          ></i>
+                          <p class="m-0" role="button">
+                            How to input daily usage of tokens?
+                          </p>
+                        </div>
+                        <div
+                          class="position-absolute start-0 shadow rounded-2 visually-hidden"
+                          id="tokenInstruction"
+                          style="
+                            width: 350px;
+                            bottom: 30px;
+                            background-color: #ffffff;
+                          "
+                        >
+                          <div
+                            class="position-relative rounded-2"
+                            style="z-index: 1000"
+                            style="width: 350px; border: 1px solid #000000"
+                          >
+                            <video
+                              src="./images/toke.mp4"
+                              muted
+                              loop
+                              autoplay
+                              style="
+                                width: 100%;
+                                border-top-left-radius: inherit;
+                                border-top-right-radius: inherit;
+                              "
+                              class=""
+                            ></video>
+                            <p class="m-0 p-3" style="font-size: 14px">
+                              To indicate daily token usage,
+                              <span class="fw-semibold"
+                                >click on the circle</span
+                              >
+                              found within the "Inventor Op." column of the
+                              table.
+                            </p>
+                          </div>
+                          <div
+                            class="position-fixed d-block w-100 h-100 top-0 start-0"
+                            style="z-index: 1000"
+                            id="bgInstruction"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-3 col-6 token d-none">
+                      <label for="tokenRate" class="form-label"
+                        >Token Rate</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="tokenRate"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div class="mb-3 col-6 token d-none">
+                      <label for="unitRate" class="form-label">Unit Rate</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="unitRate"
+                        placeholder="0"
+                      />
+                    </div>
+                    <div class="d-flex align-items-center gap-2 token d-none">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="checkAllTokens"
+                      />
+                      <label class="form-check-label" for="checkAllTokens">
+                        Check All Tokens
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="mb-3 d-flex align-items-center gap-2">
+                <input
+                  class="checkbox"
+                  type="checkbox"
+                  value=""
+                  id="includeOGP"
+                />
+                <label class="form-check-label" for="includOGP">
+                  Include OGP (Other Group Projects)
+                </label>
+              </div> -->
+              <span class="header">Optional</span>
+            </div>
+
+            <div
+              class="p-4 mb-4 rounded-2 g1 position-relative"
+              style="border: 1.5px solid #a8a8a8"
+            >
+              <div>
+                <div class="mb-3 checker">
+                  <label for="idChecker" class="form-label">Checked by</label>
+                  <select
+                    id="idChecker"
+                    class="form-select text-uppercase"
+                    aria-label="Checked by"
+                  >
+                    <option class="">ERWILSON MATIBAG</option>
+                    <option class="">dm 2</option>
+                  </select>
+                </div>
+                <div class="mb-3 approver">
+                  <label for="idApprover" class="form-label">Approved by</label>
+                  <select
+                    id="idApprover"
+                    class="form-select text-uppercase"
+                    aria-label="Approved by"
+                  >
+                    <option class="">erwin tan</option>
+                    <option class="">Ernesto Veloso</option>
+                  </select>
+                </div>
+                <div class="">
+                  <label class="form-label">KHI Representative</label>
+                  <div
+                    class="rounded-2 p-3"
+                    style="
+                      border: 1px solid #dee2e6;
+                      background-color: #e9ecf0;
+                      padding: 6px 8px 6px 12px;
+                    "
+                  >
+                    <div class="mb-3">
+                      <label for="khiName" class="form-label">Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="khiName"
+                        placeholder="KHI Representative Name"
+                      />
+                    </div>
+                    <div class="">
+                      <label for="khiPos" class="form-label">Designation</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="khiPos"
+                        placeholder="KHI Representative Designation"
+                        value="KHI Representative"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span class="header">Signatory</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="sheetFrame"
+        class="d-flex flex-column align-items-center bg-body-secondary position-relative"
+        style="width: 100%; min-width: 210mm"
+      >
+        <div
+          id="toPrint"
+          class="bg-body viewer"
+          style="width: 210mm; height: 297mm; padding: 10mm 10mm 10mm 20mm"
+        >
+          <div class="sheet-head">
+            <div
+              class="logos d-flex justify-content-between"
+              style="margin-bottom: 40px"
+            >
+              <div
+                style="
+                  background-image: url(&quot;./images/kdt\ logo.png&quot;);
+                  height: 38px;
+                  width: 75px;
+                  background-size: cover;
+                  background-position: center;
+                "
+              ></div>
+              <div
+                style="
+                  background-image: url(&quot;./images/Kawasaki.png&quot;);
+                  height: 38px;
+                  width: 160px;
+                  background-size: cover;
+                  background-position: center;
+                "
+              ></div>
+            </div>
+            <div
+              class="d-flex justify-content-center align-items-center"
+              style="margin-bottom: 23px"
+            >
+              <h5
+                class="text-uppercase fw-semibold m-0"
+                style="font-size: 24px"
+              >
+                KDT Monthly Working Record
+              </h5>
+            </div>
+            <div
+              class="inputs d-flex justify-content-between"
+              style="margin-bottom: 18px"
+            >
+              <div
+                class="d-flex flex-column"
+                style="width: 320px; overflow: hidden"
+              >
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Name</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewName"></span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">KDT Group</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewGroup"></span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="d-flex flex-column"
+                style="width: 320px; overflow: hidden"
+              >
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Month, Year</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewDate"></span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div
+                    class="d-flex justify-content-between"
+                    style="width: 110px"
+                  >
+                    <span class="">Location</span>
+                    <span class="">:</span>
+                  </div>
+                  <div
+                    class=""
+                    style="
+                      border-bottom: 1px solid #000;
+                      width: calc(100% - 110px);
+                    "
+                  >
+                    <span class="fw-semibold" id="viewLoc"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-cont" style="width: 100%">
+            <table class="w-100">
+              <thead style="border: 1px solid #000">
+                <tr>
+                  <th class="sm" rowspan="2">DATE</th>
+                  <th colspan="2">TIME</th>
+                  <th class="sm break" rowspan="2">MAN HOUR</th>
+                  <th class="sm break" rowspan="2">OVER TIME</th>
+                  <th class="des" rowspan="2">DESCRIPTION</th>
+                  <th rowspan="2" class="last">PERSON IN-CHARGE</th>
+                </tr>
+                <tr>
+                  <th class="sm">IN</th>
+                  <th class="sm">OUT</th>
+                </tr>
+              </thead>
+              <tbody id="appendHere">
+                <tr id="appendBefore">
+                  <td
+                    colspan="3"
+                    style="border-left: 0.25px solid #000"
+                    class="text-uppercase"
+                  >
+                    total hours
+                  </td>
+                  <td id="totalMH" class="fw-semibold"></td>
+                  <td id="totalOT" class="fw-semibold"></td>
+                  <td class="nan"></td>
+                  <td class="nan"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div
+            class="tokenTable d-none d-flex justify-content-center"
+            style="margin-top: 18px"
+          >
+            <table
+              class="tok"
+              style="width: calc(100% - 80px); border: 0.25px solid #000"
+            >
+              <thead>
+                <tr style="border-bottom: 0.25px solid #000">
+                  <th>Inventor Total Days</th>
+                  <th>Token Rate</th>
+                  <th>Unit Rate (Yen)</th>
+                  <th>Total Cost (Yen)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="invDays" class="fw-semibold"></td>
+                  <td id="invToken" class="fw-semibold"></td>
+                  <td id="invUnit" class="fw-semibold"></td>
+                  <td id="invTotal" class="fw-semibold"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="d-flex signature justify-content-between">
+            <div class="kdtEmp d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Prepared by:</span>
+                <div
+                  class="w-100 text-center"
+                  style="border-bottom: 1px solid; height: 19px"
+                >
+                  <span class="text-uppercase" id="preparedBy"></span>
+                </div>
+                <span
+                  class="viewPos"
+                  id="viewPrepPos"
+                  style="height: 18px"
+                ></span>
+              </div>
+            </div>
+            <div class="kdtEmp checker d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Checked by:</span>
+                <div
+                  class="w-100 text-center"
+                  style="border-bottom: 1px solid; height: 19px"
+                >
+                  <span class="text-uppercase" id="checkedBy"></span>
+                </div>
+                <span
+                  class="viewPos"
+                  id="viewCheckPos"
+                  style="height: 18px"
+                ></span>
+              </div>
+            </div>
+            <div class="kdtEmp approver d-flex">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Approved by:</span>
+                <div
+                  class="w-100 text-center"
+                  style="border-bottom: 1px solid; height: 19px"
+                >
+                  <span class="text-uppercase" id="approvedBy"></span>
+                </div>
+                <span
+                  class="viewPos"
+                  id="viewAppPos"
+                  style="height: 18px"
+                ></span>
+              </div>
+            </div>
+
+            <div class="khiEmp">
+              <div
+                class="d-flex flex-column align-items-center"
+                style="width: 150px"
+              >
+                <span style="padding-bottom: 50px">Approved by:</span>
+                <div
+                  class="w-100 text-center"
+                  style="border-bottom: 1px solid; height: 19px"
+                >
+                  <span class="text-uppercase" id="khiBy"
+                    >(KHI Representative)</span
+                  >
+                </div>
+                <span class="viewPos" id="viewKhiPos" style="height: 18px"
+                  >(Designation)</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-center align-items-center sheet-footer"
+            style="margin-top: 24px"
+          >
+            <h5 class="fw-semibold m-0" style="font-size: 16px">
+              KHI Design & Technical Service, Inc.
+            </h5>
+          </div>
+        </div>
+        <div id="sheetPager" class="sheet-pager d-none">
+          <button type="button" id="sheetPrev" class="btn btn-secondary">
+            Previous
+          </button>
+          <span id="sheetPageLabel">1 / 1</span>
+          <button type="button" id="sheetNext" class="btn btn-secondary">
+            Next
+          </button>
+        </div>
+      </div>
+
+      <!-- <div class="content flex-column flex-md-row">
+        <div class="left col-md-3 col-lg-2 col-12 p-3 px-lg-4 h-auto h-md-100">
+          <div class="form-floating col-12 mb-2">
+            <input type="date" id="startSel" class="form-control" />
+            <label for="startSel">Select Start Date</label>
+          </div>
+          <div class="form-floating col-12 mb-2" id="error_message"></div>
+          <div class="form-floating col-12 mb-2">
+            <input type="date" id="endSel" class="form-control" />
+            <label for="endSel">Select End Date</label>
+          </div>
+          <div class="form-floating col-12 mb-2" id="error_message2"></div>
+          <div class="col-12 mt-2">
+            <div class="form-check form-switch p-0 d-flex">
+              <input
+                type="checkbox"
+                role="switch"
+                class="checkbox"
+                name="checkbox"
+              />
+              <div class="d-flex align-items-center">
+                <p class="m-0 ps-3">Orig group only</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 d-flex flex-column">
+            <h4 class="mb-1 mt-2">Select BU</h4>
+            <div
+              id="buSel"
+              class="buSelection w-100 mb-4 d-flex flex-column gap-2"
+            >
+              <button class="btn btn-secondary">SYS</button>
+              <button class="btn btn-secondary">ana</button>
+              <button class="btn btn-secondary">it</button>
+            </div>
+
+            <button class="btn btn-secondary bus selAll">Select All</button>
+          </div>
+        </div>
+
+        <div class="d-none tablecont col-md-9 col-lg-10 col-12 p-3 px-lg-4">
+          <div class="mainTable overflow-auto">
+            <table id="cmrTable" class="table table-hover w-100">
+              <thead class="sticky-top">
+                <tr data-fill-color="b6f9a1" class="heady">
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    BU
+                  </th>
+                  <th
+                    rowspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Total Hours
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    New
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Kmod
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Mkdt
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Mkhi
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Chk
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Cal
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Doc
+                  </th>
+                  <th
+                    colspan="2"
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Other
+                  </th>
+                </tr>
+                <tr class="heady">
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    Hours
+                  </th>
+                  <th
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-fill-color="bbffbc"
+                  >
+                    %
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="cmrBody">
+                
+                <tr id="totalRow" class="total ent">
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000 "
+                    data-f-color="FF0000"
+                  >
+                    TOTAL
+                  </td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="towtal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="New"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="New"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Kmod"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Kmod"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Mkdt"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Mkdt"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Mkhi"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Mkhi"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Chk"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Chk"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Cal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Cal"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Doc"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Doc"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="hrs"
+                    tow="Other"
+                  ></td>
+                  <td
+                    data-f-name="Arial"
+                    data-f-sz="9"
+                    data-f-bold="true"
+                    data-a-h="center"
+                    data-a-v="middle"
+                    data-b-a-s="thin"
+                    data-b-a-c="000000"
+                    data-f-color="FF0000"
+                    class="prc"
+                    data-t="n"
+                    data-num-fmt="0.0%"
+                    tow="Other"
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          class="noShow d-flex justify-content-center col-md-9 col-lg-10 col-12 align-items-center h-100"
+        >
+          <div class="p-4 rounded-4">Please select date range</div>
+        </div>
+      </div> -->
+    </div>
+  </body>
+</html>
