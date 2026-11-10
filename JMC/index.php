@@ -799,11 +799,20 @@ require_once __DIR__ . '/lib/assets.php';
                 <div
                   class="title p-3 d-flex justify-content-between align-items-center row"
                 >
-                  <h1 class="col-12 col-lg-9">Project</h1>
-                  <div class="col-12 col-lg-3 d-flex justify-content-end">
+                  <h1 class="col-12 col-lg-6">Project</h1>
+                  <div
+                    class="jmc-proj-actions col-12 col-lg-6 d-flex justify-content-end gap-2 mt-2 mt-lg-0"
+                  >
+                    <a
+                      id="importJMC"
+                      href="/jmcimport/"
+                      class="btn btn-import fw-bold text-center shadow flex-fill"
+                    >
+                      <i class="bx bx-import p-0"></i> IMPORT
+                    </a>
                     <button
                       id="addJMC"
-                      class="btn btn-add fw-bold text-center shadow w-100"
+                      class="btn btn-add fw-bold text-center shadow flex-fill"
                       data-bs-toggle="modal"
                       data-bs-target="#addProjModal"
                     >
