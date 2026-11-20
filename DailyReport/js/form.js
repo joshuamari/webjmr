@@ -227,6 +227,8 @@ function getLabel(itemOfWorkID) {
 }
 
 function addEntries(addMode) {
+  let mhtype = $("#idMH option:selected").attr("mhid");
+
   if (evaluateMonthLock()) {
     alert("Editing is locked for dates outside the current month.");
     return;
@@ -254,7 +256,7 @@ function addEntries(addMode) {
   const mgaKulang = [];
 
   let revision = 0;
-  let mhtype = $("#idMH option:selected").attr("mhid");
+  // let mhtype = $("#idMH option:selected").attr("mhid");
 
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
