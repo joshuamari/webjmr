@@ -131,6 +131,9 @@ function MHValidation() {
     });
   }
 
+  $("#idMH").prop("disabled", true);
+  $("#idMH").val("");
+
   return isWorkDay(selLoc).then((workDay) => {
     if (!workDay) {
       alert("Leave disabled on holidays/weekends");
@@ -256,7 +259,6 @@ function addEntries(addMode) {
   const mgaKulang = [];
 
   let revision = 0;
-  // let mhtype = $("#idMH option:selected").attr("mhid");
 
   if ($("#id2DDiv").hasClass("d-none")) {
     tutri = "";
