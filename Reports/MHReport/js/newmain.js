@@ -346,9 +346,9 @@ function pHead(projHeader) {
       splitVal[0] == "Management"
     ) {
       if (splitVal[3] == "P") {
-        multi = 2;
+        multi = 2.9;
       } else {
-        multi = 2.85;
+        multi = 3.5;
       }
       backColorE = `C6E0B4`;
     } else {
@@ -375,7 +375,7 @@ function pHead(projHeader) {
     $("#tot1").append(
       `<td data-a-v="middle" data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`
     );
-    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2" : "2.85"}</td>`);
+    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2.9" : "3.5"}</td>`);
     $("#multiplier").append(
       `<td data-a-v="middle" data-fill-color="${backColorH}" data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`
     );
@@ -427,7 +427,7 @@ function total() {
     $(getTots[x]).text(getTotal($($(getTots)[x]).attr("data-tot")));
   }
 
-  // Multiplied (2 || 2.85) .xTot
+  // Multiplied (2.9 || 3.5) .xTot
   var getXTot = $(".xTot");
   for (let x = 0; x < getXTot.length; x++) {
     var totalmh = parseFloat(
@@ -530,12 +530,12 @@ function addFooter() {
   <tr style="display:none">
     <td>P</td>
     <td>Philippines</td>
-    <td data-f-color="7030A0">2.0</td>
+    <td data-f-color="7030A0">2.9</td>
   </tr>
   <tr style="display:none">
     <td>J</td>
     <td>Japan or Overseas</td>
-    <td data-f-color="7030A0">2.85</td>
+    <td data-f-color="7030A0">3.5</td>
   </tr>
   `;
   $("#mainTbody").append(addString);

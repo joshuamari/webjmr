@@ -6,6 +6,24 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.5] - 2026-11-20
+
+JMC Import now runs in the web app. Open it from the Import link on JMC. Man-Hour Report unit rates are 2.9 for the Philippines and 3.5 for Japan or overseas.
+
+### Added
+
+- **JMC** (`JMC/index.php`): the Import button opens web JMC Import at `/jmcimport/`
+
+### Changed
+
+- **Man-Hour Report** (`Reports/MHReport/js/newmain.js`): the unit rate is 2.9 for Philippines (P) and 3.5 for Japan or overseas (J). The billed amount is still total man-hours times that rate
+
+### Notes
+
+- No migration
+
+---
+
 ## [Unreleased]
 
 Planning uses the same page shell as Daily Report. Entry forms and save behavior are unchanged.
