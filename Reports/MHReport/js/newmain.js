@@ -194,6 +194,46 @@ function mhReportFilters() {
   };
 }
 
+function mhReportYearMonth() {
+  var cutoff = String($("#CO").val());
+  if (cutoff === "4" || cutoff === "5") {
+    var today = new Date();
+    var day = today.getDay();
+    var mondayOffset = day === 0 ? -6 : 1 - day;
+    var start = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() + mondayOffset
+    );
+    if (cutoff === "4") {
+      start.setDate(start.getDate() - 7);
+    }
+    return (
+      start.getFullYear() +
+      "-" +
+      String(start.getMonth() + 1).padStart(2, "0")
+    );
+  }
+  var selected = $("#monthSel").val() || "";
+  if (/^\d{4}-\d{2}/.test(selected)) {
+    return selected.slice(0, 7);
+  }
+  var today = new Date();
+  return (
+    today.getFullYear() +
+    "-" +
+    String(today.getMonth() + 1).padStart(2, "0")
+  );
+}
+
+function mhUnitRate(location) {
+  var newRates = mhReportYearMonth() >= "2026-10";
+  if (location == "P") {
+    return newRates ? 2.9 : 2;
+  }
+  return newRates ? 3.5 : 2.85;
+}
+
 function getTable() {
   if (!$("#buSel").val()) {
     return;
@@ -345,11 +385,7 @@ function pHead(projHeader) {
       splitVal[0] == "KDT" ||
       splitVal[0] == "Management"
     ) {
-      if (splitVal[3] == "P") {
-        multi = 2.9;
-      } else {
-        multi = 3.5;
-      }
+      multi = mhUnitRate(splitVal[3]);
       backColorE = `C6E0B4`;
     } else {
       backColorH = `BFBFBF`;
@@ -375,7 +411,7 @@ function pHead(projHeader) {
     $("#tot1").append(
       `<td data-a-v="middle" data-fill-color="${backColorE}" data-f-name="Arial" data-f-sz="9" data-f-color="ff0000" data-b-a-s="thin" data-t="n" data-a-h="center" data-tot="${splitVal[4]}" class="tot"></td>`
     );
-    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${splitVal[3] == "P" ? "2.9" : "3.5"}</td>`);
+    // $('#multiplier').append(`<td data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${mhUnitRate(splitVal[3])}</td>`);
     $("#multiplier").append(
       `<td data-a-v="middle" data-fill-color="${backColorH}" data-f-color="7030A0" data-f-name="Arial" data-f-sz="9" data-b-a-s="thin" data-t="n" data-a-h="center" class="multiplier-${splitVal[4]}">${multi}</td>`
     );
@@ -427,7 +463,7 @@ function total() {
     $(getTots[x]).text(getTotal($($(getTots)[x]).attr("data-tot")));
   }
 
-  // Multiplied (2.9 || 3.5) .xTot
+  // Multiplied by the 単価 for this report period .xTot
   var getXTot = $(".xTot");
   for (let x = 0; x < getXTot.length; x++) {
     var totalmh = parseFloat(
@@ -530,12 +566,12 @@ function addFooter() {
   <tr style="display:none">
     <td>P</td>
     <td>Philippines</td>
-    <td data-f-color="7030A0">2.9</td>
+    <td data-f-color="7030A0">${mhUnitRate("P")}</td>
   </tr>
   <tr style="display:none">
     <td>J</td>
     <td>Japan or Overseas</td>
-    <td data-f-color="7030A0">3.5</td>
+    <td data-f-color="7030A0">${mhUnitRate("J")}</td>
   </tr>
   `;
   $("#mainTbody").append(addString);
