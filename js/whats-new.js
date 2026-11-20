@@ -75,6 +75,20 @@
     });
   }
 
+  function summaryMarkup(summary) {
+    if (!summary) return "";
+    return String(summary)
+      .split(/\n\s*\n/)
+      .map(function (part) {
+        return part.trim();
+      })
+      .filter(Boolean)
+      .map(function (part) {
+        return '<p class="whats-new-summary">' + escapeHtml(part) + "</p>";
+      })
+      .join("");
+  }
+
   function escapeHtml(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;")
@@ -433,11 +447,7 @@
         '<span class="whats-new-release-date">' +
         escapeHtml(formatDate(latest.date)) +
         "</span></div>" +
-        (latest.summary
-          ? '<p class="whats-new-summary">' +
-            escapeHtml(latest.summary) +
-            "</p>"
-          : "") +
+        summaryMarkup(latest.summary) +
         notesHtml +
         "</section>"
       : "";
