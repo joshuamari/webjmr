@@ -57,11 +57,12 @@ foreach ($columnsRaw as $col) {
 // if (count($grpByRaw) > 0) {
 //     $grpByStmt = "GROUP BY dr.fldDate, dr.fldMHType, " . implode(', ', $grpByRaw);
 // }
-$columnsStmt = "dr.fldDate, SUM(dr.fldDuration) AS mins,
-    SUM(CASE WHEN dr.fldMHType = '1' THEN dr.fldDuration ELSE 0 END) AS otmins,
-    pt.fldID AS projid, it.fldID AS itemid, pt.fldOrder, jrd.fldKHIC, "
+$columnsStmt = "dr.fldDate, dr.fldDuration AS mins,
+    CASE WHEN dr.fldMHType = '1' THEN dr.fldDuration ELSE 0 END AS otmins,
+    pt.fldID AS projid, it.fldID AS itemid, pt.fldOrder, pt.fldBUIC, pt.fldDirect, jrd.fldKHIC,
+    jrd.fldJob AS entryJob, tw.fldTow AS entryTow, dr.fldRemarks AS entryRemarks, "
     . implode(', ', $selectedColumns);
-$grpByStmt = "GROUP BY dr.fldDate, pt.fldID, it.fldID";
+$grpByStmt = "";
 
 $exclude = FALSE;
 $excludeStmt = '';
@@ -92,7 +93,7 @@ if (isset($_POST['core'])) {
 }
 $amT = getHDTow('Leave AM');
 $pmT = getHDTow('Leave PM');
-$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $groupStmt $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate";
+$reportQ = "SELECT CASE WHEN dr.fldTow IN (:amTow,:pmTow) THEN dr.fldTow ELSE NULL END AS isHalfDay, $columnsStmt FROM `dailyreport` AS dr LEFT JOIN `projectstable` AS pt ON dr.fldProject=pt.fldID LEFT JOIN `itemofworkstable` AS it ON dr.fldItem=it.fldID LEFT JOIN `drawingreference` AS jrd ON dr.fldJobRequestDescription=jrd.fldID LEFT JOIN `typesofworktable` AS tw ON dr.fldTOW = tw.fldID WHERE dr.fldEmployeeNum=:empSelect AND dr.fldDate LIKE :ymSelect $groupStmt $locStmt $excludeStmt $grpByStmt ORDER BY dr.fldDate, dr.fldID";
 $reportStmt = $connwebjmr->prepare($reportQ);
 #endregion
 
@@ -102,6 +103,8 @@ if (!$ogp) {
     $reportParams[":groupSel"] = $groupSel;
 }
 $reportStmt->execute($reportParams);
+$seenBuic = [];
+$seenEntry = [];
 if ($reportStmt->rowCount() > 0) {
     $repArr = $reportStmt->fetchAll();
     foreach ($repArr as $rep) {
@@ -185,20 +188,65 @@ if ($reportStmt->rowCount() > 0) {
         // #endregion
 
         $isLeave = ($projid === $leaveID);
+        $buic = isset($rep['fldBUIC']) ? trim($rep['fldBUIC']) : '';
+        $indirect = isset($rep['fldDirect']) && (int)$rep['fldDirect'] === 0;
+        if ($buic !== '' && !isset($seenBuic[$buic])) {
+            $seenBuic[$buic] = true;
+        }
+        $half = '';
+        if ($isHalf == $pmT) {
+            $half = 'pm';
+        } else if ($isHalf == $amT) {
+            $half = 'am';
+        }
+        $entryKey = implode("\x1e", [
+            (string)$projid,
+            isset($rep['itemid']) ? (string)$rep['itemid'] : '',
+            $orderNum ? (string)$orderNum : '',
+            $khic ? (string)$khic : '',
+            $buic,
+            $indirect ? '1' : '0',
+            (string)(int)$rep['mins'],
+            (string)(int)$rep['otmins'],
+            isset($rep['entryJob']) ? (string)$rep['entryJob'] : '',
+            isset($rep['entryTow']) ? (string)$rep['entryTow'] : '',
+            isset($rep['entryRemarks']) ? (string)$rep['entryRemarks'] : '',
+        ]);
+        if (isset($seenEntry[$repDate][$entryKey])) {
+            continue;
+        }
+        $seenEntry[$repDate][$entryKey] = true;
         $reportData['data'][$repDate][] = [
     'desc'  => $dsc,
     'hours' => $isLeave ? ' ' : $hrs,
     'ot'    => $isLeave ? ' ' : ($rep['otmins'] / 60),
     'order' => $orderNum ? $orderNum : '',
     'khic'  => $khic ? $khic : '',
+    'buic'  => $buic,
+    'indirect' => $indirect,
+    'half'  => $half,
 ];
     }
     foreach ($reportData['data'] as $repDate => $entries) {
+    $dayHalf = '';
+    foreach ($entries as $entry) {
+        if ($entry['half'] === 'pm') {
+            $dayHalf = 'pm';
+        } else if ($entry['half'] === 'am' && $dayHalf !== 'pm') {
+            $dayHalf = 'am';
+        }
+    }
+    foreach ($reportData['data'][$repDate] as $index => $entry) {
+        $reportData['data'][$repDate][$index]['half'] = $dayHalf;
+    }
     $dayHours = 0;
     $dayOt = 0;
     foreach ($entries as $entry) {
         $dayHours += is_numeric($entry['hours']) ? $entry['hours'] : 0;
         $dayOt += is_numeric($entry['ot']) ? $entry['ot'] : 0;
+    }
+    foreach ($reportData['data'][$repDate] as $index => $entry) {
+        $reportData['data'][$repDate][$index]['dayWork'] = $dayHours;
     }
     $regularHours = $dayHours - $dayOt;
     if ($regularHours < 0) {
@@ -212,7 +260,13 @@ if ($reportStmt->rowCount() > 0) {
         }
         continue;
     }
-    $range = getTimeRange($coretime, $rangeDuration, null);
+    $halfId = null;
+    if ($dayHalf === 'pm') {
+        $halfId = $pmT;
+    } else if ($dayHalf === 'am') {
+        $halfId = $amT;
+    }
+    $range = getTimeRange($coretime, $rangeDuration, $halfId);
     if ($regularHours > 0 && $dayOt > 0) {
         $regularEnd = strtotime($range['endTime']);
         $end = $regularEnd + (int) round($dayOt * 3600);
@@ -230,6 +284,7 @@ if ($reportStmt->rowCount() > 0) {
     }
 }
 }
+$reportData['buic'] = array_keys($seenBuic);
 #endregion
 
 #region function
@@ -279,7 +334,6 @@ function updateProjectHours($string, $projectToUpdate)
 }
 function getTimeRange($core, $duration, $isHalfDay)
 {
-    global $pmT;
     global $amT;
     // Extracting values from the $core array
 
@@ -290,10 +344,8 @@ function getTimeRange($core, $duration, $isHalfDay)
     // $timeEnd = $core->Time->end; //irrelevant
     // $halfdayStart = $core->Halfday->start;
     // $halfdayEnd = $core->Halfday->end;
-    if ($isHalfDay == $pmT) {
+    if ($isHalfDay == $amT) {
         $timeStart = $lunchEnd;
-    } else if ($isHalfDay == $amT && $duration == 4) {
-        $timeStart = date("H:i", strtotime($lunchStart) - ($duration * 3600));
     } else {
         $timeStart = $core->Time->start;
     }

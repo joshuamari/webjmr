@@ -229,15 +229,18 @@ table-cont {
 }
 
 /*         DESCRIPTION */
-#descriptionList {
+#descriptionList,
+#buicList {
   height: 38px;
   padding: 6px 8px 6px 12px;
   border: 1px solid #dee2e6;
 }
-#descriptionList.open .arrow-down {
+#descriptionList.open .arrow-down,
+#buicList.open .arrow-down {
   transform: rotate(-180deg);
 }
-#descriptionList .arrow-down {
+#descriptionList .arrow-down,
+#buicList .arrow-down {
   transition: 0.3s;
 }
 .list-items {
@@ -245,7 +248,8 @@ table-cont {
   display: none;
   border: 1px solid #dee2e6;
 }
-#descriptionList.open ~ .list-items {
+#descriptionList.open ~ .list-items,
+#buicList.open ~ .list-items {
   display: block;
 }
 .list-items .item {
@@ -335,6 +339,12 @@ tbody td.nan {
 tbody tr:not(#appendBefore) {
   border-left: 0.25px solid #000;
   border-right: 0.25px solid #000;
+}
+#notes {
+  border: none !important;
+  text-align: left;
+  overflow: visible;
+  white-space: nowrap;
 }
 table tbody td {
   overflow: hidden;

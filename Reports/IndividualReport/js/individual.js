@@ -148,20 +148,24 @@ $(document).on("click", "#btnPrint", function () {
   //   };
   // });
 });
-$(document).on("click", "#descriptionList", function (event) {
+$(document).on("click", "#descriptionList, #buicList", function (event) {
   event.stopPropagation();
-  $(this).toggleClass("open");
+  const opening = !$(this).hasClass("open");
+  $("#descriptionList, #buicList").removeClass("open");
+  if (opening) $(this).addClass("open");
   $(this).blur();
 });
 $(document).on("click", "body", function (event) {
   if (
     !$("#selCol").is(event.target) &&
-    $("#selCol").has(event.target).length === 0
+    $("#selCol").has(event.target).length === 0 &&
+    !$("#buicFilter").is(event.target) &&
+    $("#buicFilter").has(event.target).length === 0
   ) {
-    $("#descriptionList").removeClass("open");
+    $("#descriptionList, #buicList").removeClass("open");
   }
 });
-$(document).on("click", ".list-items .item", function () {
+$(document).on("click", "#selCol .item", function () {
   $(this).toggleClass("checked");
 
   countCheck();
@@ -173,6 +177,19 @@ $(document).on("click", ".list-items .item", function () {
     .catch((error) => {
       alert(error);
     });
+});
+$(document).on("click", "#buicFilter .item", function (event) {
+  event.stopPropagation();
+  const choice = $(this).attr("data-buic");
+  if (choice === "all") {
+    $("#buicFilter .item").removeClass("checked");
+    $(this).addClass("checked");
+  } else {
+    $("#buicFilter .item[data-buic='all']").removeClass("checked");
+    $(this).toggleClass("checked");
+  }
+  updateBuicButton();
+  showBuicReport();
 });
 $(document).on("change", "#idGroup", function () {
   tokens = [];
@@ -287,6 +304,15 @@ $(document).on("click", "#totOnly", function () {
     });
   $(".btn-close").click();
 });
+$(document).on("change", "#excludePIC", function () {
+  getReportData()
+    .then((repdata) => {
+      createTable(repdata);
+    })
+    .catch((error) => {
+      alert(error);
+    });
+});
 $(document).on("change", "#excludeKDT, #includeOGP", function () {
   getReportData()
     .then((repdata) => {
@@ -348,11 +374,27 @@ $(document).on("input", ".cte", function () {
 //#endregion
 
 //#region FUNCTIONS
+function dateOfRow(row) {
+  var current = $(row);
+  while (current.length && !current.children("td[rowspan]").length) {
+    current = current.prev("tr");
+  }
+  return $.trim(current.children("td[rowspan]").first().text());
+}
+function tokenPlace(row) {
+  var current = $(row);
+  var date = dateOfRow(current);
+  var nth = 0;
+  current.prevAll("tr").each(function () {
+    if (dateOfRow(this) === date && $(this).find(".toke").length) nth++;
+  });
+  return { date: date, nth: nth };
+}
 function countToken() {
   tokens = [];
   $(".toke.checked").each(function () {
-    var dateT = $(this).closest("tr").find("td:first-child").text();
-    tokens.push(dateT);
+    var place = tokenPlace($(this).closest("tr"));
+    if (place.date) tokens.push(place);
   });
   var count = $(".toke.checked").length;
   $("#invDays").text(count);
@@ -360,6 +402,7 @@ function countToken() {
   totalCost();
 }
 function createTable(repdata) {
+  var keptTokens = tokens.slice();
   $("#toPrint").removeClass("is-hidden");
   $("#sheetPager").addClass("d-none");
   $("#appendHere").append($("#appendBefore"));
@@ -373,22 +416,33 @@ function createTable(repdata) {
   var grp = $("#idGroup").val();
   var daysInMonth = new Date(yr, moIndex + 1, 0).getDate();
   var tokenChecked = $("#withTokens").prop("checked");
+  var hidePic = $("#excludePIC").prop("checked");
+  var picHeader = hidePic
+    ? ""
+    : `<th rowspan="2" class="last pic" style="width:146px ">PERSON IN-CHARGE</th>`;
   var specialHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
   <th class="sm break" rowspan="2">OVER TIME</th>
   <th rowspan="2" class="jn" style="width:146px" >JOB NUMBER</th>
   <th rowspan="2" class="des">DESCRIPTION</th>
-  <th class="sm break invop" rowspan="2"style="width:40px ">INV. OP.</th>
-  <th rowspan="2" class="last pic" style="width:146px ">PERSON IN-CHARGE</th>`;
+  <th class="sm break invop${hidePic ? " last" : ""}" rowspan="2"style="width:40px ">INV. OP.</th>
+  ${picHeader}`;
   var commonHeader = `<th class="sm" rowspan="2">DATE</th>
   <th colspan="2">TIME</th>
   <th class="sm break" rowspan="2">MAN HOUR</th>
   <th class="sm break" rowspan="2">OVER TIME</th>
-  <th class="des" rowspan="2">DESCRIPTION</th>
-  <th rowspan="2" class="pic" class="last">PERSON IN-CHARGE</th>`;
+  <th class="des${hidePic ? " last" : ""}" rowspan="2">DESCRIPTION</th>
+  ${hidePic ? "" : `<th rowspan="2" class="pic" class="last">PERSON IN-CHARGE</th>`}`;
 
   var groupHeaders = tokenChecked === true ? specialHeader : commonHeader;
+  var notesSpan = hidePic && !tokenChecked ? 1 : 2;
+  $("#notes").attr("colspan", notesSpan);
+  $("#appendBefore .nan").css("display", notesSpan === 1 ? "none" : "table-cell");
+  $("#notes").css({
+    "text-align": notesSpan === 1 ? "right" : "left",
+    "padding-right": notesSpan === 1 ? "5px" : "0",
+  });
   $(".table-cont table thead tr:first-of-type").empty();
   $(".table-cont table thead tr:first-of-type").html(groupHeaders);
   //#region LUMA
@@ -507,6 +561,7 @@ function createTable(repdata) {
 
     const entries =
       repdata && repdata[key] && repdata[key].length ? repdata[key] : [null];
+    applyDayClock(entries);
     const span = entries.length;
 
     entries.forEach((entry, index) => {
@@ -532,6 +587,7 @@ function createTable(repdata) {
         tokenChecked === true
           ? `<td class="invop">${String(manHour).trim() ? invop : ""}</td>`
           : "";
+      const picCell = hidePic ? "" : `<td class="pic">${pic}</td>`;
 
       dayTr += `<tr class="${isHoliday}">
         ${dateCell}
@@ -541,14 +597,12 @@ function createTable(repdata) {
         ${jobMPM}
         <td class="des text-start">${description}</td>
         ${invopMPM}
-        <td class="pic">${pic}</td>
+        ${picCell}
       </tr>`;
     });
     $(".table-cont table tbody tr:not(#appendBefore)").remove();
     $("#appendBefore").before(dayTr);
 
-    // calculateTotalHours();
-    countToken();
     if (tokenChecked === true) {
       $(".token").removeClass("d-none");
       $(".tokenTable").removeClass("d-none");
@@ -576,7 +630,11 @@ function createTable(repdata) {
       $(".signature").css("margin-top", "35px");
       $("td,th, table tbody tr, table thead tr").css("height", "18px ");
       // $(".table-cont").css("height", "615px ");
-      $("th.des, td.des").css("width", "330px");
+      $("th.des, td.des").css(
+        hidePic
+          ? { width: "auto", "max-width": "none" }
+          : { width: "330px", "max-width": "330px" },
+      );
       $("th.pic, td.pic").css({
         width: "135px",
         "max-width": "135px",
@@ -585,6 +643,9 @@ function createTable(repdata) {
     }
   }
   //#endregion
+  tokens = keptTokens;
+  addToke();
+  countToken();
   calculateTotalHours();
   paginateSheets();
 }
@@ -809,7 +870,7 @@ function totalCost() {
 
 function countCheck() {
   var checked = $("#selCol .checked");
-  var btnText = $(".text-btn");
+  var btnText = $("#descriptionList .text-btn");
 
   if (checked && checked.length != 0) {
     btnText.text(`${checked.length} Selected`);
@@ -1184,6 +1245,141 @@ function changeCoretime() {
     },
   };
 }
+function clockMinutes(value) {
+  if (!value) return null;
+  var parts = String(value).split(":");
+  if (parts.length < 2) return null;
+  return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+}
+function formatClock(minutes) {
+  var day = ((minutes % (24 * 60)) + 24 * 60) % (24 * 60);
+  var h = Math.floor(day / 60);
+  var m = day % 60;
+  return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
+}
+function applyDayClock(entries) {
+  if (!entries || !entries[0] || !crtime || !crtime.Time || !crtime.Time.start) return;
+  var manHours = 0;
+  entries.forEach(function (entry) {
+    var hours = entry && parseFloat(entry.hours);
+    if (!isNaN(hours)) manHours += hours;
+  });
+  if (manHours <= 0) {
+    entries.forEach(function (entry) {
+      if (!entry) return;
+      entry.start = " ";
+      entry.end = " ";
+    });
+    return;
+  }
+  var startMin = clockMinutes(crtime.Time.start);
+  if (startMin == null) return;
+  var half = "";
+  entries.forEach(function (entry) {
+    if (!entry || !entry.half) return;
+    if (entry.half === "am") half = "am";
+    else if (entry.half === "pm" && half !== "am") half = "pm";
+  });
+  var lunchStart = clockMinutes(crtime.Lunch && crtime.Lunch.start);
+  var lunchEnd = clockMinutes(crtime.Lunch && crtime.Lunch.end);
+  var dinnerStart = clockMinutes(crtime.Dinner && crtime.Dinner.start);
+  var dinnerEnd = clockMinutes(crtime.Dinner && crtime.Dinner.end);
+  if (half === "am" && lunchEnd != null) {
+    startMin = lunchEnd;
+  }
+  var endMin = startMin + manHours * 60;
+  if (lunchStart != null && lunchEnd != null && lunchStart >= startMin && lunchEnd <= endMin) {
+    endMin += lunchEnd - lunchStart;
+  }
+  if (dinnerStart != null && dinnerEnd != null && dinnerStart >= startMin && dinnerEnd <= endMin) {
+    endMin += dinnerEnd - dinnerStart;
+  }
+  var startText = formatClock(startMin);
+  var endText = formatClock(endMin);
+  entries.forEach(function (entry) {
+    if (!entry) return;
+    entry.start = startText;
+    entry.end = endText;
+  });
+}
+function formatBuic(codes) {
+  const list = Array.isArray(codes) ? codes.filter((code) => code) : [];
+  if (list.length < 2) return list[0] || "";
+  const last = list.pop();
+  return list.join(" ") + " & " + last;
+}
+let latestRepdata = null;
+let latestBuic = [];
+function selectedBuics() {
+  return $("#buicFilter .item.checked")
+    .map(function () {
+      return $(this).attr("data-buic");
+    })
+    .get();
+}
+function filterByBuic(repdata, filters) {
+  if (!repdata || !filters.length || filters.indexOf("all") !== -1) return repdata;
+  const filtered = {};
+  Object.keys(repdata).forEach((day) => {
+    const entries = (repdata[day] || []).filter((entry) => {
+      if (!entry) return false;
+      if (filters.indexOf("kdt") !== -1 && entry.indirect) return true;
+      return filters.indexOf(entry.buic) !== -1;
+    });
+    if (entries.length) filtered[day] = entries;
+  });
+  return filtered;
+}
+function updateBuicButton() {
+  const selected = selectedBuics();
+  const labels = { all: "ALL", kdt: "KDT" };
+  if (!selected.length) {
+    $("#buicList .buic-btn").text("Select BU in Charge");
+    return;
+  }
+  if (selected.indexOf("all") !== -1) {
+    $("#buicList .buic-btn").text("ALL");
+    return;
+  }
+  $("#buicList .buic-btn").text(
+    selected.map((code) => labels[code] || code).join(", "),
+  );
+}
+function renderBuicOptions(codes) {
+  const available = ["all", "kdt"].concat(codes || []);
+  const current = selectedBuics().filter((code) => available.indexOf(code) !== -1);
+  const labels = { all: "ALL", kdt: "KDT" };
+  $("#buicFilter").html(
+    available
+      .map((code) => {
+        const label = labels[code] || code;
+        const checked = current.indexOf(code) !== -1 ? " checked" : "";
+        return `<li class="item rounded-1 gap-2${checked}" data-buic="${code}">
+          <span class="checkboxx"><i class="bx bx-check text-white"></i></span>
+          <span class="item-text">${label}</span>
+        </li>`;
+      })
+      .join(""),
+  );
+  updateBuicButton();
+}
+function setBuicNote(filters, allCodes) {
+  let buicText = "";
+  if (!filters.length || filters.indexOf("all") !== -1) {
+    buicText = formatBuic(allCodes);
+  } else {
+    buicText = formatBuic(
+      filters.map((code) => (code === "kdt" ? "KDT" : code)),
+    );
+  }
+  $("#notes").text(buicText ? "BU in Charge : " + buicText : "BU in Charge :");
+}
+function showBuicReport() {
+  const filters = selectedBuics();
+  setBuicNote(filters, latestBuic);
+  createTable(filterByBuic(latestRepdata, filters));
+  addToke();
+}
 function getReportData() {
   const empSelect = parseInt($("#idEmp option:selected").attr("emp-id"));
   const groupSel = $("#idGroup").val();
@@ -1214,8 +1410,12 @@ function getReportData() {
       },
       dataType: "json",
       success: function (data) {
-        const repdata = data.data;
-        resolve(repdata);
+        latestRepdata = data.data || {};
+        latestBuic = Array.isArray(data.buic) ? data.buic : [];
+        renderBuicOptions(latestBuic);
+        const filters = selectedBuics();
+        setBuicNote(filters, latestBuic);
+        resolve(filterByBuic(latestRepdata, filters));
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
@@ -1258,9 +1458,18 @@ function getHolidays() {
   });
 }
 function addToke() {
-  $.each(tokens, function (indexInArray, valueOfElement) {
-    var td = $("tr td:first-child:contains(" + valueOfElement + ")");
-    td.closest("tr").find(".custom-checkbox").addClass("checked");
+  $.each(tokens, function (_, token) {
+    if (!token || !token.date) return;
+    var seen = 0;
+    $("tr").each(function () {
+      if (dateOfRow(this) !== token.date) return;
+      if (!$(this).find(".toke").length) return;
+      if (seen === token.nth) {
+        $(this).find(".custom-checkbox").addClass("checked");
+        return false;
+      }
+      seen++;
+    });
   });
 }
 function isAllTokeChecked() {
