@@ -629,7 +629,7 @@ require_once __DIR__ . '/lib/assets.php';
             class="d-flex justify-content-center align-items-center"
             style="line-height: 50px; min-width: 78px; height: 50px"
           >
-            <img src="../images/logo.png" alt="logo" />
+            <img src="<?= asset_url('../images/logo.png') ?>" alt="logo" />
           </div>
           <span class="logo_name text-start">WEB JMR</span>
         </a>
