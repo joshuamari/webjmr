@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Monthly Individual Report</title>
+    <title>Monthly Individual Report - Advance</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <link
@@ -18,7 +18,7 @@
     <script src="js/jquery.js"></script>
     <script src="js/jquery.inview.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/individual.js"></script>
+    <script src="js/individual.js?v=202611201336"></script>
     <!-- <script src="js/jquery.table2excel.js"></script> -->
     <script>
       var busterCall = [
@@ -234,7 +234,7 @@
     <div class="home-content position-relative d-flex">
       <div class="shadow-sm" style="z-index: 3; width: 100%; min-width: 480px">
         <div class="title xPrint">
-          <h1>Monthly Individual Report</h1>
+          <h1>Monthly Individual Report - Advance</h1>
 
           <div class="d-flex justify-content-between align-items-center px-2">
             <a href="../" class="backbtn">
@@ -360,52 +360,57 @@
             >
               <div>
                 <div class="d-flex flex-row gap-5">
-                  <div class="mb-3 d-flex align-items-center gap-2">
-                    <input
-                      class="checkbox"
-                      type="checkbox"
-                      value=""
-                      id="excludeKDT"
-                    />
-                    <label class="form-check-label" for="excludeKDT">
-                      Exclude KDT Indirect
-                    </label>
+                  <div class="d-flex flex-column gap-2">
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="excludeKDT"
+                      />
+                      <label class="form-check-label" for="excludeKDT">
+                        Exclude KDT Indirect
+                      </label>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="withTokens"
+                      />
+                      <label class="form-check-label" for="withTokens">
+                        With Token Option
+                      </label>
+                    </div>
                   </div>
-                  <div class="mb-3 d-flex align-items-center gap-2">
-                    <input
-                      class="checkbox"
-                      type="checkbox"
-                      value=""
-                      id="includeOGP"
-                    />
-                    <label class="form-check-label" for="includeOGP">
-                      Include OGP (Other Group Projects)
-                    </label>
+
+                  <div class="d-flex flex-column gap-2">
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="includeOGP"
+                      />
+                      <label class="form-check-label" for="includeOGP">
+                        Include OGP (Other Group Projects)
+                      </label>
+                    </div>
+                    <div class="mb-3 d-flex align-items-center gap-2">
+                      <input
+                        class="checkbox"
+                        type="checkbox"
+                        value=""
+                        id="excludePIC"
+                      />
+                      <label class="form-check-label" for="excludePIC">
+                        Exclude PIC Column
+                      </label>
+                    </div>
                   </div>
                 </div>
-                <!-- <div class="mb-3 d-flex align-items-center gap-2">
-                  <input
-                    class="checkbox"
-                    type="checkbox"
-                    value=""
-                    id="excludeKDT"
-                  />
-                  <label class="form-check-label" for="excludeKDT">
-                    Exclude KDT Indirect
-                  </label>
-                </div> -->
-                <div class="d-flex align-items-center gap-2">
-                  <input
-                    class="checkbox"
-                    type="checkbox"
-                    value=""
-                    id="withTokens"
-                  />
-                  <label class="form-check-label" for="withTokens">
-                    With Token Option
-                  </label>
-                </div>
-                <div class="token mt-3">
+                <div class="token mt-2 mb-4">
                   <div
                     class="rounded-2 p-3"
                     style="border: 1px solid #dee2e6; background-color: #e9ecf0"
@@ -505,6 +510,37 @@
                       </label>
                     </div>
                   </div>
+                </div>
+                <div class="position-relative">
+                  <div
+                    class="d-flex align-items-center justify-content-between rounded-2"
+                    id="buicList"
+                    role="button"
+                  >
+                    <span class="buic-btn">Select BU in Charge</span>
+                    <span
+                      class="arrow-down d-flex justify-content-center align-items-center"
+                    >
+                      <i class="bx bx-chevron-down fs-4"></i>
+                    </span>
+                  </div>
+                  <ul
+                    id="buicFilter"
+                    class="list-items list-unstyled mt-2 mb-0 rounded-2 p-2"
+                  >
+                    <li class="item rounded-1 gap-2" data-buic="all">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">ALL</span>
+                    </li>
+                    <li class="item rounded-1 gap-2" data-buic="kdt">
+                      <span class="checkboxx">
+                        <i class="bx bx-check text-white"></i>
+                      </span>
+                      <span class="item-text">KDT</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
               <!-- <div class="mb-3 d-flex align-items-center gap-2">
@@ -746,7 +782,11 @@
                   <td id="totalMH" class="fw-semibold"></td>
                   <td id="totalOT" class="fw-semibold"></td>
                   <td class="nan"></td>
-                  <td class="nan"></td>
+                  <!-- <td class="nan"></td> -->
+
+                  <td colspan="2" id="notes" class="text-uppercase fw-bold">
+                    BU in Charge :
+                  </td>
                 </tr>
               </tbody>
             </table>
