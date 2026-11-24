@@ -4,15 +4,23 @@
       "version": "1.5.6",
       "date": "2026-11-24",
       "latest": true,
-      "summary": "The sidebar logo looks the same on every page. Size and contrast are set in one stylesheet.",
-      "added": [],
+      "summary": "The logo has changed.\n\nDaily Report can log a Planning type of work.",
+      "added": [
+        {
+          "title": "Planning type of work",
+          "description": "Type of Work includes Planning on normal projects. The option is Plan - Planning. It does not appear when the project is Leave.",
+          "bullets": [
+            "Select Plan - Planning when the work is planning",
+            "Leave projects still show only leave day types"
+          ]
+        }
+      ],
       "changed": [
         {
-          "title": "Sidebar logo",
-          "description": "Daily Report, JMC, Reports, Planning, Override, What's New, Daily Report Approvals, and DR Access Request use the same logo style as Daily Report. The image is 50 by 25 pixels with the same contrast filter. Edit the shared stylesheet to change it on every page.",
+          "title": "Logo",
+          "description": "The logo has changed.",
           "bullets": [
-            "The sidebar logo matches Daily Report on every page",
-            "Size and contrast are edited in one stylesheet"
+            "The logo has changed"
           ]
         }
       ],

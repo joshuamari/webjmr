@@ -8,15 +8,22 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ## [1.5.6] - 2026-11-24
 
-The sidebar logo looks the same on every page. Size and contrast are set in one stylesheet.
+The logo has changed.
+
+Daily Report can log a Planning type of work.
+
+### Added
+
+- **Planning** type of work (`typesofworktable`). The dropdown shows **Plan - Planning** on normal projects. It does not appear for Leave. Checker and automatic hours are unchanged
 
 ### Changed
 
-- **Sidebar logo** (`css/sidebar-logo.css`): Daily Report, JMC, Reports, Planning, Override, What's New, Daily Report Approvals, and DR Access Request use the same logo style as Daily Report. The image is 50 by 25 pixels with the same contrast filter. Edit `css/sidebar-logo.css` to change it on every page
+- **Logo**: The logo has changed
 
 ### Notes
 
-- No migration
+- Run: `php SQL/migrations/20261124_add_planning_type_of_work.php`
+- Safe to run more than once. A Planning row with type 1 is left as-is
 
 ---
 
