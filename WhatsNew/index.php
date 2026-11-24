@@ -13,6 +13,7 @@ require_once __DIR__ . '/lib/assets.php';
     <link rel="stylesheet" href="<?= asset_url('../css/boxicons.css') ?>" />
     <link rel="stylesheet" href="<?= asset_url('../tailwindcss/output.css') ?>" />
     <link rel="stylesheet" href="<?= asset_url('../css/whats-new.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../css/sidebar-logo.css') ?>" />
     <script src="<?= asset_url('../js/jquery.js') ?>"></script>
     <script src="<?= asset_url('../js/jquery.inview.min.js') ?>"></script>
     <script src="<?= asset_url('../js/release-history.js') ?>" data-notes="<?= asset_url('../data/whats-new.json') ?>"></script>
@@ -33,11 +34,7 @@ require_once __DIR__ . '/lib/assets.php';
             class="d-flex justify-content-center align-items-center"
             style="line-height: 50px; min-width: 78px; height: 50px"
           >
-            <img
-              src="../images/logo.png"
-              style="width: 50px; height: 50px"
-              alt="Web JMR"
-            />
+            <img src="../images/logo.png" alt="Web JMR" />
           </div>
           <span class="logo_name text-start">WEB JMR</span>
         </a>

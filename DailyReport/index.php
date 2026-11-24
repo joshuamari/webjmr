@@ -38,9 +38,10 @@ require_once __DIR__ . '/lib/assets.php';
     <script src="<?= asset_url('js/history.js') ?>"></script>
     <script src="<?= asset_url('js/main.js') ?>"></script>
     <script src="<?= asset_url('js/app.js') ?>"></script>
-    <link rel="stylesheet" href="../css/whats-new.css" />
-    <script src="../js/release-history.js"></script>
-    <script src="../js/whats-new.js"></script>
+    <link rel="stylesheet" href="<?= asset_url('../css/whats-new.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../css/sidebar-logo.css') ?>" />
+    <script src="<?= asset_url('../js/release-history.js') ?>" data-notes="<?= asset_url('../data/whats-new.json') ?>"></script>
+    <script src="<?= asset_url('../js/whats-new.js') ?>"></script>
   </head>
 
   <body>
@@ -379,11 +380,7 @@ require_once __DIR__ . '/lib/assets.php';
             class="d-flex justify-content-center align-items-center"
             style="line-height: 50px; min-width: 78px; height: 50px"
           >
-            <img
-              src="../images/logo.png"
-              style="width: 50px; height: 50px"
-              alt="logo"
-            />
+            <img src="../images/logo.png" alt="logo" />
           </div>
           <span class="logo_name text-start whitespace-nowrap">WEB JMR</span>
         </a>

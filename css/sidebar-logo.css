@@ -1,0 +1,6 @@
+/* Shared sidebar logo. Edit this file to change the logo on every page that links it. */
+.sidebar .logo-details img {
+  width: 50px;
+  height: 25px;
+  filter: brightness(1) saturate(1) contrast(1.45);
+}

@@ -6,6 +6,20 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.6] - 2026-11-24
+
+The sidebar logo looks the same on every page. Size and contrast are set in one stylesheet.
+
+### Changed
+
+- **Sidebar logo** (`css/sidebar-logo.css`): Daily Report, JMC, Reports, Planning, Override, What's New, Daily Report Approvals, and DR Access Request use the same logo style as Daily Report. The image is 50 by 25 pixels with the same contrast filter. Edit `css/sidebar-logo.css` to change it on every page
+
+### Notes
+
+- No migration
+
+---
+
 ## [1.5.5] - 2026-11-20
 
 JMC Import now runs in the web app. Open it from the Import link on JMC.

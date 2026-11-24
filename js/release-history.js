@@ -16,7 +16,10 @@
         if (notes) {
           return notes;
         }
-        return src.replace(/js\/release-history\.js(\?.*)?$/, "data/whats-new.json");
+        return src.replace(
+          /js\/release-history\.js(\?.*)?$/,
+          "data/whats-new.json$1"
+        );
       }
     }
     return "data/whats-new.json";
@@ -92,7 +95,9 @@
 
   global.WEB_JMR_RELEASES = [];
   global.WEB_JMR_CURRENT_VERSION = "";
-  global.WEB_JMR_RELEASES_READY = fetch(getWhatsNewDataUrl())
+  global.WEB_JMR_RELEASES_READY = fetch(getWhatsNewDataUrl(), {
+    cache: "no-cache",
+  })
     .then(function (response) {
       if (!response.ok) {
         throw new Error("Could not load What's New data.");

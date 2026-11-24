@@ -17,6 +17,7 @@ require_once __DIR__ . '/lib/assets.php';
     <script src="<?= asset_url('js/bootstrap.min.js') ?>"></script>
     <script src="<?= asset_url('js/reports.js') ?>"></script>
     <link rel="stylesheet" href="<?= asset_url('../css/whats-new.css') ?>" />
+    <link rel="stylesheet" href="<?= asset_url('../css/sidebar-logo.css') ?>" />
     <script src="<?= asset_url('../js/release-history.js') ?>" data-notes="<?= asset_url('../data/whats-new.json') ?>"></script>
     <script src="<?= asset_url('../js/whats-new.js') ?>"></script>
   </head>
@@ -34,11 +35,7 @@ require_once __DIR__ . '/lib/assets.php';
             class="d-flex justify-content-center align-items-center"
             style="line-height: 50px; min-width: 78px; height: 50px"
           >
-            <img
-              src="../images/logo.png"
-              style="width: 50px; height: 50px"
-              alt="Web JMR"
-            />
+            <img src="../images/logo.png" alt="Web JMR" />
           </div>
           <span class="logo_name text-start">WEB JMR</span>
         </a>

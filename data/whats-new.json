@@ -1,9 +1,28 @@
 {
   "releases": [
     {
+      "version": "1.5.6",
+      "date": "2026-11-24",
+      "latest": true,
+      "summary": "The sidebar logo looks the same on every page. Size and contrast are set in one stylesheet.",
+      "added": [],
+      "changed": [
+        {
+          "title": "Sidebar logo",
+          "description": "Daily Report, JMC, Reports, Planning, Override, What's New, Daily Report Approvals, and DR Access Request use the same logo style as Daily Report. The image is 50 by 25 pixels with the same contrast filter. Edit the shared stylesheet to change it on every page.",
+          "bullets": [
+            "The sidebar logo matches Daily Report on every page",
+            "Size and contrast are edited in one stylesheet"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.5.5",
       "date": "2026-11-20",
-      "latest": true,
+      "latest": false,
       "summary": "JMC Import now runs in the web app. Open it from the Import link on JMC.\n\nMan-Hour Report unit rates changed from October 2026 onward. The Philippines rate went from 2 to 2.9. The Japan or overseas rate went from 2.85 to 3.5. Reports for September 2026 and earlier keep the previous rates.",
       "added": [
         {
