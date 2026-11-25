@@ -40,6 +40,7 @@ switch ($cutOff) {
         $monthEnd = date('Y-m-t', strtotime($monthStart));
         $dateCompare = " AND `fldDate` >= '" . $monthStart . "' AND `fldDate` <= '" . $monthEnd . "'";
 }
+$holidayLocationSql = substr($yearMonth, 0, 7) >= '2026-09' ? '' : ' AND `fldLocation` = 1';
 $entriesArray = array();
 $maypasok = getMayPasok($yearMonth, $loc);
 $weekendsRaw = getWeekEnds($yearMonth, $loc);
@@ -49,41 +50,41 @@ $legalRegular = array_values(array_intersect($weekendsRaw, $regHolidaysRaw));
 $restdayLegalStmt = '';
 $restdayLegalBeyondStmt = '';
 if (!empty($legalRegular)) {
-    $restdayLegalStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalRegular) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_legal";
-    $restdayLegalBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalRegular) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_legalbeyond";
+    $restdayLegalStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $legalRegular) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_legal";
+    $restdayLegalBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $legalRegular) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_legalbeyond";
 }
 $legalSpecial = array_values(array_intersect($weekendsRaw, $specialHolidaysRaw));
 $restdaySpcStmt = '';
 $restdaySpcBeyondStmt = '';
 if (!empty($legalSpecial)) {
-    $restdaySpcStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_spc";
-    $restdaySpcBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_spcbeyond";
+    $restdaySpcStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_spc";
+    $restdaySpcBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $legalSpecial) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_spcbeyond";
 }
 $regHolidays = array_diff($regHolidaysRaw, $legalRegular);
 $legalOTStmt = '';
 $legalOTBeyondStmt = '';
 if (!empty($regHolidays)) {
-    $legalOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $regHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS legal_ot";
-    $legalOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $regHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS legal_otbeyond";
+    $legalOTStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $regHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS legal_ot";
+    $legalOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $regHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS legal_otbeyond";
 }
 $specialHolidays = array_diff($specialHolidaysRaw, $legalSpecial);
 $specialOTStmt = '';
 $specialOTBeyondStmt = '';
 if (!empty($specialHolidays)) {
-    $specialOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS spc_ot";
-    $specialOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS spc_otbeyond";
+    $specialOTStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS spc_ot";
+    $specialOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $specialHolidays) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS spc_otbeyond";
 }
 $weekends = array_diff($weekendsRaw, $legalRegular, $legalSpecial);
 $restdayOTStmt = '';
 $restdayOTBeyondStmt = '';
 if (!empty($weekends)) {
-    $restdayOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $weekends) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_ot";
-    $restdayOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` IN ('" . implode("','", $weekends) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_otbeyond";
+    $restdayOTStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $weekends) . "') THEN LEAST(`fldDuration`,480) ELSE 0 END) AS rd_ot";
+    $restdayOTBeyondStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` IN ('" . implode("','", $weekends) . "') AND `fldDuration` > 480 THEN `fldDuration` - 480 ELSE 0 END) AS rd_otbeyond";
 }
 $nonWorkingDays = array_values(array_unique(array_merge($weekendsRaw, $regHolidaysRaw, $specialHolidaysRaw)));
 $regOTStmt = '';
 if (!empty($nonWorkingDays)) {
-    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1 AND `fldLocation` = 1 AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` ELSE 0 END) AS reg_ot";
+    $regOTStmt = ", SUM(CASE WHEN `fldMHType` = 1" . $holidayLocationSql . " AND `fldDate` NOT IN ('" . implode("','", $nonWorkingDays) . "') THEN `fldDuration` ELSE 0 END) AS reg_ot";
 }
 
 $report_data = array();

@@ -43,6 +43,8 @@ checkAccess()
 
 //#region BINDS
 $(document).on("change", "#monthSel", function () {
+  createTable1(locations);
+  applyLocationFilter();
   getReportData()
     .then((repd) => {
       createTable(repd, locations);
@@ -52,30 +54,7 @@ $(document).on("change", "#monthSel", function () {
     });
 });
 $(document).on("change", "#selLoc", function () {
-  var loc = parseInt($("#selLoc :selected").attr("loc-id"));
-  if (loc === 0) {
-    $("table").removeClass("d-none");
-  }
-  if (loc === 1) {
-    $("table").addClass("d-none");
-    $(".mainTable table[table-id='1']").removeClass("d-none");
-  }
-  if (loc === 2) {
-    $("table").addClass("d-none");
-    $(".mainTable table[table-id='2']").removeClass("d-none");
-  }
-  if (loc === 3) {
-    $("table").addClass("d-none");
-    $(".mainTable table[table-id='3']").removeClass("d-none");
-  }
-  if (loc === 4) {
-    $("table").addClass("d-none");
-    $(".mainTable table[table-id='4']").removeClass("d-none");
-  }
-  if (loc === 5) {
-    $("table").addClass("d-none");
-    $(".mainTable table[table-id='5']").removeClass("d-none");
-  }
+  applyLocationFilter();
 });
 $(document).on("change", "#co", function () {
   getReportData()
@@ -92,6 +71,27 @@ $(document).on("click", "#btnExport", function () {
 //#endregion
 
 //#region FUNCTION
+const HOLIDAY_COLUMNS_FROM = "2026-09";
+
+function reportUsesHolidayColumns() {
+  const month = String($("#monthSel").val() || "").slice(0, 7);
+  return month >= HOLIDAY_COLUMNS_FROM;
+}
+
+function locationUsesHolidayColumns(locId) {
+  return reportUsesHolidayColumns() || Number(locId) === 1;
+}
+
+function applyLocationFilter() {
+  var loc = parseInt($("#selLoc :selected").attr("loc-id"), 10);
+  if (Number.isNaN(loc) || loc === 0) {
+    $(".mainTable table").removeClass("d-none");
+    return;
+  }
+  $(".mainTable table").addClass("d-none");
+  $(`.mainTable table[table-id='${loc}']`).removeClass("d-none");
+}
+
 function checkAccess() {
   return new Promise((resolve, reject) => {
     $.ajax({
@@ -182,11 +182,11 @@ function createTable1(location) {
   $(".mainTable").empty();
   var str = "";
   $.each(location, function (index, loc) {
-    if (index === 0) {
+    if (locationUsesHolidayColumns(loc.id)) {
       str += `
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100">
     <thead class="sticky-top shadow-sm">
-    <tr>
+    <tr class="locRow">
       <th colspan="20" class="locName" style="background-color: #eee !important;"
       data-f-name="Arial"
         data-f-sz="9"
@@ -529,14 +529,14 @@ function createTable1(location) {
       </th>
     </tr>
   </thead>
-  <tbody id="mainBody"></tbody>
+  <tbody${Number(loc.id) === 1 ? ' id="mainBody"' : ""}></tbody>
     </table>
     `;
     } else {
       str += `
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
-    <tr class="locRow" >
+    <tr class="locRow">
       <th colspan="9" class="locName" style="background-color: #eee !important;"
         data-f-name="Arial"
         data-f-sz="9"
@@ -548,118 +548,18 @@ function createTable1(location) {
         data-fill-color="eeeeee">${loc.locName}</th>
     </tr>
     <tr data-fill-color="b6f9a1" class="heady">
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Employee No.
-      </th>
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Employee Name
-      </th>
-      
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Regular Hours
-      </th>
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Total Overtime (1.3)
-      </th>
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        VL
-      </th>
-      <th
-      data-f-name="Arial"
-      data-f-sz="9"
-      data-f-bold="true"
-      data-a-h="center"
-      data-a-v="middle"
-      data-b-a-s="thin"
-      data-b-a-c="000000"
-      data-fill-color="bbffbc"
-    >
-      SL
-    </th>
-    <th
-    data-f-name="Arial"
-    data-f-sz="9"
-    data-f-bold="true"
-    data-a-h="center"
-    data-a-v="middle"
-    data-b-a-s="thin"
-    data-b-a-c="000000"
-    data-fill-color="bbffbc"
-  >
-    Others(EL,PL)
-  </th>
-  <th
-  data-f-name="Arial"
-  data-f-sz="9"
-  data-f-bold="true"
-  data-a-h="center"
-  data-a-v="middle"
-  data-b-a-s="thin"
-  data-b-a-c="000000"
-  data-fill-color="bbffbc"
->
-  Total Leave
-</th>
-      <th
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000"
-        data-fill-color="bbffbc"
-      >
-        Total Hours
-      </th>
-    </tr>    
-  </thead>
-  <tbody></tbody>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Employee No.</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Employee Name</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Regular Hours</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Total Overtime (1.3)</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">VL</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">SL</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Others(EL,PL)</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Total Leave</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Total Hours</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
     </table>
     `;
     }
@@ -842,8 +742,8 @@ function createTable(data, locs) {
     data-b-a-c="000000">
     ${totmh}</td>
     `;
-        if (locid == 1) {
-          str += `
+        if (locationUsesHolidayColumns(locid)) {
+        str += `
     <td
     data-t="n"
     data-f-name="Arial"
@@ -954,11 +854,8 @@ function createTable(data, locs) {
     data-b-a-s="thin"
     data-b-a-c="000000">
     ${rdspc_beyond}</td>
-    
-    </tr>
     `;
         }
-
         str += `</tr>`;
         rowHtml += str;
       });
@@ -966,8 +863,8 @@ function createTable(data, locs) {
         table.append(rowHtml);
       }
     } else {
-      if (locid == 1) {
-        table.append(`<tr class="noData"><td colspan='20' 
+      var emptySpan = locationUsesHolidayColumns(locid) ? 20 : 9;
+      table.append(`<tr class="noData"><td colspan='${emptySpan}' 
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -975,16 +872,6 @@ function createTable(data, locs) {
         data-a-v="middle"
         data-b-a-s="thin"
         data-b-a-c="000000">No data found.</td></tr>`);
-      } else {
-        table.append(`<tr class="noData"><td colspan='9'
-        data-f-name="Arial"
-        data-f-sz="9"
-        data-f-bold="true"
-        data-a-h="center"
-        data-a-v="middle"
-        data-b-a-s="thin"
-        data-b-a-c="000000">No data found.</td></tr>`);
-      }
     }
     $(".lottie").remove();
   });
@@ -1000,9 +887,11 @@ function addTotal() {
     if (!hasNoData) {
       var str = "";
       var totals = calculateTotals(table);
-      console.log(totals.length);
-      if (index === 0) {
-        str = `
+      var exportRoot = String(table.attr("id")) === "1";
+      var regClass = exportRoot ? "reg-total" : "reg-tot";
+      var otClass = exportRoot ? "ot-total" : "ot-tot";
+      if (locationUsesHolidayColumns(table.attr("id"))) {
+      str = `
       <tr class="totalAll">
         <td colspan="2"
         data-f-name="Arial"
@@ -1013,7 +902,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         >Total</td>
-        <td class="pula reg-total"
+        <td class="pula ${regClass}"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1024,7 +913,7 @@ function addTotal() {
         data-b-a-c="000000"
         data-f-color="dc1f1f"
         >${totals[0]}</td>
-        <td class="pula ot-total"
+        <td class="pula ${otClass}"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1222,7 +1111,7 @@ function addTotal() {
       data-b-a-s="thin"
       data-b-a-c="000000"
       >Total</td>
-        <td class="pula reg-tot"
+        <td class="pula ${regClass}"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1232,7 +1121,7 @@ function addTotal() {
         data-b-a-s="thin"
         data-b-a-c="000000"
         data-f-color="dc1f1f">${totals[0]}</td>
-        <td class="pula ot-tot"
+        <td class="pula ${otClass}"
         data-t="n"
         data-f-name="Arial"
         data-f-sz="9"
@@ -1295,7 +1184,6 @@ function addTotal() {
       </tr>
       `;
       }
-
       table.find("tbody").append(str);
     }
   });
@@ -1318,6 +1206,7 @@ function calculateTotals(table) {
 }
 function convertTables() {
   var str = "";
+  var bannerSpan = reportUsesHolidayColumns() ? 20 : 9;
   $(".mainTable table[id!=1]").each(function () {
     var tableId = $(this).attr("id");
     var table = $(`#${tableId}`);
@@ -1343,7 +1232,7 @@ function convertTables() {
             col = `colspan=2`;
           }
           if ($($(this).parent()).hasClass("noData")) {
-            col = `colspan=9`;
+            col = `colspan="${bannerSpan}"`;
           }
           if ($($(this).parent()).hasClass("locRow")) {
             props = `data-f-name="Arial"
@@ -1355,7 +1244,7 @@ function convertTables() {
             data-b-a-s="thin"
             data-b-a-c="000000"
             data-fill-color="eeeeee"
-            colspan="9"`;
+            colspan="${bannerSpan}"`;
           }
           if ($($(this).parent()).hasClass("heady")) {
             props = `data-f-name="Arial"
@@ -1397,7 +1286,18 @@ function convertTables() {
           if ($($(this)).hasClass("ot-tot")) {
             isOtTotal = `ot-total`;
           }
-          htmlString += `<td class='toRemove ${isRegTotal} ${isOtTotal}' ${props} ${col}>${$(
+          var span = "";
+          if (
+            !col &&
+            props.indexOf("colspan") === -1 &&
+            $(this).attr("colspan")
+          ) {
+            span += ` colspan="${$(this).attr("colspan")}"`;
+          }
+          if ($(this).attr("rowspan")) {
+            span += ` rowspan="${$(this).attr("rowspan")}"`;
+          }
+          htmlString += `<td class='toRemove ${isRegTotal} ${isOtTotal}' ${props} ${col}${span}>${$(
             this
           ).html()}</td>`;
         });
