@@ -17,6 +17,16 @@ if (!isset($_POST['getMHType'])) {
 
 $getMHType = trim((string) $_POST['getMHType']);
 
+$locationName = getDispatchLocationName($connwebjmr, (int) $getLocation);
+
+if (
+    $getMHType === '1'
+    && in_array($locationName, ['KDT', 'WFH', 'HWFH'], true)
+    && isWorkDayForLocation($connkdt, $getDate, $locationName)
+) {
+    jsonError('Overtime is not allowed for KDT, WFH, or HWFH on a workday.', 400);
+}
+
 $jobReqDesc = requestValue('getDescription', null);
 $twoDthreeD = requestValue('getTwoThree', null);
 $revisions = (int) requestValue('getRev', 0);

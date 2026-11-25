@@ -109,6 +109,23 @@ function getSystemIds(PDO $conn): array
     return $cache;
 }
 
+function getDispatchLocationName(PDO $conn, int $locationId): string
+{
+    $stmt = $conn->prepare("
+        SELECT fldLocation
+        FROM dispatch_locations
+        WHERE fldID = :id
+        LIMIT 1
+    ");
+    $stmt->execute([
+        ':id' => $locationId,
+    ]);
+
+    $value = $stmt->fetchColumn();
+
+    return $value !== false ? trim((string) $value) : '';
+}
+
 function getGroupAbbreviation(PDO $conn, int $groupId): string
 {
     $stmt = $conn->prepare("

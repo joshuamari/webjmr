@@ -106,15 +106,34 @@ function hasTOW() {
   }
 }
 
+function setOvertimeOption(available) {
+  const overtimeOption = $('#idMH option[mhid="1"]');
+
+  if (available) {
+    if (overtimeOption.length === 0) {
+      $("#idMH").append('<option mhid="1">Overtime</option>');
+    }
+    return;
+  }
+
+  if ($("#idMH").val() === "Overtime") {
+    $('#idMH option[mhid="0"]').prop("selected", true);
+  }
+
+  overtimeOption.remove();
+}
+
 function MHValidation() {
   const projID = $("#idProject option:selected").attr("proj-id");
   const selLoc = $("#idLocation").val() || "KDT";
+  const hideOvertime =
+    selLoc === "KDT" || selLoc === "WFH" || selLoc === "HWFH";
 
-  if (selLoc === "KDT" || selLoc === "WFH" || selLoc === "HWFH") {
-    $('#idMH option[mhid="1"]').prop("disabled", true);
+  if (hideOvertime) {
+    setOvertimeOption(false);
     $('#idMH option[mhid="0"]').prop("selected", true);
   } else {
-    $('#idMH option[mhid="1"]').prop("disabled", false);
+    setOvertimeOption(true);
   }
 
   if (projID != AppState.leaveID) {
@@ -122,6 +141,7 @@ function MHValidation() {
 
     return isWorkDay(selLoc).then((workDay) => {
       if (!workDay) {
+        setOvertimeOption(true);
         $("#idMH").val("Overtime");
         $("#idMH").prop("disabled", true);
         return;
