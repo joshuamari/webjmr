@@ -4,6 +4,12 @@ require_once __DIR__ . '/bootstrap.php';
 
 $selDate = trim((string) requestValue('selDate', date('Y-m-d')));
 $selLoc = trim((string) requestValue('selLoc', 'KDT'));
+$holidayLocation = $selLoc !== '' ? $selLoc : 'KDT';
+
+// From September 2026, overseas assignments follow the KDT holiday calendar.
+if ($selDate >= '2026-09-01') {
+    $holidayLocation = 'KDT';
+}
 
 try {
     $isWorkday = true;
@@ -21,7 +27,7 @@ try {
     ");
     $stmt->execute([
         ':selDate' => $selDate,
-        ':selLoc' => $selLoc,
+        ':selLoc' => $holidayLocation,
     ]);
 
     $holidayType = $stmt->fetchColumn();
@@ -33,7 +39,7 @@ try {
     jsonSuccess([
         'isWorkday' => $isWorkday,
         'date' => $selDate,
-        'location' => $selLoc,
+        'location' => $holidayLocation,
     ]);
 } catch (Throwable $e) {
     jsonError('Failed to check work day.', 500);
