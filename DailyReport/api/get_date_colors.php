@@ -2,35 +2,6 @@
 
 require_once __DIR__ . '/bootstrap.php';
 
-function isWorkDayForLocation(PDO $conn, string $date, string $location = 'KDT'): bool
-{
-    $isWorkday = true;
-
-    if ((int) date('N', strtotime($date)) >= 6) {
-        $isWorkday = false;
-    }
-
-    $stmt = $conn->prepare("
-        SELECT fldHolidayType
-        FROM kdtholiday
-        WHERE fldDate = :selDate
-          AND fldLocation = :location
-        LIMIT 1
-    ");
-    $stmt->execute([
-        ':selDate' => $date,
-        ':location' => $location,
-    ]);
-
-    $holidayType = $stmt->fetchColumn();
-
-    if ($holidayType !== false) {
-        $isWorkday = ((string) $holidayType === '2');
-    }
-
-    return $isWorkday;
-}
-
 $curMonth = trim((string) requireRequestValue('curMonth', 'Current month is required.'));
 $empNum = trim((string) requestValue('empNum', '464'));
 

@@ -28,7 +28,7 @@ function resolveHolidayLocation(string $date, string $location): string
     return $holidayLocation;
 }
 
-function isWorkDayForLocation(PDO $conn, string $date, string $location): bool
+function isWorkDayForLocation(PDO $conn, string $date, string $location = 'KDT'): bool
 {
     $timestamp = strtotime($date);
     $isWorkday = true;
