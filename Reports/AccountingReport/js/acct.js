@@ -56,6 +56,9 @@ $(document).on("change", "#monthSel", function () {
 $(document).on("change", "#selLoc", function () {
   applyLocationFilter();
 });
+$(document).on("change", "#selGroup", function () {
+  applyGroupFilter();
+});
 $(document).on("change", "#co", function () {
   getReportData()
     .then((repd) => {
@@ -80,6 +83,45 @@ function reportUsesHolidayColumns() {
 
 function locationUsesHolidayColumns(locId) {
   return reportUsesHolidayColumns() || Number(locId) === 1;
+}
+
+function fillGroups(data) {
+  const selected = $("#selGroup").val() || "All";
+  const groups = {};
+  $.each(data || {}, function (_, locData) {
+    $.each(locData, function (_, employee) {
+      const group = String(employee.group || "").trim();
+      if (group) {
+        groups[group] = true;
+      }
+    });
+  });
+  const names = Object.keys(groups).sort();
+  let options = `<option value="All">All</option>`;
+  $.each(names, function (_, group) {
+    options += `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`;
+  });
+  $("#selGroup").html(options);
+  $("#selGroup").val(names.indexOf(selected) >= 0 ? selected : "All");
+}
+
+function applyGroupFilter() {
+  const group = $("#selGroup").val() || "All";
+  $(".mainTable tbody tr").each(function () {
+    if ($(this).hasClass("noData") || $(this).hasClass("totalAll")) {
+      return;
+    }
+    const rowGroup = String($(this).attr("data-group") || "");
+    $(this).toggleClass("d-none", group !== "All" && rowGroup !== group);
+  });
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function applyLocationFilter() {
@@ -187,7 +229,7 @@ function createTable1(location) {
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100">
     <thead class="sticky-top shadow-sm">
     <tr class="locRow">
-      <th colspan="20" class="locName" style="background-color: #eee !important;"
+      <th colspan="21" class="locName" style="background-color: #eee !important;"
       data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -223,6 +265,19 @@ function createTable1(location) {
         data-fill-color="bbffbc"
       >
         Employee Name
+      </th>
+      <th
+        rowspan="2"
+        data-f-name="Arial"
+        data-f-sz="9"
+        data-f-bold="true"
+        data-a-h="center"
+        data-a-v="middle"
+        data-b-a-s="thin"
+        data-b-a-c="000000"
+        data-fill-color="bbffbc"
+      >
+        Group
       </th>
       
       <th
@@ -537,7 +592,7 @@ function createTable1(location) {
     <table table-id="${loc.id}" id="${loc.id}" class="table table-hover w-100 ">
     <thead class="sticky-top">
     <tr class="locRow">
-      <th colspan="9" class="locName" style="background-color: #eee !important;"
+      <th colspan="10" class="locName" style="background-color: #eee !important;"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -550,6 +605,7 @@ function createTable1(location) {
     <tr data-fill-color="b6f9a1" class="heady">
       <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Employee No.</th>
       <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Employee Name</th>
+      <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Group</th>
       <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Regular Hours</th>
       <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">Total Overtime (1.3)</th>
       <th data-f-name="Arial" data-f-sz="9" data-f-bold="true" data-a-h="center" data-a-v="middle" data-b-a-s="thin" data-b-a-c="000000" data-fill-color="bbffbc">VL</th>
@@ -577,6 +633,7 @@ function createTable(data, locs) {
       Object.keys(locData).forEach((employeeKey) => {
         const mhObject = locData[employeeKey]["mh"];
         const employeeName = locData[employeeKey]["name"];
+        const employeeGroup = locData[employeeKey]["group"] || "";
         var str = "";
         var totreg = 0,
           totot = 0,
@@ -651,7 +708,7 @@ function createTable(data, locs) {
         if (mhObject.rdSpcBeyond !== undefined) {
           rdspc_beyond = mhObject.rdSpcBeyond;
         }
-        str += `<tr>
+        str += `<tr data-group="${escapeHtml(employeeGroup)}">
     <td 
     data-f-name="Arial"
     data-f-sz="9"
@@ -670,6 +727,15 @@ function createTable(data, locs) {
     data-b-a-s="thin"
     data-b-a-c="000000">
     ${employeeName}</td>
+    <td
+    data-f-name="Arial"
+    data-f-sz="9"
+    data-f-bold="true"
+    data-a-h="center"
+    data-a-v="middle"
+    data-b-a-s="thin"
+    data-b-a-c="000000">
+    ${escapeHtml(employeeGroup)}</td>
     <td
     data-t="n"
     data-f-name="Arial"
@@ -863,7 +929,7 @@ function createTable(data, locs) {
         table.append(rowHtml);
       }
     } else {
-      var emptySpan = locationUsesHolidayColumns(locid) ? 20 : 9;
+      var emptySpan = locationUsesHolidayColumns(locid) ? 21 : 10;
       table.append(`<tr class="noData"><td colspan='${emptySpan}' 
         data-f-name="Arial"
         data-f-sz="9"
@@ -875,6 +941,8 @@ function createTable(data, locs) {
     }
     $(".lottie").remove();
   });
+  fillGroups(data);
+  applyGroupFilter();
 }
 function addTotal() {
   $(".mainTable table").each(function (index) {
@@ -893,7 +961,7 @@ function addTotal() {
       if (locationUsesHolidayColumns(table.attr("id"))) {
       str = `
       <tr class="totalAll">
-        <td colspan="2"
+        <td colspan="3"
         data-f-name="Arial"
         data-f-sz="9"
         data-f-bold="true"
@@ -1102,7 +1170,7 @@ function addTotal() {
       } else {
         str = `
       <tr class="totalAll">
-      <td colspan="2"
+      <td colspan="3"
       data-f-name="Arial"
       data-f-sz="9"
       data-f-bold="true"
@@ -1192,10 +1260,15 @@ function calculateTotals(table) {
   var totals = [];
 
   table.find("tbody tr:first-child td").each(function () {
-    var columnIndex = $(this).index() + 3;
+    var columnIndex = $(this).index() + 4;
     var total = 0;
 
-    table.find("tbody tr td:nth-child(" + columnIndex + ")").each(function () {
+    table
+      .find("tbody tr")
+      .not(".d-none")
+      .not(".noData")
+      .find("td:nth-child(" + columnIndex + ")")
+      .each(function () {
       total += parseFloat($(this).text()) || 0;
     });
 
@@ -1206,12 +1279,15 @@ function calculateTotals(table) {
 }
 function convertTables() {
   var str = "";
-  var bannerSpan = reportUsesHolidayColumns() ? 20 : 9;
+  var bannerSpan = reportUsesHolidayColumns() ? 21 : 10;
   $(".mainTable table[id!=1]").each(function () {
     var tableId = $(this).attr("id");
     var table = $(`#${tableId}`);
     var htmlString = "";
     table.find("tr").each(function () {
+      if ($(this).hasClass("d-none")) {
+        return;
+      }
       htmlString += "<tr class='toRemove'>";
       $(this)
         .find("td, th")
@@ -1229,7 +1305,7 @@ function convertTables() {
           data-b-a-c="000000"`;
 
           if ($(this).html() == "Total") {
-            col = `colspan=2`;
+            col = `colspan="3"`;
           }
           if ($($(this).parent()).hasClass("noData")) {
             col = `colspan="${bannerSpan}"`;

@@ -150,7 +150,9 @@ if ($entriesStmt->rowCount() > 0) {
     foreach ($entriesArr as $ent) {
         $empid = $ent['fldEmployeeNum'];
         $empKey = (string)$empid;
-        $ename = array_key_exists($empKey, $names) ? $names[$empKey] : false;
+        $profile = array_key_exists($empKey, $names) ? $names[$empKey] : null;
+        $ename = is_array($profile) ? $profile['name'] : false;
+        $egroup = is_array($profile) ? $profile['group'] : '';
         $location = (int)$ent['fldLocation'];
         $totalReg = $ent['totalreg'];
         $totalOT = $ent['totalot'];
@@ -255,6 +257,7 @@ if ($entriesStmt->rowCount() > 0) {
         if (array_key_exists($empid, $report_data[$location])) {
             if (!array_key_exists('name', $report_data[$location][$empid])) {
                 $report_data[$location][$empid]['name'] = $ename;
+                $report_data[$location][$empid]['group'] = $egroup;
             }
         }
     }
@@ -279,11 +282,14 @@ function getNames($empNums)
     }
     $idList = array_values($ids);
     $placeholders = implode(',', array_fill(0, count($idList), '?'));
-    $nameQ = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename FROM emp_prof WHERE fldEmployeeNum IN ($placeholders)";
+    $nameQ = "SELECT fldEmployeeNum, CONCAT(fldSurname,', ',fldFirstname) AS ename, fldGroup FROM emp_prof WHERE fldEmployeeNum IN ($placeholders)";
     $nameStmt = $connkdt->prepare($nameQ);
     $nameStmt->execute($idList);
     foreach ($nameStmt->fetchAll() as $row) {
-        $names[(string)$row['fldEmployeeNum']] = $row['ename'];
+        $names[(string)$row['fldEmployeeNum']] = [
+            'name' => $row['ename'],
+            'group' => (string) ($row['fldGroup'] ?? ''),
+        ];
     }
     return $names;
 }
