@@ -595,7 +595,7 @@ function createTable(repdata) {
         <td class="mh">${manHour}</td>
         <td class="ot">${overtime}</td>
         ${jobMPM}
-        <td class="des text-start">${description}</td>
+        <td class="des text-start"><div class="des-text">${description}</div></td>
         ${invopMPM}
         ${picCell}
       </tr>`;
@@ -614,6 +614,7 @@ function createTable(repdata) {
         "max-width": "147px",
         overflow: "hidden",
       });
+      $("td.des .des-text").css("max-width", "147px");
       $("th.jn, td.jn").css({
         width: "146px",
         "max-width": "146px",
@@ -630,11 +631,13 @@ function createTable(repdata) {
       $(".signature").css("margin-top", "35px");
       $("td,th, table tbody tr, table thead tr").css("height", "18px ");
       // $(".table-cont").css("height", "615px ");
-      $("th.des, td.des").css(
-        hidePic
-          ? { width: "auto", "max-width": "none" }
-          : { width: "330px", "max-width": "330px" },
-      );
+      var desWidth = hidePic ? "465px" : "330px";
+      $("th.des, td.des").css({
+        width: desWidth,
+        "max-width": desWidth,
+        overflow: "hidden",
+      });
+      $("td.des .des-text").css("max-width", desWidth);
       $("th.pic, td.pic").css({
         width: "135px",
         "max-width": "135px",
