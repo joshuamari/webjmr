@@ -1,9 +1,52 @@
 {
   "releases": [
     {
+      "version": "1.5.7",
+      "date": "2026-11-27",
+      "latest": true,
+      "summary": "Accounting Report shows each employee's group and can filter by that group. From September 2026, holiday and rest-day overtime includes every location.\n\nOn a workday, Daily Report no longer offers Overtime for KDT, WFH, or HWFH. From September 2026, every location follows the KDT holiday calendar.",
+      "added": [
+        {
+          "title": "Accounting Report group",
+          "description": "Accounting Report shows each employee's group. Select Group filters the rows. Totals and Excel export follow the rows that are still visible.",
+          "bullets": [
+            "A Group column shows each employee's group",
+            "Select Group filters the report"
+          ]
+        }
+      ],
+      "changed": [
+        {
+          "title": "Holiday and rest-day overtime",
+          "description": "From September 2026, Accounting Report rest-day and holiday overtime columns count hours for every location. Months before September 2026 still count those hours only for KDT.",
+          "bullets": [
+            "From September 2026, these columns include every location",
+            "Before September 2026, these columns still count only KDT"
+          ]
+        },
+        {
+          "title": "Overtime on a workday",
+          "description": "On a workday, Overtime is removed from Manhour Type when the location is KDT, WFH, or HWFH. A weekend, a holiday, or a dispatch location still allows Overtime.",
+          "bullets": [
+            "Overtime is removed for KDT, WFH, and HWFH on a workday",
+            "A weekend, a holiday, or a dispatch location still allows Overtime"
+          ]
+        },
+        {
+          "title": "Holiday calendar",
+          "description": "From September 2026, Daily Report uses the KDT holiday calendar for every location, including overseas assignments.",
+          "bullets": [
+            "From September 2026, every location follows the KDT holiday calendar"
+          ]
+        }
+      ],
+      "fixed": [],
+      "modified": []
+    },
+    {
       "version": "1.5.6",
       "date": "2026-11-24",
-      "latest": true,
+      "latest": false,
       "summary": "The logo has changed.\n\nDaily Report can log a Planning type of work.",
       "added": [
         {

@@ -6,6 +6,34 @@ Newest work sits under **[Unreleased]** until a version is tagged. Dated section
 
 ---
 
+## [1.5.7] - 2026-11-27
+
+Monthly Individual Report - Advance can filter by BU in Charge and hide Person in Charge. Each Daily Report entry is its own row on the working record.
+
+Accounting Report shows each employee's group and can filter by that group. From September 2026, holiday and rest-day overtime includes every location.
+
+On a workday, Daily Report no longer offers Overtime for KDT, WFH, or HWFH. From September 2026, every location follows the KDT holiday calendar.
+
+### Added
+
+- **Monthly Individual Report - Advance** (`Reports/IndividualReport_new/`): Select BU in Charge filters the working record. The sheet notes show the selected BU in Charge. Exclude PIC Column hides Person in Charge
+- **Individual Report:** the old report links to Monthly Individual Report - Advance, and that report links back to the old one
+- **Accounting Report** (`Reports/AccountingReport/`): a Group column shows each employee's group. Select Group filters the rows. Totals and Excel export follow the rows that are still visible
+
+### Changed
+
+- **Monthly Individual Report - Advance:** the page title is Monthly Individual Report - Advance. The working record lists each Daily Report entry on its own row. The date, time in, and time out stay on the first row for that day
+- **Monthly Individual Report - Advance** (`Reports/IndividualReport_new/js/individual.js`): when Person in Charge is hidden, the description column is 465px. A longer description stays inside that width. With Person in Charge shown, the description column stays 330px, or 147px when the token columns are on
+- **Accounting Report:** from September 2026, rest-day and holiday overtime columns count hours for every location. Months before September 2026 still count those hours only for KDT
+- **Daily Report** (`DailyReport/js/form.js`, `DailyReport/api/add_entries.php`): on a workday, Overtime is removed from Manhour Type when the location is KDT, WFH, or HWFH. A weekend, a holiday, or a dispatch location still allows Overtime
+- **Daily Report** (`DailyReport/api/check_workday.php`): from September 2026, the workday check uses the KDT holiday calendar for every location, including overseas assignments
+
+### Notes
+
+- No migration
+
+---
+
 ## [1.5.6] - 2026-11-24
 
 The logo has changed.
